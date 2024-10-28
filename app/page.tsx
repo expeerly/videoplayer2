@@ -9,19 +9,21 @@ import React from "react";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { HeroSection } from "@/components/HeroSection";
+import { ThemeSwitch } from "@/components/theme-switch";
+import Slider from "@/components/Slider";
 
 export default function Home() {
   return (
-     <div className="flex flex-col justify-center items-center"> 
-           <HeroSection />
-      <ProductReviews/>
-      <BrandSlider/>
+    <div className="flex flex-col justify-center items-center">
+      <HeroSection />
+      <Slider/>
+      <ProductReviews />
+      <BrandSlider />
       <ProductReviewsCard />
-      <ExploreCategories/>
-      <ProductReviewsCard/>
-      <Conversion/>
-      <Footer/>
-
-      </div>
+      <ExploreCategories />
+      <ProductReviewsCard />
+      <Conversion />
+      <Footer />
+    </div>
   );
 }
