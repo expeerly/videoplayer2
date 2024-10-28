@@ -72,7 +72,7 @@ const BrandCarousel = () => {
   };
 
   return (
-    <Card className="bg-[#4B49EB] w-full  sm:p-8 sm:pb-24 pb-10 overflow-hidden rounded-none my-20  ">
+    <Card className="bg-[#4B49EB] w-full sm:w-[1165px]  sm:p-8 sm:pb-24 pb-10 overflow-hidden rounded-none my-20  ">
       <div className="flex flex-col items-center gap-4 text-white mb-6">
         <h2 className="text-2xl font-extrabold text-center p-8 pb-0">Video reviews on brands you love</h2>
         <p className="opacity-80  text-center px-20">Tap on brand logo to explore reviews</p>

@@ -62,7 +62,7 @@ const ExploreCategories = () => {
   };
 
   return (
-    <Card className="w-full border-none rounded-none sm:p-8 overflow-hidden py-4">
+    <Card className="w-full md:w-[1165px] border-none rounded-none sm:p-8 overflow-hidden py-4">
       <div className="flex flex-col items-center gap-4 mb-6">
         <h2 className="text-2xl font-extrabold">Explore Categories</h2>
         <p className="opacity-80 md:w-2/5 w-full  px-[18px] sm:px-0 text-center">

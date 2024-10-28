@@ -70,7 +70,7 @@ const Conversion = () => {
   };
 
   return (
-    <Card className="bg-[#4B49EB] w-full sm:p-8 sm:pb-14 pb-10 overflow-hidden rounded-none my-20">
+    <Card className="bg-[#4B49EB] w-full md:w-[1165px] sm:p-8 sm:pb-14 pb-10 overflow-hidden rounded-none my-20">
       <div className="flex flex-col items-center gap-4 text-white mb-6">
         <h2 className="text-2xl font-extrabold text-center p-8 pb-0">
           Boost conversion with video reviews
