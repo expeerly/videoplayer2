@@ -1,9 +1,9 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import Quets from "@/public/assets/“.svg";
 import BgImage from "@/public/assets/heroimg.svg";
-import { HeaderImage } from "./icons";
+import { HeaderImage } from "@/assets/HeaderImage";
 
-const HeroSection = () => {
+export const HeroSection: FunctionComponent = () => {
   return (
     <div
       style={{
@@ -35,5 +35,3 @@ const HeroSection = () => {
     </div>
   );
 };
-
-export default HeroSection;
