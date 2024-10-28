@@ -20,11 +20,11 @@ export const HeroSection: FunctionComponent = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-[80%]  flex flex-col gap-2 text-center md:w-[75%] lg:w-[78%] mx-auto z-50 items-center">
+      <div className="w-[80%]  flex flex-col gap-2 text-center md:w-[75%] lg:w-[78%] mx-auto z-50 items-center text-white">
         <div className="w-[220px] min-[376px]:w-[330px] md:w-[520px] lg:w-[680px] flex justify-start">
           <img src={Quets.src} alt="Quote" />
         </div>
-        <h1 className="text-[30px]  sm:text-[24px] md:text-[35px] lg:text-[48px] font-extrabold leading-tight">
+        <h1 className="text-[30px] sm:text-[24px] md:text-[35px] lg:text-[48px] font-extrabold leading-tight">
           Est-ce que ça vaut le coup?
         </h1>
         <p className="text-xs sm:text-sm md:text-[13px] w-[80%] md:w-[50%] lg:text-base  leading-5">
