@@ -13,6 +13,9 @@ module.exports = {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],
       },
+      backgroundImage: {
+        'custom-pattern': "url('/app/assest/Subtract.png')",
+      },
     },
   },
   darkMode: "class",
