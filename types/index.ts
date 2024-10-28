@@ -1,5 +1,11 @@
-import { SVGProps } from "react";
-
-export type IconSvgProps = SVGProps<SVGSVGElement> & {
-  size?: number;
-};
+export interface Video {
+  id: string;
+  playbackId: string;
+  caption: string;
+  username: string;
+  likes: number;
+  comments: number;
+  shares: number;
+  userAvatar: string;
+  music: string;
+}
