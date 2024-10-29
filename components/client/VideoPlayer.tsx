@@ -24,7 +24,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         playbackId={playbackId}
         style={{ height: "100%", width: "100%" }}
         thumbnailTime={0}
-      />
+        defaultHiddenCaptions={false}
+        title="TikTok Style Video"
+      > </MuxPlayer>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
 import { VideoFeed } from "@/components/client/VideoFeed";
-import MuxVideoPreview from "@/components/client/Preview";
+import ShortVideoFrame from "@/components/client/ShortVideoFrame";
 
 const sampleVideos = [
   {
@@ -63,7 +63,7 @@ const sampleVideos = [
 const ExplorePage: NextPage = () => {
   return (
     <div className="flex w-full justify-center">
-      <MuxVideoPreview  video={{...sampleVideos[0] , duration: 2.6 }} />
+      {/* <ShortVideoFrame  playbackID={sampleVideos[0]?.playbackId} /> */}
       <VideoFeed videos={sampleVideos} />
     </div>
   );

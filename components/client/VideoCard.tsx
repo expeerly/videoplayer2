@@ -16,20 +16,25 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, isVisible }) => {
     <div className=" h-full w-full flex flex-col gap-3 snap-start items-center justify-center ">
       <div className="flex w-full gap-3">
         <Chip radius="sm" className="bg-[#0E0E0FB2] text-white" size="lg">
-          Tag{" "}
+          Explore
         </Chip>
         <Chip radius="sm" className="bg-[#0E0E0FB2] text-white" size="lg">
-          Tag 2
+          Beauty & Personal Care
+        </Chip>
+        <Chip radius="sm" className="bg-[#0E0E0FB2] text-white" size="lg">
+          Dyson
+        </Chip>
+        <Chip radius="sm" className="bg-[#0E0E0FB2] text-white" size="lg">
+          Supersonic Professionalv
         </Chip>
       </div>
-      <div className="flex gap-2 w-full h-[90%] items-end">
+      <div className="flex gap-2  h-[90%] items-end">
         <div className="relative h-full w-[392px] flex bg-black">
           <VideoPlayer isVisible={isVisible} playbackId={video.playbackId} />
-
           <VideoInfo
-            caption={video.caption}
-            music={video.music}
-            username={video.username}
+            brand={"Dyson"}
+            category={"Supersonic Professional"}
+            rating={4.2}
           />
         </div>
         <VideoActions
