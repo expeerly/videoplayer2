@@ -13,7 +13,7 @@ export const VideoActions: React.FC<VideoActionsProps> = ({
   shares,
 }) => {
   return (
-    <div className="absolute right-4 bottom-20 flex flex-col items-center gap-6 text-white">
+    <div className="flex flex-col items-center gap-6 ">
       <button className="flex flex-col items-center gap-1">
         <div className="w-12 h-12 bg-gray-600/40 rounded-full flex items-center justify-center">
           <Heart size={28} />

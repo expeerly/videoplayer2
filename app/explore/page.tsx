@@ -1,18 +1,19 @@
 import { NextPage } from "next";
 
 import { VideoFeed } from "@/components/client/VideoFeed";
+import MuxVideoPreview from "@/components/client/Preview";
 
 const sampleVideos = [
   {
     id: "1",
     playbackId: "DS00Spx1CV902MCtPj5WknGlR102V5HFkDe", // Mountain biking video
     caption: "🚴‍♂️ Epic mountain biking trails! #mtb #adventure",
-    username: "adventureseeker",
+    username: "adventu",
     likes: 15420,
     comments: 234,
     shares: 89,
     userAvatar: "/avatars/user1.jpg",
-    music: "🎵 Adventure Time - Mountain Remix",
+    music: "🎵 Adventure Time ",
   },
   {
     id: "2",
@@ -62,6 +63,7 @@ const sampleVideos = [
 const ExplorePage: NextPage = () => {
   return (
     <div className="flex w-full justify-center">
+      <MuxVideoPreview  video={{...sampleVideos[0] , duration: 2.6 }} />
       <VideoFeed videos={sampleVideos} />
     </div>
   );
