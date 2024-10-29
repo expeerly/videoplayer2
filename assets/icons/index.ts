@@ -8,3 +8,5 @@ export { VideoIcon } from "./VideoIcon";
 export { TagIcon } from "./TagIcon";
 export { CartIcon } from "./CartIcon";
 export { WorldIcon } from "./WorldIcon";
+export {LeftArrowIcon} from "./LeftArrowIcon"
+export {RightArrowIcon} from "./RightArrowIcon"

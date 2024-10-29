@@ -11,12 +11,14 @@ import { title, subtitle } from "@/components/primitives";
 import { HeroSection } from "@/components/HeroSection";
 import { ThemeSwitch } from "@/components/theme-switch";
 import Slider from "@/components/Slider";
+import { DesktopSlider } from "@/components/DesktopSlider";
 
 export default function Home() {
   return (
     <div className="flex flex-col justify-center items-center">
       <HeroSection />
-      <Slider/>
+      {/* <Slider/> */}
+      <DesktopSlider/>
       <ProductReviews />
       <BrandSlider />
       <ProductReviewsCard />
