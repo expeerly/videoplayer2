@@ -36,7 +36,7 @@ export const VideoFeed: React.FC<VideoFeedProps> = ({ videos }) => {
   return (
     <div
       ref={feedRef}
-      className="h-[852px]  w-[392px] mx-auto overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
+      className="h-full w-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide overflow-x-hidden"
     >
       {videos.map((video, index) => (
         <VideoCard

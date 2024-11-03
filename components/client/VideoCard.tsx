@@ -1,8 +1,12 @@
-import React from "react";
+"use client";
+import React, { useCallback } from "react";
+import { useRouter } from "next/navigation";
 
-import { VideoPlayer } from "./VideoPlayer";
+import { VideoPlayer } from "../server/VideoPlayer";
+
 import { VideoActions } from "./VideoActions";
 import { VideoInfo } from "./VideoInfo";
+import VideoTags from "./VideoTags";
 
 import { Video } from "@/types";
 
@@ -12,23 +16,40 @@ interface VideoCardProps {
 }
 
 export const VideoCard: React.FC<VideoCardProps> = ({ video, isVisible }) => {
+  const router = useRouter();
+
+  const moreHandler = useCallback(() => {
+    router.push(
+      `/video-reviews/${video.category}/${video.brandName}/${video.productName}/${video.playbackId}`,
+    );
+  }, [router]);
+
   return (
-    <div className="relative h-full w-full snap-start bg-black">
-      <VideoPlayer isVisible={isVisible} playbackId={video.playbackId} />
+    <div className=" h-full w-full flex flex-col gap-3 snap-start items-center justify-center ">
+      <div className="hidden sm:flex ">
+        <VideoTags />
+      </div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40 pointer-events-none" />
-
-      <VideoInfo
-        caption={video.caption}
-        music={video.music}
-        username={video.username}
-      />
-
-      <VideoActions
-        comments={video.comments}
-        likes={video.likes}
-        shares={video.shares}
-      />
+      <div className="flex gap-2  justify-center  w-full h-full  sm:h-[90%] items-end">
+        <div className="relative h-full  flex bg-black">
+          <VideoPlayer isVisible={isVisible} playbackId={video.playbackId} />
+          <VideoInfo
+            brand={"Dyson"}
+            category={"Supersonic Professional"}
+            moreHandler={moreHandler}
+            rating={4.2}
+            video={video}
+          />
+        </div>
+        <div className="hidden sm:flex ">
+          <VideoActions
+            comments={video.comments}
+            likes={video.likes}
+            moreHandler={moreHandler}
+            shares={video.shares}
+          />
+        </div>
+      </div>
     </div>
   );
 };

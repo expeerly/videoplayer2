@@ -1,6 +1,6 @@
 import React, { FunctionComponent, SVGProps } from "react";
 
-export const CartIcon: FunctionComponent<SVGProps<SVGSVGElement>> = () => {
+export const CartIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
   return (
     <svg
       fill="none"
@@ -8,6 +8,7 @@ export const CartIcon: FunctionComponent<SVGProps<SVGSVGElement>> = () => {
       viewBox="0 0 28 28"
       width="28"
       xmlns="http://www.w3.org/2000/svg"
+      {...p}
     >
       <path
         d="M8.95049 26.1666C10.23 26.1666 11.2672 25.1294 11.2672 23.8499C11.2672 22.5704 10.23 21.5332 8.95049 21.5332C7.67101 21.5332 6.63379 22.5704 6.63379 23.8499C6.63379 25.1294 7.67101 26.1666 8.95049 26.1666Z"

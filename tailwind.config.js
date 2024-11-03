@@ -1,4 +1,4 @@
-import { colors, nextui } from "@nextui-org/theme";
+import { nextui } from "@nextui-org/theme";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -12,12 +12,16 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],
+        mulish: ["var(--font-mulish)"],
       },
-      colors:{
+      colors: {
         pink: {
-          500: '#FA0F9C'
-        }
-      }
+          500: "#FA0F9C",
+        },
+        grey: {
+          700: "#0E0E0F",
+        },
+      },
     },
   },
   darkMode: "class",

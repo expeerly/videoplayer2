@@ -9,20 +9,25 @@ import {
   StoreIcon,
 } from "@/assets/icons";
 
-const navItems = [
+export const navItems = [
   { key: "explore", name: "Explore", icon: BinocularsIcon, href: "explore" },
-  { key: "brands", name: "Brands", icon: StoreIcon, href: "brands" },
+  {
+    key: "brands",
+    name: "Brands",
+    icon: StoreIcon,
+    href: "video-reviews/brand",
+  },
   {
     key: "Categories",
     name: "Categories",
     icon: CategoriesIcon,
-    href: "categories",
+    href: "video-reviews/productcategory",
   },
   {
     key: "reviewers",
     name: "Reviewers",
     icon: SpeechBubbleIcon,
-    href: "reviewers",
+    href: "video-reviews/reviewers",
   },
 ];
 
@@ -30,7 +35,9 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className={` h-full w-[275px] border-e  hidden md:flex   `}>
+    <div
+      className={` h-full w-[200px] border-e  hidden md:flex sticky top-20  `}
+    >
       <nav className="p-4 mx-auto w-full">
         {navItems.map((item) => (
           <Link

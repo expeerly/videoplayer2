@@ -1,14 +1,17 @@
 import "@/styles/globals.css";
+import "slick-carousel/slick/slick.css";
+
 import { Metadata, Viewport } from "next";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
+import { mulish } from "@/config/fonts";
 import { Navbar } from "@/components/client/Navbar";
 import Sidebar from "@/components/client/Sidebar";
+import { BottomBar } from "@/components/client/BottomBar";
+import Footer from "@/components/server/Footer";
 
 export const metadata: Metadata = {
   title: {
@@ -35,31 +38,30 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning lang="en">
-      <head />
+      <head>
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+          rel="stylesheet"
+          type="text/css"
+        />
+      </head>
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
+          "min-h-screen bg-background font-mulish antialiased",
+          mulish.variable,
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
+        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+          <div className="relative flex flex-col h-screen overflow-hidden">
             <Navbar />
-            <main className="flex">
+            <main className="flex h-full">
               <Sidebar />
-              <div className="flex-1">{children}</div>
+              <div className="flex-1 relative overflow-auto h-[calc(100%-135px)] sm:h-[calc(100%-65px)]">
+                {children}
+              </div>
             </main>
-            <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-                title="nextui.org homepage"
-              >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">NextUI</p>
-              </Link>
-            </footer>
+            <Footer />
+            <BottomBar />
           </div>
         </Providers>
       </body>

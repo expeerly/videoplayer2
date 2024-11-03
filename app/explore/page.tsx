@@ -1,18 +1,21 @@
 import { NextPage } from "next";
 
 import { VideoFeed } from "@/components/client/VideoFeed";
+import { Video } from "@/types";
 
-const sampleVideos = [
+const sampleVideos: Video[] = [
   {
     id: "1",
     playbackId: "DS00Spx1CV902MCtPj5WknGlR102V5HFkDe", // Mountain biking video
     caption: "🚴‍♂️ Epic mountain biking trails! #mtb #adventure",
-    username: "adventureseeker",
+    username: "adventu",
     likes: 15420,
     comments: 234,
     shares: 89,
     userAvatar: "/avatars/user1.jpg",
-    music: "🎵 Adventure Time - Mountain Remix",
+    category: "Adventure",
+    brandName: "Dyson",
+    productName: "Supersonic",
   },
   {
     id: "2",
@@ -23,7 +26,9 @@ const sampleVideos = [
     comments: 445,
     shares: 167,
     userAvatar: "/avatars/user2.jpg",
-    music: "🎵 Ocean Waves - Surf Dreams",
+    category: "Adventure",
+    brandName: "Dyson",
+    productName: "Supersonic",
   },
   {
     id: "3",
@@ -34,7 +39,9 @@ const sampleVideos = [
     comments: 892,
     shares: 1204,
     userAvatar: "/avatars/user3.jpg",
-    music: "🎵 Dance With Me - Pop Hits",
+    category: "Adventure",
+    brandName: "Dyson",
+    productName: "Supersonic",
   },
   {
     id: "4",
@@ -45,7 +52,9 @@ const sampleVideos = [
     comments: 342,
     shares: 567,
     userAvatar: "/avatars/user4.jpg",
-    music: "🎵 City Lights - Urban Beats",
+    category: "Adventure",
+    brandName: "Dyson",
+    productName: "Supersonic",
   },
   {
     id: "5",
@@ -56,12 +65,14 @@ const sampleVideos = [
     comments: 423,
     shares: 234,
     userAvatar: "/avatars/user5.jpg",
-    music: "🎵 Kitchen Vibes - Cooking Mood",
+    category: "Adventure",
+    brandName: "Dyson",
+    productName: "Supersonic",
   },
 ];
 const ExplorePage: NextPage = () => {
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex w-full scrollbar-hide justify-center h-full  ">
       <VideoFeed videos={sampleVideos} />
     </div>
   );

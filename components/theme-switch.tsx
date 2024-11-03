@@ -8,7 +8,6 @@ import { useIsSSR } from "@react-aria/ssr";
 import clsx from "clsx";
 import { Moon, Sun } from "lucide-react";
 
-
 export interface ThemeSwitchProps {
   className?: string;
   classNames?: SwitchProps["classNames"];
@@ -34,7 +33,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     getWrapperProps,
   } = useSwitch({
     isSelected: theme === "light" || isSSR,
-    "aria-label": `Switch to ${theme === "light" || isSSR ? "dark" : "light"} mode`,
+    "aria-label": `Switch to ${theme === "light" || isSSR ? "light" : "light"} mode`,
     onChange,
   });
 
@@ -70,11 +69,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
           ),
         })}
       >
-        {!isSelected || isSSR ? (
-          <Sun size={22} />
-        ) : (
-          <Moon size={22} />
-        )}
+        {!isSelected || isSSR ? <Sun size={22} /> : <Moon size={22} />}
       </div>
     </Component>
   );

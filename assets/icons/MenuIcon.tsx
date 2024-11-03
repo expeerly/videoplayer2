@@ -13,11 +13,11 @@ export const MenuIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
       <mask
         className=""
         height="22"
+        id="mask0_1698_48100"
+        maskUnits="userSpaceOnUse"
         width="22"
         x="0"
         y="0"
-        id="mask0_1698_48100"
-        maskUnits="userSpaceOnUse"
       >
         <rect fill="#D9D9D9" height="22" width="22" />
       </mask>
