@@ -4,9 +4,9 @@ export const HeaderImage: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
   return (
     <svg
       fill="none"
-      height="full"
+      height="100%"
       viewBox="0 0 352 340"
-      width="full"
+      width="100%"
       xmlns="http://www.w3.org/2000/svg"
       {...p}
     >

@@ -38,7 +38,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
 
   // Handle mouse movement over the stars
   const handleMouseMove = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>, starIndex: number) => {
+    (event: React.MouseEvent<HTMLDivElement>, starIndex: number) => {
       if (!editable) return;
 
       const { left, width } = event.currentTarget.getBoundingClientRect();
@@ -70,7 +70,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLButtonElement>, starIndex: number) => {
+    (event: React.KeyboardEvent<HTMLDivElement>, starIndex: number) => {
       if (!editable) return;
 
       switch (event.key) {
@@ -124,21 +124,20 @@ export const StarRating: React.FC<StarRatingProps> = ({
       const isFocused = focusedStar === index;
 
       return (
-        <button
+        <div
           key={`star-rating-${index}`}
+          role="radio"
           aria-checked={showFullStar}
           aria-label={`${index + 1} of ${totalStars} stars`}
+          tabIndex={editable ? 0 : -1}
           className={`relative inline-flex items-center justify-center focus:outline-none ${
             isFocused ? "ring-2 ring-offset-2 ring-blue-400" : ""
-          }`}
-          disabled={!editable}
-          role="radio"
-          tabIndex={editable ? 0 : -1}
-          onBlur={() => setFocusedStar(null)}
+          } ${editable ? "cursor-pointer" : "cursor-default"}`}
           onClick={() => handleStarClick(index)}
-          onFocus={() => setFocusedStar(index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
           onMouseMove={(e) => handleMouseMove(e, index)}
+          onBlur={() => setFocusedStar(null)}
+          onFocus={() => setFocusedStar(index)}
         >
           {showFullStar ? (
             <Star
@@ -168,7 +167,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
               size={sizeMap[size].star}
             />
           )}
-        </button>
+        </div>
       );
     },
     [
@@ -188,22 +187,21 @@ export const StarRating: React.FC<StarRatingProps> = ({
   // Format rating display
   const displayRating = useMemo(() => {
     const displayValue = hoverRating || rating;
-
     return displayValue.toFixed(1);
   }, [hoverRating, rating]);
 
   return (
     <div
+      role="radiogroup"
       aria-label="Star rating"
       className={`flex items-center gap-1 ${sizeMap[size].container} ${className}`}
-      role="radiogroup"
       onMouseLeave={handleMouseLeave}
     >
       {[...Array(totalStars)].map((_, index) => renderStar(index))}
       {showRating && (
         <span
-          aria-live="polite"
           className={`ml-2 ${sizeMap[size].text} text-gray-600`}
+          aria-live="polite"
         >
           {displayRating}/{totalStars}
         </span>

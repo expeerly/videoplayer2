@@ -37,17 +37,17 @@ type Item = {
 };
 
 export const categroies = [
-  { label: "Arts & Crafts" },
-  { label: "Automobile" },
-  { label: "Baby & Child Care" },
-  { label: "Beauty & Personal Care" },
-  { label: "Books & Media" },
-  { label: "Clothes and Fashion" },
-  { label: "Electronics & Gadgets" },
-  { label: "Food & Beverages" },
-  { label: "Furniture & Decor" },
-  { label: "Gardening & Outdoor Living" },
-  { label: "Health & Wellness" },
+  { label: "Arts & Crafts", key: "arts-crafts" },
+  { label: "Automobile", key: "automobile" },
+  { label: "Baby & Child Care", key: "baby-care" },
+  { label: "Beauty & Personal Care", key: "beauty-care" },
+  { label: "Books & Media", key: "books-media" },
+  { label: "Clothes and Fashion", key: "fashion" },
+  { label: "Electronics & Gadgets", key: "electronics" },
+  { label: "Food & Beverages", key: "food" },
+  { label: "Furniture & Decor", key: "furniture" },
+  { label: "Gardening & Outdoor Living", key: "gardening" },
+  { label: "Health & Wellness", key: "health" },
 ];
 
 export const menuItems: Item[] = [
@@ -108,6 +108,7 @@ export const MenuDropdown: FunctionComponent = () => {
       setOpenDropdown(null);
     }
   };
+
   const navigationHandler = useCallback(
     (path: string) => {
       router.push("/" + path);
@@ -119,13 +120,93 @@ export const MenuDropdown: FunctionComponent = () => {
     setOpenDropdown(openDropdown === key ? null : key);
   };
 
-  const onClick = useCallback((item: Item) => {
+  const onClick = useCallback(
+    (item: Item) => {
+      if (item.items) {
+        toggleSubmenu(item.key);
+      } else if (item.href) {
+        navigationHandler(item.href);
+      }
+    },
+    [navigationHandler]
+  );
+
+  const renderMenuItem = (item: Item, index: number) => {
     if (item.items) {
-      toggleSubmenu(item.key);
-    } else {
-      navigationHandler(item.href!);
+      return (
+        <React.Fragment key={`${item.key}-${index}`}>
+          <Dropdown
+            isOpen={openDropdown === item.key}
+            offset={15}
+            placement="left-start"
+            radius="none"
+            onOpenChange={(isOpen) => handleDropdownOpenChange(isOpen, item.key)}
+          >
+            <DropdownTrigger>
+              <Button
+                className={`w-full justify-start text-left mb-1 text-transparent ${
+                  openDropdown === item.key ? "font-bold bg-gray-300" : ""
+                }`}
+                endContent={
+                  openDropdown === item.key ? (
+                    <ChevronDown className="!ml-auto" />
+                  ) : (
+                    <ChevronRight className="!ml-auto" />
+                  )
+                }
+                startContent={<item.icon className="w-4 h-4" />}
+                variant="light"
+              >
+                <span className="text-black">{item.label}</span>
+              </Button>
+            </DropdownTrigger>
+
+            <DropdownMenu className="w-64">
+              {item?.itemsLabel ? (
+                <DropdownSection>
+                  <DropdownItem
+                    key={`${item.key}-viewall`}
+                    className="text-pink-500 font-bold text-base"
+                    endContent={<ArrowRight />}
+                    onClick={() => item.href && navigationHandler(item.href)}
+                  >
+                    {item.itemsLabel}
+                  </DropdownItem>
+                </DropdownSection>
+              ) : <DropdownItem className="hidden" />}
+              <DropdownSection>
+                {item.items.map((subItem) => (
+                  <DropdownItem key={subItem.key || subItem.label} className="w-full">
+                    {subItem.label}
+                  </DropdownItem>
+                ))}
+              </DropdownSection>
+            </DropdownMenu>
+          </Dropdown>
+          {item.devider && (
+            <div key={`${item.key}-divider`} className="border-b border-default-200 my-2" />
+          )}
+        </React.Fragment>
+      );
     }
-  }, []);
+
+    return (
+      <React.Fragment key={`${item.key}-${index}`}>
+        <Button
+          className="w-full justify-start text-left mb-1 text-transparent"
+          radius="sm"
+          startContent={<item.icon />}
+          variant="light"
+          onClick={() => onClick(item)}
+        >
+          <span className="text-black">{item.label}</span>
+        </Button>
+        {item.devider && (
+          <div className="border-b border-default-200 my-2" />
+        )}
+      </React.Fragment>
+    );
+  };
 
   return (
     <Popover
@@ -141,79 +222,7 @@ export const MenuDropdown: FunctionComponent = () => {
       </PopoverTrigger>
       <PopoverContent className="w-64">
         <div className="py-2">
-          {menuItems.map((item, index) =>
-            item.items ? (
-              <Dropdown
-                key={`${item.key}-${index}-1`}
-                isOpen={openDropdown === item.key}
-                offset={15}
-                placement="left-start"
-                radius="none"
-                onOpenChange={(isOpen) =>
-                  handleDropdownOpenChange(isOpen, item.key)
-                }
-              >
-                <DropdownTrigger>
-                  <Button
-                    className={`w-full justify-start text-left mb-1 text-transparent ${
-                      openDropdown === item.key ? "font-bold bg-gray-300" : ""
-                    }`}
-                    endContent={
-                      openDropdown === item.key ? (
-                        <ChevronDown className="!ml-auto" />
-                      ) : (
-                        <ChevronRight className="!ml-auto" />
-                      )
-                    }
-                    startContent={<item.icon className="w-4 h-4" />}
-                    variant="light"
-                  >
-                    <span className="text-black">{item.label}</span>
-                  </Button>
-                </DropdownTrigger>
-
-                <DropdownMenu className="w-64">
-                  <DropdownSection>
-                    {item?.itemsLabel ? (
-                      <DropdownItem
-                        key={item.itemsLabel}
-                        className="text-pink-500 font-bold text-base"
-                        endContent={<ArrowRight />}
-                        onClick={() => navigationHandler(item?.href!)}
-                      >
-                        {item.itemsLabel}
-                      </DropdownItem>
-                    ) : (
-                      <DropdownItem className="hidden" />
-                    )}
-                  </DropdownSection>
-                  <DropdownSection>
-                    {item.items.map((subItem) => (
-                      <DropdownItem key={subItem.label} className="w-full">
-                        {subItem.label}
-                      </DropdownItem>
-                    ))}
-                  </DropdownSection>
-                </DropdownMenu>
-              </Dropdown>
-            ) : (
-              <>
-                <Button
-                  key={item.key + "button"}
-                  className="w-full justify-start text-left mb-1 text-transparent"
-                  radius="sm"
-                  startContent={<item.icon />}
-                  variant="light"
-                  onClick={() => onClick(item)}
-                >
-                  <span className="text-black">{item.label}</span>
-                </Button>
-                {item.devider && (
-                  <div className="border-b border-default-200 my-2" />
-                )}
-              </>
-            ),
-          )}
+          {menuItems.map((item, index) => renderMenuItem(item, index))}
         </div>
       </PopoverContent>
     </Popover>
