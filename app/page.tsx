@@ -1,3 +1,4 @@
+import { Logo } from "@/assets/Logo";
 import { Button } from "@/components/ui";
 
 export default function Home() {
