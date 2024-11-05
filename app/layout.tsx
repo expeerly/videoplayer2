@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
+import {
+  Mulish,
+} from "next/font/google";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -11,6 +16,13 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+});
+
+
+// Initialize the font with the subsets and weights you want to use
+ const mulish = Mulish({
+  subsets: ["latin"],
+  variable: "--font-mulish",
 });
 
 export const metadata: Metadata = {
@@ -26,9 +38,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${mulish.variable} antialiased`}
       >
-        {children}
+        <div className="relative flex flex-col h-screen overflow-hidden font-mulish">
+          <Navbar />
+          <main className="flex h-full">
+            <Sidebar/>
+            <div className="flex-1 relative overflow-auto h-[calc(100%-135px)] sm:h-[calc(100%-65px)]">
+              {children}
+            </div>
+          </main>
+        </div>
       </body>
     </html>
   );

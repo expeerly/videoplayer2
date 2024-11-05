@@ -7,7 +7,21 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
+        mulish: ["var(--font-mulish)"],
+      },
+      colors: {
+        pink: {
+          500: "#FA0F9C",
+        },
+        grey: {
+          700: "#0E0E0F",
+        },
+      },
+    },
   },
   plugins: [],
 };

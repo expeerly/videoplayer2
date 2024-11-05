@@ -73,7 +73,7 @@ export const Button = ({
           // Regular button sizes
           "text-sm px-4 py-1.5 gap-1.5": size === "sm" && !isOnlyIcon,
           "text-base px-6 py-2 gap-2": size === "md" && !isOnlyIcon,
-          "text-lg px-8 py-2.5 gap-2.5": size === "lg" && !isOnlyIcon,
+          "text-lg px-11 py-2 gap-2.5": size === "lg" && !isOnlyIcon,
 
           // Icon-only sizes (square aspect ratio)
           "p-1.5": size === "sm" && isOnlyIcon,
