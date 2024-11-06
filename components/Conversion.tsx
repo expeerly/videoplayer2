@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Slider } from "./Slider";
 import { MobileSlider } from "./ui/MobileSlider";
- 
 export const ConversionSlider:FunctionComponent = ()=> {
   return (
     <div className="w-full  bg-[#4B49EB] flex justify-center">
