@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Slider } from "./Slider";
 import { MobileSlider } from "./ui/MobileSlider";
 
-const ConversionSlider:FunctionComponent = ()=> {
+export const ConversionSlider:FunctionComponent = ()=> {
   return (
     <div className="w-full  bg-[#4B49EB] flex justify-center">
       <div className="bg-[#4B49EB] w-full sm:max-w-[1170px] flex flex-col justify-center items-center  gap-4 py-20 px-5">
