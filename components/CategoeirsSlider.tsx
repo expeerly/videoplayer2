@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import {Slider} from './Slider';
 import { MobileSlider } from './ui/MobileSlider';
 
-function CategoeirsSlider() {
+export const CategoeirsSlider: FunctionComponent = () => {
   return (
     <div className=' w-full sm:max-w-[1170px] flex flex-col justify-center items-center  gap-4 py-20 px-5'>
        <h1 className='font-extrabold text-2xl '>Explore Categories</h1>
@@ -15,7 +15,5 @@ function CategoeirsSlider() {
        </div>
        
     </div>
-  )
-}
-
-export default CategoeirsSlider;
+  );
+};
