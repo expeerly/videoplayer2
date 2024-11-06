@@ -31,7 +31,7 @@ export const navItems = [
 ];
 
 export default async function Sidebar() {
-  // Get the current pathname from headers instead of usePathname hook
+
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
 

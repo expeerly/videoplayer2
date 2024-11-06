@@ -1,6 +1,5 @@
 import Link from "next/link";
 import React, { FunctionComponent } from "react";
-import { Button } from "./ui";
 
 export const HowExpeerlyWorks: FunctionComponent = () => {
   return (
