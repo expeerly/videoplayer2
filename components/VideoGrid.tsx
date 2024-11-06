@@ -61,7 +61,7 @@ export const VideoGrid: FunctionComponent<ReviewGridProps> = ({
   description = false,
 }) => {
   return (
-    <div className=" max-w-[900px] py-10">
+    <div className="w-full sm:max-w-[900px] py-10 pl-3 lg:pl-0">
         <div>       
         <div className="mb-5">
           <ProfileCard  />

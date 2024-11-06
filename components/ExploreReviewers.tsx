@@ -61,8 +61,8 @@ export const ExpolreReviewers: FunctionComponent<ReviewGridProps> = ({
   description = true,
 }) => {
   return (
-    <div className=" max-w-[900px] py-10">
-        <h1 className=" sm:w-2/5 font-extrabold text-2xl text-[#0E0E0F]">Each Expeerly reviewer has 
+    <div className=" w-full  sm:max-w-[900px] py-10 pl-3 lg:pl-0">
+        <h1 className=" md:w-2/3 lg:w-2/5 font-extrabold text-2xl sm:text-start text-center text-[#0E0E0F]">Each Expeerly reviewer has 
         a personal story to share</h1>
         <div>       
         <div className="mb-5">
@@ -101,7 +101,9 @@ export const ExpolreReviewers: FunctionComponent<ReviewGridProps> = ({
           <VideoCard key={review.id} video={review} />
         ))}
       </div>
-      <Button size='lg' variant='primary' className="mt-10 font-bold">Explore All Reviewers</Button>
+      <div className="mr-3">
+      <Button size='lg' variant='primary' className="mt-10 font-bold sm:w-auto w-full">Explore All Reviewers</Button>
+      </div>
     </div>
     </div>
   );

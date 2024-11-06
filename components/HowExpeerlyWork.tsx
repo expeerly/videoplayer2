@@ -3,12 +3,12 @@ import React, { FunctionComponent } from "react";
 
 export const HowExpeerlyWorks: FunctionComponent = () => {
   return (
-    <div className="mt-10">
+    <div className="mt-10 p-3 sm:p-0">
       <div className="sm:w-[460px] w-auto mx-auto text-start sm:text-center mb-12">
         <h2 className="text-xl md:text-2xl text-center font-extrabold mb-4">
           How Expeerly works?
         </h2>
-        <p className="text-gray-600 mb-6 w-full sm:max-w-2xl mx-auto">
+        <p className="text-[#0E0E0F] mb-6 w-full sm:max-w-2xl mx-auto">
           Expeerly is a place for consumers to get insights about what other
           shoppers think of products and services. The video reviews are real
           and authentic shared by our community of reviewers from our globe.
