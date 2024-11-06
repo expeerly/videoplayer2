@@ -1,69 +1,64 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, FunctionComponent } from "react";
+import { SlideProps, SliderCard } from "./ui/SliderCard";
 
-interface Category {
-  id: number | string;
-  name: string;
-  icon: string;
-}
+type SliderProps = {
+  slides?: SlideProps[][];
+};
 
-interface CategorySliderProps {
-  categories?: Category[][];
-}
-
-const defaultCategories: Category[][] = [
+const defaultCategories: SlideProps[][] = [
   [
-    { id: 1, name: "Travel", icon: "✈️" },
-    { id: 2, name: "Automobile", icon: "🚗" },
-    { id: 3, name: "Health & Wellness", icon: "❤️" },
-    { id: 4, name: "Arts & Crafts", icon: "🎨" },
-    { id: 5, name: "Baby & Child Care", icon: "👶" },
-    { id: 6, name: "Home & Kitchen", icon: "🏠" },
-    { id: 7, name: "Beauty & Personal Care", icon: "💅" },
-    { id: 8, name: "Books & Media", icon: "📚" },
-    { id: 9, name: "Clothes and Fashion", icon: "👕" },
+    { name: "Travel", icon: "✈️" },
+    { name: "Automobile", icon: "🚗" },
+    { name: "Health & Wellness", icon: "❤️" },
+    { name: "Arts & Crafts", icon: "🎨" },
+    { name: "Baby & Child Care", icon: "👶" },
+    { name: "Home & Kitchen", icon: "🏠" },
+    { name: "Beauty & Personal Care", icon: "💅" },
+    { name: "Books & Media", icon: "📚" },
+    { name: "Clothes and Fashion", icon: "👕" },
   ],
   [
-    { id: 1, name: "Travel", icon: "✈️" },
-    { id: 2, name: "Automobile", icon: "🚗" },
-    { id: 3, name: "Health & Wellness", icon: "❤️" },
-    { id: 4, name: "Arts & Crafts", icon: "🎨" },
-    { id: 5, name: "Baby & Child Care", icon: "👶" },
-    { id: 6, name: "Home & Kitchen", icon: "🏠" },
-    { id: 7, name: "Beauty & Personal Care", icon: "💅" },
-    { id: 8, name: "Books & Media", icon: "📚" },
-    { id: 9, name: "Clothes and Fashion", icon: "👕" },
-    { id: 1, name: "Travel", icon: "✈️" },
-    { id: 2, name: "Automobile", icon: "🚗" },
-    { id: 3, name: "Health & Wellness", icon: "❤️" },
-    { id: 4, name: "Arts & Crafts", icon: "🎨" },
-    { id: 5, name: "Baby & Child Care", icon: "👶" },
-    { id: 6, name: "Home & Kitchen", icon: "🏠" },
-    { id: 7, name: "Beauty & Personal Care", icon: "💅" },
-    { id: 8, name: "Books & Media", icon: "📚" },
-    { id: 9, name: "Clothes and Fashion", icon: "👕" },
+    { name: "Travel", icon: "✈️" },
+    { name: "Automobile", icon: "🚗" },
+    { name: "Health & Wellness", icon: "❤️" },
+    { name: "Arts & Crafts", icon: "🎨" },
+    { name: "Baby & Child Care", icon: "👶" },
+    { name: "Home & Kitchen", icon: "🏠" },
+    { name: "Beauty & Personal Care", icon: "💅" },
+    { name: "Books & Media", icon: "📚" },
+    { name: "Clothes and Fashion", icon: "👕" },
+    { name: "Travel", icon: "✈️" },
+    { name: "Automobile", icon: "🚗" },
+    { name: "Health & Wellness", icon: "❤️" },
+    { name: "Arts & Crafts", icon: "🎨" },
+    { name: "Baby & Child Care", icon: "👶" },
+    { name: "Home & Kitchen", icon: "🏠" },
+    { name: "Beauty & Personal Care", icon: "💅" },
+    { name: "Books & Media", icon: "📚" },
+    { name: "Clothes and Fashion", icon: "👕" },
   ],
 ];
 
-const CategorySlider: React.FC<CategorySliderProps> = ({
-  categories = defaultCategories,
+export const Slider: FunctionComponent<SliderProps> = ({
+  slides = defaultCategories,
 }) => {
-  const [positions, setPositions] = useState<number[]>(categories.map(() => 0));
+  const [positions, setPositions] = useState<number[]>(slides.map(() => 0));
   const [isTransitioning, setIsTransitioning] = useState<boolean[]>(
-    categories.map(() => false)
+    slides.map(() => false)
   );
   const containerRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  const extendedCategories = categories.map((row) => [...row, ...row, ...row]);
+  const extendedslides = slides.map((row) => [...row, ...row, ...row]);
 
   useEffect(() => {
-    rowRefs.current = rowRefs.current.slice(0, categories.length);
+    rowRefs.current = rowRefs.current.slice(0, slides.length);
 
     rowRefs.current.forEach((rowRef, index) => {
       if (rowRef) {
-        const rowWidth = categories[index].length * (160 + 8);
+        const rowWidth = slides[index].length * (160 + 8);
         rowRef.style.transform = `translateX(-${rowWidth}px)`;
         setPositions((prev) => {
           const newPositions = [...prev];
@@ -72,11 +67,11 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
         });
       }
     });
-  }, [categories]);
+  }, [slides]);
 
   const handleTransitionEnd = (rowIndex: number) => {
     const currentPosition = positions[rowIndex];
-    const rowLength = categories[rowIndex].length;
+    const rowLength = slides[rowIndex].length;
     const rowWidth = rowLength * (160 + 8);
 
     if (currentPosition <= -rowWidth * 2) {
@@ -117,30 +112,33 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-7xl mx-auto px-8">
+    <div ref={containerRef} className="relative w-full max-w-7xl mx-auto ">
+      <div className=" flex justify-center items-center absolute w-40 h-full left-0 top-1/2 -translate-y-1/2 z-10  bg-[linear-gradient(90deg,_#FFFFFF_40.5%,_rgba(255,255,255,0)_100%)]">
+        <button
+          onClick={() => scroll("right")}
+          className=" bg-white rounded-full shadow-md p-1 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Previous"
+        >
+          {"<"}
+        </button>
+      </div>
 
+      <div className=" flex justify-center items-center absolute w-40 h-full right-0 top-1/2 -translate-y-1/2 z-10  bg-[linear-gradient(270deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]">
+        <button
+          onClick={() => scroll("left")}
+          className=" bg-white rounded-full shadow-md p-1 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Next"
+        >
+          {">"}
+        </button>
+      </div>
 
-      <button
-        onClick={() => scroll("right")}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Previous"
-      >
-        {"<"}
-      </button>
-
-      <button
-        onClick={() => scroll("left")}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Next"
-      >
-        {">"}
-      </button>
       <div className="space-y-4">
-        {categories.map((_, rowIndex) => (
+        {slides.map((_, rowIndex) => (
           <div key={rowIndex} className="overflow-hidden mx-8">
             <div
               ref={(el) => setRowRef(el, rowIndex)}
-              className="inline-flex gap-2"
+              className="inline-flex gap-4"
               style={{
                 transform: `translateX(${positions[rowIndex]}px)`,
                 transition: isTransitioning[rowIndex]
@@ -149,14 +147,8 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
               }}
               onTransitionEnd={() => handleTransitionEnd(rowIndex)}
             >
-              {extendedCategories[rowIndex].map((category, index) => (
-                <button
-                  key={`${category.id}-${index}`}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 whitespace-nowrap flex-shrink-0"
-                >
-                  <span className="text-lg">{category.icon}</span>
-                  <span className="text-sm text-gray-700">{category.name}</span>
-                </button>
+              {extendedslides[rowIndex].map((category, index) => (
+                <SliderCard key={index} {...category} />
               ))}
             </div>
           </div>
@@ -165,5 +157,3 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
     </div>
   );
 };
-
-export default CategorySlider;
