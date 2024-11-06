@@ -56,14 +56,11 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  // Create arrays with duplicated items for infinite scroll
   const extendedCategories = categories.map((row) => [...row, ...row, ...row]);
 
   useEffect(() => {
-    // Initialize refs array
     rowRefs.current = rowRefs.current.slice(0, categories.length);
 
-    // Initialize each row's position to show the middle set
     rowRefs.current.forEach((rowRef, index) => {
       if (rowRef) {
         const rowWidth = categories[index].length * (160 + 8);
@@ -114,14 +111,14 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
   const scroll = (direction: "left" | "right") => {
     const increment = direction === "left" ? 300 : -300;
 
-    // Update all rows simultaneously
+
     setIsTransitioning((prev) => prev.map(() => true));
     setPositions((prev) => prev.map((pos) => pos + increment));
   };
 
   return (
     <div ref={containerRef} className="relative w-full max-w-7xl mx-auto px-8">
-      {/* Single pair of navigation buttons */}
+
 
       <button
         onClick={() => scroll("right")}
@@ -138,8 +135,6 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
       >
         {">"}
       </button>
-
-      {/* Multiple rows */}
       <div className="space-y-4">
         {categories.map((_, rowIndex) => (
           <div key={rowIndex} className="overflow-hidden mx-8">
