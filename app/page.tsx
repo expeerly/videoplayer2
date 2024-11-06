@@ -2,7 +2,8 @@ import { HeroSection } from "@/components/HeroSection";
 import { ExpolreReviewers } from "@/components/ExploreReviewers";
 import { HowExpeerlyWorks } from "@/components/HowExpeerlyWork";
 import Footer from "@/components/Footer";
-import Slider from "@/components/Slider";
+import { Slider } from "@/components/Slider";
+import { MobileSlider } from "@/components/ui/MobileSlider";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <HeroSection />
       <ExpolreReviewers />
       <Slider />
+      <MobileSlider />
       <HowExpeerlyWorks />
       <Footer />
     </div>
