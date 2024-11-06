@@ -15,12 +15,9 @@ export const HeroSection: FunctionComponent = () => {
       }}
       className="w-full h-[320px] z-0 sm:h-[400px] md:h-[500px] lg:h-[450px] flex items-center justify-bottom relative"
     >
-      {/* Header Image */}
       <div className="absolute h-[250px] w-[250px] top-11 sm:top-6 md:top-16 md:w-[400px] md:h-[300px] lg:top-18 left-1/2 transform -translate-x-1/2 flex justify-center">
         <HeaderImage />
       </div>
-
-      {/* Main Content */}
       <div className="w-[80%]  flex flex-col gap-2 text-center md:w-[75%] lg:w-[78%] mx-auto z-50 items-center text-white">
         <div className="flex flex-col justify-start -mt-16 md:-mt-20">
           <img
