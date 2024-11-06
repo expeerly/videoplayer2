@@ -2,10 +2,28 @@
 
 import React, { useState, useRef, useEffect, FunctionComponent } from "react";
 import { SlideProps, SliderCard } from "./ui/SliderCard";
+import clsx from "clsx";
 
 type SliderProps = {
   slides?: SlideProps[][];
+  classNameStyle?: {
+    leftButtonClassName?: string;
+    rightButtonClassName?: string;
+    cardClassName?: string;
+  };
 };
+
+// Constants for base classes
+const BUTTON_CONTAINER_BASE_CLASSES = clsx(
+  "flex justify-center items-center",
+  "absolute w-40 h-full top-1/2 -translate-y-1/2 z-10"
+);
+
+const BUTTON_BASE_CLASSES = clsx(
+  "bg-white rounded-full shadow-md p-1",
+  "hover:bg-gray-50",
+  "focus:outline-none focus:ring-2 focus:ring-blue-500"
+);
 
 const defaultCategories: SlideProps[][] = [
   [
@@ -43,6 +61,7 @@ const defaultCategories: SlideProps[][] = [
 
 export const Slider: FunctionComponent<SliderProps> = ({
   slides = defaultCategories,
+  classNameStyle,
 }) => {
   const [positions, setPositions] = useState<number[]>(slides.map(() => 0));
   const [isTransitioning, setIsTransitioning] = useState<boolean[]>(
@@ -52,6 +71,32 @@ export const Slider: FunctionComponent<SliderProps> = ({
   const rowRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const extendedslides = slides.map((row) => [...row, ...row, ...row]);
+
+  // Helper functions for dynamic classes
+  const getNavigationButtonContainerClasses = (
+    direction: "left" | "right",
+    customClassName?: string
+  ) => {
+    const gradientDirection =
+      direction === "left"
+        ? "bg-[linear-gradient(90deg,_#FFFFFF_40.5%,_rgba(255,255,255,0)_100%)]"
+        : "bg-[linear-gradient(270deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]";
+
+    return clsx(
+      BUTTON_CONTAINER_BASE_CLASSES,
+      gradientDirection,
+      direction === "left" ? "left-0" : "right-0",
+      customClassName
+    );
+  };
+
+  const getSlideRowStyles = (rowIndex: number) => ({
+    transform: `translateX(${positions[rowIndex]}px)`,
+    transition: clsx({
+      "transform 0.3s ease-in-out": isTransitioning[rowIndex],
+      none: !isTransitioning[rowIndex],
+    }),
+  });
 
   useEffect(() => {
     rowRefs.current = rowRefs.current.slice(0, slides.length);
@@ -74,18 +119,7 @@ export const Slider: FunctionComponent<SliderProps> = ({
     const rowLength = slides[rowIndex].length;
     const rowWidth = rowLength * (160 + 8);
 
-    if (currentPosition <= -rowWidth * 2) {
-      setIsTransitioning((prev) => {
-        const newState = [...prev];
-        newState[rowIndex] = false;
-        return newState;
-      });
-      setPositions((prev) => {
-        const newPositions = [...prev];
-        newPositions[rowIndex] = -rowWidth;
-        return newPositions;
-      });
-    } else if (currentPosition >= 0) {
+    if (currentPosition <= -rowWidth * 2 || currentPosition >= 0) {
       setIsTransitioning((prev) => {
         const newState = [...prev];
         newState[rowIndex] = false;
@@ -105,50 +139,64 @@ export const Slider: FunctionComponent<SliderProps> = ({
 
   const scroll = (direction: "left" | "right") => {
     const increment = direction === "left" ? 300 : -300;
-
-    // Update all rows simultaneously
     setIsTransitioning((prev) => prev.map(() => true));
     setPositions((prev) => prev.map((pos) => pos + increment));
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-7xl mx-auto ">
-      <div className=" flex justify-center items-center absolute w-40 h-full left-0 top-1/2 -translate-y-1/2 z-10  bg-[linear-gradient(90deg,_#FFFFFF_40.5%,_rgba(255,255,255,0)_100%)]">
+    <div ref={containerRef} className="relative w-full max-w-7xl mx-auto">
+      {/* Left Navigation Button */}
+      <div
+        className={getNavigationButtonContainerClasses(
+          "left",
+          classNameStyle?.leftButtonClassName
+        )}
+      >
         <button
           onClick={() => scroll("right")}
-          className=" bg-white rounded-full shadow-md p-1 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={BUTTON_BASE_CLASSES}
           aria-label="Previous"
         >
           {"<"}
         </button>
       </div>
 
-      <div className=" flex justify-center items-center absolute w-40 h-full right-0 top-1/2 -translate-y-1/2 z-10  bg-[linear-gradient(270deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]">
+      {/* Right Navigation Button */}
+      <div
+        className={getNavigationButtonContainerClasses(
+          "right",
+          classNameStyle?.rightButtonClassName
+        )}
+      >
         <button
           onClick={() => scroll("left")}
-          className=" bg-white rounded-full shadow-md p-1 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={BUTTON_BASE_CLASSES}
           aria-label="Next"
         >
           {">"}
         </button>
       </div>
 
+      {/* Slides Container */}
       <div className="space-y-4">
         {slides.map((_, rowIndex) => (
           <div key={rowIndex} className="overflow-hidden mx-8">
             <div
               ref={(el) => setRowRef(el, rowIndex)}
               className="inline-flex gap-4"
-              style={{
-                transform: `translateX(${positions[rowIndex]}px)`,
-                transition: isTransitioning[rowIndex]
-                  ? "transform 0.3s ease-in-out"
-                  : "none",
-              }}
+              style={getSlideRowStyles(rowIndex)}
               onTransitionEnd={() => handleTransitionEnd(rowIndex)}
             >
-              {extendedslides[rowIndex].map((category, index) => (
-                <SliderCard key={index} {...category} />
+              {[
+                ...extendedslides[rowIndex],
+                ...extendedslides[rowIndex],
+                ...extendedslides[rowIndex],
+              ].map((category, index) => (
+                <SliderCard
+                  key={`${category.name}-${index}`}
+                  data={{ ...category }}
+                  className={classNameStyle?.cardClassName}
+                />
               ))}
             </div>
           </div>
