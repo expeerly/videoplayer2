@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
+import {Navbar} from "@/components/Navbar";
+import {Sidebar} from "@/components/Sidebar";
 import {
   Mulish,
 } from "next/font/google";
@@ -44,7 +44,7 @@ export default function RootLayout({
           <Navbar />
           <main className="flex h-full">
             <Sidebar/>
-            <div className="flex-1 relative overflow-auto h-[calc(100%-135px)] sm:h-[calc(100%-65px)]">
+            <div className="flex-1 -z-10 relative overflow-auto h-[calc(100%-135px)] sm:h-[calc(100%-65px)]">
               {children}
             </div>
           </main>

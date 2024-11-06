@@ -13,7 +13,7 @@ export const HeroSection: FunctionComponent = () => {
         backgroundSize: "cover",
         backgroundPosition: "bottom",
       }}
-      className="w-full h-[320px] sm:h-[400px] md:h-[500px] lg:h-[450px] flex items-center justify-bottom relative"
+      className="w-full h-[320px] z-0 sm:h-[400px] md:h-[500px] lg:h-[450px] flex items-center justify-bottom relative"
     >
       {/* Header Image */}
       <div className="absolute h-[250px] w-[250px] top-11 sm:top-6 md:top-16 md:w-[400px] md:h-[300px] lg:top-18 left-1/2 transform -translate-x-1/2 flex justify-center">

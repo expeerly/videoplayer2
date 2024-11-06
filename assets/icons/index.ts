@@ -16,3 +16,4 @@ export { TagIcon } from "./TagIcon";
 export { VideoIcon } from "./VideoIcon";
 export { WorldIcon } from "./WorldIcon";
 export {DownArrowIcon} from './DownArrowIcon'
+export {ArrowRightIcon} from './ArrowRightIcon'

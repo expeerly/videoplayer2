@@ -1,6 +1,3 @@
-import { Logo } from "@/assets/Logo";
-import { Button } from "@/components/ui";
-import Navbar from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 
 export default function Home() {

@@ -7,6 +7,7 @@ import {
   SpeechBubbleIcon,
   StoreIcon,
 } from "@/assets/icons";
+import { FunctionComponent } from "react";
 
 export const navItems = [
   { key: "explore", name: "Explore", icon: BinocularsIcon, href: "explore" },
@@ -30,7 +31,7 @@ export const navItems = [
   },
 ];
 
-export default async function Sidebar() {
+export  const Sidebar:FunctionComponent =async () => {
   // Get the current pathname from headers instead of usePathname hook
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
