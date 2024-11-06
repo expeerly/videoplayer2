@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { BrandsSlider } from "@/components/BrandsSlider";
 import { VideoGrid } from "@/components/VideoGrid";
 import { CategoeirsSlider } from "@/components/CategoeirsSlider";
-import ConversionSlider from "@/components/Conversion";
+import { ConversionSlider } from "@/components/Conversion";
 
 export default function Home() {
   return (
