@@ -3,8 +3,8 @@ import { FunctionComponent, SVGProps } from "react";
 export const HeaderImage: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
   return (
     <svg
-      width="full"
-      height="full"
+      width="100%"
+      height="100%"
       viewBox="0 0 352 340"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

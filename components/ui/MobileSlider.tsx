@@ -64,7 +64,6 @@ const createSlideClasses = (isReverse: boolean) =>
     "animate-marquee": !isReverse,
     "animate-marquee-reverse": isReverse,
   });
-
 export const MobileSlider: FunctionComponent<Props> = ({
   slides = brands,
   styleClassNames,
