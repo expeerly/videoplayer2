@@ -64,8 +64,8 @@ export const BrandsSlider: FunctionComponent = () => {
             cardClassName:'bg-white'
           }} />
         </div>
-        <div className="px-3 w-full">
-        <button className=" bg-white mt-10 text-black font-bold w-full sm:w-auto rounded-full py-3 px-7">
+        <div className="px-3 w-full flex justify-center">
+        <button className=" bg-white mt-10 mx-auto text-black font-bold w-full sm:w-auto rounded-full py-3 px-7">
           Get Video Reviewed
         </button>
         </div>
