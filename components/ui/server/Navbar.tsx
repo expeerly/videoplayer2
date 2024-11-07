@@ -8,7 +8,7 @@ import { defaultMenuItems } from "../../../app/components/client/DropDownMenu";
 export const Navbar:FunctionComponent = () => {
   return (
     <div className="flex z-40 flex-row w-full bg-white justify-between py-5 px-10 border-b sticky top-0">
-      <Link href="/">
+      <Link href={'/'}>
         <Logo />
       </Link>
       <div className="hidden md:flex">

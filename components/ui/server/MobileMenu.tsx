@@ -1,47 +1,46 @@
-"use client"
+"use client";
 
-import { FunctionComponent, useCallback, useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Logo } from "@/assets/Logo"
-import { MenuIcon } from "@/assets/icons"
+import { FunctionComponent, useCallback, useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { Logo } from "@/assets/Logo";
+import { MenuIcon } from "@/assets/icons";
 
 interface MenuItem {
-  key: string
-  label: string
-  href?: string
-  devider?: boolean
-  items?: Array<{ label: string }>
-  itemsLabel?: string
+  key: string;
+  label: string;
+  href?: string;
+  devider?: boolean;
+  items?: Array<{ label: string }>;
+  itemsLabel?: string;
 }
 
 interface MobileMenuProps {
-  menuItems: MenuItem[]
+  menuItems: MenuItem[];
 }
 
 export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
   menuItems,
 }: MobileMenuProps) => {
-  const router = useRouter()
-  const [isOpen, setIsOpen] = useState(false)
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
 
   const toggleSubmenu = (key: string) => {
-    setActiveSubmenu(activeSubmenu === key ? null : key)
-  }
+    setActiveSubmenu(activeSubmenu === key ? null : key);
+  };
 
   const navigationHandler = useCallback(
     (path: string) => {
-      router.push("/" + path)
-      setIsOpen(false)
-      setActiveSubmenu(null)
+      router.push(path);
+      setIsOpen(false);
+      setActiveSubmenu(null);
     },
     [router]
-  )
+  );
 
   return (
     <>
-      {/* Menu Toggle Button */}
       <button
         onClick={() => setIsOpen(true)}
         className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
@@ -121,7 +120,9 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
                       <div className="mt-2 space-y-2 bg-white p-6 rounded-md">
                         {item.itemsLabel && (
                           <button
-                            onClick={() => item?.href && navigationHandler(item?.href)}
+                            onClick={() =>
+                              item?.href && navigationHandler(item?.href)
+                            }
                             className="w-full text-left py-2 flex flex-row gap-3 text-pink-500 font-bold text-base"
                           >
                             {item.itemsLabel}
@@ -178,5 +179,5 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
         </div>
       )}
     </>
-  )
-}
+  );
+};
