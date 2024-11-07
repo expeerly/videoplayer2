@@ -15,7 +15,7 @@ export const BottomBar = () => {
           key={item.name}
           className={`flex w-full justify-center items-center py-2 px-4 gap-2 rounded transition-all duration-200 
             hover:bg-gray-100 hover:text-black focus:outline-none
-            ${pathname.includes(item.href) ? "bg-gray-100 text-black" : "text-gray-500"}`}
+            ${pathname.includes(item.href) ? "bg-gray-100 text-black" : "text-transparent"}`}
           href={`/${item.href}`}
         >
           <item.icon className="w-5 h-5" />

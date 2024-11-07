@@ -118,7 +118,7 @@ export const DropDownMenu:FunctionComponent<DropDownMenuProps>=  ({
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative z-[9999999] ${className}`}>
       <button
         onClick={toggleMenu}
         className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"

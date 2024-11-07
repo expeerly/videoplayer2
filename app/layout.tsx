@@ -6,6 +6,8 @@ import {Sidebar} from "@/components/Sidebar";
 import {
   Mulish,
 } from "next/font/google";
+import Footer from "@/components/Footer";
+import BottomBar from "@/components/BottomBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,14 +42,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${mulish.variable} antialiased`}
       >
-        <div className="relative flex flex-col h-screen overflow-hidden font-mulish">
+        <div className=" flex flex-col h-screen overflow-hidden font-mulish">
           <Navbar />
-          <main className="flex h-full">
+          <main className="flex h-[calc(100%-135px)] sm:h-[calc(100%-65px)]">
             <Sidebar/>
-            <div className="flex-1 -z-10 relative overflow-auto h-[calc(100%-135px)] sm:h-[calc(100%-65px)]">
+            <div className="flex-1 relative overflow-auto h-full">
               {children}
             </div>
           </main>
+          <Footer/>
+          <BottomBar/>
         </div>
       </body>
     </html>

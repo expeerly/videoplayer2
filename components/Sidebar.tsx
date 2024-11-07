@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { headers } from "next/headers";
+// Sidebar.tsx
+import { FunctionComponent } from "react";
+import {ActiveLink} from "../components/client/ActiveLink";
 
 import {
   BinocularsIcon,
@@ -7,52 +8,48 @@ import {
   SpeechBubbleIcon,
   StoreIcon,
 } from "@/assets/icons";
-import { FunctionComponent } from "react";
 
 export const navItems = [
-  { key: "explore", name: "Explore", icon: BinocularsIcon, href: "explore" },
+  { key: "explore", name: "Explore", icon: BinocularsIcon, href: "/explore" },
   {
     key: "brands",
     name: "Brands",
     icon: StoreIcon,
-    href: "video-reviews/brand",
+    href: "/video-reviews/brand",
   },
   {
     key: "Categories",
     name: "Categories",
     icon: CategoriesIcon,
-    href: "video-reviews/productcategory",
+    href: "/video-reviews/productcategory",
   },
   {
     key: "reviewers",
     name: "Reviewers",
     icon: SpeechBubbleIcon,
-    href: "video-reviews/reviewers",
+    href: "/video-reviews/reviewers",
   },
 ];
 
-export  const Sidebar:FunctionComponent =async () => {
-  // Get the current pathname from headers instead of usePathname hook
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") || "";
-
+export const Sidebar: FunctionComponent = () => {
   return (
     <div className="h-full w-[200px] border-e hidden md:flex sticky top-20">
       <nav className="p-4 mx-auto w-full">
-        {navItems.map((item) => (
-          <Link
-            key={item.name}
-            href={`/${item.href}`}
-            className={`flex w-full justify-start items-center py-2 px-4 gap-2 group text-transparent rounded transition-colors duration-200
-               hover:bg-[#F7F7F7] hover:text-black focus:ring-0 ${
-                 pathname.includes(item.href) && "bg-[#F7F7F7] text-black"
-               }`}
-          >
-            <item.icon />
-            <span className="text-black">{item.name}</span>
-          </Link>
-        ))}
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <ActiveLink
+              key={item.name}
+              href={item.href}
+              className="flex w-full justify-start items-center py-2 px-4 gap-2 group text-transparent rounded transition-colors duration-200 hover:bg-[#F7F7F7] hover:text-black focus:ring-0"
+            >
+              <Icon />
+              <span className="text-black">{item.name}</span>
+            </ActiveLink>
+          );
+        })}
       </nav>
     </div>
   );
-}
+};
+
