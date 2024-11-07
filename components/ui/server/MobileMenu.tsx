@@ -2,7 +2,7 @@
 
 import { FunctionComponent, useCallback, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Logo } from "@/assets/Logo";
 import { MenuIcon } from "@/assets/icons";
 
