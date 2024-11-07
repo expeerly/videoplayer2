@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, FunctionComponent } from "react";
-import { SlideProps, SliderCard } from "./ui/SliderCard";
+import { SlideProps, SliderCard } from "./SliderCard";
 import clsx from "clsx";
 import { LeftArrowIcon, RightArrowIcon } from "@/assets/icons";
 

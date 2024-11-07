@@ -2,9 +2,14 @@ import React, { FunctionComponent } from "react";
 import Quets from "@/assets/“.svg";
 import BgImage from "@/assets/BG.svg";
 import { HeaderImage } from "@/assets/HeaderImage";
-import { DownArrowIcon } from "@/assets/icons";
+import { ScrollButton } from "./client/ScrollButton";
+import Image from "next/image";
 
-export const HeroSection: FunctionComponent = () => {
+type HeroSectionProps = {
+  nextSectionId: string;
+}
+
+export const HeroSection: FunctionComponent<HeroSectionProps> = ({nextSectionId }) => {
   return (
     <div
       style={{
@@ -20,7 +25,7 @@ export const HeroSection: FunctionComponent = () => {
       </div>
       <div className="w-[80%]  flex flex-col gap-2 text-center md:w-[75%] lg:w-[78%] mx-auto z-50 items-center text-white">
         <div className="flex flex-col justify-start -mt-16 md:-mt-20">
-          <img
+          <Image
             src={Quets.src}
             alt="Quote"
             width={24}
@@ -36,9 +41,10 @@ export const HeroSection: FunctionComponent = () => {
           Explorez les derniers avis vidéos, de vos marques et produits
           préférés.
         </p>
-        <div className="bg-white rounded-full p-3 bottom-14 absolute justify-center md:bottom-44 ml-5 md:ml-3 lg:bottom-32">
-      <DownArrowIcon height={14} width={14}/>
-      </div>
+        <ScrollButton 
+          targetSectionId={nextSectionId}
+          className="absolute bottom-14 md:bottom-44 ml-5 md:ml-3 lg:bottom-32"
+        />
       </div>
       
     </div>

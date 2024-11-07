@@ -18,7 +18,6 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-// Initialize the font with the subsets and weights you want to use
 const mulish = Mulish({
   subsets: ["latin"],
   variable: "--font-mulish",
