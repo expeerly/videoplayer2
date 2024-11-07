@@ -3,6 +3,7 @@ import Quets from "@/assets/“.svg";
 import BgImage from "@/assets/BG.svg";
 import { HeaderImage } from "@/assets/HeaderImage";
 import { ScrollButton } from "./client/ScrollButton";
+import Image from "next/image";
 
 type HeroSectionProps = {
   nextSectionId: string;
@@ -24,7 +25,7 @@ export const HeroSection: FunctionComponent<HeroSectionProps> = ({nextSectionId 
       </div>
       <div className="w-[80%]  flex flex-col gap-2 text-center md:w-[75%] lg:w-[78%] mx-auto z-50 items-center text-white">
         <div className="flex flex-col justify-start -mt-16 md:-mt-20">
-          <img
+          <Image
             src={Quets.src}
             alt="Quote"
             width={24}
