@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import {
   ArrowRightIcon,
   BinocularsIcon,
@@ -99,7 +99,21 @@ export const DropDownMenu:FunctionComponent<DropDownMenuProps>=  ({
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
  
+  const menuRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+        setOpenSubmenuKey(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
@@ -111,14 +125,8 @@ export const DropDownMenu:FunctionComponent<DropDownMenuProps>=  ({
     setOpenSubmenuKey(openSubmenuKey === key ? null : key);
   };
 
-  const handleItemClick = (href: string | undefined) => {
-    if (href) {
-      window.location.href = href;
-    }
-  };
-
   return (
-    <div className={`relative z-[9999999] ${className}`}>
+    <div className={`relative z-[9999999] ${className}`} ref={menuRef}>
       <button
         onClick={toggleMenu}
         className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
@@ -154,20 +162,18 @@ export const DropDownMenu:FunctionComponent<DropDownMenuProps>=  ({
                     </button>
                     {openSubmenuKey === item.key && (
                       <div className="absolute -left-64 top-0 w-64 bg-white rounded-md shadow-lg py-1  border border-gray-100">
-                        <ul>
-                          {item?.itemsLabel ? (
-                            <div
+           
+                          {item.itemsLabel &&(
+                            <Link
                               key={item.itemsLabel}
-                              onClick={() => handleItemClick(item.href)}
+                              href={`${item.href}`}
                               className="text-pink-500 cursor-pointer font-bold text-base flex flex-row w-full text-left px-4 py-2 gap-3 items-center"
                             >
                               {item.itemsLabel}
                               <ArrowRightIcon/>
-                            </div>
-                          ) : (
-                            <div className="hidden"></div>
+                            </Link>
                           )}
-                        </ul>
+              
                         <ul>
                           {item.items.map((subItem, index) => (
                             <li key={index}>
@@ -185,9 +191,8 @@ export const DropDownMenu:FunctionComponent<DropDownMenuProps>=  ({
                   </div>
                 ) : (
                   <Link
-                    onClick={() => handleItemClick(item.href)}
                     className="w-full flex items-center text-transparent hover:text-black hover:bg-[#F7F7F7] px-4 py-2 gap-4  transition-colors duration-200"
-                    href={""}
+                    href={`${item.href}`}
                   >
                     <item.icon />
                     <span className="text-black">{item.label}</span>

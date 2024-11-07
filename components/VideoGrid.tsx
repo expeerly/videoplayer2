@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { VideoCard } from "./VideoCard";
+import { ReviewCard } from "./VideoCard";
 import ProfileCard from "./ProfileCard";
 import VideoCardBg from "@/assets/videoCardBg";
 
@@ -9,7 +9,6 @@ type ReviewGridProps = {
     productName: string;
     brand: string;
     rating: number;
-    bgColor: string;
     view: number;
   }[];
   description?: string;
@@ -77,7 +76,7 @@ export const VideoGrid: FunctionComponent<ReviewGridProps> = ({
         </div>
         <div className="flex gap-[15px] overflow-x-auto sm:flex-wrap  justify-start w-full">
           {tempreviews.map((review) => (
-            <VideoCard key={review.id} video={review} />
+            <ReviewCard key={review.id} review={review} />
           ))}
         </div>
       </div>

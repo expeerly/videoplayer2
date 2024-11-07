@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, FunctionComponent } from "react";
 import { SlideProps, SliderCard } from "./ui/SliderCard";
 import clsx from "clsx";
+import { LeftArrowIcon, RightArrowIcon } from "@/assets/icons";
 
 type SliderProps = {
   slides?: SlideProps[][];
@@ -20,7 +21,7 @@ const BUTTON_CONTAINER_BASE_CLASSES = clsx(
 );
 
 const BUTTON_BASE_CLASSES = clsx(
-  "bg-white rounded-full shadow-md p-1",
+  "bg-white rounded-full shadow-md py-3 px-4",
   "hover:bg-gray-50",
   "focus:outline-none focus:ring-2 focus:ring-blue-500"
 );
@@ -157,7 +158,7 @@ export const Slider: FunctionComponent<SliderProps> = ({
           className={BUTTON_BASE_CLASSES}
           aria-label="Previous"
         >
-          {"<"}
+          <LeftArrowIcon />
         </button>
       </div>
 
@@ -173,7 +174,7 @@ export const Slider: FunctionComponent<SliderProps> = ({
           className={BUTTON_BASE_CLASSES}
           aria-label="Next"
         >
-          {">"}
+          <RightArrowIcon />
         </button>
       </div>
 

@@ -1,15 +1,12 @@
 import React, { FunctionComponent } from "react";
-import { PlayIcon } from "../assets/PlayIcon"; 
-import { ProfileIcon } from "../assets/Profile";
-import { Star } from "@/assets/Star";
-import Image from "next/image";
-import bgimage from "@/assets/Screenshot.png"
-type StaticImageData = any;
+import {VideoThumbnail} from "../components/client/VideoThumbnail";
+import { StarRating } from "../components/client/StarRating";
+import { PlayIcon } from "@/assets/PlayIcon";
+import { Avatar } from "./Avatar";
 
 type Props = {
-  video: {
+  review: {
     id: number;
-    bgImage:  StaticImageData;
     rating: number;
     view: number;
     brand: string;
@@ -17,50 +14,37 @@ type Props = {
   };
 };
 
-export const VideoCard: FunctionComponent<Props> = ({ video }) => {
+export const ReviewCard: FunctionComponent<Props> = ({ review }) => {
   return (
     <div
-      key={video.id}
+      key={review.id}
       className="relative min-w-[160px] max-w-[160px] rounded-xl overflow-hidden box-border"
     >
-      <div className='relative group cursor-pointer'>
+      <div className={`h-64 relative group cursor-pointer`}>
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40" />
-       
-        <Image src={bgimage} alt="bgpoto"  className="w-full h-full object-cover" /> 
-        <div className="absolute top-3 left-3 text-white rounded-full font-medium text-xs">
+        <VideoThumbnail playbackID="DS00Spx1CV902MCtPj5WknGlR102V5HFkDe" />
+        <div className="absolute top-3 left-3   text-white  rounded-full font-medium text-xs">
           <div className="flex items-center gap-1 justify-center ml-1">
-            
-            <p className=" text-sm font-medium">
-              {video.rating}
-              </p>
-            <div className="flex">
-              {Array.from({ length: video.rating }).map((_, index) => (
-                <span key={index} className="text-yellow-400 ml-0.5"><Star/></span>
-              ))}
-            </div>
+            {review.rating}
+            <StarRating rating={review?.rating} size="sm" showRating={false} />
           </div>
-          <div className="flex items-center mt-1">
-            <div className="h-3 w-3" >
-               <PlayIcon />
-            </div>
-           <p className="font-bold text-sm ">
-             {video.view}
-           </p>
-           
+          <div className="flex items-center mt-1 ">
+            <PlayIcon  />
+            {review.view}
           </div>
         </div>
 
-        <div className="absolute bottom-1 left-0 right-0 p-3 w-full">
+        <div className="absolute bottom-0 left-0 right-0 p-3 w-full">
           <div className="flex items-center gap-2 w-full">
-            <div className=" w-8 h-8  rounded-full">
-              <ProfileIcon /> 
+            <div className="bg-white p-1 rounded-full">
+              <Avatar size="sm" />
             </div>
-            <div className="text-white ml-2 w-24">
-              <p className="text-sm font-medium leading-tight truncate">
-                {video.brand}
+            <div className="text-white w-24 ">
+              <p className="text-sm font-medium leading-tight">
+                {review.brand}
               </p>
-              <p className="text-sm font-medium w-full truncate">
-                {video.productName}
+              <p className="text-xs opacity-90 w-full truncate">
+                {review.productName}
               </p>
             </div>
           </div>
