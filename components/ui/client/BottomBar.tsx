@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { navItems } from "./Sidebar";
+import { navItems } from "../server/Sidebar";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ export const BottomBar = () => {
   const pathname = usePathname();
   
   return (
-    <div className="z-10 flex flex-row justify-around sticky -bottom-0.5 py-2 bg-white border-t w-full md:hidden">
+    <div className="z-[99999] flex flex-row justify-around sticky -bottom-0.5 py-2 bg-white border-t w-full md:hidden">
       {navItems.map((item) => (
         <Link
           key={item.name}

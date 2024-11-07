@@ -1,6 +1,4 @@
-// Sidebar.tsx
 import { FunctionComponent } from "react";
-import {ActiveLink} from "../components/client/ActiveLink";
 
 import {
   BinocularsIcon,
@@ -8,6 +6,7 @@ import {
   SpeechBubbleIcon,
   StoreIcon,
 } from "@/assets/icons";
+import { ActiveLink } from "../client/ActiveLink";
 
 export const navItems = [
   { key: "explore", name: "Explore", icon: BinocularsIcon, href: "/explore" },

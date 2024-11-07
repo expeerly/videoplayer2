@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import clsx from "clsx";
 
 type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
@@ -15,7 +15,7 @@ export interface ButtonProps
   children: React.ReactNode;
 }
 
-export const Button = ({
+export const Button:FunctionComponent<ButtonProps> = ({
   variant = "primary",
   size = "md",
   startContent,

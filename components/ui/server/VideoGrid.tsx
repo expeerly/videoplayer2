@@ -61,8 +61,8 @@ export const VideoGrid: FunctionComponent<ReviewGridProps> = ({
   description = false,
 }) => {
   return (
-    <div className="w-full sm:max-w-[900px] py-10 pl-3 lg:pl-0">
-        <div>       
+    <div className="w-full sm:max-w-[900px] py-5 px-3 lg:pl-0">
+      <div>
         <div className="mb-5">
           <ProfileCard />
           {description && (
@@ -74,7 +74,7 @@ export const VideoGrid: FunctionComponent<ReviewGridProps> = ({
             </div>
           )}
         </div>
-        <div className="flex gap-[15px] overflow-x-auto sm:flex-wrap  justify-start w-full">
+        <div className="flex gap-[15px] overflow-x-auto sm:flex-wrap scrollbar-thin scrollbar-none justify-start w-full">
           {tempreviews.map((review) => (
             <ReviewCard key={review.id} review={review} />
           ))}

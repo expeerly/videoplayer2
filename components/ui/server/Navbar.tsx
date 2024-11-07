@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from "react";
 import { Logo } from "@/assets/Logo";
 import Link from "next/link";
-import { DropDownMenu } from "./DropDownMenu";
+import { DropDownMenu } from "../../../app/components/client/DropDownMenu";
 import { MobileMenu } from "./MobileMenu";
-import { defaultMenuItems } from "./DropDownMenu";
+import { defaultMenuItems } from "../../../app/components/client/DropDownMenu";
 
 export const Navbar:FunctionComponent = () => {
   return (

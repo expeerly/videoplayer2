@@ -1,10 +1,10 @@
-import { HeroSection } from "@/components/HeroSection";
-import { ExpolreReviewers } from "@/components/ExploreReviewers";
-import { HowExpeerlyWorks } from "@/components/HowExpeerlyWork";
-import { BrandsSlider } from "@/components/BrandsSlider";
-import { VideoGrid } from "@/components/VideoGrid";
-import { CategoeirsSlider } from "@/components/CategoeirsSlider";
-import { ConversionSlider } from "@/components/Conversion";
+import { HeroSection } from "@/app/components/server/HeroSection";
+import { ExpolreReviewers } from "@/app/components/server/ExploreReviewers";
+import { HowExpeerlyWorks } from "@/app/components/server/HowExpeerlyWork";
+import { BrandsSlider } from "@/app/components/server/BrandsSlider";
+import { VideoGrid } from "@/components/ui/server/VideoGrid";
+import { CategoeirsSlider } from "@/app/components/server/CategoeirsSlider";
+import { ConversionSlider } from "@/app/components/server/Conversion";
 
 const SECTION_IDS = {
   EXPLORE_REVIEWERS: 'explore-reviewers',

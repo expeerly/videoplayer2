@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import Quets from "@/assets/“.svg";
 import BgImage from "@/assets/BG.svg";
 import { HeaderImage } from "@/assets/HeaderImage";
-import { ScrollButton } from "./client/ScrollButton";
+import { ScrollButton } from "../client/ScrollButton";
 import Image from "next/image";
 
 type HeroSectionProps = {
