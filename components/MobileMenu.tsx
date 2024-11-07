@@ -1,42 +1,43 @@
-'use client';
+"use client"
 
-import { FunctionComponent, useCallback, useState } from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { Logo } from '@/assets/Logo';
-import { MenuIcon } from '@/assets/icons';
+import { FunctionComponent, useCallback, useState } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Logo } from "@/assets/Logo"
+import { MenuIcon } from "@/assets/icons"
 
 interface MenuItem {
-  key: string;
-  label: string;
-  href?: string;
-  devider?: boolean;
-  items?: Array<{ label: string }>;
-  itemsLabel?: string;
+  key: string
+  label: string
+  href?: string
+  devider?: boolean
+  items?: Array<{ label: string }>
+  itemsLabel?: string
 }
 
 interface MobileMenuProps {
-  menuItems: MenuItem[];
+  menuItems: MenuItem[]
 }
 
-export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: MobileMenuProps) => {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
+  menuItems,
+}: MobileMenuProps) => {
+  const router = useRouter()
+  const [isOpen, setIsOpen] = useState(false)
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
 
   const toggleSubmenu = (key: string) => {
-    setActiveSubmenu(activeSubmenu === key ? null : key);
-  };
+    setActiveSubmenu(activeSubmenu === key ? null : key)
+  }
 
   const navigationHandler = useCallback(
     (path: string) => {
-      router.push('/' + path);
-      setIsOpen(false);
-      setActiveSubmenu(null);
+      router.push("/" + path)
+      setIsOpen(false)
+      setActiveSubmenu(null)
     },
     [router]
-  );
+  )
 
   return (
     <>
@@ -57,7 +58,10 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
             <div className="h-full w-full bg-[#F7F7F7] flex flex-col">
               {/* Header with close button */}
               <div className="flex justify-between p-4 border-b">
-                <Link href="/" className="flex justify-start items-center gap-1">
+                <Link
+                  href="/"
+                  className="flex justify-start items-center gap-1"
+                >
                   <Logo />
                 </Link>
                 <button
@@ -88,7 +92,7 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
                       onClick={() =>
                         item.items
                           ? toggleSubmenu(item.key)
-                          : navigationHandler(item?.href!)
+                          : item?.href && navigationHandler(item.href)
                       }
                       className="flex w-full items-center justify-between py-2 text-left text-base"
                     >
@@ -99,7 +103,7 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
                       {item.items && (
                         <svg
                           className={`h-4 w-4 transition-transform duration-200 ${
-                            activeSubmenu === item.key ? 'rotate-90' : ''
+                            activeSubmenu === item.key ? "rotate-90" : ""
                           }`}
                           viewBox="0 0 24 24"
                           fill="none"
@@ -117,7 +121,7 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
                       <div className="mt-2 space-y-2 bg-white p-6 rounded-md">
                         {item.itemsLabel && (
                           <button
-                            onClick={() => navigationHandler(item?.href!)}
+                            onClick={() => item?.href && navigationHandler(item?.href)}
                             className="w-full text-left py-2 flex flex-row gap-3 text-pink-500 font-bold text-base"
                           >
                             {item.itemsLabel}
@@ -174,5 +178,5 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
         </div>
       )}
     </>
-  );
-};
+  )
+}

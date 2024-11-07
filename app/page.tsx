@@ -1,7 +1,6 @@
 import { HeroSection } from "@/components/HeroSection";
 import { ExpolreReviewers } from "@/components/ExploreReviewers";
 import { HowExpeerlyWorks } from "@/components/HowExpeerlyWork";
-import Footer from "@/components/Footer";
 import { BrandsSlider } from "@/components/BrandsSlider";
 import { VideoGrid } from "@/components/VideoGrid";
 import { CategoeirsSlider } from "@/components/CategoeirsSlider";

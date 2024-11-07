@@ -1,5 +1,6 @@
 import React from "react";
 import { PlayIcon } from "@/assets/PlayIcon";
+import Image from "next/image";
 
 type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
 type AvatarFallback = "user" | "initials";
@@ -50,7 +51,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       aria-label={alt}
     >
       {src ? (
-        <img
+        <Image
           src={src}
           alt={alt}
           className="w-full h-full object-cover"
@@ -62,6 +63,8 @@ export const Avatar: React.FC<AvatarProps> = ({
               nextSibling.style.display = "flex";
             }
           }}
+          height={20}
+          width={20}
         />
       ) : (
         fallbackOptions[fallback]
