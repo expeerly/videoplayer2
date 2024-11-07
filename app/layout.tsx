@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import {Navbar} from "@/components/Navbar";
-import {Sidebar} from "@/components/Sidebar";
-import {
-  Mulish,
-} from "next/font/google";
+import { Navbar } from "@/components/Navbar";
+import { Sidebar } from "@/components/Sidebar";
+import { Mulish } from "next/font/google";
 import Footer from "@/components/Footer";
 import BottomBar from "@/components/BottomBar";
 
@@ -20,9 +18,8 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-
 // Initialize the font with the subsets and weights you want to use
- const mulish = Mulish({
+const mulish = Mulish({
   subsets: ["latin"],
   variable: "--font-mulish",
 });
@@ -44,14 +41,14 @@ export default function RootLayout({
       >
         <div className=" flex flex-col h-screen overflow-hidden font-mulish">
           <Navbar />
-          <main className="flex h-[calc(100%-135px)] sm:h-[calc(100%-65px)]">
-            <Sidebar/>
+          <main className="flex h-[calc(100%-100px)] sm:h-[calc(100%-87px)] ">
+            <Sidebar />
             <div className="flex-1 relative overflow-auto h-full">
               {children}
+              <Footer />
             </div>
           </main>
-          <Footer/>
-          <BottomBar/>
+          <BottomBar />
         </div>
       </body>
     </html>

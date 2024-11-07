@@ -9,7 +9,7 @@ export const BottomBar = () => {
   const pathname = usePathname();
   
   return (
-    <div className="flex flex-row justify-around sticky bottom-0 py-2 bg-white border-t w-full md:hidden">
+    <div className="z-10 flex flex-row justify-around sticky -bottom-0.5 py-2 bg-white border-t w-full md:hidden">
       {navItems.map((item) => (
         <Link
           key={item.name}
