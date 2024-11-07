@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { Slider } from "./Slider";
+import { Slider } from "./ui/Slider";
 import { MobileSlider } from "./ui/MobileSlider";
 import Logo from "@/assets/brands/logo.svg";
 import Logo1 from "@/assets/brands/logo1.svg";

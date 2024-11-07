@@ -15,6 +15,7 @@ type ReviewGridProps = {
   }[];
   description?: string;
   hasHeader?: boolean;
+  id: string
 };
 const tempreviews = [
     {
@@ -57,10 +58,10 @@ const tempreviews = [
 
 
 export const ExpolreReviewers: FunctionComponent<ReviewGridProps> = ({
-  description = true,
+  description = true, id
 }) => {
   return (
-    <div className=" w-full  sm:max-w-[900px] py-10 pl-3 lg:pl-0">
+    <div id={id} className=" w-full  sm:max-w-[900px] py-10 pl-3 lg:pl-0">
         <h1 className=" md:w-2/3 lg:w-2/5 font-extrabold text-2xl sm:text-start text-center text-[#0E0E0F]">Each Expeerly reviewer has 
         a personal story to share</h1>
         <div>       
