@@ -31,33 +31,13 @@ type Props = {
 };
 
 // Base classes as constants
-const BASE_CONTAINER_CLASSES = "w-full relative overflow-hidden p-4";
-const BASE_SHADOW_CLASSES = "absolute top-0 z-10 h-full w-40";
+const BASE_CONTAINER_CLASSES = "w-full relative overflow-hidden ";
+
 const BASE_ROW_CLASSES = "relative flex w-full overflow-x-hidden gap-4";
 const BASE_SLIDE_CLASSES = "flex w-max shrink-0 items-center gap-4";
 
 // Helper functions for class generation
-const createShadowClasses = (
-  position: "left" | "right",
-  customClassName?: string
-) => {
-  return clsx(
-    BASE_SHADOW_CLASSES,
-    position === "left"
-      ? [
-          "left-0",
-          "bg-[linear-gradient(90deg,_#FFFFFF_40.5%,_rgba(255,255,255,0)_100%)]",
-        ]
-      : [
-          "right-0",
-          "bg-[linear-gradient(270deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]",
-        ],
-    customClassName,
-    {
-      "opacity-90": !customClassName,
-    }
-  );
-};
+
 
 const createSlideClasses = (isReverse: boolean) =>
   clsx(BASE_SLIDE_CLASSES, {
@@ -70,12 +50,7 @@ export const MobileSlider: FunctionComponent<Props> = ({
 }) => {
   return (
     <div className={BASE_CONTAINER_CLASSES}>
-      <div
-        className={createShadowClasses(
-          "left",
-          styleClassNames?.leftShadowClassName
-        )}
-      />
+      
 
       {slides.map((row, index) => {
         const isReverseRow = index % 2 !== 0;
@@ -105,12 +80,7 @@ export const MobileSlider: FunctionComponent<Props> = ({
         );
       })}
 
-      <div
-        className={createShadowClasses(
-          "right",
-          styleClassNames?.rightShadowClassName
-        )}
-      />
+      
     </div>
   );
 };
