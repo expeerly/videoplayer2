@@ -1,4 +1,4 @@
-import { RightArrowIcon } from "../assets/RightArrowIcon"; 
+import { RightArrowIcon } from "../../../assets/RightArrowIcon"; 
 import { ProfileIcon } from "@/assets/Profile";
 
 export default function ProfileCard() {

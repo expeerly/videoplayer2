@@ -23,7 +23,7 @@ const BUTTON_CONTAINER_BASE_CLASSES = clsx(
 const BUTTON_BASE_CLASSES = clsx(
   "bg-white rounded-full shadow-md py-3 px-4",
   "hover:bg-gray-50",
-  "focus:outline-none focus:ring-2 focus:ring-blue-500"
+  "focus:outline-none focus:ring-0"
 );
 
 const defaultCategories: SlideProps[][] = [

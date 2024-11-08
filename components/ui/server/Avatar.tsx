@@ -63,6 +63,8 @@ export const Avatar: React.FC<AvatarProps> = ({
               nextSibling.style.display = "flex";
             }
           }}
+          height={20}
+          width={20}
         />
       ) : (
         fallbackOptions[fallback]

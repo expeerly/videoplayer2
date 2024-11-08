@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { FunctionComponent, useCallback, useState } from 'react';
 import Link from 'next/link';
@@ -19,8 +19,9 @@ interface MobileMenuProps {
   menuItems: MenuItem[];
 }
 
-export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: MobileMenuProps) => {
-  const pathname = usePathname();
+export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
+  menuItems,
+}: MobileMenuProps) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
@@ -31,7 +32,7 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
 
   const navigationHandler = useCallback(
     (path: string) => {
-      router.push('/' + path);
+      router.push(path);
       setIsOpen(false);
       setActiveSubmenu(null);
     },
@@ -40,7 +41,6 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
 
   return (
     <>
-      {/* Menu Toggle Button */}
       <button
         onClick={() => setIsOpen(true)}
         className="flex items-center space-x-2 p-[8px] rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
@@ -77,7 +77,7 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
                       onClick={() =>
                         item.items
                           ? toggleSubmenu(item.key)
-                          : navigationHandler(item?.href!)
+                          : item?.href && navigationHandler(item.href)
                       }
                       className="flex w-full items-center justify-between py-2 text-left text-base"
                     >
@@ -88,7 +88,7 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
                       {item.items && (
                         <svg
                           className={`h-4 w-4 transition-transform duration-200 ${
-                            activeSubmenu === item.key ? 'rotate-90' : ''
+                            activeSubmenu === item.key ? "rotate-90" : ""
                           }`}
                           viewBox="0 0 24 24"
                           fill="none"
@@ -106,7 +106,9 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
                       <div className="mt-2 space-y-2 bg-white p-6 rounded-md">
                         {item.itemsLabel && (
                           <button
-                            onClick={() => navigationHandler(item?.href!)}
+                            onClick={() =>
+                              item?.href && navigationHandler(item?.href)
+                            }
                             className="w-full text-left py-2 flex flex-row gap-3 text-pink-500 font-bold text-base"
                           >
                             {item.itemsLabel}

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
-import {Slider} from './ui/Slider';
-import { MobileSlider } from './ui/MobileSlider';
+import {Slider} from '../../../components/ui/server/Slider';
+import { MobileSlider } from '../../../components/ui/server/MobileSlider';
 
 export const CategoeirsSlider: FunctionComponent = () => {
   return (

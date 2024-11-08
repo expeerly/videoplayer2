@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FunctionComponent, useEffect, useRef, useState } from "react";
+import React, { FC, FunctionComponent, SVGProps, useEffect, useRef, useState } from "react";
 import {
   ArrowRightIcon,
   BinocularsIcon,
@@ -22,7 +22,7 @@ type Item = {
   label: string;
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
   href?: string;
-  items?: { label: string; key?: string; icon?: any }[];
+  items?: { label: string; key?: string; icon?: FC<SVGProps<SVGSVGElement>> }[];
   itemsLabel?: string | undefined;
   devider?: boolean | undefined;
 };

@@ -1,6 +1,5 @@
-'use client'
-// components/ScrollButton.tsx
-import { FunctionComponent } from 'react';
+"use client";
+import { FunctionComponent } from "react";
 import { DownArrowIcon } from "@/assets/icons";
 
 type ScrollButtonProps = {
@@ -8,16 +7,16 @@ type ScrollButtonProps = {
   className?: string;
 };
 
-export const ScrollButton: FunctionComponent<ScrollButtonProps> = ({ 
+export const ScrollButton: FunctionComponent<ScrollButtonProps> = ({
   targetSectionId,
-  className = "" 
+  className = "",
 }) => {
   const handleScroll = () => {
     const element = document.getElementById(targetSectionId);
     if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
       });
     }
   };

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
-import {VideoThumbnail} from "../components/client/VideoThumbnail";
-import { StarRating } from "../components/client/StarRating";
+import {VideoThumbnail} from "../client/VideoThumbnail";
+import { StarRating } from "./StarRating";
 import { PlayIcon } from "@/assets/PlayIcon";
 import { Avatar } from "./Avatar";
 
