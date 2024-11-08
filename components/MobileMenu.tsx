@@ -4,7 +4,7 @@ import { FunctionComponent, useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Logo } from '@/assets/Logo';
-import { MenuIcon } from '@/assets/icons';
+import { CloseIcon, MenuIcon } from '@/assets/icons';
 
 interface MenuItem {
   key: string;
@@ -43,7 +43,7 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
       {/* Menu Toggle Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
+        className="flex items-center space-x-2 p-[8px] rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
         type="button"
         aria-haspopup="true"
       >
@@ -56,26 +56,15 @@ export const MobileMenu:FunctionComponent<MobileMenuProps> = ({ menuItems }: Mob
           <div className="fixed inset-0 h-full">
             <div className="h-full w-full bg-[#F7F7F7] flex flex-col">
               {/* Header with close button */}
-              <div className="flex justify-between p-4 border-b">
+              <div className="sticky top-0 flex justify-between items-center px-4 py-1 border-b">
                 <Link href="/" className="flex justify-start items-center gap-1">
                   <Logo />
                 </Link>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-full hover:bg-gray-100 focus:outline-none"
-                >
-                  <svg
-                    className="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                  className="flex items-center h-10 w-10 text-center justify-center  rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
                   >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
+                  <CloseIcon/>
                 </button>
               </div>
 

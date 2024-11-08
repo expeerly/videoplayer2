@@ -38,7 +38,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${mulish.variable} antialiased`}
       >
-        <div className=" flex flex-col h-screen overflow-hidden font-mulish">
+        <div className=" flex flex-col  font-mulish md:h-screen md:overflow-hidden">
           <Navbar />
           <main className="flex h-[calc(100%-100px)] sm:h-[calc(100%-87px)] ">
             <Sidebar />
