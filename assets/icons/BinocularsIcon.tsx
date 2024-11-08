@@ -1,6 +1,8 @@
-import React, { FC, SVGProps } from "react";
+import React, { FunctionComponent, SVGProps } from "react";
 
-export const BinocularsIcon: FC<SVGProps<SVGSVGElement>> = (p) => {
+export const BinocularsIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
+  p
+) => {
   return (
     <svg
       fill="none"

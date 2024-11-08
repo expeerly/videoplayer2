@@ -1,6 +1,8 @@
-import React, { FC, SVGProps } from "react";
+import React, { FC, FunctionComponent, SVGProps } from "react";
 
-export const SpeechBubbleIcon: FC<SVGProps<SVGSVGElement>> = (p) => {
+export const SpeechBubbleIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
+  p
+) => {
   return (
     <svg
       fill="none"

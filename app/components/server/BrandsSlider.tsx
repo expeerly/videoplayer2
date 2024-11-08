@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { Slider } from "../../../components/ui/server/Slider";
+import { Slider } from "../../../components/ui/client/Slider";
 import { MobileSlider } from "../../../components/ui/server/MobileSlider";
 import Logo from "@/assets/brands/logo.svg";
 import Logo1 from "@/assets/brands/logo1.svg";
@@ -42,32 +42,32 @@ export const BrandsSlider: FunctionComponent = () => {
   ];
 
   return (
-    <div
-      className="relative w-full flex justify-center bg-no-repeat bg-cover bg-bottom"
+    <section
+      className="relative w-full flex justify-center bg-no-repeat bg-top sm:bg-bottom"
       style={{
         backgroundImage: `url(${BackgroundImage.src})`,
       }}
     >
-      <div className="z-50 w-full sm:max-w-[1170px] flex flex-col justify-center items-center  gap-4 py-10 sm:py-20 ">
-        <h1 className="font-extrabold text-2xl px-3 text-center text-white">
+      <div className="z-50 w-full flex flex-col justify-center items-center gap-4 pt-9 pb-14 sm:pb-20 sm:max-w-[1170px]">
+        <h2 className="font-extrabold text-2xl px-3 text-center text-white">
           Video reviews on brands you love
-        </h1>
+        </h2>
         <p className="text-white px-3 mb-10">
           Tap on brand logo to explore reviews.
         </p>
-        <div className=" hidden w-full sm:flex">
+        <div className=" hidden w-full md:flex">
           <Slider
             slides={brands}
             classNameStyle={{
               leftButtonClassName:
                 "!bg-[linear-gradient(90deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]",
               rightButtonClassName:
-                "!bg-[linear-gradient(270deg,_#4B49EB_47.5%,_rgba(255,255,255,0)_100%)]",
+                "!bg-[linear-gradient(270deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]",
               cardClassName: "bg-white",
             }}
           />
         </div>
-        <div className=" flex w-full  sm:hidden">
+        <div className=" flex w-full  md:hidden">
           <MobileSlider
             slides={brands}
             styleClassNames={{
@@ -85,6 +85,6 @@ export const BrandsSlider: FunctionComponent = () => {
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

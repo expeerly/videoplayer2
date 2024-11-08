@@ -3,8 +3,8 @@ import React, { FunctionComponent } from "react";
 
 export const HowExpeerlyWorks: FunctionComponent = () => {
   return (
-    <div className="mt-10 p-3 sm:p-0">
-      <div className="sm:w-[460px] w-auto mx-auto text-start sm:text-center mb-12">
+    <div className="w-full mt-12 mb-5 px-5 md:my-16 ">
+      <div className="sm:w-[460px] w-auto mx-auto text-start sm:text-center">
         <h2 className="text-xl md:text-2xl text-center font-extrabold mb-4">
           How Expeerly works?
         </h2>

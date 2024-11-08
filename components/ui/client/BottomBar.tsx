@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { navItems } from "../server/Sidebar";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-export const BottomBar = () => {
+export const BottomBar:FunctionComponent = () => {
   const pathname = usePathname();
   
   return (
@@ -24,5 +24,3 @@ export const BottomBar = () => {
     </div>
   );
 };
-
-export default BottomBar;

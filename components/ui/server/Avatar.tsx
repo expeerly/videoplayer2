@@ -1,5 +1,5 @@
-import React from "react";
-import { PlayIcon } from "@/assets/PlayIcon";
+import React, { FunctionComponent } from "react";
+import { PlayIcon } from "@/assets/icons/PlayIcon";
 import Image from "next/image";
 
 type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
@@ -13,7 +13,7 @@ interface AvatarProps {
   className?: string;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({
+export const Avatar: FunctionComponent<AvatarProps> = ({
   src = null,
   alt = "User avatar",
   size = "md",

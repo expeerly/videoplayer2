@@ -33,11 +33,7 @@ export const Button:FunctionComponent<ButtonProps> = ({
         // Base styles
         "flex items-center justify-center font-medium transition-all duration-200",
         "focus:outline-none",
-        {
-          "rounded-full": !isOnlyIcon,
-          "rounded-lg": isOnlyIcon,
-        },
-
+        "rounded-full",
         // Variants
         {
           // Primary variant

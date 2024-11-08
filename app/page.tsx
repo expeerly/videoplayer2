@@ -6,19 +6,19 @@ import { VideoGrid } from "@/components/ui/server/VideoGrid";
 import { CategoeirsSlider } from "@/app/components/server/CategoeirsSlider";
 import { ConversionSlider } from "@/app/components/server/Conversion";
 
-const SECTION_IDS = {
-  EXPLORE_REVIEWERS: 'explore-reviewers',
-} as const;
-
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center">
-      <HeroSection nextSectionId={SECTION_IDS.EXPLORE_REVIEWERS} />
-      <ExpolreReviewers id={SECTION_IDS.EXPLORE_REVIEWERS} />
+      <HeroSection />
+      <ExpolreReviewers />
       <BrandsSlider />
-      <VideoGrid />
+      <section className="flex justify-center max-w-[900px] mb-5 w-full mx-auto pt-16 pl-5 mid-lg:pl-0">
+        <VideoGrid />
+      </section>
       <CategoeirsSlider />
-      <VideoGrid />
+      <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 pl-5 md:pb-[70px] mid-lg:pl-0 ">
+        <VideoGrid />
+      </section>
       <ConversionSlider />
       <HowExpeerlyWorks />
     </div>

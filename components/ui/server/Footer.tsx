@@ -1,7 +1,7 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import Link from "next/link";
 
-export const Footer = () => {
+export const Footer:FunctionComponent = () => {
   return (
     <footer className="w-full px-4 py-8 border-t bg-white">
       <div className="max-w-4xl mx-auto  pt-4 flex justify-center">
@@ -29,5 +29,3 @@ export const Footer = () => {
     </footer>
   );
 };
-
-export default Footer;

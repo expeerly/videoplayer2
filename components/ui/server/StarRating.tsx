@@ -1,5 +1,5 @@
 import { StarIcon } from "@/assets/icons";
-import React from "react";
+import React, { FunctionComponent } from "react";
 
 interface StarRatingProps {
   rating?: number;
@@ -17,7 +17,7 @@ type SizeMapType = {
   };
 };
 
-export const StarRating: React.FC<StarRatingProps> = ({
+export const StarRating: FunctionComponent<StarRatingProps> = ({
   rating = 0,
   totalStars = 5,
   size = "md",

@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import {VideoThumbnail} from "../client/VideoThumbnail";
 import { StarRating } from "./StarRating";
-import { PlayIcon } from "@/assets/PlayIcon";
+import { PlayIcon } from "@/assets/icons/PlayIcon";
 import { Avatar } from "./Avatar";
 
 type Props = {

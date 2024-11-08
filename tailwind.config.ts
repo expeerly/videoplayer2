@@ -35,6 +35,9 @@ const config: Config = {
           "100%": { transform: "translateX(0%)" },
         },
       },
+      screens:{
+        'mid-lg': '1160px',
+      }
     },
   },
   plugins: [ require('tailwind-scrollbar')({ preferredStrategy: 'pseudoelements' })],

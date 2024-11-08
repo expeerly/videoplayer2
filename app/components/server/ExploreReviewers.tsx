@@ -2,47 +2,28 @@ import React, { FunctionComponent } from "react";
 import { Button } from "../../../components/ui/server";
 import { VideoGrid } from "../../../components/ui/server/VideoGrid";
 
-type ReviewGridProps = {
-  reviews?: {
-    id: number;
-    productName: string;
-    brand: string;
-    rating: number;
-    view: number;
-  }[];
-  hasHeader?: boolean;
-  id: string;
-};
-
-export const ExpolreReviewers: FunctionComponent<ReviewGridProps> = ({
-  id,
-}) => {
+export const ExpolreReviewers: FunctionComponent = () => {
   return (
-    <div id={id} className=" w-full  sm:max-w-[900px] py-10 pl-3 lg:pl-0">
-      <h1 className=" md:w-2/3 lg:w-2/5 font-extrabold text-2xl sm:text-start text-center text-[#0E0E0F]">
+    <section
+      id="explore-reviewers"
+      className="flex flex-col gap-8 w-full py-12 pl-5 md:pt-14 md:pb-[70px] md:max-w-[900px] mid-lg:pl-0 "
+    >
+      <h2 className="font-extrabold text-2xl text-center text-[#0E0E0F]  md:w-2/3 lg:w-2/5  sm:text-start ">
         Each Expeerly reviewer has a personal story to share
-      </h1>
+      </h2>
 
-      <VideoGrid
-        description="I love cooking and getting people around in our garden, specially
-            when weather is good..."
-      />
-
-      <div>
-        <VideoGrid
-          description="I love cooking and getting people around in our garden, specially
-            when weather is good..."
-        />
-        <div className="mr-3">
-          <Button
-            size="lg"
-            variant="primary"
-            className="mt-10 font-bold sm:w-auto w-full"
-          >
-            Explore All Reviewers
-          </Button>
-        </div>
+      <VideoGrid />
+      <VideoGrid />
+      <div className="w-full md:max-w-[300px] px-5 md:px-0">
+        <Button
+          size="lg"
+          variant="primary"
+          className="font-bold text-nowrap"
+          fullWidth
+        >
+          Explore All Reviewers
+        </Button>
       </div>
-    </div>
+    </section>
   );
 };

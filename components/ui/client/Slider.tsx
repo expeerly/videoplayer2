@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect, FunctionComponent } from "react";
-import { SlideProps, SliderCard } from "./SliderCard";
+import { SlideProps, SliderCard } from "../server/SliderCard";
 import clsx from "clsx";
-import { LeftArrowIcon, RightArrowIcon } from "@/assets/icons";
+import { LeftChevronIcon, RightChevronIcon } from "@/assets/icons";
 
 type SliderProps = {
   slides?: SlideProps[][];
@@ -16,8 +16,8 @@ type SliderProps = {
 
 // Constants for base classes
 const BUTTON_CONTAINER_BASE_CLASSES = clsx(
-  "flex justify-center items-center",
-  "absolute w-40 h-full top-1/2 -translate-y-1/2 z-10"
+  "flex items-center px-2",
+  "absolute w-28 h-full top-1/2 -translate-y-1/2 z-10"
 );
 
 const BUTTON_BASE_CLASSES = clsx(
@@ -80,13 +80,13 @@ export const Slider: FunctionComponent<SliderProps> = ({
   ) => {
     const gradientDirection =
       direction === "left"
-        ? "bg-[linear-gradient(90deg,_#FFFFFF_40.5%,_rgba(255,255,255,0)_100%)]"
+        ? "bg-[linear-gradient(90deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]"
         : "bg-[linear-gradient(270deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]";
 
     return clsx(
       BUTTON_CONTAINER_BASE_CLASSES,
       gradientDirection,
-      direction === "left" ? "left-0" : "right-0",
+      direction === "left" ? "left-0 justify-start" : "right-0 justify-end",
       customClassName
     );
   };
@@ -146,7 +146,6 @@ export const Slider: FunctionComponent<SliderProps> = ({
 
   return (
     <div ref={containerRef} className="relative w-full max-w-7xl mx-auto">
-      {/* Left Navigation Button */}
       <div
         className={getNavigationButtonContainerClasses(
           "left",
@@ -158,11 +157,10 @@ export const Slider: FunctionComponent<SliderProps> = ({
           className={BUTTON_BASE_CLASSES}
           aria-label="Previous"
         >
-          <LeftArrowIcon />
+          <LeftChevronIcon />
         </button>
       </div>
 
-      {/* Right Navigation Button */}
       <div
         className={getNavigationButtonContainerClasses(
           "right",
@@ -174,11 +172,10 @@ export const Slider: FunctionComponent<SliderProps> = ({
           className={BUTTON_BASE_CLASSES}
           aria-label="Next"
         >
-          <RightArrowIcon />
+          <RightChevronIcon />
         </button>
       </div>
 
-      {/* Slides Container */}
       <div className="space-y-4">
         {slides.map((_, rowIndex) => (
           <div key={rowIndex} className="overflow-hidden mx-8">

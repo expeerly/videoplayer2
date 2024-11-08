@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { Slider } from "../../../components/ui/server/Slider";
+import { Slider } from "../../../components/ui/client/Slider";
 import { MobileSlider } from "../../../components/ui/server/MobileSlider";
 import Logo from "@/assets/brands/logo.svg";
 import Logo1 from "@/assets/brands/logo1.svg";
@@ -28,20 +28,20 @@ export const ConversionSlider: FunctionComponent = () => {
   ];
 
   return (
-    <div
-      className="relative w-full  flex justify-center bg-no-repeat bg-cover bg-bottom"
+    <section
+      className="relative w-full  flex justify-center bg-no-repeat bg-cover bg-top sm:bg-bottom"
       style={{
         backgroundImage: `url(${BackgroundImage.src})`,
       }}
     >
       <div className=" z-20 w-full sm:max-w-[1170px] flex flex-col justify-center items-center  gap-4 py-10 sm:py-20 ">
-        <h1 className="font-extrabold px-3 text-2xl text-white text-center">
+        <h2 className="font-extrabold px-3 text-2xl text-white text-center">
           Boost conversion with video reviews
-        </h1>
+        </h2>
         <p className="text-white px-3 text-center mb-10">
            Are you a retailer wanting to display expeerly reviews for free?
         </p>
-        <div className=" hidden w-full sm:flex">
+        <div className=" hidden w-full md:flex">
           <Slider
             slides={brands}
             classNameStyle={{
@@ -53,7 +53,7 @@ export const ConversionSlider: FunctionComponent = () => {
             }}
           />
         </div>
-        <div className=" flex w-full sm:hidden">
+        <div className=" flex w-full md:hidden">
           <MobileSlider
             slides={brands}
             styleClassNames={{
@@ -71,6 +71,6 @@ export const ConversionSlider: FunctionComponent = () => {
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

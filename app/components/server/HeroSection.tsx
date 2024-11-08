@@ -5,20 +5,13 @@ import { HeaderImage } from "@/assets/HeaderImage";
 import { ScrollButton } from "../client/ScrollButton";
 import Image from "next/image";
 
-type HeroSectionProps = {
-  nextSectionId: string;
-}
-
-export const HeroSection: FunctionComponent<HeroSectionProps> = ({nextSectionId }) => {
+export const HeroSection: FunctionComponent = () => {
   return (
     <div
       style={{
         backgroundImage: `url(${BgImage.src})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "bottom",
       }}
-      className="w-full h-[320px] z-0 sm:h-[400px] md:h-[500px] lg:h-[450px] flex items-center justify-bottom relative"
+      className="w-full flex items-center justify-bottom relative bg-bottom bg-cover bg-no-repeat z-0 h-[320px] sm:h-[400px] md:h-[500px] lg:h-[450px] "
     >
       <div className="absolute h-[250px] w-[250px] top-11 sm:top-6 md:top-16 md:w-[400px] md:h-[300px] lg:top-18 left-1/2 transform -translate-x-1/2 flex justify-center">
         <HeaderImage />
@@ -41,12 +34,11 @@ export const HeroSection: FunctionComponent<HeroSectionProps> = ({nextSectionId 
           Explorez les derniers avis vidéos, de vos marques et produits
           préférés.
         </p>
-        <ScrollButton 
-          targetSectionId={nextSectionId}
+        <ScrollButton
+          targetSectionId={"explore-reviewers"}
           className="absolute bottom-14 md:bottom-44 ml-5 md:ml-3 lg:bottom-32"
         />
       </div>
-      
     </div>
   );
 };

@@ -1,17 +1,21 @@
-'use client'
+"use client";
 
-import { FC, PropsWithChildren } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { FunctionComponent, PropsWithChildren } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface ActiveLinkProps extends PropsWithChildren {
-  href: string
-  className: string
+  href: string;
+  className: string;
 }
 
-export const ActiveLink: FC<ActiveLinkProps> = ({ children, href, className }) => {
-  const pathname = usePathname()
- 
+export const ActiveLink: FunctionComponent<ActiveLinkProps> = ({
+  children,
+  href,
+  className,
+}) => {
+  const pathname = usePathname();
+
   return (
     <Link
       href={href}
@@ -21,6 +25,5 @@ export const ActiveLink: FC<ActiveLinkProps> = ({ children, href, className }) =
     >
       {children}
     </Link>
-  )
-}
-
+  );
+};

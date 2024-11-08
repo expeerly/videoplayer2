@@ -1,15 +1,20 @@
 "use client";
 
-import React, { FC, FunctionComponent, SVGProps, useEffect, useRef, useState } from "react";
+import React, {
+  FunctionComponent,
+  SVGProps,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
-  ArrowRightIcon,
   BinocularsIcon,
   CartIcon,
   CategoriesIcon,
   DownArrowIcon,
   InfoIcon,
   MenuIcon,
-  RightArrowIcon,
+  RightChevronIcon,
   SpeechBubbleIcon,
   StoreIcon,
   TagIcon,
@@ -20,9 +25,13 @@ import Link from "next/link";
 type Item = {
   key: string;
   label: string;
-  icon: React.FC<React.SVGProps<SVGSVGElement>>;
+  icon: FunctionComponent<SVGProps<SVGSVGElement>>;
   href?: string;
-  items?: { label: string; key?: string; icon?: FC<SVGProps<SVGSVGElement>> }[];
+  items?: {
+    label: string;
+    key?: string;
+    icon?: FunctionComponent<SVGProps<SVGSVGElement>>;
+  }[];
   itemsLabel?: string | undefined;
   devider?: boolean | undefined;
 };
@@ -88,17 +97,17 @@ export const defaultMenuItems: Item[] = [
 ];
 
 type DropDownMenuProps = {
-  menuItems?: Item[],
-  className?: string
-}
+  menuItems?: Item[];
+  className?: string;
+};
 
-export const DropDownMenu:FunctionComponent<DropDownMenuProps>=  ({
+export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
   menuItems = defaultMenuItems,
   className = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
- 
+
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -146,7 +155,6 @@ export const DropDownMenu:FunctionComponent<DropDownMenuProps>=  ({
                     <button
                       onClick={() => toggleSubmenu(item.key)}
                       className="w-full flex items-center justify-between px-4 py-2  text-transparent hover:text-black hover:bg-gray-50 transition-colors duration-200"
-                    
                     >
                       <span className="flex gap-4 items-center">
                         <item.icon />
@@ -156,31 +164,27 @@ export const DropDownMenu:FunctionComponent<DropDownMenuProps>=  ({
                         {openSubmenuKey === item.key ? (
                           <DownArrowIcon />
                         ) : (
-                          <RightArrowIcon />
+                          <RightChevronIcon />
                         )}
                       </span>
                     </button>
                     {openSubmenuKey === item.key && (
                       <div className="absolute -left-64 top-0 w-64 bg-white rounded-md shadow-lg py-1  border border-gray-100">
-           
-                          {item.itemsLabel &&(
-                            <Link
-                              key={item.itemsLabel}
-                              href={`${item.href}`}
-                              className="text-pink-500 cursor-pointer font-bold text-base flex flex-row w-full text-left px-4 py-2 gap-3 items-center"
-                            >
-                              {item.itemsLabel}
-                              <ArrowRightIcon/>
-                            </Link>
-                          )}
-              
+                        {item.itemsLabel && (
+                          <Link
+                            key={item.itemsLabel}
+                            href={`${item.href}`}
+                            className="text-pink-500 cursor-pointer font-bold text-base flex flex-row w-full text-left px-4 py-2 gap-3 items-center"
+                          >
+                            {item.itemsLabel}
+                            <RightChevronIcon />
+                          </Link>
+                        )}
+
                         <ul>
                           {item.items.map((subItem, index) => (
                             <li key={index}>
-                              <button
-                                
-                                className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
-                              >
+                              <button className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200">
                                 {subItem.label}
                               </button>
                             </li>

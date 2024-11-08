@@ -1,6 +1,8 @@
-import React, { FC, SVGProps } from "react";
+import React, { FunctionComponent, SVGProps } from "react";
 
-export const RightArrowIcon: FC<SVGProps<SVGSVGElement>> = (p) => {
+export const RightChevronIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
+  p
+) => {
   return (
     <svg
       width="8"

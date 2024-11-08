@@ -1,23 +1,13 @@
 import React, { FunctionComponent } from "react";
 import { ReviewCard } from "./VideoCard";
-import ProfileCard from "./ProfileCard";
-import VideoCardBg from "@/assets/videoCardBg";
+import { ProfileCard, ProfileCardProps } from "./ProfileCard";
 
 type ReviewGridProps = {
-  reviews?: {
-    id: number;
-    productName: string;
-    brand: string;
-    rating: number;
-    view: number;
-  }[];
-  description?: string;
-  hasHeader?: boolean;
+  headerData?: ProfileCardProps;
 };
 const tempreviews = [
   {
     id: 1,
-    bgImage: VideoCardBg,
     rating: 4.5,
     view: 1200,
     brand: "TechGurau",
@@ -25,7 +15,6 @@ const tempreviews = [
   },
   {
     id: 2,
-    bgImage: VideoCardBg,
     rating: 4.5,
     view: 1200,
     brand: "TechGurau",
@@ -33,7 +22,6 @@ const tempreviews = [
   },
   {
     id: 3,
-    bgImage: VideoCardBg,
     rating: 4.5,
     view: 1200,
     brand: "TechGurau",
@@ -41,7 +29,6 @@ const tempreviews = [
   },
   {
     id: 4,
-    bgImage: VideoCardBg,
     rating: 4.5,
     view: 1200,
     brand: "TechGurau",
@@ -49,7 +36,6 @@ const tempreviews = [
   },
   {
     id: 5,
-    bgImage: VideoCardBg,
     rating: 3.5,
     view: 1200,
     brand: "TechGurau",
@@ -58,27 +44,16 @@ const tempreviews = [
 ];
 
 export const VideoGrid: FunctionComponent<ReviewGridProps> = ({
-  description = false,
+  headerData,
 }) => {
   return (
-    <div className="w-full sm:max-w-[900px] py-5 px-3 lg:pl-0">
-      <div>
-        <div className="mb-5">
-          <ProfileCard />
-          {description && (
-            <div className="flex  sm:w-2/5 items-center mt-2">
-              <p className=" text-gray-700 ml-2 line-clamp-2">
-                {`I love cooking and getting people around in our garden, specially
-            when weather is good...`}
-              </p>
-            </div>
-          )}
-        </div>
-        <div className="flex gap-[15px] overflow-x-auto sm:flex-wrap scrollbar-thin scrollbar-none justify-start w-full">
-          {tempreviews.map((review) => (
-            <ReviewCard key={review.id} review={review} />
-          ))}
-        </div>
+    <div className="w-full flex flex-col gap-5">
+      <ProfileCard {...headerData} />
+
+      <div className="flex gap-[15px] overflow-x-auto scrollbar-thin scrollbar-none justify-start w-full pr-4">
+        {tempreviews.map((review) => (
+          <ReviewCard key={review.id} review={review} />
+        ))}
       </div>
     </div>
   );
