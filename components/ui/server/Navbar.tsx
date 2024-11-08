@@ -23,7 +23,7 @@ export const Navbar: FunctionComponent = () => {
 
         <DropDownMenu />
       </div>
-      <div className="flex flex-row-reverse flex-1 md:hidden">
+      <div className=" md:hidden">
         <MobileMenu menuItems={defaultMenuItems} />
       </div>
     </nav>
