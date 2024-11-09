@@ -39,13 +39,17 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
 
   return (
     <>
-      <button onClick={() => setIsOpen(!isOpen)} type="button">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        type="button"
+        className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
+      >
         {isOpen ? <CloseIcon /> : <MenuIcon />}
       </button>
 
       <div
-        className={`fixed top-[60px] left-0 w-full transition-all duration-300 ease-in-out ${
-          isOpen ? "h-[calc(100vh-118px)] opacity-100" : "h-0 opacity-0"
+        className={`fixed top-[75px] left-0 w-full transition-all duration-300 ease-in-out ${
+          isOpen ? "h-[calc(100vh-120px)] opacity-100" : "h-0 opacity-0"
         }`}
       >
         <div className="h-full w-full bg-[#F7F7F7] flex flex-col">

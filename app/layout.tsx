@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Mulish } from "next/font/google";
 import { Footer } from "@/components/ui/server/Footer";
-import { BottomBar } from "@/components/ui/client/BottomBar";
 import { Sidebar } from "@/components/ui/server/Sidebar";
 import { Navbar } from "@/components/ui/server/Navbar";
 
@@ -12,6 +11,7 @@ const geistSans = localFont({
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -36,18 +36,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${mulish.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${mulish.variable} h-full antialiased`}
       >
-        <div className=" flex flex-col h-screen overflow-hidden font-mulish">
+        <div className="flex h-full flex-col font-mulish">
           <Navbar />
-          <main className="flex h-[calc(100%-100px)] sm:h-[calc(100%-87px)] ">
+          <main className="flex w-full flex-col-reverse md:flex-row">
             <Sidebar />
-            <div className="flex-1 relative overflow-auto h-full">
+            <div className="flex-1 w-full md:w-[calc(100%-200px)] relative ">
               {children}
-              <Footer />
             </div>
           </main>
-          <BottomBar />
+          <Footer />
         </div>
       </body>
     </html>

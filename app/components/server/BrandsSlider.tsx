@@ -43,7 +43,7 @@ export const BrandsSlider: FunctionComponent = () => {
 
   return (
     <section
-      className="relative w-full flex justify-center bg-no-repeat bg-top sm:bg-bottom"
+      className="relative w-full flex justify-center bg-no-repeat bg-top sm:bg-bottom sm:bg-cover"
       style={{
         backgroundImage: `url(${BackgroundImage.src})`,
       }}
