@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import {VideoThumbnail} from "../client/VideoThumbnail";
+import {VideoThumbnail} from "./VideoThumbnail";
 import { StarRating } from "./StarRating";
 import { PlayIcon } from "@/assets/icons/PlayIcon";
 import { Avatar } from "./Avatar";
@@ -43,7 +43,7 @@ export const ReviewCard: FunctionComponent<Props> = ({ review }) => {
               <p className="text-sm font-medium leading-tight">
                 {review.brand}
               </p>
-              <p className="text-xs opacity-90 w-full truncate">
+              <p className="text-sm font-medium opacity-90 w-full truncate">
                 {review.productName}
               </p>
             </div>

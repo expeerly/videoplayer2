@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { ReviewCard } from "./VideoCard";
+import { ReviewCard } from "./ReviewCard";
 import { ProfileCard, ProfileCardProps } from "./ProfileCard";
 
 type ReviewGridProps = {
@@ -43,7 +43,7 @@ const tempreviews = [
   },
 ];
 
-export const VideoGrid: FunctionComponent<ReviewGridProps> = ({
+export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
   headerData,
 }) => {
   return (

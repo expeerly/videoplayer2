@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Slider } from "../../../components/ui/client/Slider";
 import { MobileSlider } from "../../../components/ui/server/MobileSlider";
 
-export const CategoeirsSlider: FunctionComponent = () => {
+export const CategoriesSlider: FunctionComponent = () => {
   return (
     <div className="w-full sm:max-w-[1170px] flex flex-col justify-center items-center gap-4 py-10 ">
       <h2 className="font-extrabold text-2xl px-3 ">Explore Categories</h2>

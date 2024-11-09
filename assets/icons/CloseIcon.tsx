@@ -12,7 +12,6 @@ export const CloseIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
     >
       <mask
         id="mask0_1698_47328"
-        style={{ maskType: "alpha" }}
         maskUnits="userSpaceOnUse"
         x="0"
         y="0"

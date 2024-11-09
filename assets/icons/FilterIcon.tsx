@@ -14,7 +14,6 @@ export const FilterIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
     >
       <mask
         id="mask0_2960_20923"
-        style={{ maskType: "alpha" }}
         maskUnits="userSpaceOnUse"
         x="0"
         y="0"

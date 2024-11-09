@@ -35,7 +35,7 @@ export const Sidebar: FunctionComponent = () => {
   return (
     <>
       <div className="h- min-h-screen w-[200px] border-e hidden md:flex">
-        <nav className="p-4 mx-auto w-full fixed top-24">
+        <nav className="p-4 mx-auto w-full fixed top-24 max-w-[200px]">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (

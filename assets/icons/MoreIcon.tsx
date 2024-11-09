@@ -12,7 +12,6 @@ export const MoreIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
     >
       <mask
         id="mask0_2651_14767"
-        style={{ maskType: "alpha" }}
         maskUnits="userSpaceOnUse"
         x="0"
         y="0"

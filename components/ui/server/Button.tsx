@@ -26,7 +26,7 @@ export const Button:FunctionComponent<ButtonProps> = ({
   children,
   disabled,
   ...props
-}: ButtonProps) => {
+}) => {
   return (
     <button
       className={clsx(

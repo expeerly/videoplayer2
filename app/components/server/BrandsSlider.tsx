@@ -1,51 +1,39 @@
-import React, { FunctionComponent } from "react";
-import { Slider } from "../../../components/ui/client/Slider";
-import { MobileSlider } from "../../../components/ui/server/MobileSlider";
-import Logo from "@/assets/brands/logo.svg";
-import Logo1 from "@/assets/brands/logo1.svg";
-import Logo2 from "@/assets/brands/logo2.svg";
-import Logo3 from "@/assets/brands/logo3.svg";
-import Logo4 from "@/assets/brands/logo4.svg";
-import Logo5 from "@/assets/brands/logo5.svg";
-import Logo6 from "@/assets/brands/logo6.svg";
-import Logo7 from "@/assets/brands/logo7.svg";
-import Logo8 from "@/assets/brands/logo8.svg";
-import Logo9 from "@/assets/brands/logo9.svg";
-import Logo10 from "@/assets/brands/logo10.svg";
-import Logo11 from "@/assets/brands/logo11.svg";
-import Logo12 from "@/assets/brands/logo12.svg";
-import Logo13 from "@/assets/brands/logo13.svg";
-import Logo14 from "@/assets/brands/logo14.svg";
-import BackgroundImage from "@/assets/BackgroundImage.svg";
+import React, { FunctionComponent } from "react"
+import { Slider } from "../../../components/ui/client/Slider"
+import { MobileSlider } from "../../../components/ui/server/MobileSlider"
+import Link from "next/link"
+
+export const brands = [
+  [
+    { imgURL: "/brands/logo.svg", id: 1 },
+    { imgURL: "/brands/logo1.svg", id: 2 },
+    { imgURL: "/brands/logo2.svg", id: 3 },
+    { imgURL: "/brands/logo3.svg", id: 4 },
+    { imgURL: "/brands/logo4.svg", id: 5 },
+    { imgURL: "/brands/logo5.svg", id: 6 },
+    { imgURL: "/brands/logo6.svg", id: 7 },
+    { imgURL: "/brands/logo7.svg", id: 8 },
+    { imgURL: "/brands/logo8.svg", id: 9 },
+  ],
+  [
+    { imgURL: "/brands/logo.svg", id: 1 },
+    { imgURL: "/brands/logo1.svg", id: 2 },
+    { imgURL: "/brands/logo2.svg", id: 3 },
+    { imgURL: "/brands/logo3.svg", id: 4 },
+    { imgURL: "/brands/logo4.svg", id: 5 },
+    { imgURL: "/brands/logo5.svg", id: 6 },
+    { imgURL: "/brands/logo6.svg", id: 7 },
+    { imgURL: "/brands/logo7.svg", id: 8 },
+    { imgURL: "/brands/logo8.svg", id: 9 },
+  ],
+]
 
 export const BrandsSlider: FunctionComponent = () => {
-  const brands = [
-    [
-      { imgURL: Logo, id: 1 },
-      { imgURL: Logo1, id: 2 },
-      { imgURL: Logo2, id: 3 },
-      { imgURL: Logo3, id: 4 },
-      { imgURL: Logo4, id: 5 },
-      { imgURL: Logo5, id: 6 },
-      { imgURL: Logo6, id: 7 },
-      { imgURL: Logo7, id: 8 },
-      { imgURL: Logo8, id: 9 },
-    ],
-    [
-      { imgURL: Logo9, id: 1 },
-      { imgURL: Logo10, id: 2 },
-      { imgURL: Logo11, id: 3 },
-      { imgURL: Logo12, id: 4 },
-      { imgURL: Logo13, id: 5 },
-      { imgURL: Logo14, id: 6 },
-    ],
-  ];
-
   return (
     <section
       className="relative w-full flex justify-center bg-no-repeat bg-top sm:bg-bottom sm:bg-cover"
       style={{
-        backgroundImage: `url(${BackgroundImage.src})`,
+        backgroundImage: `url(/BackgroundImage.svg)`,
       }}
     >
       <div className="z-50 w-full flex flex-col justify-center items-center gap-4 pt-9 pb-14 sm:pb-20 sm:max-w-[1170px]">
@@ -80,11 +68,14 @@ export const BrandsSlider: FunctionComponent = () => {
           />
         </div>
         <div className="px-3 w-full flex justify-center">
-          <button className=" bg-white mt-10 mx-auto text-black font-bold w-full sm:w-auto rounded-full py-3 px-7">
+          <Link
+            href="/explore"
+            className=" bg-white mt-10 mx-auto text-black font-bold w-full sm:w-auto rounded-full py-3 px-16"
+          >
             Get Video Reviewed
-          </button>
+          </Link>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
-import { Button } from "../../../components/ui/server";
-import { VideoGrid } from "../../../components/ui/server/VideoGrid";
+import { Button } from "../../../components/ui/server/Button";
+import { ReviewGrid } from "../../../components/ui/server/ReviewGrid";
 
 export const ExpolreReviewers: FunctionComponent = () => {
   return (
@@ -12,8 +12,8 @@ export const ExpolreReviewers: FunctionComponent = () => {
         Each Expeerly reviewer has a personal story to share
       </h2>
 
-      <VideoGrid />
-      <VideoGrid />
+      <ReviewGrid />
+      <ReviewGrid />
       <div className="w-full md:max-w-[300px] px-5 md:px-0">
         <Button
           size="lg"
