@@ -5,8 +5,9 @@ import { BrandsSlider } from '@/app/components/server/BrandsSlider';
 import { ReviewGrid } from '@/components/ui/server/ReviewGrid';
 import { CategoriesSlider } from '@/app/components/server/CategoriesSlider';
 import { ConversionSlider } from '@/app/components/server/Conversion';
+import { NextPage } from 'next';
 
-export default function Home() {
+const HomePage: NextPage = () => {
   return (
     <div className="flex flex-col w-full items-center justify-center">
       <HeroSection />
@@ -23,4 +24,6 @@ export default function Home() {
       <HowExpeerlyWorks />
     </div>
   );
-}
+};
+
+export default HomePage;
