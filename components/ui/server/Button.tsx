@@ -1,21 +1,20 @@
-import React, { FunctionComponent } from "react";
-import clsx from "clsx";
+import React, { FunctionComponent, PropsWithChildren } from "react"
+import clsx from "clsx"
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonVariant = "primary" | "secondary" | "outline" | "ghost"
+type ButtonSize = "sm" | "md" | "lg"
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  startContent?: React.ReactNode;
-  endContent?: React.ReactNode;
-  fullWidth?: boolean;
-  isOnlyIcon?: boolean;
-  children: React.ReactNode;
+  variant?: ButtonVariant
+  size?: ButtonSize
+  startContent?: React.ReactNode
+  endContent?: React.ReactNode
+  fullWidth?: boolean
+  isOnlyIcon?: boolean
 }
 
-export const Button: FunctionComponent<ButtonProps> = ({
+export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   variant = "primary",
   size = "md",
   startContent,
@@ -86,7 +85,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
         "disabled:cursor-not-allowed disabled:opacity-60",
 
         // Additional classes
-        className,
+        className
       )}
       disabled={disabled}
       {...props}
@@ -105,5 +104,5 @@ export const Button: FunctionComponent<ButtonProps> = ({
         </>
       )}
     </button>
-  );
-};
+  )
+}

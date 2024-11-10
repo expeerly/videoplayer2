@@ -5,6 +5,7 @@ import { Mulish } from "next/font/google"
 import { Footer } from "@/components/ui/server/Footer"
 import { Sidebar } from "@/components/ui/server/Sidebar"
 import { Navbar } from "@/components/ui/server/Navbar"
+import { PropsWithChildren } from "react"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -22,11 +23,7 @@ export const metadata: Metadata = {
   description: "Discover and share video reviews",
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
   return (
     <html lang="en">
       <body

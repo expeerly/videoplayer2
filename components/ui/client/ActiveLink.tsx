@@ -4,16 +4,14 @@ import { FunctionComponent, PropsWithChildren } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-interface ActiveLinkProps extends PropsWithChildren {
+type ActiveLinkProps = {
   href: string
   className?: string
 }
 
-export const ActiveLink: FunctionComponent<ActiveLinkProps> = ({
-  children,
-  href,
-  className,
-}) => {
+export const ActiveLink: FunctionComponent<PropsWithChildren<
+  ActiveLinkProps
+>> = ({ children, href, className }) => {
   const pathname = usePathname()
 
   return (
