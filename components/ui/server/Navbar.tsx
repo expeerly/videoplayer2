@@ -1,14 +1,14 @@
-import React, { FunctionComponent } from "react";
-import { Logo } from "@/assets/Logo";
-import Link from "next/link";
-import { DropDownMenu } from "../../../app/components/client/DropDownMenu";
-import { MobileMenu } from "../client/MobileMenu";
-import { defaultMenuItems } from "../../../app/components/client/DropDownMenu";
-import { Button } from "./Button";
+import React, { FunctionComponent } from "react"
+import { Logo } from "@/assets/Logo"
+import Link from "next/link"
+import { DropDownMenu } from "../../../app/components/client/DropDownMenu"
+import { MobileMenu } from "../client/MobileMenu"
+import { defaultMenuItems } from "../../../app/components/client/DropDownMenu"
+import { Button } from "./Button"
 
 export const Navbar: FunctionComponent = () => {
   return (
-    <nav className="flex items-center z-[999999999] flex-row w-full bg-white justify-between  py-[15px] px-5 sm:py-5 sm:px-12 border-b sticky top-0">
+    <nav className="flex items-center z-[999999999] flex-row w-full bg-white justify-between  py-[15px] px-5 sm:py-5 sm:px-12 border-b">
       <Link
         href={"/"}
         title="logo"
@@ -32,5 +32,5 @@ export const Navbar: FunctionComponent = () => {
         <MobileMenu menuItems={defaultMenuItems} />
       </div>
     </nav>
-  );
-};
+  )
+}

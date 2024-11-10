@@ -1,13 +1,13 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent } from "react"
 
 import {
   BinocularsIcon,
   CategoriesIcon,
   SpeechBubbleIcon,
   StoreIcon,
-} from "@/assets/icons";
-import { ActiveLink } from "../client/ActiveLink";
-import { BottomBar } from "../client/BottomBar";
+} from "@/assets/icons"
+import { ActiveLink } from "../client/ActiveLink"
+import { BottomBar } from "../client/BottomBar"
 
 export const navItems = [
   { key: "explore", name: "Explore", icon: BinocularsIcon, href: "/explore" },
@@ -29,7 +29,7 @@ export const navItems = [
     icon: SpeechBubbleIcon,
     href: "/video-reviews/reviewers",
   },
-];
+]
 
 export const Sidebar: FunctionComponent = () => {
   return (
@@ -37,21 +37,17 @@ export const Sidebar: FunctionComponent = () => {
       <div className="h- min-h-screen w-[200px] border-e hidden md:flex">
         <nav className="p-4 mx-auto w-full fixed top-24 max-w-[200px]">
           {navItems.map((item) => {
-            const Icon = item.icon;
+            const Icon = item.icon
             return (
-              <ActiveLink
-                key={item.name}
-                href={item.href}
-                className="flex w-full justify-start items-center py-2 px-4 gap-2 group text-transparent rounded transition-colors duration-200 hover:bg-[#F7F7F7] hover:text-black focus:ring-0"
-              >
+              <ActiveLink key={item.name} href={item.href}>
                 <Icon />
                 <span className="text-black">{item.name}</span>
               </ActiveLink>
-            );
+            )
           })}
         </nav>
       </div>
       <BottomBar />
     </>
-  );
-};
+  )
+}
