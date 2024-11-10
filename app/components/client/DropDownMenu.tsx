@@ -1,12 +1,6 @@
-"use client";
+'use client';
 
-import React, {
-  FunctionComponent,
-  SVGProps,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FunctionComponent, SVGProps, useEffect, useRef, useState } from 'react';
 import {
   BinocularsIcon,
   CartIcon,
@@ -20,9 +14,9 @@ import {
   TagIcon,
   VideoIcon,
   WorldIcon,
-} from "@/assets/icons";
-import Link from "next/link";
-import { ArrowRightIcon } from "@/assets/icons/ArrowRightIcon";
+} from '@/assets/icons';
+import Link from 'next/link';
+import { ArrowRightIcon } from '@/assets/icons/ArrowRightIcon';
 export type MenuItem = {
   key: string;
   label: string;
@@ -38,67 +32,67 @@ export type MenuItem = {
 };
 
 export const categroies = [
-  { label: "Arts & Crafts", href: "/video-reviews/productcategory/1" },
-  { label: "Automobile", href: "/video-reviews/productcategory/2" },
-  { label: "Baby & Child Care", href: "/video-reviews/productcategory/3" },
-  { label: "Beauty & Personal Care", href: "/video-reviews/productcategory/4" },
-  { label: "Books & Media", href: "/video-reviews/productcategory/5" },
-  { label: "Clothes and Fashion", href: "/video-reviews/productcategory/6" },
-  { label: "Electronics & Gadgets", href: "/video-reviews/productcategory/7" },
-  { label: "Food & Beverages", href: "/video-reviews/productcategory/8" },
-  { label: "Furniture & Decor", href: "/video-reviews/productcategory/9" },
+  { label: 'Arts & Crafts', href: '/video-reviews/productcategory/1' },
+  { label: 'Automobile', href: '/video-reviews/productcategory/2' },
+  { label: 'Baby & Child Care', href: '/video-reviews/productcategory/3' },
+  { label: 'Beauty & Personal Care', href: '/video-reviews/productcategory/4' },
+  { label: 'Books & Media', href: '/video-reviews/productcategory/5' },
+  { label: 'Clothes and Fashion', href: '/video-reviews/productcategory/6' },
+  { label: 'Electronics & Gadgets', href: '/video-reviews/productcategory/7' },
+  { label: 'Food & Beverages', href: '/video-reviews/productcategory/8' },
+  { label: 'Furniture & Decor', href: '/video-reviews/productcategory/9' },
   {
-    label: "Gardening & Outdoor Living",
-    href: "/video-reviews/productcategory/10",
+    label: 'Gardening & Outdoor Living',
+    href: '/video-reviews/productcategory/10',
   },
-  { label: "Health & Wellness", href: "/video-reviews/productcategory/11" },
+  { label: 'Health & Wellness', href: '/video-reviews/productcategory/11' },
 ];
 
 export const defaultMenuItems: MenuItem[] = [
-  { key: "explore", label: "Explore", icon: BinocularsIcon, href: "/explore" },
+  { key: 'explore', label: 'Explore', icon: BinocularsIcon, href: '/explore' },
   {
-    key: "brands",
-    label: "Brands",
+    key: 'brands',
+    label: 'Brands',
     icon: StoreIcon,
-    href: "/video-reviews/brand",
+    href: '/video-reviews/brand',
   },
   {
-    key: "Categories",
-    label: "Categories",
+    key: 'Categories',
+    label: 'Categories',
     icon: CategoriesIcon,
     items: categroies,
-    itemsLabel: "View all categories",
-    href: "/video-reviews/productcategory",
+    itemsLabel: 'View all categories',
+    href: '/video-reviews/productcategory',
   },
   {
-    key: "reviewers",
-    label: "Reviewers",
+    key: 'reviewers',
+    label: 'Reviewers',
     icon: SpeechBubbleIcon,
     devider: true,
-    href: "/video-reviews/reviewers",
+    href: '/video-reviews/reviewers',
   },
-  { key: "learn", label: "Learn more", icon: InfoIcon },
-  { key: "submit", label: "Submit a video review", icon: VideoIcon },
+  { key: 'learn', label: 'Learn more', icon: InfoIcon },
+  { key: 'submit', label: 'Submit a video review', icon: VideoIcon },
   {
-    key: "brands_businesses",
-    label: "For brands & businesses",
+    key: 'brands_businesses',
+    label: 'For brands & businesses',
     icon: TagIcon,
   },
   {
-    key: "marketplaces",
-    label: "For marketplaces",
+    key: 'marketplaces',
+    label: 'For marketplaces',
     icon: CartIcon,
     devider: true,
   },
   {
-    key: "language",
-    label: "English (EN)",
+    key: 'language',
+    label: 'English (EN)',
     icon: WorldIcon,
     items: [
-      { label: "Deutsch (DE)", href: "/de" },
-      { label: "English (EN)", href: "/en" },
-      { label: "French (FR)", href: "/fr" },
-      { label: "Italian (IT)", href: "/it" },
+      { label: 'Deutsch (DE)', href: '/de' },
+      { label: 'English (EN)', href: '/en' },
+      { label: 'French (FR)', href: '/fr' },
+      { label: 'Italian (IT)', href: '/it' },
     ],
   },
 ];
@@ -110,7 +104,7 @@ type DropDownMenuProps = {
 
 export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
   menuItems = defaultMenuItems,
-  className = "",
+  className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
@@ -125,9 +119,9 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
   const toggleMenu = () => {
@@ -156,14 +150,14 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
       <div
         id="dropdown-menu"
         className={`absolute top-12 right-0 w-64 bg-white rounded-md shadow-lg py-1 transition-all duration-200 ${
-          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="menu-button"
       >
         <ul>
-          {menuItems.map((item) => (
+          {menuItems.map(item => (
             <li key={item.key} className="relative">
               {item.items ? (
                 <div>
@@ -177,18 +171,14 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
                       <span className="text-black">{item.label}</span>
                     </span>
                     <span className="ml-2">
-                      {openSubmenuKey === item.key ? (
-                        <DownArrowIcon />
-                      ) : (
-                        <RightChevronIcon />
-                      )}
+                      {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
                     </span>
                   </button>
                   <div
                     className={`absolute -left-64 top-0 w-64 bg-white rounded-md shadow-lg py-1 border border-gray-100 transition-all duration-200 ${
                       openSubmenuKey === item.key
-                        ? "opacity-100 visible"
-                        : "opacity-0 invisible pointer-events-none"
+                        ? 'opacity-100 visible'
+                        : 'opacity-0 invisible pointer-events-none'
                     }`}
                     role="menu"
                   >
@@ -228,9 +218,7 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
                   <span className="text-black">{item.label}</span>
                 </Link>
               )}
-              {item.devider && (
-                <div className="border-b border-default-200 my-2" />
-              )}
+              {item.devider && <div className="border-b border-default-200 my-2" />}
             </li>
           ))}
         </ul>
