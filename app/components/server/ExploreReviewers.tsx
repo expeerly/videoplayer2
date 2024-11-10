@@ -1,6 +1,6 @@
-import React, { FunctionComponent } from "react";
-import { Button } from "../../../components/ui/server/Button";
-import { ReviewGrid } from "../../../components/ui/server/ReviewGrid";
+import React, { FunctionComponent } from 'react';
+import { Button } from '../../../components/ui/server/Button';
+import { ReviewGrid } from '../../../components/ui/server/ReviewGrid';
 
 export const ExpolreReviewers: FunctionComponent = () => {
   return (
@@ -14,13 +14,8 @@ export const ExpolreReviewers: FunctionComponent = () => {
 
       <ReviewGrid />
       <ReviewGrid />
-      <div className="w-full md:max-w-[300px] px-5 md:px-0">
-        <Button
-          size="lg"
-          variant="primary"
-          className="font-bold text-nowrap"
-          fullWidth
-        >
+      <div className="w-full md:max-w-[300px] px-5 md:px-0 text-base font-bold">
+        <Button size="lg" variant="primary" className="font-bold text-nowrap" fullWidth>
           Explore All Reviewers
         </Button>
       </div>

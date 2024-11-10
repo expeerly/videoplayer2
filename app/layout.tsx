@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import '.././globals.css';
+import './globals.css';
 import { Mulish } from 'next/font/google';
 import { Footer } from '@/components/ui/server/Footer';
 import { Sidebar } from '@/components/ui/server/Sidebar';

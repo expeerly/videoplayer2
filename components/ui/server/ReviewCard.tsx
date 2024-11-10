@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from "react";
-import { VideoThumbnail } from "./VideoThumbnail";
-import { StarRating } from "./StarRating";
-import { PlayIcon } from "@/assets/icons/PlayIcon";
-import { Avatar } from "./Avatar";
+import React, { FunctionComponent } from 'react';
+import { VideoThumbnail } from './VideoThumbnail';
+import { StarRating } from './StarRating';
+import { PlayIcon } from '@/assets/icons/PlayIcon';
+import { Avatar } from './Avatar';
 
 type Props = {
   review: {
@@ -24,11 +24,11 @@ export const ReviewCard: FunctionComponent<Props> = ({ review }) => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40" />
         <VideoThumbnail playbackID="DS00Spx1CV902MCtPj5WknGlR102V5HFkDe" />
         <div className="absolute top-3 left-3   text-white  rounded-full font-medium text-xs">
-          <div className="flex items-center gap-1 justify-center ml-1">
+          <div className="flex items-center gap-1 justify-center ml-1 text-sm">
             {review.rating}
             <StarRating rating={review?.rating} size="sm" showRating={false} />
           </div>
-          <div className="flex items-center mt-1 ">
+          <div className="flex items-center mt-1 text-sm font-bold gap-1">
             <PlayIcon />
             {review.view}
           </div>
@@ -39,13 +39,9 @@ export const ReviewCard: FunctionComponent<Props> = ({ review }) => {
             <div className="bg-white p-1 rounded-full">
               <Avatar size="sm" />
             </div>
-            <div className="text-white w-24 ">
-              <p className="text-sm font-medium leading-tight">
-                {review.brand}
-              </p>
-              <p className="text-sm font-medium opacity-90 w-full truncate">
-                {review.productName}
-              </p>
+            <div className="text-white w-20">
+              <p className="text-sm font-medium leading-tight">{review.brand}</p>
+              <p className="text-sm font-medium opacity-90 w-full truncate">{review.productName}</p>
             </div>
           </div>
         </div>

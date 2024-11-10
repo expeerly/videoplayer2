@@ -37,10 +37,14 @@ export const BrandsSlider: FunctionComponent = () => {
       }}
     >
       <div className="z-50 w-full flex flex-col justify-center items-center gap-4 pt-9 pb-14 sm:pb-20 sm:max-w-[1170px]">
-        <h2 className="font-extrabold text-2xl px-3 text-center text-white">
-          Video reviews on brands you love
-        </h2>
-        <p className="text-white px-3 mb-10">Tap on brand logo to explore reviews.</p>
+        <div className="w-[60%] flex justify-center items-center flex-col gap-1 sm:w-full">
+          <h2 className="font-extrabold text-2xl text-center text-white sm:w-full">
+            Video reviews on brands you love
+          </h2>
+          <p className="w-[90%] text-white mb-5 text-center sm:w-full">
+            Tap on brand logo to explore reviews.
+          </p>
+        </div>
         <div className=" hidden w-full md:flex">
           <Slider
             slides={brands}
