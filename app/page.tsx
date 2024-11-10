@@ -12,11 +12,11 @@ export default function Home() {
       <HeroSection />
       <ExpolreReviewers />
       <BrandsSlider />
-      <section className="flex justify-center max-w-[900px] mb-5 w-full mx-auto pt-16 pl-5 mid-lg:pl-0">
+      <section className="flex justify-center max-w-[900px] mb-5 w-full mx-auto pt-16">
         <ReviewGrid />
       </section>
       <CategoriesSlider />
-      <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 pl-5 md:pb-[70px] mid-lg:pl-0 ">
+      <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]  ">
         <ReviewGrid />
       </section>
       <ConversionSlider />

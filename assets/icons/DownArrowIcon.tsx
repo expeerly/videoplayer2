@@ -1,8 +1,6 @@
-import React, { FunctionComponent, SVGProps } from "react";
+import React, { FunctionComponent, SVGProps } from 'react';
 
-export const DownArrowIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
-  p,
-) => {
+export const DownArrowIcon: FunctionComponent<SVGProps<SVGSVGElement>> = p => {
   return (
     <svg
       width="15"

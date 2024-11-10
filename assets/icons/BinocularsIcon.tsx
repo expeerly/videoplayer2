@@ -1,8 +1,6 @@
-import React, { FunctionComponent, SVGProps } from "react";
+import React, { FunctionComponent, SVGProps } from 'react';
 
-export const BinocularsIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
-  p,
-) => {
+export const BinocularsIcon: FunctionComponent<SVGProps<SVGSVGElement>> = p => {
   return (
     <svg
       fill="none"
@@ -11,7 +9,7 @@ export const BinocularsIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
       width="28"
       xmlns="http://www.w3.org/2000/svg"
       {...p}
-      className={p.className + " group"}
+      className={p.className + ' group'}
     >
       <mask
         fill="black"

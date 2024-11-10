@@ -44,7 +44,7 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
       >
         <div className={`h-full w-full bg-[#F7F7F7] flex flex-col`}>
           <ul className="flex-1 px-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 relative">
-            {menuItems.map((item) => (
+            {menuItems.map(item => (
               <li key={item.key}>
                 {item.devider && <hr className="my-4 border-gray-200" />}
                 {!item.items?.length && item.href ? (
@@ -84,7 +84,7 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
                         <ArrowRightIcon />
                       </Link>
                     )}
-                    {item.items.map((subItem) => (
+                    {item.items.map(subItem => (
                       <Link
                         title={subItem.label}
                         href={subItem?.href}

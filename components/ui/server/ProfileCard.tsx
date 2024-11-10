@@ -1,6 +1,6 @@
-import { RightChevronIcon } from "@/assets/icons";
-import { Avatar } from "./Avatar";
-import { FunctionComponent } from "react";
+import { RightChevronIcon } from '@/assets/icons';
+import { Avatar } from './Avatar';
+import { FunctionComponent } from 'react';
 
 export type ProfileCardProps = {
   description?: string;
@@ -10,10 +10,10 @@ export type ProfileCardProps = {
 };
 
 const tempData = {
-  title: "Marisa C.",
-  subTitle: "38, Zurich (CH)",
+  title: 'Marisa C.',
+  subTitle: '38, Zurich (CH)',
   description:
-    "I love cooking and getting people around in our garden, specially when weather is good...",
+    'I love cooking and getting people around in our garden, specially when weather is good...',
 };
 
 export const ProfileCard: FunctionComponent<ProfileCardProps> = ({

@@ -1,6 +1,6 @@
-import { FunctionComponent, SVGProps } from "react";
+import { FunctionComponent, SVGProps } from 'react';
 
-export const PlayIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
+export const PlayIcon: FunctionComponent<SVGProps<SVGSVGElement>> = p => {
   return (
     <svg
       width="9"

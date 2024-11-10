@@ -1,6 +1,6 @@
-import React, { FunctionComponent, SVGProps } from "react";
+import React, { FunctionComponent, SVGProps } from 'react';
 
-export const MenuIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
+export const MenuIcon: FunctionComponent<SVGProps<SVGSVGElement>> = p => {
   return (
     <svg
       fill="none"

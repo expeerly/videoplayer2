@@ -1,6 +1,6 @@
-import React, { FunctionComponent, SVGProps } from "react";
+import React, { FunctionComponent, SVGProps } from 'react';
 
-export const MoreIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
+export const MoreIcon: FunctionComponent<SVGProps<SVGSVGElement>> = p => {
   return (
     <svg
       width="34"
@@ -10,14 +10,7 @@ export const MoreIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
       xmlns="http://www.w3.org/2000/svg"
       {...p}
     >
-      <mask
-        id="mask0_2651_14767"
-        maskUnits="userSpaceOnUse"
-        x="0"
-        y="0"
-        width="34"
-        height="34"
-      >
+      <mask id="mask0_2651_14767" maskUnits="userSpaceOnUse" x="0" y="0" width="34" height="34">
         <rect width="34" height="34" fill="#D9D9D9" />
       </mask>
       <g mask="url(#mask0_2651_14767)">

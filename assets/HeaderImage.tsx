@@ -1,6 +1,6 @@
-import { FunctionComponent, SVGProps } from "react";
+import { FunctionComponent, SVGProps } from 'react';
 
-export const HeaderImage: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
+export const HeaderImage: FunctionComponent<SVGProps<SVGSVGElement>> = p => {
   return (
     <svg
       width="100%"
@@ -15,14 +15,7 @@ export const HeaderImage: FunctionComponent<SVGProps<SVGSVGElement>> = (p) => {
         fill="#FA0F9C"
       />
       <circle cx="108.5" cy="171.5" r="108.5" fill="#7572FA" />
-      <ellipse
-        opacity="0.8"
-        cx="236"
-        cy="89.5"
-        rx="90"
-        ry="89.5"
-        fill="#2FEDF9"
-      />
+      <ellipse opacity="0.8" cx="236" cy="89.5" rx="90" ry="89.5" fill="#2FEDF9" />
       <path
         d="M276.774 285.042C276.983 284.399 277.892 284.399 278.101 285.042L278.951 287.657C279.044 287.945 279.312 288.139 279.614 288.139H282.364C283.04 288.139 283.321 289.004 282.774 289.401L280.549 291.018C280.305 291.195 280.203 291.51 280.296 291.797L281.146 294.413C281.355 295.056 280.619 295.59 280.072 295.193L277.848 293.576C277.603 293.399 277.272 293.399 277.028 293.576L274.803 295.193C274.256 295.59 273.52 295.056 273.729 294.413L274.579 291.797C274.672 291.51 274.57 291.195 274.326 291.018L272.101 289.401C271.554 289.004 271.835 288.139 272.511 288.139H275.261C275.563 288.139 275.831 287.945 275.924 287.657L276.774 285.042Z"
         fill="#FFC122"
