@@ -1,10 +1,10 @@
-import { HeroSection } from "@/app/components/server/HeroSection";
-import { ExpolreReviewers } from "@/app/components/server/ExploreReviewers";
-import { HowExpeerlyWorks } from "@/app/components/server/HowExpeerlyWork";
-import { BrandsSlider } from "@/app/components/server/BrandsSlider";
-import { ReviewGrid } from "@/components/ui/server/ReviewGrid";
-import { CategoriesSlider } from "@/app/components/server/CategoriesSlider";
-import { ConversionSlider } from "@/app/components/server/Conversion";
+import { HeroSection } from '@/app/components/server/HeroSection';
+import { ExpolreReviewers } from '@/app/components/server/ExploreReviewers';
+import { HowExpeerlyWorks } from '@/app/components/server/HowExpeerlyWork';
+import { BrandsSlider } from '@/app/components/server/BrandsSlider';
+import { ReviewGrid } from '@/components/ui/server/ReviewGrid';
+import { CategoriesSlider } from '@/app/components/server/CategoriesSlider';
+import { ConversionSlider } from '@/app/components/server/Conversion';
 
 export default function Home() {
   return (

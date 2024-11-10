@@ -1,33 +1,31 @@
-"use client"
+'use client';
 
-import { FunctionComponent, useEffect, useState } from "react"
-import { CloseIcon, MenuIcon, RightChevronIcon } from "@/assets/icons"
-import { Button } from "../server/Button"
-import { ArrowRightIcon } from "@/assets/icons/ArrowRightIcon"
-import Link from "next/link"
-import { MenuItem } from "@/app/components/client/DropDownMenu"
-import { usePathname } from "next/navigation"
+import { FunctionComponent, useEffect, useState } from 'react';
+import { CloseIcon, MenuIcon, RightChevronIcon } from '@/assets/icons';
+import { Button } from '../server/Button';
+import { ArrowRightIcon } from '@/assets/icons/ArrowRightIcon';
+import Link from 'next/link';
+import { MenuItem } from '@/app/components/client/DropDownMenu';
+import { usePathname } from 'next/navigation';
 
 type MobileMenuProps = {
-  menuItems: MenuItem[]
-}
+  menuItems: MenuItem[];
+};
 
-export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
-  menuItems,
-}) => {
-  const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false)
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
+export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) => {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
 
   const toggleSubmenu = (key: string) => {
-    setActiveSubmenu(activeSubmenu === key ? null : key)
-  }
+    setActiveSubmenu(activeSubmenu === key ? null : key);
+  };
 
   useEffect(() => {
     if (pathname) {
-      setIsOpen(false)
+      setIsOpen(false);
     }
-  }, [pathname])
+  }, [pathname]);
 
   return (
     <>
@@ -41,7 +39,7 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
 
       <div
         className={`fixed top-[75px] left-0 w-full transition-all duration-300 ease-in-out overflow-hidden ${
-          isOpen ? "h-[calc(100vh-120px)] opacity-100" : "h-0 opacity-0"
+          isOpen ? 'h-[calc(100vh-120px)] opacity-100' : 'h-0 opacity-0'
         }`}
       >
         <div className={`h-full w-full bg-[#F7F7F7] flex flex-col`}>
@@ -54,23 +52,19 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
                     href={item?.href}
                     className="flex w-full items-center justify-between  text-left text-base"
                   >
-                    <span className="font-bold py-2 px-4 text-black rounded">
-                      {item.label}
-                    </span>
+                    <span className="font-bold py-2 text-black rounded">{item.label}</span>
                   </Link>
                 ) : (
                   <button
                     onClick={() => toggleSubmenu(item.key)}
                     className="flex w-full items-center justify-between  text-left text-base"
                   >
-                    <span className="font-bold py-2 px-4 text-black rounded">
-                      {item.label}
-                    </span>
+                    <span className="font-bold py-2 text-black rounded">{item.label}</span>
 
                     {item.items && (
                       <RightChevronIcon
                         className={`h-4 w-4 transition-transform duration-200 ${
-                          activeSubmenu === item.key ? "rotate-90" : ""
+                          activeSubmenu === item.key ? 'rotate-90' : ''
                         }`}
                       />
                     )}
@@ -118,7 +112,7 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
             ))}
           </ul>
 
-          <div className="space-y-3 p-4">
+          <div className=" p-4 flex flex-col sm:flex-row items-center gap-3">
             <Button size="lg" fullWidth>
               Sign Up
             </Button>
@@ -129,5 +123,5 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({
         </div>
       </div>
     </>
-  )
-}
+  );
+};

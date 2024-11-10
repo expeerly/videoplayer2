@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from "react";
-import { Slider } from "../../../components/ui/client/Slider";
-import { MobileSlider } from "../../../components/ui/server/MobileSlider";
-import { brands } from "./BrandsSlider";
-import Link from "next/link";
+import React, { FunctionComponent } from 'react';
+import { Slider } from '../../../components/ui/client/Slider';
+import { MobileSlider } from '../../../components/ui/server/MobileSlider';
+import { brands } from './BrandsSlider';
+import Link from 'next/link';
 
 export const ConversionSlider: FunctionComponent = () => {
   return (
@@ -13,10 +13,10 @@ export const ConversionSlider: FunctionComponent = () => {
       }}
     >
       <div className=" z-20 w-full sm:max-w-[1170px] flex flex-col justify-center items-center  gap-4 py-10 sm:py-20 ">
-        <h2 className="font-extrabold px-3 text-2xl text-white text-center">
+        <h2 className="font-extrabold px-5 text-2xl text-white text-center">
           Boost conversion with video reviews
         </h2>
-        <p className="text-white px-3 text-center mb-10">
+        <p className="text-white px-5 text-center mb-10">
            Are you a retailer wanting to display expeerly reviews for free?
         </p>
         <div className=" hidden w-full md:flex">
@@ -24,10 +24,10 @@ export const ConversionSlider: FunctionComponent = () => {
             slides={[brands[0]]}
             classNameStyle={{
               leftButtonClassName:
-                "!bg-[linear-gradient(90deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]",
+                '!bg-[linear-gradient(90deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]',
               rightButtonClassName:
-                "!bg-[linear-gradient(270deg,_#4B49EB_47.5%,_rgba(255,255,255,0)_100%)]",
-              cardClassName: "bg-white",
+                '!bg-[linear-gradient(270deg,_#4B49EB_47.5%,_rgba(255,255,255,0)_100%)]',
+              cardClassName: 'bg-white',
             }}
           />
         </div>
@@ -36,17 +36,17 @@ export const ConversionSlider: FunctionComponent = () => {
             slides={[brands[0]]}
             styleClassNames={{
               leftShadowClassName:
-                "!bg-[linear-gradient(90deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]",
+                '!bg-[linear-gradient(90deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]',
               rightShadowClassName:
-                "!bg-[linear-gradient(270deg,_#4B49EB_47.5%,_rgba(255,255,255,0)_100%)]",
-              cardClassName: "bg-white",
+                '!bg-[linear-gradient(270deg,_#4B49EB_47.5%,_rgba(255,255,255,0)_100%)]',
+              cardClassName: 'bg-white',
             }}
           />
         </div>
-        <div className="px-3">
+        <div className="px-5 mt-10">
           <Link
-            href={"/explore"}
-            className=" bg-white mt-10 text-black font-bold w-full sm:w-auto  rounded-full py-3 px-9"
+            href={'/explore'}
+            className=" bg-white  text-black font-bold w-full sm:w-auto  rounded-full py-3 px-9"
           >
             Integrate Video Reviews Now
           </Link>
