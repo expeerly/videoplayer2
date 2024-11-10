@@ -1,7 +1,7 @@
 import React, { FunctionComponent, SVGProps } from "react";
 
 export const BinocularsIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
-  p
+  p,
 ) => {
   return (
     <svg

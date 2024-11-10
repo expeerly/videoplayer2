@@ -3,7 +3,7 @@ import { FunctionComponent } from "react";
 
 type Props = {
   playbackID: string;
-}
+};
 
 export const VideoThumbnail: FunctionComponent<Props> = ({
   playbackID,
@@ -11,8 +11,7 @@ export const VideoThumbnail: FunctionComponent<Props> = ({
   playbackID: string;
 }) => {
   const ThumbnailURL = {
-    url: 
-      `https://image.mux.com/${playbackID}/thumbnail.webp?width=220&time=1`,
+    url: `https://image.mux.com/${playbackID}/thumbnail.webp?width=220&time=1`,
     gif: `https://image.mux.com/${playbackID}/animated.webp?width=150&fps=10`,
     placeholder: `https://image.mux.com/${playbackID}/thumbnail.webp?time=1&width=50`,
   };

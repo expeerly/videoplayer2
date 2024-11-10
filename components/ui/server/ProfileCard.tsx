@@ -45,4 +45,3 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = ({
     </div>
   );
 };
-

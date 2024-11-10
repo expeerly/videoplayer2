@@ -20,7 +20,7 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className }) => {
       className={clsx(
         "flex items-center justify-center gap-2 px-8  rounded-full border border-black  focus:outline-none focus:ring-0 whitespace-nowrap flex-shrink-0",
         { "py-3": !data.imgURL },
-        className
+        className,
       )}
     >
       {data?.icon && <span className="text-lg">{data?.icon}</span>}

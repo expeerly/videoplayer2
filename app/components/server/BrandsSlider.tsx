@@ -1,7 +1,7 @@
-import React, { FunctionComponent } from "react"
-import { Slider } from "../../../components/ui/client/Slider"
-import { MobileSlider } from "../../../components/ui/server/MobileSlider"
-import Link from "next/link"
+import React, { FunctionComponent } from "react";
+import { Slider } from "../../../components/ui/client/Slider";
+import { MobileSlider } from "../../../components/ui/server/MobileSlider";
+import Link from "next/link";
 
 export const brands = [
   [
@@ -26,7 +26,7 @@ export const brands = [
     { imgURL: "/brands/logo7.svg", id: 8 },
     { imgURL: "/brands/logo8.svg", id: 9 },
   ],
-]
+];
 
 export const BrandsSlider: FunctionComponent = () => {
   return (
@@ -77,5 +77,5 @@ export const BrandsSlider: FunctionComponent = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

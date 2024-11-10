@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import {VideoThumbnail} from "./VideoThumbnail";
+import { VideoThumbnail } from "./VideoThumbnail";
 import { StarRating } from "./StarRating";
 import { PlayIcon } from "@/assets/icons/PlayIcon";
 import { Avatar } from "./Avatar";
@@ -29,7 +29,7 @@ export const ReviewCard: FunctionComponent<Props> = ({ review }) => {
             <StarRating rating={review?.rating} size="sm" showRating={false} />
           </div>
           <div className="flex items-center mt-1 ">
-            <PlayIcon  />
+            <PlayIcon />
             {review.view}
           </div>
         </div>

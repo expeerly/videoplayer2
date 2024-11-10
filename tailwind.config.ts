@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import tailwindScrollbar from 'tailwind-scrollbar';
+import tailwindScrollbar from "tailwind-scrollbar";
 
 const config: Config = {
   content: [
@@ -35,11 +35,11 @@ const config: Config = {
           "100%": { transform: "translateX(0%)" },
         },
       },
-      screens:{
-        'mid-lg': '1160px',
-      }
+      screens: {
+        "mid-lg": "1160px",
+      },
     },
   },
-  plugins: [tailwindScrollbar({ preferredStrategy: 'pseudoelements' })],
+  plugins: [tailwindScrollbar({ preferredStrategy: "pseudoelements" })],
 };
 export default config;

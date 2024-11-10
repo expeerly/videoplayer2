@@ -1,6 +1,8 @@
 import React, { FunctionComponent, SVGProps } from "react";
 
-export const CategoriesIcon: FunctionComponent<SVGProps<SVGSVGElement>> = () => {
+export const CategoriesIcon: FunctionComponent<
+  SVGProps<SVGSVGElement>
+> = () => {
   return (
     <svg
       fill="none"

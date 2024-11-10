@@ -1,7 +1,7 @@
 import React, { FunctionComponent, SVGProps } from "react";
 
 export const ArrowRightIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
-  p
+  p,
 ) => {
   return (
     <svg

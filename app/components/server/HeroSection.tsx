@@ -17,7 +17,7 @@ export const HeroSection: FunctionComponent = () => {
       <div className="w-[80%]  flex flex-col gap-2 text-center md:w-[75%] lg:w-[78%] mx-auto z-50 items-center text-white">
         <div className="flex flex-col justify-start -mt-16 md:-mt-20">
           <Image
-            src={'/Quets.svg'}
+            src={"/Quets.svg"}
             alt="Quote"
             width={24}
             height={24}

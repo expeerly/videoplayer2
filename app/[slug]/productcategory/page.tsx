@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const page = () => {
   return (
-    <div className='h-full'>
-        <h1>Product Category</h1>
+    <div className="h-full">
+      <h1>Product Category</h1>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

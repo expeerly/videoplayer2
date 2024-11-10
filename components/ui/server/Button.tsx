@@ -15,7 +15,7 @@ export interface ButtonProps
   children: React.ReactNode;
 }
 
-export const Button:FunctionComponent<ButtonProps> = ({
+export const Button: FunctionComponent<ButtonProps> = ({
   variant = "primary",
   size = "md",
   startContent,
@@ -86,7 +86,7 @@ export const Button:FunctionComponent<ButtonProps> = ({
         "disabled:cursor-not-allowed disabled:opacity-60",
 
         // Additional classes
-        className
+        className,
       )}
       disabled={disabled}
       {...props}
@@ -99,7 +99,9 @@ export const Button:FunctionComponent<ButtonProps> = ({
             <span className="inline-flex shrink-0">{startContent}</span>
           )}
           {children}
-          {endContent && <span className="inline-flex shrink-0">{endContent}</span>}
+          {endContent && (
+            <span className="inline-flex shrink-0">{endContent}</span>
+          )}
         </>
       )}
     </button>

@@ -5,7 +5,6 @@ import { brands } from "./BrandsSlider";
 import Link from "next/link";
 
 export const ConversionSlider: FunctionComponent = () => {
-
   return (
     <section
       className="relative w-full  flex justify-center bg-no-repeat bg-top sm:bg-bottom sm:bg-cover"
@@ -45,7 +44,10 @@ export const ConversionSlider: FunctionComponent = () => {
           />
         </div>
         <div className="px-3">
-          <Link href={"/explore"} className=" bg-white mt-10 text-black font-bold w-full sm:w-auto  rounded-full py-3 px-9">
+          <Link
+            href={"/explore"}
+            className=" bg-white mt-10 text-black font-bold w-full sm:w-auto  rounded-full py-3 px-9"
+          >
             Integrate Video Reviews Now
           </Link>
         </div>

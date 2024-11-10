@@ -1,7 +1,7 @@
 import React, { FunctionComponent, SVGProps } from "react";
 
 export const FilterIcon: FunctionComponent<SVGProps<SVGSVGElement>> = (
-  props
+  props,
 ) => {
   return (
     <svg

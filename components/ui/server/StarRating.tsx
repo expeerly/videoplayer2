@@ -50,7 +50,11 @@ export const StarRating: FunctionComponent<StarRatingProps> = ({
           <StarIcon fill={color} color={color} />
         ) : showPartialStar ? (
           <div className="relative">
-            <StarIcon color={grayColor} fill={grayColor} className="absolute top-0 left-0" />
+            <StarIcon
+              color={grayColor}
+              fill={grayColor}
+              className="absolute top-0 left-0"
+            />
             <div
               className="relative overflow-hidden"
               style={{ width: `${fillPercentage * 100}%` }}

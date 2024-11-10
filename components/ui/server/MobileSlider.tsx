@@ -31,7 +31,8 @@ type Props = {
 };
 
 const BASE_CONTAINER_CLASSES = "w-full relative overflow-hidden";
-const BASE_ROW_CLASSES = "relative flex w-full overflow-x-auto scroll-smooth scrollbar scrollbar-none";
+const BASE_ROW_CLASSES =
+  "relative flex w-full overflow-x-auto scroll-smooth scrollbar scrollbar-none";
 const BASE_SLIDE_CLASSES =
   "flex w-max shrink-0 items-center gap-4 cursor-grab active:cursor-grabbing  px-2 ";
 
@@ -41,7 +42,7 @@ export const MobileSlider: FunctionComponent<Props> = ({
 }) => {
   return (
     <div className={BASE_CONTAINER_CLASSES}>
-      {slides.map((row, index) => ( 
+      {slides.map((row, index) => (
         <div
           key={`row-${index}`}
           className={clsx(BASE_ROW_CLASSES, {

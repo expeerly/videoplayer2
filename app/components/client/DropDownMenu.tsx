@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, {
   FunctionComponent,
@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from "react"
+} from "react";
 import {
   BinocularsIcon,
   CartIcon,
@@ -20,22 +20,22 @@ import {
   TagIcon,
   VideoIcon,
   WorldIcon,
-} from "@/assets/icons"
-import Link from "next/link"
-import { ArrowRightIcon } from "@/assets/icons/ArrowRightIcon"
+} from "@/assets/icons";
+import Link from "next/link";
+import { ArrowRightIcon } from "@/assets/icons/ArrowRightIcon";
 export type MenuItem = {
-  key: string
-  label: string
-  icon: FunctionComponent<SVGProps<SVGSVGElement>>
-  href?: string
+  key: string;
+  label: string;
+  icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+  href?: string;
   items?: {
-    label: string
-    href: string
-    hasLogo?: boolean
-  }[]
-  itemsLabel?: string | undefined
-  devider?: boolean | undefined
-}
+    label: string;
+    href: string;
+    hasLogo?: boolean;
+  }[];
+  itemsLabel?: string | undefined;
+  devider?: boolean | undefined;
+};
 
 export const categroies = [
   { label: "Arts & Crafts", href: "/video-reviews/productcategory/1" },
@@ -52,7 +52,7 @@ export const categroies = [
     href: "/video-reviews/productcategory/10",
   },
   { label: "Health & Wellness", href: "/video-reviews/productcategory/11" },
-]
+];
 
 export const defaultMenuItems: MenuItem[] = [
   { key: "explore", label: "Explore", icon: BinocularsIcon, href: "/explore" },
@@ -101,48 +101,48 @@ export const defaultMenuItems: MenuItem[] = [
       { label: "Italian (IT)", href: "/it" },
     ],
   },
-]
+];
 
 type DropDownMenuProps = {
-  menuItems?: MenuItem[]
-  className?: string
-}
+  menuItems?: MenuItem[];
+  className?: string;
+};
 
 export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
   menuItems = defaultMenuItems,
   className = "",
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null)
+  const [isOpen, setIsOpen] = useState(false);
+  const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
 
-  const menuRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-        setOpenSubmenuKey(null)
+        setIsOpen(false);
+        setOpenSubmenuKey(null);
       }
-    }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const toggleMenu = () => {
-    setIsOpen(!isOpen)
+    setIsOpen(!isOpen);
     if (!isOpen) {
-      setOpenSubmenuKey(null)
+      setOpenSubmenuKey(null);
     }
-  }
+  };
 
   const toggleSubmenu = (key: string) => {
-    setOpenSubmenuKey(openSubmenuKey === key ? null : key)
-  }
+    setOpenSubmenuKey(openSubmenuKey === key ? null : key);
+  };
 
   return (
-     <div className={`relative z-[9999999] ${className}`} ref={menuRef}>
+    <div className={`relative z-[9999999] ${className}`} ref={menuRef}>
       <button
         onClick={toggleMenu}
         className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
@@ -184,9 +184,11 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
                       )}
                     </span>
                   </button>
-                  <div 
+                  <div
                     className={`absolute -left-64 top-0 w-64 bg-white rounded-md shadow-lg py-1 border border-gray-100 transition-all duration-200 ${
-                      openSubmenuKey === item.key ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+                      openSubmenuKey === item.key
+                        ? "opacity-100 visible"
+                        : "opacity-0 invisible pointer-events-none"
                     }`}
                     role="menu"
                   >
@@ -234,5 +236,5 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};

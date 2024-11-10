@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import Link from "next/link";
 
-export const Footer:FunctionComponent = () => {
+export const Footer: FunctionComponent = () => {
   return (
     <footer className="w-full md:w-[calc(100%-199px)] border-l ml-auto px-4 pt-8 pb-14 border-t bg-white md:pb-8">
       <div className="max-w-4xl mx-auto  pt-4 flex justify-center">
