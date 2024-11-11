@@ -11,6 +11,8 @@ type SliderProps = {
     leftButtonClassName?: string;
     rightButtonClassName?: string;
     cardClassName?: string;
+    rowContainerClassName?: string;
+    rowClassName?: string;
   };
 };
 
@@ -167,9 +169,12 @@ export const Slider: FunctionComponent<SliderProps> = ({
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className={clsx('space-y-6', classNameStyle?.rowContainerClassName)}>
         {slides.map((_, rowIndex) => (
-          <div key={rowIndex} className="overflow-hidden mx-8">
+          <div
+            key={rowIndex}
+            className={clsx('overflow-hidden mx-8', classNameStyle?.rowClassName)}
+          >
             <div
               ref={el => setRowRef(el, rowIndex)}
               className="inline-flex gap-4"

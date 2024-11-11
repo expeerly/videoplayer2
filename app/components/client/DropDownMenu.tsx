@@ -136,93 +136,101 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
   };
 
   return (
-    <div className={`relative z-[9999999] ${className}`} ref={menuRef}>
-      <button
-        onClick={toggleMenu}
-        className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
-        type="button"
-        aria-haspopup="true"
-        aria-expanded={isOpen}
-      >
-        <MenuIcon />
-      </button>
-
+    <>
       <div
-        id="dropdown-menu"
-        className={`absolute top-12 right-0 w-64 bg-white rounded-md shadow-lg py-1 transition-all duration-200 ${
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+        className={`fixed top-[90px] left-[200px] h-[calc(100%-90px)] w-[calc(100%-200px)]  bg-black bg-opacity-50 transition-opacity duration-200 ${
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
-        role="menu"
-        aria-orientation="vertical"
-        aria-labelledby="menu-button"
-      >
-        <ul>
-          {menuItems.map(item => (
-            <li key={item.key} className="relative">
-              {item.items ? (
-                <div>
-                  <button
-                    onClick={() => toggleSubmenu(item.key)}
-                    className="w-full flex items-center justify-between px-4 py-2 text-transparent hover:text-black hover:bg-gray-50 transition-colors duration-200"
-                    aria-expanded={openSubmenuKey === item.key}
-                  >
-                    <span className="flex gap-4 items-center">
-                      <item.icon />
-                      <span className="text-black">{item.label}</span>
-                    </span>
-                    <span className="ml-2">
-                      {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
-                    </span>
-                  </button>
-                  <div
-                    className={`absolute -left-64 top-0 w-64 bg-white rounded-md shadow-lg py-1 border border-gray-100 transition-all duration-200 ${
-                      openSubmenuKey === item.key
-                        ? 'opacity-100 visible'
-                        : 'opacity-0 invisible pointer-events-none'
-                    }`}
-                    role="menu"
-                  >
-                    {item.itemsLabel && (
-                      <Link
-                        title={item.itemsLabel}
-                        href={`${item.href}`}
-                        className="text-pink-500 cursor-pointer font-bold text-base flex items-center flex-row w-full text-left px-4 py-2 gap-3"
-                      >
-                        {item.itemsLabel}
-                        <ArrowRightIcon />
-                      </Link>
-                    )}
-                    <ul>
-                      {item.items.map((subItem, index) => (
-                        <li key={index}>
-                          <Link
-                            href={subItem.href}
-                            title={subItem.label}
-                            className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
-                          >
-                            <RightChevronIcon />
-                            {subItem.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+        aria-hidden="true"
+      />
+      <div className={`relative z-[9999999] ${className}`} ref={menuRef}>
+        <button
+          onClick={toggleMenu}
+          className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+        >
+          <MenuIcon />
+        </button>
+
+        <div
+          id="dropdown-menu"
+          className={`absolute top-12 right-0 w-[393px] bg-white  shadow-lg  pb-[32px] pt-[35px] transition-all duration-200 ${
+            isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          }`}
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="menu-button"
+        >
+          <ul>
+            {menuItems.map(item => (
+              <li key={item.key} className="relative">
+                {item.items ? (
+                  <div>
+                    <button
+                      onClick={() => toggleSubmenu(item.key)}
+                      className="w-full flex items-center justify-between px-5 py-2 text-transparent hover:bg-gray-50 transition-colors duration-200"
+                      aria-expanded={openSubmenuKey === item.key}
+                    >
+                      <span className="flex gap-4 items-center">
+                        <item.icon />
+                        <span className="text-black">{item.label}</span>
+                      </span>
+                      <span className="ml-2">
+                        {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
+                      </span>
+                    </button>
+                    <div
+                      className={`absolute -left-[353px] top-0 w-[353px] bg-white  shadow-lg py-1 border border-gray-100 transition-all duration-200 ${
+                        openSubmenuKey === item.key
+                          ? 'opacity-100 visible'
+                          : 'opacity-0 invisible pointer-events-none'
+                      }`}
+                      role="menu"
+                    >
+                      {item.itemsLabel && (
+                        <Link
+                          title={item.itemsLabel}
+                          href={`${item.href}`}
+                          className="text-pink-500 cursor-pointer font-bold text-base flex items-center flex-row w-full text-left px-5 py-2 gap-3"
+                        >
+                          {item.itemsLabel}
+                          <ArrowRightIcon />
+                        </Link>
+                      )}
+                      <ul>
+                        {item.items.map((subItem, index) => (
+                          <li key={index}>
+                            <Link
+                              href={subItem.href}
+                              title={subItem.label}
+                              className="flex items-center gap-2 w-full text-left px-5 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                            >
+                              <RightChevronIcon />
+                              {subItem.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <Link
-                  className="w-full flex items-center text-transparent hover:text-black hover:bg-[#F7F7F7] px-4 py-2 gap-4 transition-colors duration-200"
-                  href={`${item.href}`}
-                  title={item.label}
-                >
-                  <item.icon />
-                  <span className="text-black">{item.label}</span>
-                </Link>
-              )}
-              {item.devider && <div className="border-b border-default-200 my-2" />}
-            </li>
-          ))}
-        </ul>
+                ) : (
+                  <Link
+                    className="w-full flex items-center text-transparent hover:text-black hover:bg-[#F7F7F7] px-4 py-2 gap-4 transition-colors duration-200"
+                    href={`${item.href}`}
+                    title={item.label}
+                  >
+                    <item.icon />
+                    <span className="text-black">{item.label}</span>
+                  </Link>
+                )}
+                {item.devider && <div className="border-b border-default-200 my-4" />}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

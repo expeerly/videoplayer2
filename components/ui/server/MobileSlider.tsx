@@ -27,10 +27,12 @@ type Props = {
     leftShadowClassName?: string;
     rightShadowClassName?: string;
     cardClassName?: string;
+    rowContainerClassName?: string;
+    rowClassName?: string;
   };
 };
 
-const BASE_CONTAINER_CLASSES = 'w-full relative overflow-hidden';
+const BASE_CONTAINER_CLASSES = 'w-full relative overflow-hidden space-y-6';
 const BASE_ROW_CLASSES =
   'relative flex w-full overflow-x-auto scroll-smooth scrollbar scrollbar-none';
 const BASE_SLIDE_CLASSES =
@@ -38,14 +40,9 @@ const BASE_SLIDE_CLASSES =
 
 export const MobileSlider: FunctionComponent<Props> = ({ slides = brands, styleClassNames }) => {
   return (
-    <div className={BASE_CONTAINER_CLASSES}>
+    <div className={clsx(BASE_CONTAINER_CLASSES, styleClassNames?.rowContainerClassName)}>
       {slides.map((row, index) => (
-        <div
-          key={`row-${index}`}
-          className={clsx(BASE_ROW_CLASSES, {
-            'mb-4': index !== slides.length - 1,
-          })}
-        >
+        <div key={`row-${index}`} className={clsx(BASE_ROW_CLASSES, styleClassNames?.rowClassName)}>
           <div className={BASE_SLIDE_CLASSES}>
             {row.map((brand, idx) => (
               <SliderCard

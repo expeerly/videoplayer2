@@ -42,7 +42,7 @@ export const StarRating: FunctionComponent<StarRatingProps> = ({
     const fillPercentage = calculateStarFill(index);
     const showPartialStar = fillPercentage > 0 && fillPercentage < 1;
     const showFullStar = fillPercentage === 1;
-    const grayColor = '#D1D5DB'; // Tailwind gray-300 equivalent
+    const grayColor = '#BBB9BF'; // Tailwind gray-300 equivalent
 
     return (
       <div key={index} className="relative inline-block">

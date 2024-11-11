@@ -27,6 +27,27 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
     }
   }, [pathname]);
 
+  useEffect(() => {
+    if (isOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${scrollY}px`;
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    }
+
+    return () => {
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+    };
+  }, [isOpen]);
+
   return (
     <>
       <button
@@ -39,7 +60,7 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
 
       <div
         className={`fixed top-[75px] left-0 w-full transition-all duration-300 ease-in-out overflow-hidden ${
-          isOpen ? 'h-[calc(100vh-120px)] opacity-100' : 'h-0 opacity-0'
+          isOpen ? 'h-[calc(100vh-77px)] opacity-100' : 'h-0 opacity-0'
         }`}
       >
         <div className={`h-full w-full bg-[#F7F7F7] flex flex-col`}>
