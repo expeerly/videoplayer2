@@ -6,20 +6,14 @@ import { ReviewGrid } from '@/src/components/ui/server/ReviewGrid';
 import { CategoriesSlider } from './components/server/CategoriesSlider';
 import { ConversionSlider } from './components/server/Conversion';
 import { NextPage, Metadata } from 'next';
-import { Locale } from '@/src/i18n/config';
 import { getDictionary } from './lib/dictionary';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: Locale };
-}): Promise<Metadata> {
-  const lang = await params;
-  const dict = await getDictionary(lang.locale);
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getDictionary();
 
   return {
-    title: dict.home_site_title,
-    description: dict.home_meta_description,
+    title: t.home_site_title,
+    description: t.home_meta_description,
   };
 }
 
