@@ -1,0 +1,45 @@
+import { HeroSection } from './components/server/HeroSection';
+import { ExpolreReviewers } from './components/server/ExploreReviewers';
+import { HowExpeerlyWorks } from './components/server/HowExpeerlyWork';
+import { BrandsSlider } from './components/server/BrandsSlider';
+import { ReviewGrid } from '@/src/components/ui/server/ReviewGrid';
+import { CategoriesSlider } from './components/server/CategoriesSlider';
+import { ConversionSlider } from './components/server/Conversion';
+import { NextPage, Metadata } from 'next';
+import { Locale } from '@/src/i18n/config';
+import { getDictionary } from './lib/dictionary';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: Locale };
+}): Promise<Metadata> {
+  const lang = await params;
+  const dict = await getDictionary(lang.locale);
+
+  return {
+    title: dict.home_site_title,
+    description: dict.home_meta_description,
+  };
+}
+
+const HomePage: NextPage = () => {
+  return (
+    <div className="flex flex-col w-full items-center justify-center">
+      <HeroSection />
+      <ExpolreReviewers />
+      <BrandsSlider />
+      <section className="flex justify-center max-w-[900px] mb-5 w-full mx-auto pt-16">
+        <ReviewGrid />
+      </section>
+      <CategoriesSlider />
+      <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]  ">
+        <ReviewGrid />
+      </section>
+      <ConversionSlider />
+      <HowExpeerlyWorks />
+    </div>
+  );
+};
+
+export default HomePage;

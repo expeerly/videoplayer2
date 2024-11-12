@@ -2,7 +2,7 @@ import type { Config } from 'tailwindcss';
 import tailwindScrollbar from 'tailwind-scrollbar';
 
 const config: Config = {
-  content: ['./components/**/*.{js,ts,jsx,tsx,mdx}', './app/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: ['./components/**/*.{js,ts,jsx,tsx,mdx}', './src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       fontFamily: {
