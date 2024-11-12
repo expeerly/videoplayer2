@@ -1,6 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Mulish', system-ui, sans-serif;
+  }
+}
 
 @font-face {
   font-family: 'Geist';
@@ -11,4 +19,5 @@
 
 :root {
   --font-sans: 'Geist', sans-serif;
+  --font-mulish: 'Mulish', sans-serif;
 }
