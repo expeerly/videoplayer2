@@ -17,6 +17,7 @@ import {
 } from '@/assets/icons';
 import Link from 'next/link';
 import { ArrowRightIcon } from '@/assets/icons/ArrowRightIcon';
+import { Button } from '@/components/ui/server/Button';
 export type MenuItem = {
   key: string;
   label: string;
@@ -138,21 +139,22 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
   return (
     <>
       <div
-        className={`fixed top-[90px] left-[200px] h-[calc(100%-90px)] w-[calc(100%-200px)]  bg-black bg-opacity-50 transition-opacity duration-200 ${
+        className={`fixed top-[90px] left-[200px] h-[calc(100%-90px)] w-[calc(100%-200px)]  bg-black bg-opacity-25 transition-opacity duration-200 ${
           isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
         aria-hidden="true"
       />
       <div className={`relative z-[9999999] ${className}`} ref={menuRef}>
-        <button
+        <Button
+          isOnlyIcon
+          variant="secondary"
           onClick={toggleMenu}
-          className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
           type="button"
           aria-haspopup="true"
           aria-expanded={isOpen}
         >
           <MenuIcon />
-        </button>
+        </Button>
 
         <div
           id="dropdown-menu"
@@ -217,7 +219,7 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
                   </div>
                 ) : (
                   <Link
-                    className="w-full flex items-center text-transparent hover:text-black hover:bg-[#F7F7F7] px-4 py-2 gap-4 transition-colors duration-200"
+                    className="w-full flex items-center text-transparent hover:bg-[#F7F7F7] px-5 py-2 gap-4 transition-colors duration-200"
                     href={`${item.href}`}
                     title={item.label}
                   >

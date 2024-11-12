@@ -35,6 +35,10 @@ const config: Config = {
         },
       },
       screens: {
+        mobileS: '320px',
+        mobileM: '375px',
+        mobileL: '425px',
+        'mid-tablet': '550px',
         'mid-lg': '1160px',
       },
     },

@@ -18,7 +18,7 @@ export const BottomBar: FunctionComponent = () => {
             ${pathname.includes(item.href) ? 'bg-gray-100 text-black' : 'text-transparent'}`}
           href={item.href}
         >
-          <item.icon className="w-5 h-5" />
+          <item.icon />
         </Link>
       ))}
     </nav>

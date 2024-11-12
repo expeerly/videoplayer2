@@ -50,13 +50,16 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
 
   return (
     <>
-      <button
+      <Button
         onClick={() => setIsOpen(!isOpen)}
         type="button"
-        className="flex items-center space-x-2 p-3 rounded-full bg-[#EFEDF4] focus:ring-2 focus:ring-[#EFEDF4] focus:ring-opacity-50 transition-colors duration-200"
+        aria-label="Toggle menu"
+        variant="secondary"
+        title="Toggle menu"
+        isOnlyIcon
       >
         {isOpen ? <CloseIcon /> : <MenuIcon />}
-      </button>
+      </Button>
 
       <div
         className={`fixed top-[75px] left-0 w-full transition-all duration-300 ease-in-out overflow-hidden ${

@@ -3,6 +3,7 @@ import { VideoThumbnail } from './VideoThumbnail';
 import { StarRating } from './StarRating';
 import { PlayIcon } from '@/assets/icons/PlayIcon';
 import { Avatar } from './Avatar';
+import clsx from 'clsx';
 
 type Props = {
   review: {
@@ -18,9 +19,17 @@ export const ReviewCard: FunctionComponent<Props> = ({ review }) => {
   return (
     <div
       key={review.id}
-      className="relative min-w-[160px] max-w-[160px] rounded-xl overflow-hidden box-border"
+      className={clsx(
+        'relative rounded-[10px] overflow-hidden box-border',
+        'min-w-[160px] w-[160px] mobileS:w-[180px] mobileS:min-w-[180px]',
+        'mobileM:min-w-[calc(50%-20px)] mobileM:w-[calc(50%-20px)]',
+        'mobileL:w-[calc(45%-20px)] mobileL:min-w-[calc(45%-20px)]',
+        'mid-tablet:w-[calc(35%-25x)] mid-tablet:min-w-[calc(35%-25px)]',
+        'sm:w-[calc(30%-20px)] sm:min-w-[calc(30%-20px)]',
+        'md:w-[167px] md:max-w-[167px] md:min-w-[167px]'
+      )}
     >
-      <div className={`h-64 relative group cursor-pointer`}>
+      <div className={`h-[273px] relative group cursor-pointer w-full`}>
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40" />
         <VideoThumbnail playbackID="DS00Spx1CV902MCtPj5WknGlR102V5HFkDe" />
         <div className="absolute top-3 left-3   text-white  rounded-full font-medium text-xs">

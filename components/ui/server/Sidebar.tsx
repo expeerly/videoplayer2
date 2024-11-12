@@ -34,7 +34,7 @@ export const Sidebar: FunctionComponent = () => {
           {navItems.map(item => {
             const Icon = item.icon;
             return (
-              <ActiveLink key={item.name} href={item.href}>
+              <ActiveLink key={item.name} href={item.href} title={item.name}>
                 <Icon />
                 <span className="text-black">{item.name}</span>
               </ActiveLink>
