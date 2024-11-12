@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Slider } from '../../../components/ui/client/Slider';
 import { MobileSlider } from '../../../components/ui/server/MobileSlider';
-import Link from 'next/link';
+import { Button } from '@/components/ui/server/Button';
 
 export const brands = [
   [
@@ -69,13 +69,16 @@ export const BrandsSlider: FunctionComponent = () => {
             }}
           />
         </div>
-        <div className="px-5 w-full flex justify-center">
-          <Link
-            href="/explore"
-            className=" bg-white mt-10 mx-auto text-black font-bold w-full sm:w-auto text-center rounded-full py-3 px-16"
+        <div className="px-5 w-full flex justify-center sm:w-[340px]">
+          <Button
+            size="lg"
+            variant="secondary"
+            href="/video-reviews"
+            fullWidth
+            className=" bg-white mt-10 text-center"
           >
             Get Video Reviewed
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

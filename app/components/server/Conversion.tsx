@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Slider } from '../../../components/ui/client/Slider';
 import { MobileSlider } from '../../../components/ui/server/MobileSlider';
 import { brands } from './BrandsSlider';
-import Link from 'next/link';
+import { Button } from '@/components/ui/server/Button';
 
 export const ConversionSlider: FunctionComponent = () => {
   return (
@@ -43,13 +43,16 @@ export const ConversionSlider: FunctionComponent = () => {
             }}
           />
         </div>
-        <div className="px-5 mt-10">
-          <Link
-            href={'/explore'}
-            className=" bg-white  text-black font-bold w-full sm:w-auto  rounded-full py-3 px-9"
+        <div className="px-5 mt-10 w-full flex justify-center sm:w-max">
+          <Button
+            size="lg"
+            variant="secondary"
+            href="/video-reviews"
+            fullWidth
+            className=" bg-white mt-10 text-center"
           >
             Integrate Video Reviews Now
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

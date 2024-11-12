@@ -14,8 +14,8 @@ export const ExpolreReviewers: FunctionComponent = () => {
 
       <ReviewGrid />
       <ReviewGrid />
-      <div className="w-full md:max-w-[300px] px-5 md:px-0">
-        <Button size="lg" variant="primary" className="font-bold text-nowrap" fullWidth>
+      <div className="w-full sm:max-w-[300px] px-5 mid-lg:px-0">
+        <Button href="/explore" size="lg" variant="primary" fullWidth>
           Explore All Reviewers
         </Button>
       </div>

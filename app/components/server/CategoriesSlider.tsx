@@ -10,10 +10,10 @@ export const CategoriesSlider: FunctionComponent = () => {
         Whether you’d like to travel, find the perfect sofa or buy a new car, we’ve got you covered.
       </p>
       <div className=" hidden w-full  md:flex">
-        <Slider />
+        <Slider classNameStyle={{ rowContainerClassName: '!space-y-4' }} />
       </div>
       <div className=" flex w-full md:hidden">
-        <MobileSlider />
+        <MobileSlider styleClassNames={{ rowContainerClassName: '!space-y-4' }} />
       </div>
     </div>
   );

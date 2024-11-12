@@ -13,6 +13,8 @@ const config: Config = {
       colors: {
         pink: {
           500: '#FA0F9C',
+          600: '#DE1777',
+          700: '#C6186B',
         },
         grey: {
           700: '#0E0E0F',
