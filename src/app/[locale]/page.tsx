@@ -2,11 +2,11 @@ import { HeroSection } from './components/server/HeroSection';
 import { ExpolreReviewers } from './components/server/ExploreReviewers';
 import { HowExpeerlyWorks } from './components/server/HowExpeerlyWork';
 import { BrandsSlider } from './components/server/BrandsSlider';
-import { ReviewGrid } from '@/src/components/ui/server/ReviewGrid';
 import { CategoriesSlider } from './components/server/CategoriesSlider';
 import { ConversionSlider } from './components/server/Conversion';
 import { NextPage, Metadata } from 'next';
 import { getDictionary } from './lib/dictionary';
+import { ReviewGrid } from '../components/server/ReviewGrid';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getDictionary();

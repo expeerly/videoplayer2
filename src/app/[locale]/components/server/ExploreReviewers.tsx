@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { Button } from '../../../../components/ui/server/Button';
-import { ReviewGrid } from '../../../../components/ui/server/ReviewGrid';
+import { Button } from '@/src/app/components/server/Button';
+import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { getDictionary } from '../../lib/dictionary';
 
 export const ExpolreReviewers: FunctionComponent = async () => {

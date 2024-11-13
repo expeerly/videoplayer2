@@ -25,8 +25,8 @@ import {
 } from '@/src/assets/icons';
 import Link from 'next/link';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
-import { Button } from '@/src/components/ui/server/Button';
 import { useTranslations } from 'use-intl';
+import { Button } from '@/src/app/components/server/Button';
 
 export type MenuItem = {
   key: string;

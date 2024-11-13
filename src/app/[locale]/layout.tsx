@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import './globals.css';
-import { Footer } from '@/src/components/ui/server/Footer';
-import { Sidebar } from '@/src/components/ui/server/Sidebar';
-import { Navbar } from '@/src/components/ui/client/Navbar';
+import { Footer } from '@/src/app/components/server/Footer';
+import { Sidebar } from '@/src/app/components/server/Sidebar';
+import { Navbar } from '@/src/app/components/client/Navbar';
 import { PropsWithChildren } from 'react';
 import { notFound } from 'next/navigation';
 import { routing } from '@/src/i18n/routing';
-import { BottomBar } from '@/src/components/ui/client/BottomBar';
+import { BottomBar } from '@/src/app/components/client/BottomBar';
 
 export const metadata: Metadata = {
   title: 'Expeerly App',
