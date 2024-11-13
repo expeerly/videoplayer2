@@ -1,3 +1,4 @@
+export { ArrowRightIcon } from './ArrowRightIcon';
 export { BinocularsIcon } from './BinocularsIcon';
 export { CartIcon } from './CartIcon';
 export { CategoriesIcon } from './CategoriesIcon';

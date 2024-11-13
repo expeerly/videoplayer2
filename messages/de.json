@@ -15,5 +15,24 @@
   "cta_button_retailer": "Videobewertungen jetzt integrieren",
   "home_h2_how_expeerly_works": "Wie expeerly funktioniert",
   "home_how_it_works_body_text": "Expeerly ist ein Ort, an dem Verbraucher Einblicke in die Meinungen anderer Käufer zu Produkten und Dienstleistungen erhalten. Die Videobewertungen werden von unserer Gemeinschaft von Rezensenten aus der ganzen Welt geteilt.",
-  "cta_button_how_it_works": "Mehr erfahren"
+  "cta_button_how_it_works": "Mehr erfahren",
+  "footer": {
+    "contactUs": "Kontakt",
+    "aboutUs": "Mehr über uns",
+    "termsCompanies": "AGB Unternehmen",
+    "termsReviewers": "AGB Tester",
+    "privacyPolicy": "Datenschutzrichtlinie"
+  },
+  "menu": {
+    "explore": "Entedecken",
+    "brands": "Brands",
+    "reviewers": "Tester",
+    "categories": "Kategorien",
+    "learnMore": "Mehr erfahren",
+    "submitVideoReview": "Video Review einreichen",
+    "forBrandsAndBusinesses": "Für Brands & Unternehmen",
+    "forMarketplaces": "Für Marktplätze",
+    "language": "Deutsch (DE)",
+    "viewAllCategories": "Alle Kategorien ansehen"
+  }
 }

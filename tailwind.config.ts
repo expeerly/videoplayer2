@@ -18,6 +18,9 @@ const config: Config = {
         grey: {
           700: '#0E0E0F',
         },
+        blue: {
+          500: '#4B49EB',
+        },
       },
       animation: {
         marquee: 'marquee 25s linear infinite',

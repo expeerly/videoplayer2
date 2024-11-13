@@ -58,20 +58,22 @@ const BASE_SLIDE_CLASSES =
 
 export const MobileSlider: FunctionComponent<Props> = ({ slides = brands, styleClassNames }) => {
   return (
-    <div className={clsx(BASE_CONTAINER_CLASSES, styleClassNames?.rowContainerClassName)}>
+    <ul className={clsx(BASE_CONTAINER_CLASSES, styleClassNames?.rowContainerClassName)}>
       {slides.map((row, index) => (
-        <div key={`row-${index}`} className={clsx(BASE_ROW_CLASSES, styleClassNames?.rowClassName)}>
-          <div className={BASE_SLIDE_CLASSES}>
+        <li key={`row-${index}`} className={clsx(BASE_ROW_CLASSES, styleClassNames?.rowClassName)}>
+          <ul className={BASE_SLIDE_CLASSES}>
             {[...row].map((brand, idx) => (
-              <SliderCard
-                className={styleClassNames?.cardClassName}
-                key={`${brand.name}-${idx}`}
-                data={brand}
-              />
+              <li key={`${brand.name}-${idx}`}>
+                <SliderCard
+                  className={styleClassNames?.cardClassName}
+                  key={`${brand.name}-${idx}`}
+                  data={brand}
+                />
+              </li>
             ))}
-          </div>
-        </div>
+          </ul>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };

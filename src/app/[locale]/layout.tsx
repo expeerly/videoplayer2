@@ -8,10 +8,23 @@ import { Navbar } from '@/src/components/ui/client/Navbar';
 import { PropsWithChildren } from 'react';
 import { notFound } from 'next/navigation';
 import { routing } from '@/src/i18n/routing';
+import { BottomBar } from '@/src/components/ui/client/BottomBar';
 
 export const metadata: Metadata = {
   title: 'Expeerly App',
   description: 'Discover and share video reviews',
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.ico' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    other: [
+      { url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+  },
 };
 
 export default async function RootLayout({
@@ -31,10 +44,11 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <div className="flex h-full flex-col font-mulish">
             <Navbar />
-            <main className="flex w-full flex-col-reverse md:flex-row">
+            <div className="flex w-full flex-col-reverse md:flex-row">
               <Sidebar />
-              <div className="flex-1 w-full md:w-[calc(100%-200px)] relative ">{children}</div>
-            </main>
+              <BottomBar />
+              <main className="flex-1 w-full md:w-[calc(100%-200px)] relative ">{children}</main>
+            </div>
             <Footer />
           </div>
         </NextIntlClientProvider>

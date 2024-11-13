@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import { HeaderImage } from '@/src/assets/HeaderImage';
 import { ScrollButton } from '../client/ScrollButton';
 import Image from 'next/image';
 import { getDictionary } from '../../lib/dictionary';
@@ -16,7 +15,13 @@ export const HeroSection: FunctionComponent = async () => {
         className="w-full flex items-center justify-bottom relative bg-top bg-cover bg-no-repeat z-0 h-[401px] md:bg-bottom sm:h-[400px] md:h-[500px] lg:h-[450px]"
       >
         <div className="absolute h-[340px] w-[300px] top-7 mobileL:w-[350px] sm:top-6 md:top-16 lg:top-18 left-1/2 transform -translate-x-1/2 flex justify-center">
-          <HeaderImage />
+          <Image
+            src={'/HeaderImage.svg'}
+            alt={'Header Image'}
+            height={340}
+            width={300}
+            className=" mobileL:w-[350px]"
+          />
         </div>
         <div className="w-[80%] flex flex-col gap-2 text-center  mx-auto z-50 items-center text-white sm:mt-10 md:w-[75%] lg:w-[78%]">
           <div className="flex items-start justify-start">

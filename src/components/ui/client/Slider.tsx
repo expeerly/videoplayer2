@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, FunctionComponent } from 'react';
+import React, { useState, useRef, FunctionComponent, useCallback, memo } from 'react';
 import { SlideProps, SliderCard } from '../server/SliderCard';
 import clsx from 'clsx';
 import { LeftChevronIcon, RightChevronIcon } from '@/src/assets/icons';
@@ -50,99 +50,78 @@ const defaultCategories: SlideProps[][] = [
     { name: 'Beauty & Personal Care', icon: '💅' },
     { name: 'Books & Media', icon: '📚' },
     { name: 'Clothes and Fashion', icon: '👕' },
-    { name: 'Travel', icon: '✈️' },
-    { name: 'Automobile', icon: '🚗' },
-    { name: 'Health & Wellness', icon: '❤️' },
-    { name: 'Arts & Crafts', icon: '🎨' },
-    { name: 'Baby & Child Care', icon: '👶' },
-    { name: 'Home & Kitchen', icon: '🏠' },
-    { name: 'Beauty & Personal Care', icon: '💅' },
-    { name: 'Books & Media', icon: '📚' },
-    { name: 'Clothes and Fashion', icon: '👕' },
   ],
 ];
 
-export const Slider: FunctionComponent<SliderProps> = ({
+const getNavigationButtonContainerClasses = (
+  direction: 'left' | 'right',
+  customClassName?: string
+) => {
+  const gradientDirection =
+    direction === 'left'
+      ? 'bg-[linear-gradient(90deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]'
+      : 'bg-[linear-gradient(270deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]';
+
+  return clsx(
+    BUTTON_CONTAINER_BASE_CLASSES,
+    gradientDirection,
+    direction === 'left' ? 'left-0 justify-start' : 'right-0 justify-end',
+    customClassName
+  );
+};
+
+const SliderComponent: FunctionComponent<SliderProps> = ({
   slides = defaultCategories,
   classNameStyle,
 }) => {
   const [positions, setPositions] = useState<number[]>(slides.map(() => 0));
   const [isTransitioning, setIsTransitioning] = useState<boolean[]>(slides.map(() => false));
   const containerRef = useRef<HTMLDivElement>(null);
-  const rowRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const rowRefs = useRef<Array<HTMLUListElement | null>>([]);
 
-  const extendedslides = slides.map(row => [...row, ...row, ...row]);
-
-  // Helper functions for dynamic classes
-  const getNavigationButtonContainerClasses = (
-    direction: 'left' | 'right',
-    customClassName?: string
-  ) => {
-    const gradientDirection =
-      direction === 'left'
-        ? 'bg-[linear-gradient(90deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]'
-        : 'bg-[linear-gradient(270deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]';
-
-    return clsx(
-      BUTTON_CONTAINER_BASE_CLASSES,
-      gradientDirection,
-      direction === 'left' ? 'left-0 justify-start' : 'right-0 justify-end',
-      customClassName
-    );
-  };
-
-  const getSlideRowStyles = (rowIndex: number) => ({
-    transform: `translateX(${positions[rowIndex]}px)`,
-    transition: clsx({
-      'transform 0.3s ease-in-out': isTransitioning[rowIndex],
-      none: !isTransitioning[rowIndex],
+  const getSlideRowStyles = useCallback(
+    (rowIndex: number) => ({
+      transform: `translateX(${positions[rowIndex]}px)`,
+      transition: clsx({
+        'transform 0.3s ease-in-out': isTransitioning[rowIndex],
+        none: !isTransitioning[rowIndex],
+      }),
     }),
-  });
+    [isTransitioning, positions]
+  );
 
-  useEffect(() => {
-    rowRefs.current = rowRefs.current.slice(0, slides.length);
+  const setRowRef = useCallback(
+    (el: HTMLUListElement | null, index: number) => {
+      rowRefs.current[index] = el;
+    },
+    [rowRefs]
+  );
 
-    rowRefs.current.forEach((rowRef, index) => {
-      if (rowRef) {
-        const rowWidth = slides[index].length * (160 + 8);
-        rowRef.style.transform = `translateX(-${rowWidth}px)`;
-        setPositions(prev => {
-          const newPositions = [...prev];
-          newPositions[index] = -rowWidth;
-          return newPositions;
-        });
-      }
-    });
-  }, [slides]);
+  const scroll = useCallback((direction: 'left' | 'right') => {
+    const containerWidth = containerRef.current?.offsetWidth || 0;
+    const increment = direction === 'left' ? -300 : 300;
 
-  const handleTransitionEnd = (rowIndex: number) => {
-    const currentPosition = positions[rowIndex];
-    const rowLength = slides[rowIndex].length;
-    const rowWidth = rowLength * (160 + 8);
-
-    if (currentPosition <= -rowWidth * 2 || currentPosition >= 0) {
-      setIsTransitioning(prev => {
-        const newState = [...prev];
-        newState[rowIndex] = false;
-        return newState;
-      });
-      setPositions(prev => {
-        const newPositions = [...prev];
-        newPositions[rowIndex] = -rowWidth;
-        return newPositions;
-      });
-    }
-  };
-
-  const setRowRef = (el: HTMLDivElement | null, index: number) => {
-    rowRefs.current[index] = el;
-  };
-
-  const scroll = (direction: 'left' | 'right') => {
-    const increment = direction === 'left' ? 300 : -300;
     setIsTransitioning(prev => prev.map(() => true));
-    setPositions(prev => prev.map(pos => pos + increment));
-  };
+
+    setPositions(prev => {
+      return prev.map((position, index) => {
+        const rowRef = rowRefs.current[index];
+        if (!rowRef) return position;
+
+        const rowWidth = rowRef.scrollWidth;
+        let newPosition = position + increment;
+
+        // Add bounds checking
+        if (newPosition > 0) {
+          newPosition = 0;
+        } else if (newPosition < -(rowWidth - containerWidth + 64)) {
+          newPosition = -(rowWidth - containerWidth + 64);
+        }
+
+        return newPosition;
+      });
+    });
+  }, []);
 
   return (
     <div ref={containerRef} className="relative w-full max-w-7xl mx-auto">
@@ -169,33 +148,38 @@ export const Slider: FunctionComponent<SliderProps> = ({
         </button>
       </div>
 
-      <div className={clsx('space-y-6', classNameStyle?.rowContainerClassName)}>
-        {slides.map((_, rowIndex) => (
-          <div
-            key={rowIndex}
-            className={clsx('overflow-hidden mx-8', classNameStyle?.rowClassName)}
-          >
-            <div
-              ref={el => setRowRef(el, rowIndex)}
-              className="inline-flex gap-4"
-              style={getSlideRowStyles(rowIndex)}
-              onTransitionEnd={() => handleTransitionEnd(rowIndex)}
-            >
-              {[
-                ...extendedslides[rowIndex],
-                ...extendedslides[rowIndex],
-                ...extendedslides[rowIndex],
-              ].map((category, index) => (
-                <SliderCard
-                  key={`${category.name}-${index}`}
-                  data={{ ...category }}
-                  className={classNameStyle?.cardClassName}
-                />
-              ))}
+      <ul className={clsx('space-y-6', classNameStyle?.rowContainerClassName)}>
+        {slides.map((row, rowIndex) => (
+          <li key={rowIndex} className="relative">
+            <div className={clsx('overflow-hidden mx-8', classNameStyle?.rowClassName)}>
+              <ul
+                ref={el => setRowRef(el, rowIndex)}
+                className="inline-flex gap-4"
+                style={getSlideRowStyles(rowIndex)}
+                onTransitionEnd={() => {
+                  setIsTransitioning(prev => {
+                    const newState = [...prev];
+                    newState[rowIndex] = false;
+                    return newState;
+                  });
+                }}
+              >
+                {row.map((category, index) => (
+                  <li key={`${category.name}-${index} h-full w-full`}>
+                    <SliderCard
+                      key={`${category.name}-${index}`}
+                      data={category}
+                      className={classNameStyle?.cardClassName}
+                    />
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };
+
+export const Slider = memo(SliderComponent);

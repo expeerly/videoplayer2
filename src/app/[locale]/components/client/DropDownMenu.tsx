@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FunctionComponent, SVGProps, useEffect, useRef, useState } from 'react';
+import React, { FunctionComponent, memo, SVGProps, useEffect, useRef, useState } from 'react';
 import {
   BinocularsIcon,
   CartIcon,
@@ -18,6 +18,7 @@ import {
 import Link from 'next/link';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import { Button } from '@/src/components/ui/server/Button';
+import { useTranslations } from 'use-intl';
 
 export type MenuItem = {
   key: string;
@@ -59,11 +60,11 @@ export const defaultMenuItems: MenuItem[] = [
     href: '/video-reviews/brand',
   },
   {
-    key: 'Categories',
+    key: 'categories',
     label: 'Categories',
     icon: CategoriesIcon,
     items: categroies,
-    itemsLabel: 'View all categories',
+    itemsLabel: 'viewAllCategories',
     href: '/video-reviews/productcategory',
   },
   {
@@ -73,15 +74,15 @@ export const defaultMenuItems: MenuItem[] = [
     devider: true,
     href: '/video-reviews/reviewers',
   },
-  { key: 'learn', label: 'Learn more', icon: InfoIcon },
-  { key: 'submit', label: 'Submit a video review', icon: VideoIcon },
+  { key: 'learnMore', label: 'Learn more', icon: InfoIcon },
+  { key: 'submitVideoReview', label: 'Submit a video review', icon: VideoIcon },
   {
-    key: 'brands_businesses',
+    key: 'forBrandsAndBusinesses',
     label: 'For brands & businesses',
     icon: TagIcon,
   },
   {
-    key: 'marketplaces',
+    key: 'forMarketplaces',
     label: 'For marketplaces',
     icon: CartIcon,
     devider: true,
@@ -104,19 +105,19 @@ type DropDownMenuProps = {
   className?: string;
 };
 
-export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
+const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   menuItems = defaultMenuItems,
   className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations('menu');
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
-        setOpenSubmenuKey(null);
       }
     };
 
@@ -127,9 +128,7 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
   }, []);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-    if (!isOpen) {
-      setOpenSubmenuKey(null);
-    }
+    setOpenSubmenuKey(null);
   };
 
   const toggleSubmenu = (key: string) => {
@@ -140,11 +139,11 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
     <>
       <div
         className={`fixed top-[90px] left-[200px] h-[calc(100%-90px)] w-[calc(100%-200px)]  bg-black bg-opacity-25 transition-opacity duration-200 ${
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+          isOpen ? 'opacity-100 h-full' : 'opacity-0 h-0 pointer-events-none'
         }`}
         aria-hidden="true"
       />
-      <div className={`relative z-[9999999] ${className}`} ref={menuRef}>
+      <div className={`relative z-[9999999] group/menu ${className}`} ref={menuRef}>
         <Button
           isOnlyIcon
           variant="secondary"
@@ -152,35 +151,37 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
           type="button"
           aria-haspopup="true"
           aria-expanded={isOpen}
+          title="MenuIcon"
         >
           <MenuIcon />
         </Button>
 
         <div
           id="dropdown-menu"
-          className={`absolute top-12 right-0 w-[393px] bg-white  shadow-lg  pb-[32px] pt-[35px] transition-all duration-200 ${
-            isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-          }`}
+          className={`absolute top-12 right-0 w-[393px] bg-white  shadow-lg overflow-hidden opacity-0 h-0 group-focus-within/menu:h-auto group-focus-within/menu:opacity-100  group-focus-within/menu:overflow-visible`}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
         >
-          <ul>
+          <ul className=" pb-[32px] pt-[35px] ">
             {menuItems.map(item => (
               <li key={item.key} className="relative">
                 {item.items ? (
                   <div>
                     <button
                       onClick={() => toggleSubmenu(item.key)}
+                      role="menuitem"
                       className="w-full flex items-center justify-between px-5 py-2 text-transparent hover:bg-gray-50 transition-colors duration-200"
+                      title="item.label"
                       aria-expanded={openSubmenuKey === item.key}
                     >
                       <span className="flex gap-4 items-center">
                         <item.icon />
-                        <span className="text-black">{item.label}</span>
+                        <span className="text-black">{t(item.key)}</span>
                       </span>
                       <span className="ml-2">
-                        {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
+                        <DownArrowIcon className="group-focus-within:block hidden" />{' '}
+                        <RightChevronIcon className="group-focus-within:hidden block" />
                       </span>
                     </button>
                     <div
@@ -193,11 +194,12 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
                     >
                       {item.itemsLabel && (
                         <Link
+                          role="menuitem"
                           title={item.itemsLabel}
                           href={`${item.href}`}
                           className="text-pink-500 cursor-pointer font-bold text-base flex items-center flex-row w-full text-left px-5 py-2 gap-3"
                         >
-                          {item.itemsLabel}
+                          {t(item.itemsLabel)}
                           <ArrowRightIcon />
                         </Link>
                       )}
@@ -205,9 +207,10 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
                         {item.items.map((subItem, index) => (
                           <li key={index}>
                             <Link
+                              role="menuitem"
                               href={subItem.href}
                               title={subItem.label}
-                              className="flex items-center gap-2 w-full text-left px-5 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                              className="flex items-center gap-2 w-full text-left px-5 py-2 text-black hover:bg-gray-50"
                             >
                               <RightChevronIcon />
                               {subItem.label}
@@ -219,12 +222,13 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
                   </div>
                 ) : (
                   <Link
+                    role="menuitem"
                     className="w-full flex items-center text-transparent hover:bg-[#F7F7F7] px-5 py-2 gap-4 transition-colors duration-200"
                     href={`${item.href}`}
                     title={item.label}
                   >
                     <item.icon />
-                    <span className="text-black">{item.label}</span>
+                    <span className="text-black">{t(item.key)}</span>
                   </Link>
                 )}
                 {item.devider && <div className="border-b border-default-200 my-4" />}
@@ -236,3 +240,5 @@ export const DropDownMenu: FunctionComponent<DropDownMenuProps> = ({
     </>
   );
 };
+
+export const DropDownMenu = memo(DropDownMenuComponent);

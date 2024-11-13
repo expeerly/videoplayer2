@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { PlayIcon } from '@/src/assets/icons/PlayIcon';
 import Image from 'next/image';
+import clsx from 'clsx';
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 type AvatarFallback = 'user' | 'initials';
@@ -18,7 +19,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
   alt = 'User avatar',
   size = 'md',
   fallback = 'initials',
-  className = '',
+  className,
 }) => {
   const sizeClasses: Record<AvatarSize, string> = {
     xs: 'w-6 h-6',
@@ -41,12 +42,13 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
     ),
   };
 
-  const baseClasses =
-    'inline-flex items-center justify-center bg-gray-100 overflow-hidden rounded-full';
-
   return (
     <div
-      className={`${baseClasses} ${sizeClasses[size]} ${className}`.trim()}
+      className={clsx(
+        'inline-flex items-center justify-center bg-gray-100 overflow-hidden rounded-full',
+        sizeClasses[size],
+        className
+      )}
       role="img"
       aria-label={alt}
     >

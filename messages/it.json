@@ -15,5 +15,24 @@
   "cta_button_retailer": "Integra le recensioni video",
   "home_h2_how_expeerly_works": "Come funziona expeerly",
   "home_how_it_works_body_text": "Expeerly è un luogo in cui i consumatori possono scoprire cosa pensano altri acquirenti di prodotti e servizi. Le recensioni video sono condivise dalla nostra comunità di recensori da tutto il mondo.",
-  "cta_button_how_it_works": "Scopri di più"
+  "cta_button_how_it_works": "Scopri di più",
+  "footer": {
+    "contactUs": "Contattaci",
+    "aboutUs": "Saperne di più",
+    "termsCompanies": "CG Aziende",
+    "termsReviewers": "CG Tester",
+    "privacyPolicy": "Informativa sulla Privacy"
+  },
+  "menu": {
+    "explore": "Scoprire",
+    "brands": "Marchi",
+    "reviewers": "Tester",
+    "categories": "Categorie",
+    "learnMore": "Scopri di più",
+    "submitVideoReview": "Invia una video recensione",
+    "forBrandsAndBusinesses": "Per marchi e aziende",
+    "forMarketplaces": "Per marketplace",
+    "language": "Italiano (IT)",
+    "viewAllCategories": "Vedi tutte le categorie"
+  }
 }

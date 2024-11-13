@@ -6,7 +6,7 @@ export const HowExpeerlyWorks: FunctionComponent = async () => {
   const t = await getDictionary();
 
   return (
-    <div className="w-full mt-12 mb-8 px-5 md:my-16 ">
+    <section className="w-full mt-12 mb-8 px-5 md:my-16 ">
       <div className="sm:w-[460px] w-auto mx-auto text-start sm:text-center">
         <h2 className="text-xl md:text-2xl text-center font-extrabold mb-4">
           {t.home_h2_how_expeerly_works}
@@ -18,6 +18,6 @@ export const HowExpeerlyWorks: FunctionComponent = async () => {
           {t.cta_button_how_it_works}
         </Button>
       </div>
-    </div>
+    </section>
   );
 };

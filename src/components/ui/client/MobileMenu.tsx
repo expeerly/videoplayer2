@@ -1,19 +1,22 @@
 'use client';
 
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState, memo } from 'react';
 import { CloseIcon, MenuIcon, RightChevronIcon } from '@/src/assets/icons';
 import { Button } from '../server/Button';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MenuItem } from '@/src/app/[locale]/components/client/DropDownMenu';
+import { useTranslations } from 'next-intl';
+import clsx from 'clsx';
 
 type MobileMenuProps = {
   menuItems: MenuItem[];
 };
 
-export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) => {
+const MobileMenuComponent: FunctionComponent<MobileMenuProps> = ({ menuItems }) => {
   const pathname = usePathname();
+  const t = useTranslations('menu');
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
 
@@ -57,17 +60,18 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
         variant="secondary"
         title="Toggle menu"
         isOnlyIcon
+        size="sm"
       >
         {isOpen ? <CloseIcon /> : <MenuIcon />}
       </Button>
 
       <div
-        className={`fixed top-[75px] left-0 w-full transition-all duration-300 ease-in-out overflow-hidden ${
-          isOpen ? 'h-[calc(100vh-77px)] opacity-100' : 'h-0 opacity-0'
+        className={`fixed top-[70px] bottom-0 left-0 w-full bg-[#F7F7F7] overflow-auto border-t h-[calc(100%-71px)] ${
+          isOpen ? 'block' : 'hidden'
         }`}
       >
-        <div className={`h-full w-full bg-[#F7F7F7] flex flex-col`}>
-          <ul className="flex-1 px-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 relative">
+        <nav className={`h-full w-full justify-between flex flex-col pt-5`}>
+          <ul className="px-4 scrollbar-thin scrollbar-thumb-gray-400 relative">
             {menuItems.map(item => (
               <li key={item.key}>
                 {item.devider && <hr className="my-4 border-gray-200" />}
@@ -76,14 +80,14 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
                     href={item?.href}
                     className="flex w-full items-center justify-between  text-left text-base"
                   >
-                    <span className="font-bold py-2 text-black rounded">{item.label}</span>
+                    <span className="font-bold py-2 text-black rounded">{t(item.key)}</span>
                   </Link>
                 ) : (
                   <button
                     onClick={() => toggleSubmenu(item.key)}
                     className="flex w-full items-center justify-between  text-left text-base"
                   >
-                    <span className="font-bold py-2 text-black rounded">{item.label}</span>
+                    <span className="font-bold py-2 text-black rounded">{t(item.key)}</span>
 
                     {item.items && (
                       <RightChevronIcon
@@ -96,7 +100,11 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
                 )}
 
                 {item.items && activeSubmenu === item.key && (
-                  <div className="mt-2 space-y-2 bg-white p-6 rounded-md">
+                  <div
+                    className={clsx('mt-2 space-y-2 bg-white p-6 rounded-md', {
+                      'shadow-2xl': item.key === 'language',
+                    })}
+                  >
                     {item.itemsLabel && item.href && (
                       <Link
                         href={item.href}
@@ -104,7 +112,7 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
                         aria-label={item.itemsLabel}
                         className="w-full text-left py-2 flex flex-row gap-3 items-center text-pink-500 font-bold text-base"
                       >
-                        {item.itemsLabel}
+                        {t(item.itemsLabel)}
                         <ArrowRightIcon />
                       </Link>
                     )}
@@ -144,8 +152,10 @@ export const MobileMenu: FunctionComponent<MobileMenuProps> = ({ menuItems }) =>
               Log In
             </Button>
           </div>
-        </div>
+        </nav>
       </div>
     </>
   );
 };
+
+export const MobileMenu = memo(MobileMenuComponent);

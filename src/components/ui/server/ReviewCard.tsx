@@ -21,8 +21,8 @@ export const ReviewCard: FunctionComponent<Props> = ({ review }) => {
       key={review.id}
       className={clsx(
         'relative rounded-[10px] overflow-hidden box-border',
-        'min-w-[160px] w-[160px] mobileS:w-[180px] mobileS:min-w-[180px]',
-        'mobileM:min-w-[calc(50%-20px)] mobileM:w-[calc(50%-20px)]',
+        'min-w-[160px] w-[160px] mobileS:w-[50%-50px] mobileS:min-w-[50%-50px]',
+        'mobileM:min-w-[167] mobileM:w-[calc(50%-20px)]',
         'mobileL:w-[calc(45%-20px)] mobileL:min-w-[calc(45%-20px)]',
         'mid-tablet:w-[calc(35%-25x)] mid-tablet:min-w-[calc(35%-25px)]',
         'sm:w-[calc(30%-20px)] sm:min-w-[calc(30%-20px)]',

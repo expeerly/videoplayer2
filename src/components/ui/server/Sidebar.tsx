@@ -3,6 +3,7 @@ import { FunctionComponent } from 'react';
 import { BinocularsIcon, CategoriesIcon, SpeechBubbleIcon, StoreIcon } from '@/src/assets/icons';
 import { ActiveLink } from '../client/ActiveLink';
 import { BottomBar } from '../client/BottomBar';
+import { getDictionary } from '@/src/app/[locale]/lib/dictionary';
 
 export const navItems = [
   { key: 'explore', name: 'Explore', icon: BinocularsIcon, href: '/explore' },
@@ -13,7 +14,7 @@ export const navItems = [
     href: '/video-reviews/brand',
   },
   {
-    key: 'Categories',
+    key: 'categories',
     name: 'Categories',
     icon: CategoriesIcon,
     href: '/video-reviews/productcategory',
@@ -26,22 +27,27 @@ export const navItems = [
   },
 ];
 
-export const Sidebar: FunctionComponent = () => {
+export const Sidebar: FunctionComponent = async () => {
+  const t: { [key: string]: string } = (await getDictionary()).menu;
   return (
     <>
-      <div className="min-h-screen w-[200px] border-e hidden md:flex">
+      <aside className="min-h-screen w-[200px] border-e hidden md:flex">
         <nav className="p-4 mx-auto w-full fixed top-24 max-w-[200px]">
-          {navItems.map(item => {
-            const Icon = item.icon;
-            return (
-              <ActiveLink key={item.name} href={item.href} title={item.name}>
-                <Icon />
-                <span className="text-black">{item.name}</span>
-              </ActiveLink>
-            );
-          })}
+          <ul>
+            {navItems.map(item => {
+              const Icon = item.icon;
+              return (
+                <li key={item.key}>
+                  <ActiveLink key={item.name} href={item.href} title={item.name}>
+                    <Icon />
+                    <span className="text-black">{t[item.key]}</span>
+                  </ActiveLink>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
-      </div>
+      </aside>
       <BottomBar />
     </>
   );

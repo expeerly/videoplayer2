@@ -15,5 +15,24 @@
   "cta_button_retailer": "Integrate Video Reviews now",
   "home_h2_how_expeerly_works": "How expeerly works",
   "home_how_it_works_body_text": "Expeerly is a place for consumers to get insights about what other shoppers think of products and services. The video reviews are shared by our community of reviewers from our the globe.",
-  "cta_button_how_it_works": "Learn more"
+  "cta_button_how_it_works": "Learn more",
+  "footer": {
+    "contactUs": "Contact us",
+    "aboutUs": "About us",
+    "termsCompanies": "Terms Companies",
+    "termsReviewers": "Terms Reviewers",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "menu": {
+    "explore": "Explore",
+    "brands": "Brands",
+    "reviewers": "Reviewers",
+    "categories": "Categories",
+    "learnMore": "Learn more",
+    "submitVideoReview": "Submit a Video Review",
+    "forBrandsAndBusinesses": "For brands & businesses",
+    "forMarketplaces": "For marketplaces",
+    "language": "English (EN)",
+    "viewAllCategories": "View all categories"
+  }
 }

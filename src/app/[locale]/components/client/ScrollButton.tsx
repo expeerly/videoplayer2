@@ -1,5 +1,5 @@
 'use client';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, memo } from 'react';
 import { DownArrowIcon } from '@/src/assets/icons';
 
 type ScrollButtonProps = {
@@ -7,7 +7,7 @@ type ScrollButtonProps = {
   className?: string;
 };
 
-export const ScrollButton: FunctionComponent<ScrollButtonProps> = ({
+const ScrollButtonComponent: FunctionComponent<ScrollButtonProps> = ({
   targetSectionId,
   className = '',
 }) => {
@@ -31,3 +31,5 @@ export const ScrollButton: FunctionComponent<ScrollButtonProps> = ({
     </button>
   );
 };
+
+export const ScrollButton = memo(ScrollButtonComponent);

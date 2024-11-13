@@ -50,7 +50,7 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({ headerData }) =
         <ProfileCard {...headerData} />
       </div>
 
-      <div className="flex gap-[15px] overflow-x-auto scrollbar-thin scrollbar-none justify-start w-full px-5 mid-lg:px-0">
+      <div className="flex gap-[9px] overflow-x-auto scrollbar-thin scrollbar-none justify-start w-full px-5 mid-lg:px-0 md:gap-4">
         {tempreviews.map(review => (
           <ReviewCard key={review.id} review={review} />
         ))}

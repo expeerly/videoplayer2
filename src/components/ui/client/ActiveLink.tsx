@@ -2,7 +2,7 @@
 
 import { FunctionComponent, PropsWithChildren } from 'react';
 import Link, { LinkProps } from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/src/i18n/routing';
 
 type ActiveLinkProps<T> = {
   className?: string;

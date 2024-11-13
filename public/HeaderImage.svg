@@ -1,14 +1,10 @@
-import { FunctionComponent, SVGProps } from 'react';
 
-export const HeaderImage: FunctionComponent<SVGProps<SVGSVGElement>> = p => {
-  return (
-    <svg
+   <svg
       width="100%"
       height="100%"
       viewBox="0 0 352 340"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      {...p}
     >
       <path
         d="M315.999 160.053C354.191 198.562 357.978 265.309 315.397 298.921C290.917 318.242 339.753 325.544 326.426 329.966C245.276 356.895 201.815 323.876 176.473 298.329C138.28 259.82 138.54 197.647 177.074 159.461C215.599 121.284 277.797 121.544 315.999 160.062V160.053Z"
@@ -37,5 +33,3 @@ export const HeaderImage: FunctionComponent<SVGProps<SVGSVGElement>> = p => {
         fill="#FFC122"
       />
     </svg>
-  );
-};

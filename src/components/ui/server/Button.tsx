@@ -77,7 +77,7 @@ const styleClasses = ({
       'text-sm px-4  gap-1.5': size === 'sm' && !isOnlyIcon,
       'text-base px-6 py-3 gap-2 leading-3 max-h-11': size === 'md' && !isOnlyIcon,
       'text-base px-11 py-[13px] gap-2 max-h-[50px]': size === 'lg' && !isOnlyIcon,
-      'p-2 h-8 w-8': size === 'sm' && isOnlyIcon,
+      'p-2 h-10 w-10': size === 'sm' && isOnlyIcon,
       'p-3 h-12 w-12': size === 'md' && isOnlyIcon,
       'p-4 h-16 w-16': size === 'lg' && isOnlyIcon,
 

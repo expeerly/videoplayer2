@@ -1,6 +1,5 @@
 'use client';
 import React, { FunctionComponent } from 'react';
-import { Logo } from '@/src/assets/Logo';
 import Link from 'next/link';
 import { DropDownMenu } from '../../../app/[locale]/components/client/DropDownMenu';
 import { MobileMenu } from './MobileMenu';
@@ -9,27 +8,39 @@ import { Button } from '../server/Button';
 import clsx from 'clsx';
 import { LeftChevronIcon } from '@/src/assets/icons';
 import { usePathname } from '@/src/i18n/routing';
+import Image from 'next/image';
 
 export const Navbar: FunctionComponent = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center z-[999999999] flex-row w-full bg-white justify-between  py-[15px] px-4 md:py-5 md:px-12 border-b md:sticky top-0">
+    <header className="flex items-center z-[999999999] flex-row w-full bg-white justify-between  py-[15px] px-4 md:py-5 md:px-12 border-b md:sticky top-0">
       <div className="flex gap-2 items-center">
         <Button
           isOnlyIcon
           variant="secondary"
-          className={clsx({ hidden: pathname === '/', ' sm:hidden': pathname !== '/' })}
+          className={clsx({
+            hidden: pathname === '/',
+            ' sm:hidden': pathname !== '/',
+          })}
         >
           <LeftChevronIcon />
         </Button>
         <Link
           href={'/'}
-          title="logo"
+          title="expeerly"
           aria-label="logo"
-          className={clsx({ 'max-w-[30px] sm:max-w-max overflow-hidden': pathname !== '/' })}
+          className={clsx({
+            'w-[30px] flex sm:w-max overflow-hidden': pathname !== '/',
+          })}
         >
-          <Logo className="h-[30px] w-auto sm:w-auto md:h-[35px]" />
+          <Image
+            src={'/expeerly-logo.svg'}
+            height={35}
+            width={113.75}
+            alt="Expeerly Logo"
+            className="h-[30px] w-[113.75px] md:h-[35px] flex"
+          />
         </Link>
       </div>
       <div className="hidden md:flex gap-[22px]">
@@ -46,6 +57,6 @@ export const Navbar: FunctionComponent = () => {
       <div className=" md:hidden">
         <MobileMenu menuItems={defaultMenuItems} />
       </div>
-    </nav>
+    </header>
   );
 };

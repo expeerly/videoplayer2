@@ -10,7 +10,7 @@ export const ConversionSlider: FunctionComponent = async () => {
 
   return (
     <section
-      className="relative w-full  flex justify-center bg-no-repeat bg-top sm:bg-bottom sm:bg-cover"
+      className="relative w-full bg-blue-500 flex justify-center bg-no-repeat bg-top md:bg-transparent"
       style={{
         backgroundImage: `url(/BackgroundImage.svg)`,
       }}
@@ -44,13 +44,13 @@ export const ConversionSlider: FunctionComponent = async () => {
             }}
           />
         </div>
-        <div className="px-5 mt-10 w-full flex justify-center sm:w-max">
+        <div className="px-5 w-full mt-12 flex justify-center sm:w-max">
           <Button
             size="lg"
             variant="secondary"
             href="/video-reviews"
             fullWidth
-            className=" bg-white mt-10 text-center"
+            className=" bg-white text-center"
           >
             {t.cta_button_retailer}
           </Button>
