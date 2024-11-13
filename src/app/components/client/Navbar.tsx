@@ -1,5 +1,5 @@
 'use client';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, memo } from 'react';
 import Link from 'next/link';
 import { DropDownMenu } from '../../../app/[locale]/components/client/DropDownMenu';
 import { MobileMenu } from './MobileMenu';
@@ -10,7 +10,7 @@ import { LeftChevronIcon } from '@/src/assets/icons';
 import { usePathname } from '@/src/i18n/routing';
 import Image from 'next/image';
 
-export const Navbar: FunctionComponent = () => {
+const NavbarComponent: FunctionComponent = () => {
   const pathname = usePathname();
 
   return (
@@ -60,3 +60,5 @@ export const Navbar: FunctionComponent = () => {
     </header>
   );
 };
+
+export const Navbar = memo(NavbarComponent);

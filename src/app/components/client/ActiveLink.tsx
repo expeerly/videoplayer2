@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, PropsWithChildren } from 'react';
+import { FunctionComponent, memo, PropsWithChildren } from 'react';
 import Link, { LinkProps } from 'next/link';
 import { usePathname } from '@/src/i18n/routing';
 
@@ -10,7 +10,7 @@ type ActiveLinkProps<T> = {
   title?: string;
 } & T;
 
-export const ActiveLink: FunctionComponent<PropsWithChildren<ActiveLinkProps<LinkProps>>> = ({
+const ActiveLinkComponent: FunctionComponent<PropsWithChildren<ActiveLinkProps<LinkProps>>> = ({
   children,
   className,
   ...props
@@ -30,3 +30,5 @@ export const ActiveLink: FunctionComponent<PropsWithChildren<ActiveLinkProps<Lin
     </Link>
   );
 };
+
+export const ActiveLink = memo(ActiveLinkComponent);

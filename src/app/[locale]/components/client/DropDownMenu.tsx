@@ -1,6 +1,14 @@
 'use client';
 
-import React, { FunctionComponent, memo, SVGProps, useEffect, useRef, useState } from 'react';
+import React, {
+  FunctionComponent,
+  memo,
+  SVGProps,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   BinocularsIcon,
   CartIcon,
@@ -126,14 +134,18 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  const toggleMenu = () => {
+
+  const toggleMenu = useCallback(() => {
     setIsOpen(!isOpen);
     setOpenSubmenuKey(null);
-  };
+  }, [isOpen]);
 
-  const toggleSubmenu = (key: string) => {
-    setOpenSubmenuKey(openSubmenuKey === key ? null : key);
-  };
+  const toggleSubmenu = useCallback(
+    (key: string) => {
+      setOpenSubmenuKey(openSubmenuKey === key ? null : key);
+    },
+    [openSubmenuKey]
+  );
 
   return (
     <>
