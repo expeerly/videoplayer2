@@ -45,7 +45,7 @@ const styleClasses = ({
 }: BaseButtonProps) => {
   return clsx(
     // Base styles
-    'flex items-center justify-center font-bold transition-all duration-200 text-nowrap',
+    'flex items-center justify-center font-bold text-nowrap',
     'focus:outline-none',
     'rounded-full',
     // Variants
@@ -74,9 +74,9 @@ const styleClasses = ({
       'disabled:text-gray-300 disabled:hover:bg-transparent ': variant === 'ghost',
 
       // Sizes with icon-only support
-      'text-sm px-4 py-1.5 gap-1.5': size === 'sm' && !isOnlyIcon,
-      'text-base px-6 py-2 gap-2': size === 'md' && !isOnlyIcon,
-      'text-lg px-11 py-[15px] gap-2.5': size === 'lg' && !isOnlyIcon,
+      'text-sm px-4  gap-1.5': size === 'sm' && !isOnlyIcon,
+      'text-base px-6 py-3 gap-2 leading-3 max-h-11': size === 'md' && !isOnlyIcon,
+      'text-base px-11 py-[13px] gap-2 max-h-[50px]': size === 'lg' && !isOnlyIcon,
       'p-2 h-8 w-8': size === 'sm' && isOnlyIcon,
       'p-3 h-12 w-12': size === 'md' && isOnlyIcon,
       'p-4 h-16 w-16': size === 'lg' && isOnlyIcon,
