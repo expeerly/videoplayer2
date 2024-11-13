@@ -10,7 +10,7 @@ export const ConversionSlider: FunctionComponent = async () => {
 
   return (
     <section
-      className="relative w-full bg-blue-500 flex justify-center bg-no-repeat bg-top md:bg-transparent"
+      className="relative w-full bg-blue-500 flex justify-center bg-top bg-no-repeat md:bg-bottom md:bg-transparent bg-cover"
       style={{
         backgroundImage: `url(/BackgroundImage.svg)`,
       }}

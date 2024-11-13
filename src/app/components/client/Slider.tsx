@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, FunctionComponent, useCallback, memo } from 'react';
+import React, { useState, useRef, FunctionComponent, useCallback, memo, useEffect } from 'react';
 import { SlideProps, SliderCard } from '../server/SliderCard';
 import clsx from 'clsx';
 import { LeftChevronIcon, RightChevronIcon } from '@/src/assets/icons';
@@ -74,10 +74,20 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
   slides = defaultCategories,
   classNameStyle,
 }) => {
-  const [positions, setPositions] = useState<number[]>(slides.map(() => 0));
+  const [positions, setPositions] = useState<number[]>([]);
   const [isTransitioning, setIsTransitioning] = useState<boolean[]>(slides.map(() => false));
   const containerRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Array<HTMLUListElement | null>>([]);
+
+  // Initialize positions with offset for even-indexed rows
+  useEffect(() => {
+    const initialPositions = slides.map((_, index) => {
+      const rowIndex = index + 1;
+      // Offset even-indexed rows by -150px
+      return rowIndex % 2 === 0 ? -100 : 0;
+    });
+    setPositions(initialPositions);
+  }, [slides]);
 
   const getSlideRowStyles = useCallback(
     (rowIndex: number) => ({
@@ -111,11 +121,21 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
         const rowWidth = rowRef.scrollWidth;
         let newPosition = position + increment;
 
-        // Add bounds checking
-        if (newPosition > 0) {
-          newPosition = 0;
-        } else if (newPosition < -(rowWidth - containerWidth + 64)) {
-          newPosition = -(rowWidth - containerWidth + 64);
+        // Add bounds checking with offset for even-indexed rows
+        if (index % 2 === 0) {
+          // Even-indexed rows have a -150px offset
+          if (newPosition > -150) {
+            newPosition = -150;
+          } else if (newPosition < -(rowWidth - containerWidth + 64)) {
+            newPosition = -(rowWidth - containerWidth + 64);
+          }
+        } else {
+          // Odd-indexed rows behave normally
+          if (newPosition > 0) {
+            newPosition = 0;
+          } else if (newPosition < -(rowWidth - containerWidth + 64)) {
+            newPosition = -(rowWidth - containerWidth + 64);
+          }
         }
 
         return newPosition;

@@ -54,7 +54,10 @@ const MobileMenuComponent: FunctionComponent<MobileMenuProps> = ({ menuItems }) 
   return (
     <>
       <Button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          setActiveSubmenu(null);
+        }}
         type="button"
         aria-label="Toggle menu"
         variant="secondary"
