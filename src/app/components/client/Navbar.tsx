@@ -13,7 +13,7 @@ import { useTranslations } from 'next-intl';
 
 const NavbarComponent: FunctionComponent = () => {
   const pathname = usePathname();
-  const t = useTranslations();
+  const t = useTranslations('menu');
 
   return (
     <header className="flex items-center z-[999999999] flex-row w-full bg-white justify-between  py-[15px] px-4 md:py-5 md:px-8 mid-lg:px-12 border-b md:sticky top-0">

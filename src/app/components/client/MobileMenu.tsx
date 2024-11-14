@@ -152,10 +152,10 @@ const MobileMenuComponent: FunctionComponent<MobileMenuProps> = ({ menuItems }) 
 
           <div className=" p-4 flex flex-col sm:flex-row items-center gap-3">
             <Button size="lg" fullWidth>
-              Sign Up
+              {t('signUp')}
             </Button>
             <Button size="lg" fullWidth variant="outline">
-              Log In
+              {t('login')}
             </Button>
           </div>
         </nav>
