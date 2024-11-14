@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import Link from 'next/link';
-import { getDictionary } from '@/src/app/[locale]/lib/dictionary';
+import { getDictionary } from '@/src/lib/dictionary';
 
 export const Footer: FunctionComponent = async () => {
   const t = (await getDictionary()).footer;

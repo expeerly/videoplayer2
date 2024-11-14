@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Slider } from '@/src/app/components/client/Slider';
 import { MobileSlider } from '@/src/app/components/server/MobileSlider';
 import { Button } from '@/src/app/components/server/Button';
-import { getDictionary } from '../../lib/dictionary';
+import { getDictionary } from '@/src/lib/dictionary';
 
 export const brands = [
   [

@@ -6,7 +6,7 @@ import { Button } from '../server/Button';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MenuItem } from '@/src/app/[locale]/components/client/DropDownMenu';
+import { MenuItem } from '@/src/app/components/client/DropDownMenu';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 

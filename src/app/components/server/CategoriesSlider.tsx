@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { getDictionary } from '../../lib/dictionary';
+import { getDictionary } from '@/src/lib/dictionary';
 import { Slider } from '@/src/app/components/client/Slider';
 import { MobileSlider } from '@/src/app/components/server/MobileSlider';
 

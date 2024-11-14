@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react';
 import { BinocularsIcon, CategoriesIcon, SpeechBubbleIcon, StoreIcon } from '@/src/assets/icons';
 import { ActiveLink } from '../client/ActiveLink';
 import { BottomBar } from '../client/BottomBar';
-import { getDictionary } from '@/src/app/[locale]/lib/dictionary';
+import { getDictionary } from '@/src/lib/dictionary';
 
 export const navItems = [
   { key: 'explore', name: 'Explore', icon: BinocularsIcon, href: '/explore' },

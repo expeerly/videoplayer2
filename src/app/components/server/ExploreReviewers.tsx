@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Button } from '@/src/app/components/server/Button';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
-import { getDictionary } from '../../lib/dictionary';
+import { getDictionary } from '@/src/lib/dictionary';
 
 export const ExpolreReviewers: FunctionComponent = async () => {
   const t = await getDictionary();

@@ -1,9 +1,9 @@
 'use client';
 import React, { FunctionComponent, memo } from 'react';
 import Link from 'next/link';
-import { DropDownMenu } from '../../../app/[locale]/components/client/DropDownMenu';
+import { DropDownMenu } from './DropDownMenu';
 import { MobileMenu } from './MobileMenu';
-import { defaultMenuItems } from '../../../app/[locale]/components/client/DropDownMenu';
+import { defaultMenuItems } from './DropDownMenu';
 import { Button } from '../server/Button';
 import clsx from 'clsx';
 import { LeftChevronIcon } from '@/src/assets/icons';

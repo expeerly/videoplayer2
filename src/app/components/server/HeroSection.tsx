@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { ScrollButton } from '../client/ScrollButton';
 import Image from 'next/image';
-import { getDictionary } from '../../lib/dictionary';
+import { getDictionary } from '@/src/lib/dictionary';
 
 export const HeroSection: FunctionComponent = async () => {
   const t = await getDictionary();

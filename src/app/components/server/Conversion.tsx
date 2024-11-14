@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { brands } from '../../../components/server/BrandsSlider';
-import { getDictionary } from '../../../../lib/dictionary';
+import { brands } from './BrandsSlider';
+import { getDictionary } from '@/src/lib/dictionary';
 import { Slider } from '@/src/app/components/client/Slider';
 import { Button } from '@/src/app/components/server/Button';
 import { MobileSlider } from '@/src/app/components/server/MobileSlider';

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { getDictionary } from '../../lib/dictionary';
+import { getDictionary } from '@/src/lib/dictionary';
 import { Button } from '@/src/app/components/server/Button';
 
 export const HowExpeerlyWorks: FunctionComponent = async () => {
