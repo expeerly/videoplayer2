@@ -165,22 +165,23 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           aria-haspopup="true"
           aria-expanded={isOpen}
           title="MenuIcon"
+          id="menu-button"
         >
           <MenuIcon />
         </Button>
 
         <div
           id="dropdown-menu"
-          className={`absolute top-12 right-0 w-[393px] bg-white  shadow-lg overflow-hidden opacity-0 h-0 group-focus-within/menu:h-auto group-focus-within/menu:opacity-100  group-focus-within/menu:overflow-visible`}
+          className={`absolute top-12 right-0 w-[393px] bg-white shadow-lg overflow-hidden opacity-0 h-0 group-focus-within/menu:h-auto group-focus-within/menu:opacity-100 group-focus-within/menu:overflow-visible`}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
         >
-          <ul className=" pb-[32px] pt-[35px] ">
+          <ul role="menu" className="pb-[32px] pt-[35px]">
             {menuItems.map(item => (
-              <li key={item.key} className="relative">
+              <li key={item.key} role="presentation" className="relative">
                 {item.items ? (
-                  <div>
+                  <div role="presentation">
                     <button
                       onClick={() => toggleSubmenu(item.key)}
                       role="menuitem"
@@ -198,7 +199,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                       </span>
                     </button>
                     <div
-                      className={`absolute -left-[353px] top-0 w-[353px] bg-white  shadow-lg py-1 border border-gray-100 transition-all duration-200 ${
+                      className={`absolute -left-[353px] top-0 w-[353px] bg-white shadow-lg py-1 border border-gray-100 transition-all duration-200 ${
                         openSubmenuKey === item.key
                           ? 'opacity-100 visible'
                           : 'opacity-0 invisible pointer-events-none'
@@ -216,9 +217,9 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                           <ArrowRightIcon />
                         </Link>
                       )}
-                      <ul>
+                      <ul role="menu">
                         {item.items.map((subItem, index) => (
-                          <li key={index}>
+                          <li key={index} role="presentation">
                             <Link
                               role="menuitem"
                               href={subItem.href}

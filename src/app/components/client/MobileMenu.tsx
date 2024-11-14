@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, useEffect, useState, memo } from 'react';
+import { FunctionComponent, useEffect, useState, memo, useCallback } from 'react';
 import { CloseIcon, MenuIcon, RightChevronIcon } from '@/src/assets/icons';
 import { Button } from '../server/Button';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
@@ -20,9 +20,12 @@ const MobileMenuComponent: FunctionComponent<MobileMenuProps> = ({ menuItems }) 
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
 
-  const toggleSubmenu = (key: string) => {
-    setActiveSubmenu(activeSubmenu === key ? null : key);
-  };
+  const toggleSubmenu = useCallback(
+    (key: string) => {
+      setActiveSubmenu(activeSubmenu === key ? null : key);
+    },
+    [activeSubmenu]
+  );
 
   useEffect(() => {
     if (pathname) {

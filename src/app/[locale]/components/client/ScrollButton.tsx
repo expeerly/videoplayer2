@@ -1,5 +1,5 @@
 'use client';
-import { FunctionComponent, memo } from 'react';
+import { FunctionComponent, memo, useCallback } from 'react';
 import { DownArrowIcon } from '@/src/assets/icons';
 
 type ScrollButtonProps = {
@@ -11,7 +11,7 @@ const ScrollButtonComponent: FunctionComponent<ScrollButtonProps> = ({
   targetSectionId,
   className = '',
 }) => {
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     const element = document.getElementById(targetSectionId);
     if (element) {
       element.scrollIntoView({
@@ -19,7 +19,7 @@ const ScrollButtonComponent: FunctionComponent<ScrollButtonProps> = ({
         block: 'start',
       });
     }
-  };
+  }, [targetSectionId]);
 
   return (
     <button
