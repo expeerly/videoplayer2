@@ -27,6 +27,7 @@ import Link from 'next/link';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import { useTranslations } from 'use-intl';
 import { Button } from '@/src/app/components/server/Button';
+import clsx from 'clsx';
 
 export type MenuItem = {
   key: string;
@@ -68,6 +69,12 @@ export const defaultMenuItems: MenuItem[] = [
     href: '/video-reviews/brand',
   },
   {
+    key: 'reviewers',
+    label: 'Reviewers',
+    icon: SpeechBubbleIcon,
+    href: '/video-reviews/reviewers',
+  },
+  {
     key: 'categories',
     label: 'Categories',
     icon: CategoriesIcon,
@@ -75,27 +82,30 @@ export const defaultMenuItems: MenuItem[] = [
     itemsLabel: 'viewAllCategories',
     href: '/video-reviews/productcategory',
   },
+
   {
-    key: 'reviewers',
-    label: 'Reviewers',
-    icon: SpeechBubbleIcon,
     devider: true,
-    href: '/video-reviews/reviewers',
+
+    key: 'learnMore',
+    label: 'Learn more',
+    icon: InfoIcon,
+    href: 'https://www.get.expeerly.com/about-us',
   },
-  { key: 'learnMore', label: 'Learn more', icon: InfoIcon },
   { key: 'submitVideoReview', label: 'Submit a video review', icon: VideoIcon },
   {
     key: 'forBrandsAndBusinesses',
     label: 'For brands & businesses',
     icon: TagIcon,
+    href: 'https://www.get.expeerly.com/for-brands',
   },
   {
     key: 'forMarketplaces',
     label: 'For marketplaces',
     icon: CartIcon,
-    devider: true,
+    href: 'https://www.get.expeerly.com/for-marketplaces',
   },
   {
+    devider: true,
     key: 'language',
     label: 'English (EN)',
     icon: WorldIcon,
@@ -156,7 +166,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
         }`}
         aria-hidden="true"
       />
-      <div className={`relative z-[9999999] group/menu ${className}`} ref={menuRef}>
+      <div className={`relative z-[9999999] ${className}`} ref={menuRef}>
         <Button
           isOnlyIcon
           variant="secondary"
@@ -164,7 +174,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           type="button"
           aria-haspopup="true"
           aria-expanded={isOpen}
-          title="MenuIcon"
+          title="Show/Hide Menu"
           id="menu-button"
         >
           <MenuIcon />
@@ -172,20 +182,25 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
 
         <div
           id="dropdown-menu"
-          className={`absolute top-12 right-0 w-[393px] bg-white shadow-lg overflow-hidden opacity-0 h-0 group-focus-within/menu:h-auto group-focus-within/menu:opacity-100 group-focus-within/menu:overflow-visible`}
-          role="menu"
+          className={`absolute top-12 right-0 w-[393px] bg-white shadow-lg ${isOpen ? 'h-auto opacity-100 overflow-visible' : 'overflow-hidden opacity-0 h-0'}`}
           aria-orientation="vertical"
           aria-labelledby="menu-button"
         >
           <ul role="menu" className="pb-[32px] pt-[35px]">
             {menuItems.map(item => (
               <li key={item.key} role="presentation" className="relative">
+                {item.devider && <div className="border-b border-gray-300 my-4 mx-5" />}
                 {item.items ? (
                   <div role="presentation">
                     <button
                       onClick={() => toggleSubmenu(item.key)}
                       role="menuitem"
-                      className="w-full flex items-center justify-between px-5 py-2 text-transparent hover:bg-gray-50 transition-colors duration-200"
+                      className={clsx(
+                        'w-full flex items-center justify-between px-5 py-2 text-transparent hover:bg-gray-50 transition-colors duration-200',
+                        {
+                          'bg-light-gray': openSubmenuKey === item.key,
+                        }
+                      )}
                       title="item.label"
                       aria-expanded={openSubmenuKey === item.key}
                     >
@@ -194,8 +209,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                         <span className="text-black">{t(item.key)}</span>
                       </span>
                       <span className="ml-2">
-                        <DownArrowIcon className="group-focus-within:block hidden" />{' '}
-                        <RightChevronIcon className="group-focus-within:hidden block" />
+                        {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
                       </span>
                     </button>
                     <div
@@ -226,7 +240,6 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                               title={subItem.label}
                               className="flex items-center gap-2 w-full text-left px-5 py-2 text-black hover:bg-gray-50"
                             >
-                              <RightChevronIcon />
                               {subItem.label}
                             </Link>
                           </li>
@@ -237,7 +250,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                 ) : (
                   <Link
                     role="menuitem"
-                    className="w-full flex items-center text-transparent hover:bg-[#F7F7F7] px-5 py-2 gap-4 transition-colors duration-200"
+                    className="w-full flex items-center text-transparent hover:bg-light-gray px-5 py-2 gap-4 transition-colors duration-200"
                     href={`${item.href}`}
                     title={item.label}
                   >
@@ -245,7 +258,6 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                     <span className="text-black">{t(item.key)}</span>
                   </Link>
                 )}
-                {item.devider && <div className="border-b border-default-200 my-4" />}
               </li>
             ))}
           </ul>

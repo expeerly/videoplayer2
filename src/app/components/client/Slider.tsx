@@ -58,9 +58,7 @@ const getNavigationButtonContainerClasses = (
   customClassName?: string
 ) => {
   const gradientDirection =
-    direction === 'left'
-      ? 'bg-[linear-gradient(90deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]'
-      : 'bg-[linear-gradient(270deg,_#FFFFFF_47.5%,_rgba(255,255,255,0)_100%)]';
+    direction === 'left' ? 'bg-white-left-gradient' : 'bg-white-right-gradient';
 
   return clsx(
     BUTTON_CONTAINER_BASE_CLASSES,

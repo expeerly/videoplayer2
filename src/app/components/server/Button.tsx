@@ -56,7 +56,7 @@ const styleClasses = ({
       'disabled:bg-pink-300 disabled:hover:bg-pink-300 ': variant === 'primary',
 
       // Secondary variant
-      'bg-[#EFEDF4] text-gray-800 hover:bg-gray-200 active:bg-gray-300 focus:ring-0':
+      'bg-navy-100 text-gray-800 hover:bg-gray-200 active:bg-gray-300 focus:ring-0':
         variant === 'secondary',
       'disabled:bg-gray-100 disabled:hover:bg-gray-100 ': variant === 'secondary',
 

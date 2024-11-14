@@ -22,8 +22,8 @@ const ActiveLinkComponent: FunctionComponent<PropsWithChildren<ActiveLinkProps<L
       label={props.label}
       title={props.title}
       className={`${className} ${
-        pathname === props.href ? 'bg-[#F7F7F7] text-black' : 'text-transparent'
-      } flex w-full justify-start items-center py-2 px-4 gap-2 group rounded transition-colors duration-200 hover:bg-[#F7F7F7] hover:text-black focus:ring-0`}
+        pathname === props.href ? 'bg-light-gray text-black' : 'text-transparent'
+      } flex w-full justify-start items-center py-2 px-3 gap-2 group rounded transition-colors duration-200 hover:bg-light-gray hover:text-black focus:ring-0`}
       {...props}
     >
       {children}

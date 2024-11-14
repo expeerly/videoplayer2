@@ -5,7 +5,6 @@ type StarRatingProps = {
   rating?: number;
   totalStars?: number;
   size?: 'sm' | 'md' | 'lg';
-  color?: string;
   showRating?: boolean;
   className?: string;
 };
@@ -21,7 +20,6 @@ export const StarRating: FunctionComponent<StarRatingProps> = ({
   rating = 0,
   totalStars = 5,
   size = 'md',
-  color = '#FFB800',
   showRating = true,
   className = '',
 }) => {
@@ -42,21 +40,22 @@ export const StarRating: FunctionComponent<StarRatingProps> = ({
     const fillPercentage = calculateStarFill(index);
     const showPartialStar = fillPercentage > 0 && fillPercentage < 1;
     const showFullStar = fillPercentage === 1;
-    const grayColor = '#BBB9BF'; // Tailwind gray-300 equivalent
 
     return (
       <div key={index} className="relative inline-block">
         {showFullStar ? (
-          <StarIcon fill={color} color={color} />
+          <StarIcon className={`[&>path]:stroke-yellow-500 [&>path]:fill-yellow-500`} />
         ) : showPartialStar ? (
           <div className="relative">
-            <StarIcon color={grayColor} fill={grayColor} className="absolute top-0 left-0" />
+            <StarIcon
+              className={`absolute top-0 left-0 [&>path]:fill-gray-400 [&>path]:stroke-gray-400`}
+            />
             <div className="relative overflow-hidden" style={{ width: `${fillPercentage * 100}%` }}>
-              <StarIcon fill={color} color={color} />
+              <StarIcon className={`[&>path]:stroke-yellow-500 [&>path]:fill-yellow-500`} />
             </div>
           </div>
         ) : (
-          <StarIcon color={grayColor} fill={grayColor} />
+          <StarIcon className="[&>path]:fill-gray-400 [&>path]:stroke-gray-400" />
         )}
       </div>
     );

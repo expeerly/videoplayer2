@@ -34,5 +34,7 @@
     "forMarketplaces": "Pour marketplaces",
     "language": "Français (FR)",
     "viewAllCategories": "Voir toutes les catégories"
-  }
+  },
+  "signUp": "Enregistrer",
+  "login": "Se connecter"
 }

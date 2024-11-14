@@ -7,7 +7,7 @@ export const HeroSection: FunctionComponent = async () => {
   const t = await getDictionary();
 
   return (
-    <div className="bg-[linear-gradient(180deg,_#4B49EB_0%,_#2C1277_100.39%)]  w-full md:bg-none">
+    <div className="bg-gradient-to-b from-blue-500 to-[#2C1277] w-full md:bg-none">
       <div
         style={{
           backgroundImage: `url(/BG.svg)`,

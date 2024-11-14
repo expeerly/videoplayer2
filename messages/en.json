@@ -34,5 +34,7 @@
     "forMarketplaces": "For marketplaces",
     "language": "English (EN)",
     "viewAllCategories": "View all categories"
-  }
+  },
+  "signUp": "Sign up",
+  "login": "Login"
 }

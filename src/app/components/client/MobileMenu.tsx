@@ -72,15 +72,15 @@ const MobileMenuComponent: FunctionComponent<MobileMenuProps> = ({ menuItems }) 
       </Button>
 
       <div
-        className={`fixed top-[70px] bottom-0 left-0 w-full bg-[#F7F7F7] overflow-auto border-t h-[calc(100%-71px)] ${
+        className={`fixed top-[70px] bottom-0 left-0 w-full bg-light-gray overflow-auto border-t h-[calc(100%-71px)] ${
           isOpen ? 'block' : 'hidden'
         }`}
       >
-        <nav className={`h-full w-full justify-between flex flex-col pt-5`}>
+        <nav className={`h-full w-full justify-between flex flex-col pt-3`}>
           <ul className="px-4 scrollbar-thin scrollbar-thumb-gray-400 relative">
             {menuItems.map(item => (
               <li key={item.key}>
-                {item.devider && <hr className="my-4 border-gray-200" />}
+                {item.devider && <hr className="my-4 border-gray-300 mx-1" />}
                 {!item.items?.length && item.href ? (
                   <Link
                     href={item?.href}

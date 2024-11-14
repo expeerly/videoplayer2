@@ -9,28 +9,37 @@ export const Footer: FunctionComponent = async () => {
       <div className="max-w-4xl mx-auto  pt-4 flex justify-center">
         <div className="grid gap-6   sm:grid-cols-3 grid-cols-2 w-[660px]  sm:gap-4 text-sm mb-4">
           <div className="flex flex-col gap-6">
-            <Link href="#" className="text-[#0E0E0F] font-bold">
+            <Link href="#" className="text-gray-700 font-bold">
               {t.contactUs}
             </Link>
-            <Link href="#" className="text-[#0E0E0F] font-bold">
+            <Link
+              href="https://www.get.expeerly.com/terms-and-conditions-companies"
+              className="text-gray-700 font-bold"
+            >
               {t.termsCompanies}
             </Link>
           </div>
           <div className="flex flex-col gap-6">
-            <Link href="#" className="text-[#0E0E0F] font-bold">
+            <Link href="https://www.get.expeerly.com/about-us" className="text-gray-700 font-bold">
               {t.aboutUs}
             </Link>
-            <Link href="#" className="text-[#0E0E0F] font-bold">
+            <Link
+              href="https://www.get.expeerly.com/terms-and-conditions-creators"
+              className="text-gray-700 font-bold"
+            >
               {t.termsReviewers}
             </Link>
           </div>
 
           <div className="flex flex-col gap-6">
-            <Link href="#" className="text-[#0E0E0F] font-bold">
+            <Link
+              href="https://www.get.expeerly.com/privacy-policy"
+              className="text-gray-700 font-bold"
+            >
               {t.privacyPolicy}
             </Link>
 
-            <div className=" text-[#8D8B94]">© Expeerly AG, {new Date().getFullYear()}</div>
+            <div className=" text-gray-500">© Expeerly AG, {new Date().getFullYear()}</div>
           </div>
         </div>
       </div>

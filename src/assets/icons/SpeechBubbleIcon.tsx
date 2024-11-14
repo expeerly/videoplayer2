@@ -4,9 +4,9 @@ export const SpeechBubbleIcon: FunctionComponent<SVGProps<SVGSVGElement>> = p =>
   return (
     <svg
       fill="none"
-      height="28"
+      height="23.33"
       viewBox="0 0 28 28"
-      width="28"
+      width="23.33"
       xmlns="http://www.w3.org/2000/svg"
       {...p}
     >

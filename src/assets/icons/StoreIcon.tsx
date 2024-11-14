@@ -3,12 +3,12 @@ import React, { FunctionComponent, SVGProps } from 'react';
 export const StoreIcon: FunctionComponent<SVGProps<SVGSVGElement>> = p => {
   return (
     <svg
-      height={28}
-      width={28}
+      height={23.33}
+      width={23.33}
       id="Layer_1"
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      viewBox="0 0 50 50"
+      viewBox="5 4 40 40"
       {...p}
     >
       <path

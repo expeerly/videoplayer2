@@ -11,10 +11,15 @@ export const HowExpeerlyWorks: FunctionComponent = async () => {
         <h2 className="text-xl md:text-2xl text-center font-extrabold mb-4">
           {t.home_h2_how_expeerly_works}
         </h2>
-        <p className="text-[#0E0E0F] mb-6 w-full sm:max-w-2xl mx-auto">
+        <p className="text-gray-700 mb-6 w-full sm:max-w-2xl mx-auto">
           {t.home_how_it_works_body_text}
         </p>
-        <Button size="lg" className="w-full sm:w-[300px] mx-auto" href="#" variant="outline">
+        <Button
+          size="lg"
+          className="w-full sm:w-[300px] mx-auto"
+          href="https://www.get.expeerly.com/about-us"
+          variant="outline"
+        >
           {t.cta_button_how_it_works}
         </Button>
       </div>

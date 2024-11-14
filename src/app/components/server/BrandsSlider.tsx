@@ -33,7 +33,7 @@ export const BrandsSlider: FunctionComponent = async () => {
   const t = await getDictionary();
   return (
     <section
-      className="relative w-full flex justify-center bg-no-repeat bg-top sm:bg-bottom sm:bg-cover"
+      className="relative bg-blue-500 w-full flex justify-center bg-no-repeat bg-top md:bg-bottom md:bg-cover md:bg-transparent"
       style={{
         backgroundImage: `url(/BackgroundImage.svg)`,
       }}
@@ -49,10 +49,8 @@ export const BrandsSlider: FunctionComponent = async () => {
           <Slider
             slides={brands}
             classNameStyle={{
-              leftButtonClassName:
-                '!bg-[linear-gradient(90deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]',
-              rightButtonClassName:
-                '!bg-[linear-gradient(270deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]',
+              leftButtonClassName: '!bg-blue-left-gradient',
+              rightButtonClassName: '!bg-blue-right-gradient',
               cardClassName: 'bg-white',
             }}
           />
@@ -61,10 +59,6 @@ export const BrandsSlider: FunctionComponent = async () => {
           <MobileSlider
             slides={brands}
             styleClassNames={{
-              leftShadowClassName:
-                '!bg-[linear-gradient(90deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]',
-              rightShadowClassName:
-                '!bg-[linear-gradient(270deg,_#4B49EB_47.5%,_rgba(255,255,255,0)_100%)]',
               cardClassName: 'bg-white',
             }}
           />
@@ -73,7 +67,7 @@ export const BrandsSlider: FunctionComponent = async () => {
           <Button
             size="lg"
             variant="secondary"
-            href="/video-reviews"
+            href="/for-brands"
             fullWidth
             className=" bg-white mt-10 text-center"
             title={t.cta_button_brand}

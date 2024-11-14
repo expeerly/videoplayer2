@@ -31,14 +31,19 @@ export const Sidebar: FunctionComponent = async () => {
   const t: { [key: string]: string } = (await getDictionary()).menu;
   return (
     <>
-      <aside className="min-h-screen w-[200px] border-e hidden md:flex">
-        <nav className="p-4 mx-auto w-full fixed top-24 max-w-[200px]">
+      <aside className="min-h-screen w-[25%] mid-lg:w-[275px] border-e hidden md:flex">
+        <nav className="p-4 pl-5 mid-lg:pl-9 fixed top-24 w-[25%] mid-lg:w-[275px]">
           <ul>
             {navItems.map(item => {
               const Icon = item.icon;
               return (
                 <li key={item.key}>
-                  <ActiveLink key={item.name} href={item.href} title={item.name}>
+                  <ActiveLink
+                    className="my-2 w-full"
+                    key={item.name}
+                    href={item.href}
+                    title={item.name}
+                  >
                     <Icon />
                     <span className="text-black">{t[item.key]}</span>
                   </ActiveLink>

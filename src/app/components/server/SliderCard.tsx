@@ -25,7 +25,7 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className }) => {
       aria-label={data?.name ?? `slide-${data?.id}`}
     >
       {data?.icon && <span className="text-lg">{data?.icon}</span>}
-      {data?.name && <span className="text-sm text-gray-700">{data?.name}</span>}
+      {data?.name && <span className="text-base text-gray-700">{data?.name}</span>}
       {data.imgURL && (
         <Image
           className="w-full h-max min-w-max"

@@ -24,10 +24,8 @@ export const ConversionSlider: FunctionComponent = async () => {
           <Slider
             slides={[brands[0]]}
             classNameStyle={{
-              leftButtonClassName:
-                '!bg-[linear-gradient(90deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]',
-              rightButtonClassName:
-                '!bg-[linear-gradient(270deg,_#4B49EB_47.5%,_rgba(255,255,255,0)_100%)]',
+              leftButtonClassName: '!bg-blue-left-gradient',
+              rightButtonClassName: '!bg-blue-right-gradient',
               cardClassName: 'bg-white',
             }}
           />
@@ -36,10 +34,6 @@ export const ConversionSlider: FunctionComponent = async () => {
           <MobileSlider
             slides={[brands[0]]}
             styleClassNames={{
-              leftShadowClassName:
-                '!bg-[linear-gradient(90deg,_#4B49EB_40.5%,_rgba(255,255,255,0)_100%)]',
-              rightShadowClassName:
-                '!bg-[linear-gradient(270deg,_#4B49EB_47.5%,_rgba(255,255,255,0)_100%)]',
               cardClassName: 'bg-white',
             }}
           />
@@ -48,7 +42,7 @@ export const ConversionSlider: FunctionComponent = async () => {
           <Button
             size="lg"
             variant="secondary"
-            href="/video-reviews"
+            href="https://www.get.expeerly.com/for-marketplaces"
             fullWidth
             className=" bg-white text-center"
           >
