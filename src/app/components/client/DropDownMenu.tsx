@@ -28,6 +28,7 @@ import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import { useTranslations } from 'use-intl';
 import { Button } from '@/src/app/components/server/Button';
 import clsx from 'clsx';
+import { usePathname } from '@/src/i18n/routing';
 
 export type MenuItem = {
   key: string;
@@ -131,13 +132,15 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('menu');
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-        setOpenSubmenuKey(null);
-      }
+      if (window.innerWidth > 768)
+        if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+          setIsOpen(false);
+          setOpenSubmenuKey(null);
+        }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -145,6 +148,33 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (pathname) {
+      setIsOpen(false);
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    if (isOpen && window.innerWidth < 768) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${scrollY}px`;
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    }
+
+    return () => {
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+    };
+  }, [isOpen]);
 
   const toggleMenu = useCallback(() => {
     setIsOpen(!isOpen);
@@ -159,9 +189,9 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   );
 
   return (
-    <>
+    <div>
       <div
-        className={`fixed top-[90px] left-[200px] h-[calc(100%-90px)] w-[calc(100%-200px)]  bg-black bg-opacity-25 transition-opacity duration-200 ${
+        className={`fixed left-0 top-[90px] md:left-[200px] h-[calc(100%-90px)] w-[calc(100%-200px)]  bg-black bg-opacity-25 ${
           isOpen ? 'opacity-100 h-full' : 'opacity-0 h-0 pointer-events-none'
         }`}
         aria-hidden="true"
@@ -176,94 +206,123 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           aria-expanded={isOpen}
           title="Show/Hide Menu"
           id="menu-button"
+          className="p-2 h-10 w-10 md:p-3 md:h-12 md:w-12 ml-auto"
         >
           <MenuIcon />
         </Button>
-
         <div
-          id="dropdown-menu"
-          className={`absolute top-12 right-0 w-[393px] bg-white shadow-lg ${isOpen ? 'h-auto opacity-100 overflow-visible' : 'overflow-hidden opacity-0 h-0'}`}
-          aria-orientation="vertical"
-          aria-labelledby="menu-button"
+          className={`fixed top-[70px] right-0 w-full overflow-auto bg-light-gray  md:static md:top-0 md:bg:transparent md:w-[393px] md:h-full
+             ${isOpen ? 'h-[calc(100%-71px)] border-t md:h-full md:border-t-0 ' : 'h-0 overflow-hidden md:overflow-visible'}`}
         >
-          <ul role="menu" className="pb-[32px] pt-[35px]">
-            {menuItems.map(item => (
-              <li key={item.key} role="presentation" className="relative">
-                {item.devider && <div className="border-b border-gray-300 my-4 mx-5" />}
-                {item.items ? (
-                  <div role="presentation">
-                    <button
-                      onClick={() => toggleSubmenu(item.key)}
-                      role="menuitem"
-                      className={clsx(
-                        'w-full flex items-center justify-between px-5 py-2 text-transparent hover:bg-gray-50 transition-colors duration-200',
-                        {
-                          'bg-light-gray': openSubmenuKey === item.key,
-                        }
-                      )}
-                      title="item.label"
-                      aria-expanded={openSubmenuKey === item.key}
-                    >
-                      <span className="flex gap-4 items-center">
-                        <item.icon />
-                        <span className="text-black">{t(item.key)}</span>
-                      </span>
-                      <span className="ml-2">
-                        {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
-                      </span>
-                    </button>
+          <div
+            id="dropdown-menu"
+            className={`md:bg-white md:right md:absolute md:top-[69px] w-full md:shadow-lg ${
+              isOpen ? 'block' : 'hidden'
+            }`}
+            aria-orientation="vertical"
+            aria-labelledby="menu-button"
+          >
+            <ul
+              role="menu"
+              className="pt-4 px-5 pb-[32px]  h-max md:px-3 md:overflow-visible md:pt-[35px] "
+            >
+              {menuItems.map(item => (
+                <li key={item.key} role="presentation" className="">
+                  {item.devider && <div className="border-b border-gray-300 my-4 mx-5" />}
+                  {item.items ? (
                     <div
-                      className={`absolute -left-[353px] top-0 w-[353px] bg-white shadow-lg py-1 border border-gray-100 transition-all duration-200 ${
-                        openSubmenuKey === item.key
-                          ? 'opacity-100 visible'
-                          : 'opacity-0 invisible pointer-events-none'
-                      }`}
-                      role="menu"
+                      role="presentation"
+                      className="flex h-auto flex-col relative md:flex-row-reverse"
                     >
-                      {item.itemsLabel && (
-                        <Link
-                          role="menuitem"
-                          title={item.itemsLabel}
-                          href={`${item.href}`}
-                          className="text-pink-500 cursor-pointer font-bold text-base flex items-center flex-row w-full text-left px-5 py-2 gap-3"
-                        >
-                          {t(item.itemsLabel)}
-                          <ArrowRightIcon />
-                        </Link>
-                      )}
-                      <ul role="menu">
-                        {item.items.map((subItem, index) => (
-                          <li key={index} role="presentation">
+                      <button
+                        onClick={() => toggleSubmenu(item.key)}
+                        role="menuitem"
+                        className={clsx(
+                          'w-full flex items-center justify-between px-1 rounded-lg py-2 text-transparent md:px-2 md:hover:bg-gray-50 transition-colors duration-200',
+                          {
+                            'md:bg-light-gray': openSubmenuKey === item.key,
+                          }
+                        )}
+                        title="item.label"
+                        aria-expanded={openSubmenuKey === item.key}
+                      >
+                        <span className="flex gap-4 items-center">
+                          <item.icon />
+                          <span className="text-black">{t(item.key)}</span>
+                        </span>
+                        <span className="ml-2">
+                          {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
+                        </span>
+                      </button>
+                      <div
+                        className={` w-full md:absolute md:-left-full  md:top-0  md:flex md:justify-end ${
+                          openSubmenuKey === item.key
+                            ? 'h-auto opacity-100 visible'
+                            : 'opacity-0 invisible pointer-events-none h-0'
+                        }`}
+                        role="menu"
+                      >
+                        <div className=" w-full md:w-max bg-white md:shadow-lg py-1 md:border md:min-w-[279px] md:border-gray-100 px-6 mr-2">
+                          {item.itemsLabel && (
                             <Link
                               role="menuitem"
-                              href={subItem.href}
-                              title={subItem.label}
-                              className="flex items-center gap-2 w-full text-left px-5 py-2 text-black hover:bg-gray-50"
+                              title={item.itemsLabel}
+                              href={`${item.href}`}
+                              className="px-1 text-pink-500 cursor-pointer font-bold text-base flex items-center flex-row w-full text-left md:px-2 py-2 gap-3"
                             >
-                              {subItem.label}
+                              {t(item.itemsLabel)}
+                              <ArrowRightIcon />
                             </Link>
-                          </li>
-                        ))}
-                      </ul>
+                          )}
+                          <ul role="menu">
+                            {item.items.map((subItem, index) => (
+                              <li key={index} role="presentation">
+                                <Link
+                                  role="menuitem"
+                                  href={subItem.href}
+                                  title={subItem.label}
+                                  className="flex items-center gap-2 w-full text-left pl-2 pr-14 py-2 text-black hover:bg-gray-50"
+                                >
+                                  {subItem.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <Link
-                    role="menuitem"
-                    className="w-full flex items-center text-transparent hover:bg-light-gray px-5 py-2 gap-4 transition-colors duration-200"
-                    href={`${item.href}`}
-                    title={item.label}
-                  >
-                    <item.icon />
-                    <span className="text-black">{t(item.key)}</span>
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
+                  ) : (
+                    <Link
+                      role="menuitem"
+                      className="px-1 w-full flex items-center text-transparent hover:bg-light-gray md:px-2 rounded-lg py-2 gap-4 transition-colors duration-200"
+                      href={`${item.href}`}
+                      title={item.label}
+                    >
+                      <item.icon />
+                      <span className="text-black">{t(item.key)}</span>
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className=" p-4 flex flex-col sm:flex-row items-center gap-3 md:fixed top-6 md:p-0">
+            <Button fullWidth href="https://app.expeerly.com/ " className="w-full md:w-[150px]">
+              {t('signUp')}
+            </Button>
+
+            <Button
+              fullWidth
+              href="https://app.expeerly.com/?m=signup&user=creator"
+              className="w-full md:w-[150px]"
+              variant="outline"
+            >
+              {t('login')}
+            </Button>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
