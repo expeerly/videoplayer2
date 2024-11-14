@@ -39,14 +39,14 @@ const config: Config = {
         },
       },
       fontSize: {
-        'heading-1': [
+        h1: [
           '24px',
           {
             lineHeight: '1.25',
             fontWeight: '700',
           },
         ],
-        'heading-2': [
+        h2: [
           '24px',
           {
             lineHeight: '1.25',
@@ -60,20 +60,6 @@ const config: Config = {
             fontWeight: '400',
           },
         ],
-      },
-      animation: {
-        marquee: 'marquee 25s linear infinite',
-        'marquee-reverse': 'marquee-reverse 25s linear infinite',
-      },
-      keyframes: {
-        marquee: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-100%)' },
-        },
-        'marquee-reverse': {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(0%)' },
-        },
       },
       screens: {
         mobileS: '320px',
