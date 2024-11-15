@@ -47,7 +47,7 @@ export type MenuItem = {
 
 export const categroies = [
   { label: 'Arts & Crafts', href: '/video-reviews/productcategory/1' },
-  { label: 'Automobile', href: '/video-reviews/productcategory/2' },
+  { label: 'Automotive', href: '/video-reviews/productcategory/2' },
   { label: 'Baby & Child Care', href: '/video-reviews/productcategory/3' },
   { label: 'Beauty & Personal Care', href: '/video-reviews/productcategory/4' },
   { label: 'Books & Media', href: '/video-reviews/productcategory/5' },
@@ -55,11 +55,17 @@ export const categroies = [
   { label: 'Electronics & Gadgets', href: '/video-reviews/productcategory/7' },
   { label: 'Food & Beverages', href: '/video-reviews/productcategory/8' },
   { label: 'Furniture & Decor', href: '/video-reviews/productcategory/9' },
-  {
-    label: 'Gardening & Outdoor Living',
-    href: '/video-reviews/productcategory/10',
-  },
+  { label: 'Gardening & Outdoor Living', href: '/video-reviews/productcategory/10' },
   { label: 'Health & Wellness', href: '/video-reviews/productcategory/11' },
+  { label: 'Home & Kitchen', href: '/video-reviews/productcategory/12' },
+  { label: 'Jewelry and Watches', href: '/video-reviews/productcategory/13' },
+  { label: 'Music & Instruments', href: '/video-reviews/productcategory/14' },
+  { label: 'Office Supplies', href: '/video-reviews/productcategory/15' },
+  { label: 'Pet Supplies', href: '/video-reviews/productcategory/16' },
+  { label: 'Sports & Outdoors', href: '/video-reviews/productcategory/17' },
+  { label: 'Toys & Games', href: '/video-reviews/productcategory/18' },
+  { label: 'Tools & Home Improvement', href: '/video-reviews/productcategory/19' },
+  { label: 'Travel', href: '/video-reviews/productcategory/20' },
 ];
 
 export const defaultMenuItems: MenuItem[] = [
@@ -193,7 +199,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   return (
     <>
       <div
-        className={`hidden fixed left-0 top-[90px] md:left-[200px] h-[calc(100%-90px)] w-[calc(100%-200px)]  bg-black bg-opacity-25 md:block ${
+        className={`hidden fixed right-0 top-[90px] h-[calc(100%-90px)]  md:w-[75%] mid-lg:w-[calc(100%-275px)]  bg-black bg-opacity-25 md:block ${
           isOpen ? 'opacity-100 h-full' : 'opacity-0 h-0 pointer-events-none'
         }`}
         aria-hidden="true"
@@ -267,14 +273,14 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                         </span>
                       </button>
                       <div
-                        className={` w-full md:absolute md:-left-full  md:top-0  md:flex md:justify-end ${
+                        className={` w-full md:absolute md:-left-full md:top-0 md:flex md:justify-end overflow-hidden overflow-y-auto ${
                           openSubmenuKey === item.key
-                            ? 'h-auto opacity-100 visible'
+                            ? 'h-auto opacity-100 visible md:h-[586px] '
                             : 'opacity-0 invisible pointer-events-none h-0'
                         }`}
                         role="menu"
                       >
-                        <div className=" w-full md:w-max bg-white md:shadow-lg py-1 md:border md:min-w-[279px] md:border-gray-100 px-6 mr-2">
+                        <div className=" h-max  w-full md:w-max py-4 bg-white md:shadow-lg  md:border md:min-w-[279px] md:border-gray-100 px-6 mr-2">
                           {item.itemsLabel && (
                             <Link
                               role="menuitem"
