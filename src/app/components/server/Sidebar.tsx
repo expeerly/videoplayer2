@@ -31,7 +31,7 @@ export const Sidebar: FunctionComponent = async () => {
   const t: { [key: string]: string } = (await getDictionary()).menu;
   return (
     <>
-      <aside className="min-h-screen w-[25%] mid-lg:w-[275px] border-e hidden md:flex">
+      <aside className="min-h-screen md:w-[25%] mid-lg:w-[275px] border-e hidden md:flex">
         <nav className="p-4 pl-5 mid-lg:pl-9 fixed top-24 w-[25%] mid-lg:w-[275px]">
           <ul>
             {navItems.map(item => {

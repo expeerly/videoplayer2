@@ -29,7 +29,7 @@ export const HeroSection: FunctionComponent = async () => {
             <h1 className="text-[42px]  lg:text-[47px] font-extrabold">{t.home_h1_title}</h1>
           </div>
           <p className="text-base w-[80%] md:w-[50%] lg:w-[40%] ">{t.home_top_body_text}</p>
-          <ScrollButton targetSectionId={'explore-reviewers'} className="mt-5 mobileL:mt-10" />
+          <ScrollButton className="mt-5 mobileL:mt-10" />
         </div>
       </div>
     </div>

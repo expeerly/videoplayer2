@@ -46,7 +46,9 @@ export default async function RootLayout({
             <div className="flex w-full flex-col-reverse md:flex-row">
               <Sidebar />
               <BottomBar />
-              <main className="flex-1 w-full md:w-[calc(100%-275px)] relative ">{children}</main>
+              <main className="flex-1 w-full md:w-[75%] mid-lg:w-[calc(100%-275px)] relative ">
+                {children}
+              </main>
             </div>
             <Footer />
           </div>

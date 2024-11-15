@@ -13,6 +13,7 @@ import {
   BinocularsIcon,
   CartIcon,
   CategoriesIcon,
+  CloseIcon,
   DownArrowIcon,
   InfoIcon,
   MenuIcon,
@@ -189,9 +190,9 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   );
 
   return (
-    <div>
+    <>
       <div
-        className={`fixed left-0 top-[90px] md:left-[200px] h-[calc(100%-90px)] w-[calc(100%-200px)]  bg-black bg-opacity-25 ${
+        className={`hidden fixed left-0 top-[90px] md:left-[200px] h-[calc(100%-90px)] w-[calc(100%-200px)]  bg-black bg-opacity-25 md:block ${
           isOpen ? 'opacity-100 h-full' : 'opacity-0 h-0 pointer-events-none'
         }`}
         aria-hidden="true"
@@ -208,15 +209,22 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           id="menu-button"
           className="p-2 h-10 w-10 md:p-3 md:h-12 md:w-12 ml-auto"
         >
-          <MenuIcon />
+          {!isOpen ? (
+            <MenuIcon />
+          ) : (
+            <>
+              <CloseIcon className="block md:hidden" />
+              <MenuIcon className="hidden md:block" />
+            </>
+          )}
         </Button>
         <div
-          className={`fixed top-[70px] right-0 w-full overflow-auto bg-light-gray  md:static md:top-0 md:bg:transparent md:w-[393px] md:h-full
-             ${isOpen ? 'h-[calc(100%-71px)] border-t md:h-full md:border-t-0 ' : 'h-0 overflow-hidden md:overflow-visible'}`}
+          className={`flex gap-5 justify-between flex-col fixed top-[78px] right-0 w-full overflow-auto bg-light-gray  md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
+             ${isOpen ? 'h-[calc(100%-78px)] border-t md:h-full md:border-t-0 ' : 'h-0 overflow-hidden md:overflow-visible'}`}
         >
           <div
             id="dropdown-menu"
-            className={`md:bg-white md:right md:absolute md:top-[69px] w-full md:shadow-lg ${
+            className={`md:bg-white md:right md:absolute md:top-[69px] w-full md:shadow-lg h-max ${
               isOpen ? 'block' : 'hidden'
             }`}
             aria-orientation="vertical"
@@ -228,7 +236,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
             >
               {menuItems.map(item => (
                 <li key={item.key} role="presentation" className="">
-                  {item.devider && <div className="border-b border-gray-300 my-4 mx-5" />}
+                  {item.devider && <div className="border-b border-gray-300 my-4 mx-1" />}
                   {item.items ? (
                     <div
                       role="presentation"
@@ -281,7 +289,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                                   role="menuitem"
                                   href={subItem.href}
                                   title={subItem.label}
-                                  className="flex items-center gap-2 w-full text-left pl-2 pr-14 py-2 text-black hover:bg-gray-50"
+                                  className="flex items-center gap-2 w-full text-left pl-2 pr-14 py-2 rounded-lg text-black hover:bg-gray-50"
                                 >
                                   {subItem.label}
                                 </Link>
@@ -306,7 +314,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
               ))}
             </ul>
           </div>
-          <div className=" p-4 flex flex-col sm:flex-row items-center gap-3 md:fixed top-6 md:p-0">
+          <div className=" p-4 flex flex-col sm:flex-row items-center gap-3 md:fixed md:mt-0 md:top-6 md:p-0">
             <Button fullWidth href="https://app.expeerly.com/ " className="w-full md:w-[150px]">
               {t('signUp')}
             </Button>
@@ -322,7 +330,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

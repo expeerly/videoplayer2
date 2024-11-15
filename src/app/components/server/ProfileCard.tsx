@@ -35,7 +35,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = ({
             <h2 className=" font-bold text-gray-700">{title}</h2>
             <RightChevronIcon className="w-2 h-3" />
           </div>
-          <p className="text-base text-gray-500">{subTitle}</p>
+          <p className="text-sm text-gray-500">{subTitle}</p>
         </div>
       </div>
 
