@@ -198,7 +198,10 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
         }`}
         aria-hidden="true"
       />
-      <div className={`relative z-[9999999] ${className}`} ref={menuRef}>
+      <div
+        className={`relative z-[9999999] md:flex md:flex-row-reverse md:items-center ${className}`}
+        ref={menuRef}
+      >
         <Button
           isOnlyIcon
           variant="secondary"
@@ -220,7 +223,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           )}
         </Button>
         <div
-          className={`flex gap-5 justify-between flex-col fixed top-[78px] right-0 w-full overflow-auto bg-light-gray  md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
+          className={`flex gap-5 justify-between flex-col fixed top-[78px] right-0 w-full overflow-auto bg-light-gray md:items-center md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
              ${isOpen ? 'h-[calc(100%-78px)] border-t md:h-full md:border-t-0 ' : 'h-0 overflow-hidden md:overflow-visible'}`}
         >
           <div
@@ -315,14 +318,18 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
               ))}
             </ul>
           </div>
-          <div className=" p-4 flex flex-col sm:flex-row items-center gap-3 md:fixed md:mt-0 md:top-6 md:p-0">
-            <Button fullWidth href="https://app.expeerly.com/ " className="w-full md:w-[150px]">
+          <div className=" p-4 flex flex-col sm:flex-row items-center gap-3 md:p-0 my-auto">
+            <Button
+              fullWidth
+              href="https://app.expeerly.com/?m=signup&user=creator"
+              className="w-full md:w-[150px]"
+            >
               {t('signUp')}
             </Button>
 
             <Button
               fullWidth
-              href="https://app.expeerly.com/?m=signup&user=creator"
+              href="https://app.expeerly.com/"
               className="w-full md:w-[150px]"
               variant="outline"
             >
