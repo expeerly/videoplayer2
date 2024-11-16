@@ -1,0 +1,23 @@
+# Build files
+.next/
+build/
+dist/
+out/
+
+# Node modules
+node_modules/
+
+# Package files
+package-lock.json
+yarn.lock
+
+# Public assets
+public/
+
+# Various config files
+.gitignore
+.eslintignore
+.prettierignore
+
+# README and other markdown files (optional)
+*.md
