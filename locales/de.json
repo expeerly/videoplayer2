@@ -4,15 +4,12 @@
   "home_h1_title": "Lohnt es sich?",
   "home_top_body_text": "Entdecke die neuesten Videoreviews zu deinen Lieblingsprodukten.",
   "home_h2": "Jeder Tester hat eine persönliche Geschichte zu erzählen.",
-  "cta_button": "Alle Tester entdecken",
   "home_h2_brand_section": "Video Bewertungen deiner Lieblingsmarken",
   "home_brand_body_text": "Tippe auf das Markenlogo, um Bewertungen zu sehen.",
-  "cta_button_brand": "Video Reviews Einsetzen",
   "home_h2_category_section": "Kategorien entdecken",
   "home_category_body_text": "Ob du einen neuen Haartrockner kaufen oder zu einem neuen Zielen reisen möchtest, finde Videobewertungen hier.",
   "home_h2_retailer": "Konversionsrate mit Video Bewertungen steigern",
   "home_retailer_body_text": "Händler oder Marktplatz, der Videobewertungen kostenlos anzeigen möchte?",
-  "cta_button_retailer": "Videobewertungen jetzt integrieren",
   "home_h2_how_expeerly_works": "Wie expeerly funktioniert",
   "home_how_it_works_body_text": "Expeerly ist ein Ort, an dem Verbraucher Einblicke in die Meinungen anderer Käufer zu Produkten und Dienstleistungen erhalten. Die Videobewertungen werden von unserer Gemeinschaft von Rezensenten aus der ganzen Welt geteilt.",
   "cta_button_how_it_works": "Mehr erfahren",
@@ -36,5 +33,20 @@
     "viewAllCategories": "Alle Kategorien ansehen",
     "signUp": "Registrieren",
     "login": "Einloggen"
+  },
+  "explore_all_reviewers": {
+    "label": "Alle Tester entdecken",
+    "aria_label": "Alle Videoreviewer-Profile auf Experify erkunden",
+    "alt_text": "Button, um alle Videoreviewer auf Experify zu sehen"
+  },
+  "get_video_reviewed": {
+    "label": "Video Reviews einsetzen",
+    "aria_label": "Fordere eine Videorezension für dein Produkt auf Experify an",
+    "alt_text": "Button, um dein Produkt mit einem Video auf Experify bewerten zu lassen"
+  },
+  "integrate_video": {
+    "label": "Videobewertungen jetzt integrieren",
+    "aria_label": "Integriere jetzt Videorezension in in deinen Online-Shop mit Experify",
+    "alt_text": "Button, um Videorezension en in deinen Online-Shop auf Experify zu integrieren"
   }
 }

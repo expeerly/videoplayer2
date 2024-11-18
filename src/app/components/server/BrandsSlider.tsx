@@ -70,9 +70,10 @@ export const BrandsSlider: FunctionComponent = async () => {
             href="/for-brands"
             fullWidth
             className=" bg-white mt-10 text-center"
-            title={t.cta_button_brand}
+            title={t.get_video_reviewed.label}
+            aria-label={t.get_video_reviewed.aria_label}
           >
-            {t.cta_button_brand}
+            {t.get_video_reviewed.label}
           </Button>
         </div>
       </div>

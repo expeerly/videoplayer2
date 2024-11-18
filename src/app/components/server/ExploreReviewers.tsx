@@ -14,8 +14,15 @@ export const ExpolreReviewers: FunctionComponent = async () => {
       <ReviewGrid />
       <ReviewGrid />
       <div className="w-full sm:max-w-[300px] px-5 mid-lg:px-0">
-        <Button href="/video-reviews/reviewer" size="lg" variant="primary" fullWidth>
-          {t.cta_button}
+        <Button
+          title={t.explore_all_reviewers.label}
+          aria-label={t.explore_all_reviewers.aria_label}
+          href="/video-reviews/reviewer"
+          size="lg"
+          variant="primary"
+          fullWidth
+        >
+          {t.explore_all_reviewers.label}
         </Button>
       </div>
     </section>

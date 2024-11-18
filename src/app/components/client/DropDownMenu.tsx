@@ -165,22 +165,28 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   useEffect(() => {
     if (window.innerWidth < 768) {
       if (isOpen) {
-        const scrollY = window.scrollY;
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
-        document.body.style.top = `-${scrollY}px`;
+        // First scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        setTimeout(() => {
+          document.body.style.position = 'fixed';
+          document.body.style.width = '100%';
+          document.body.style.top = '0';
+          document.body.style.overflow = 'hidden';
+        }, 300);
       } else {
-        const scrollY = document.body.style.top;
         document.body.style.position = '';
         document.body.style.width = '';
         document.body.style.top = '';
-        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+        document.body.style.overflow = '';
       }
     }
+
     return () => {
       document.body.style.position = '';
       document.body.style.width = '';
       document.body.style.top = '';
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
