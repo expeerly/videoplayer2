@@ -45,8 +45,10 @@ export const ConversionSlider: FunctionComponent = async () => {
             href="https://www.get.expeerly.com/for-marketplaces"
             fullWidth
             className=" bg-white text-center"
+            aria-label={t.integrate_video.aria_label}
+            title={t.integrate_video.label}
           >
-            {t.cta_button_retailer}
+            {t.integrate_video.label}
           </Button>
         </div>
       </div>
