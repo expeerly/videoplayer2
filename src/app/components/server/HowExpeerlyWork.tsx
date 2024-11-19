@@ -19,8 +19,9 @@ export const HowExpeerlyWorks: FunctionComponent = async () => {
           className="w-full sm:w-[300px] mx-auto"
           href="https://www.get.expeerly.com/about-us"
           variant="outline"
+          aria-label={t.learn_more.aria_label}
         >
-          {t.cta_button_how_it_works}
+          {t.learn_more.label}
         </Button>
       </div>
     </section>

@@ -5,28 +5,26 @@ import { Button } from '@/src/app/components/server/Button';
 import { getDictionary } from '@/src/lib/dictionary';
 
 export const brands = [
-  [
-    { imgURL: '/brands/logo.svg', id: 1 },
-    { imgURL: '/brands/logo1.svg', id: 2 },
-    { imgURL: '/brands/logo2.svg', id: 3 },
-    { imgURL: '/brands/logo3.svg', id: 4 },
-    { imgURL: '/brands/logo4.svg', id: 5 },
-    { imgURL: '/brands/logo5.svg', id: 6 },
-    { imgURL: '/brands/logo6.svg', id: 7 },
-    { imgURL: '/brands/logo7.svg', id: 8 },
-    { imgURL: '/brands/logo8.svg', id: 9 },
-  ],
-  [
-    { imgURL: '/brands/logo.svg', id: 1 },
-    { imgURL: '/brands/logo1.svg', id: 2 },
-    { imgURL: '/brands/logo2.svg', id: 3 },
-    { imgURL: '/brands/logo3.svg', id: 4 },
-    { imgURL: '/brands/logo4.svg', id: 5 },
-    { imgURL: '/brands/logo5.svg', id: 6 },
-    { imgURL: '/brands/logo6.svg', id: 7 },
-    { imgURL: '/brands/logo7.svg', id: 8 },
-    { imgURL: '/brands/logo8.svg', id: 9 },
-  ],
+  { imgURL: '/brands/logo.svg', id: 1 },
+  { imgURL: '/brands/logo1.svg', id: 2 },
+  { imgURL: '/brands/logo2.svg', id: 3 },
+  { imgURL: '/brands/logo3.svg', id: 4 },
+  { imgURL: '/brands/logo4.svg', id: 5 },
+  { imgURL: '/brands/logo5.svg', id: 6 },
+  { imgURL: '/brands/logo6.svg', id: 7 },
+  { imgURL: '/brands/logo7.svg', id: 8 },
+  { imgURL: '/brands/logo8.svg', id: 9 },
+  { imgURL: '/brands/logo.svg', id: 10 },
+  { imgURL: '/brands/logo8.svg', id: 11 },
+  { imgURL: '/brands/logo1.svg', id: 12 },
+  { imgURL: '/brands/logo2.svg', id: 13 },
+  { imgURL: '/brands/logo3.svg', id: 14 },
+  { imgURL: '/brands/logo4.svg', id: 15 },
+  { imgURL: '/brands/logo5.svg', id: 16 },
+  { imgURL: '/brands/logo6.svg', id: 17 },
+  { imgURL: '/brands/logo7.svg', id: 18 },
+  { imgURL: '/brands/logo8.svg', id: 19 },
+  { imgURL: '/brands/logo.svg', id: 20 },
 ];
 
 export const BrandsSlider: FunctionComponent = async () => {

@@ -13,27 +13,6 @@
   "home_h2_how_expeerly_works": "Comment fonctionne expeerly",
   "home_how_it_works_body_text": "Expeerly est un endroit où les consommateurs peuvent découvrir les avis d'autres acheteurs sur les produits et services. Les avis vidéo sont partagés par notre communauté de testeurs du monde entier.",
   "cta_button_how_it_works": "En savoir plus",
-  "footer": {
-    "contactUs": "Contactez-nous",
-    "aboutUs": "A propos de nous",
-    "termsCompanies": "CGV Clients",
-    "termsReviewers": "CGV Testeurs",
-    "privacyPolicy": "Mentions légales"
-  },
-  "menu": {
-    "explore": "Découvrir",
-    "brands": "Marques",
-    "reviewers": "Testeur",
-    "categories": "Catégories",
-    "learnMore": "En savoir plus",
-    "submitVideoReview": "Soumettre avis vidéo",
-    "forBrandsAndBusinesses": "Pour marques et entreprises",
-    "forMarketplaces": "Pour marketplaces",
-    "language": "Français (FR)",
-    "viewAllCategories": "Voir toutes les catégories",
-    "signUp": "Enregistrer",
-    "login": "Se connecter"
-  },
   "explore_all_reviewers": {
     "label": "Découvrir tous les testeurs",
     "aria_label": "Explorer les profils de tous les testeurs vidéo sur Experify",
@@ -48,5 +27,128 @@
     "label": "Intégrez des avis vidéo",
     "aria_label": "Intégrez dès maintenant des revues vidéo à votre boutique en ligne avec Experify",
     "alt_text": "Bouton pour intégrer des revues vidéo à votre boutique en ligne sur Experify"
+  },
+  "learn_more": {
+    "label": "En savoir plus",
+    "aria_label": "En savoir plus sur le fonctionnement d'Expeerly"
+  },
+  "contact_us": {
+    "label": "Contactez-nous",
+    "aria_label": "Voici comment contacter Expeerly"
+  },
+  "about_us": {
+    "label": "A propos de nous",
+    "aria_label": "En savoir plus sur l'équipe Expeerly"
+  },
+  "terms_companies": {
+    "label": "CGV Clients",
+    "aria_label": "Ce sont les termes et conditions pour les entreprises"
+  },
+  "terms_reviewers": {
+    "label": "CGV Testeurs",
+    "aria_label": "Ce sont les termes et conditions pour les évaluateurs"
+  },
+  "privacy_policy": {
+    "label": "Mentions légales",
+    "aria_label": "En savoir plus sur notre politique de confidentialité"
+  },
+  "menu": {
+    "explore": {
+      "label": "Découvrir",
+      "aria_label": "Découvrez toutes les vidéos"
+    },
+    "brands": {
+      "label": "Marques",
+      "aria_label": "Découvrez toutes les marques"
+    },
+    "reviewers": {
+      "label": "Testeur",
+      "aria_label": "Découvrez tous les évaluateurs"
+    },
+    "categories": {
+      "label": "Catégories",
+      "aria_label": "Découvrez toutes les catégories"
+    },
+    "submit_video_review": {
+      "label": "Soumettre avis vidéo",
+      "aria_label": "Soumettre une critique vidéo en tant que critique"
+    },
+    "for_brands": {
+      "label": "Pour marques et entreprises",
+      "aria_label": "En savoir plus sur Expeerly en tant que marque ou entreprise"
+    },
+    "for_marketplaces": {
+      "label": "Pour marketplaces",
+      "aria_label": "En savoir plus sur Expeerly en tant que marketplace ou boutique en ligne"
+    },
+    "language": {
+      "label": "Français (FR)",
+      "aria_label": "Définir la version linguistique"
+    },
+    "learn_more": {
+      "label": "En savoir plus",
+      "aria_label": "En savoir plus sur le fonctionnement d'Expeerly"
+    },
+    "sign_up": {
+      "label": "Enregister",
+      "aria_label": "Inscrivez-vous à Expeerly"
+    },
+    "login": {
+      "label": "Se connecter",
+      "aria_label": "Connectez-vous à votre compte Expeerly"
+    },
+    "menu_open": {
+      "label": "",
+      "aria_label": "Ouvrir le menu de droite"
+    },
+    "menu_close": {
+      "label": "",
+      "aria_label": "Fermer le menu de droite"
+    }
+  },
+  "review": {
+    "label": "Avis",
+    "aria_label": "Accéder aux détails de l'avis"
+  },
+  "faq_product_details": {
+    "label": "FAQ/Détails du produit",
+    "aria_label": "Accédez aux questions fréquemment posées et aux détails du produit"
+  },
+
+  "buy_now": {
+    "label": "Profiter maintenant",
+    "aria_label": "Accédez au produit présenté dans la vidéo"
+  },
+  "learn_more_brand": {
+    "label": "En savoir plus",
+    "aria_label": "En savoir plus sur Expeerly en tant que marque ou entreprise"
+  },
+  "learn_more_reviewer": {
+    "label": "En savoir plus",
+    "aria_label": "Apprenez à devenir un évaluateur expert"
+  },
+  "scroll_reviews": {
+    "label": "",
+    "aria_label": "Faites défiler jusqu'aux avis"
+  },
+  "filter_brands": {
+    "label": "Marques",
+    "aria_label": "Filtrer uniquement les marques"
+  },
+  "filter_categories": {
+    "label": "Catégories",
+    "aria_label": "Filtrer les catégories uniquement"
+  },
+  "view_all": {
+    "label": "Tout afficher",
+    "aria_label": "Afficher tous les filtres"
+  },
+  "apply_filter": {
+    "label": "Appliquer le filtre",
+    "aria_label": "Appliquer des filtres"
+  },
+  "open_filter": {
+    "label": "",
+    "aria_label": "Ouvrir le filtre"
   }
 }
