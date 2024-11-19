@@ -8,7 +8,7 @@ type ActiveLinkProps<T> = {
   className?: string;
   label?: string;
   title?: string;
-  ariaLabel?: string;
+  'aria-label'?: string;
 } & T;
 
 const ActiveLinkComponent: FunctionComponent<PropsWithChildren<ActiveLinkProps<LinkProps>>> = ({
@@ -22,7 +22,7 @@ const ActiveLinkComponent: FunctionComponent<PropsWithChildren<ActiveLinkProps<L
     <Link
       label={props.label}
       title={props.title}
-      aria-label={props.ariaLabel}
+      aria-label={props['aria-label']}
       className={`${className} ${
         pathname === props.href ? 'bg-light-gray text-black' : 'text-transparent'
       } flex w-full justify-start items-center py-2 px-3 gap-2 group rounded transition-colors duration-200 hover:bg-light-gray hover:text-black focus:ring-0`}

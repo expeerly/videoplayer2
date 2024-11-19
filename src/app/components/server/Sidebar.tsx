@@ -53,7 +53,7 @@ export const Sidebar: FunctionComponent = async () => {
                     key={item.key}
                     href={item.href}
                     title={t[item.key].label}
-                    ariaLabel={t[item.key].aria_label}
+                    aria-label={t[item.key].aria_label}
                   >
                     <Icon />
                     <span className="text-black">{t[item.key].label}</span>
