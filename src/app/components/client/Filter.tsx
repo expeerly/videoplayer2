@@ -2,7 +2,7 @@
 import { FunctionComponent, memo, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useTranslations } from 'use-intl';
-import { CloseIcon, MenuIcon } from '@/src/assets/icons';
+import { CloseIcon, FilterIcon } from '@/src/assets/icons';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { FilterCard } from '../server/FilterCard';
 import { Button } from '../server/Button';
@@ -26,17 +26,36 @@ const categories: ItemType[] = [
   { name: 'Beauty & Personal Care', icon: '💅' },
   { name: 'Books & Media', icon: '📚' },
   { name: 'Clothes and Fashion', icon: '👕' },
+  { name: 'Electronics & Gadgets', icon: '📱' },
+  { name: 'Food & Beverages', icon: '🍔' },
+  { name: 'Furniture & Decor', icon: '🛋️' },
+  { name: 'Gardening & Outdoor Living', icon: '🌻' },
+  { name: 'Jewelry and Watches', icon: '💎' },
+  { name: 'Music & Instruments', icon: '🎸' },
+  { name: 'Office Supplies', icon: '📎' },
+  { name: 'Pet Supplies', icon: '🐾' },
+  { name: 'Sports & Outdoors', icon: '🏀' },
+  { name: 'Toys & Games', icon: '🧸' },
+  { name: 'Tools & Home Improvement', icon: '🔧' },
 ];
 
 const brands: ItemType[] = [
-  { name: 'Bauknecht', logo: '/api/placeholder/100/40' },
-  { name: 'Dyson', logo: '/api/placeholder/100/40' },
-  { name: 'Get Your Guide', logo: '/api/placeholder/100/40' },
-  { name: 'Koenig', logo: '/api/placeholder/100/40' },
-  { name: 'Philips', logo: '/api/placeholder/100/40' },
-  { name: 'Sony', logo: '/api/placeholder/100/40' },
-  { name: 'Tefal', logo: '/api/placeholder/100/40' },
-  { name: 'Zalando', logo: '/api/placeholder/100/40' },
+  { name: 'Dyson', logo: '/brands/logo.svg' },
+  { name: 'Philips', logo: '/brands/logo1.svg' },
+  { name: 'Sony', logo: '/brands/logo13.svg' },
+  { name: 'Tefal', logo: '/brands/logo11.svg' },
+  { name: 'Zalando', logo: '/brands/logo14.svg' },
+  { name: 'Get Your Guide', logo: '/brands/logo11.svg' },
+  { name: 'Koenig', logo: '/brands/logo5.svg' },
+  { name: 'Bauknecht', logo: '/brands/logo12.svg' },
+  { name: 'Dyson_1', logo: '/brands/logo.svg' },
+  { name: 'Philips_2', logo: '/brands/logo1.svg' },
+  { name: 'Sony_3', logo: '/brands/logo13.svg' },
+  { name: 'Tefal_4', logo: '/brands/logo11.svg' },
+  { name: 'Zalando_5', logo: '/brands/logo14.svg' },
+  { name: 'Get Your Guide_6', logo: '/brands/logo11.svg' },
+  { name: 'Koenig_7', logo: '/brands/logo5.svg' },
+  { name: 'Bauknecht_8', logo: '/brands/logo12.svg' },
 ];
 
 const FilterComponent: FunctionComponent = () => {
@@ -47,12 +66,24 @@ const FilterComponent: FunctionComponent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('categories');
+
+  // Track both current and applied filters
   const [pendingFilters, setPendingFilters] = useState({
     brand: searchParams.get('brand'),
     category: searchParams.get('category'),
   });
 
-  const filterCount = (pendingFilters.brand ? 1 : 0) + (pendingFilters.category ? 1 : 0);
+  const [appliedFilters, setAppliedFilters] = useState({
+    brand: searchParams.get('brand'),
+    category: searchParams.get('category'),
+  });
+
+  const hasFilterChanges = useCallback(() => {
+    return (
+      pendingFilters.brand !== appliedFilters.brand ||
+      pendingFilters.category !== appliedFilters.category
+    );
+  }, [pendingFilters, appliedFilters]);
 
   const updatePendingFilters = useCallback((type: 'brand' | 'category', value: string | null) => {
     setPendingFilters(prev => ({ ...prev, [type]: value }));
@@ -67,12 +98,13 @@ const FilterComponent: FunctionComponent = () => {
     [activeTab, pendingFilters, updatePendingFilters]
   );
 
-  const handleClearFilters = useCallback(() => {
-    updatePendingFilters(activeTab === 'categories' ? 'category' : 'brand', null);
-  }, [activeTab, updatePendingFilters]);
-
   const handleApplyFilters = useCallback(() => {
-    const params = new URLSearchParams(searchParams);
+    // Don't proceed if nothing has changed
+    if (!hasFilterChanges()) {
+      return;
+    }
+
+    const params = new URLSearchParams(searchParams.toString());
 
     // Update brand filter
     if (pendingFilters.brand) {
@@ -88,10 +120,15 @@ const FilterComponent: FunctionComponent = () => {
       params.delete('category');
     }
 
-    router.push(`${pathname}?${params.toString()}`);
-  }, [pendingFilters, searchParams, pathname, router]);
+    // Store the successfully applied filters
+    setAppliedFilters({
+      brand: pendingFilters.brand,
+      category: pendingFilters.category,
+    });
 
-  const items = activeTab === 'categories' ? categories : brands;
+    // Update URL
+    router.push(`${pathname}?${params.toString()}`);
+  }, [pendingFilters, searchParams, pathname, router, hasFilterChanges]);
 
   const toggleMenu = useCallback(() => {
     setIsOpen(prev => !prev);
@@ -100,7 +137,6 @@ const FilterComponent: FunctionComponent = () => {
   useEffect(() => {
     if (window.innerWidth < 768) {
       if (isOpen) {
-        // First scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         setTimeout(() => {
@@ -127,10 +163,13 @@ const FilterComponent: FunctionComponent = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (window.innerWidth > 768)
-        if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-          setIsOpen(false);
-        }
+      if (
+        window.innerWidth > 768 &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -147,7 +186,7 @@ const FilterComponent: FunctionComponent = () => {
 
   return (
     <div
-      className={clsx('z-[999999999] md:z-[999999] md:pr-[50px] md:pt-[50px] inset-0', {
+      className={clsx('z-[999999999] md:z-[999999] inset-0', {
         'fixed  h-100% bg-light-gray md:bg-transparent md:relative': isOpen,
       })}
     >
@@ -161,11 +200,15 @@ const FilterComponent: FunctionComponent = () => {
         title="Show/Hide Menu"
         aria-label={isOpen ? t('menu.menu_close.aria_label') : t('menu.menu_open.aria_label')}
         id="menu-button"
-        className={clsx('p-2 max-h-10 max-w-10 md:p-3 md:h-12 md:w-12 ml-auto', {
-          'absolute right-5 top-[15px] md:static md:top-0 md:right-0': isOpen,
-        })}
+        className={clsx(
+          'p-2 max-h-10 max-w-10 ml-auto md:mr-[50px] md:mt-[50px] md:p-3 md:h-12 md:w-12',
+          {
+            'absolute right-5 top-[15px] md:static md:top-0 md:right-0': isOpen,
+            'mt-5 mr-5 ': !isOpen,
+          }
+        )}
       >
-        {!isOpen ? <MenuIcon /> : <CloseIcon />}
+        {!isOpen ? <FilterIcon /> : <CloseIcon />}
       </Button>
 
       <div
@@ -175,47 +218,74 @@ const FilterComponent: FunctionComponent = () => {
         }`}
         aria-orientation="vertical"
         aria-labelledby="menu-button"
+        ref={menuRef}
       >
-        <div className="w-full h-[calc(100%-50px)] flex justify-between flex-col md:h-auto bg-light-gray rounded-lg">
-          <h3 className="h-[70px] px-10 py-5 text-base font-normal capitalize border-b text-center md:py-4 md:h-[58px]">
-            {activeTab}
-          </h3>
-          <div className="flex gap-4 px-10 py-5 justify-center">
+        <div className="w-full h-full flex justify-between flex-col md:h-auto bg-light-gray rounded-lg">
+          <div className="flex justify-center items-center h-[70px] px-10 py-5 border-b  md:py-4 md:h-[58px]">
+            <h3 className="text-base font-normal capitalize text-center">{activeTab}</h3>
+          </div>
+          <div className="flex gap-4 px-5 py-5 md:px-10">
             {(['brands', 'categories'] as const).map(tab => (
               <Button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 variant={tab === activeTab ? 'primary' : 'outline'}
-                fullWidth
+                className="capitalize w-max md:w-full"
               >
                 {tab}
               </Button>
             ))}
           </div>
+          {/* <div className="w-full overflow-x-auto overflow-y-hidden px-5 mb-3 flex gap-1">
+            <div
+              key={pendingFilters?.[activeTab]}
+              className="flex w-max items-center gap-[6px] px-4 py-[7.5px] bg-gray-100 border border-gray-300 text-gray-600 rounded-full text-sm"
+            >
+              <span className="text-sm">{pendingFilters?.[activeTab]}</span>
+              <button
+                onClick={() => handleItemToggle(i!)}
+                className="focus:outline-none"
+              >
+                <CloseIcon className="h-4" />
+              </button>
+            </div>
+          </div> */}
+          <div className="flex-1 overflow-y-auto md:max-h-[424px]">
+            <div className="px-5 h-max overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 md:px-10">
+              {(activeTab === 'categories' ? categories : brands).map(item => {
+                const isChecked =
+                  pendingFilters.category === item.name || pendingFilters.brand === item.name;
 
-          <div className="px-4 h-max md:max-h-[424px] md:overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 ">
-            {items.map(item => {
-              const isChecked =
-                pendingFilters.category === item.name || pendingFilters.brand === item.name;
-
-              return (
-                <FilterCard
-                  name={item.name}
-                  icon={item.icon}
-                  logo={item.logo}
-                  checked={isChecked}
-                  key={item.name}
-                  onChange={handleItemToggle}
-                />
-              );
-            })}
+                return (
+                  <FilterCard
+                    name={item.name}
+                    icon={item.icon}
+                    logo={item.logo}
+                    checked={isChecked}
+                    key={item.name}
+                    onChange={handleItemToggle}
+                  />
+                );
+              })}
+            </div>
           </div>
 
-          <div className="flex mt-auto gap-4 py-3 px-10 border-t justify-center md:border-t-0 md:pb-[30px]">
-            <Button onClick={handleClearFilters} variant="outline" size="lg" fullWidth>
+          <div className="flex gap-4 py-3 px-5 border-t justify-center md:px-10 md:border-t-0 md:pb-[30px]">
+            <Button
+              href={`/video-reviews/${activeTab === 'brands' ? 'brand' : 'productcategory'}`}
+              variant="outline"
+              size="lg"
+              fullWidth
+            >
               View All
             </Button>
-            <Button onClick={handleApplyFilters} disabled={filterCount === 0} size="lg" fullWidth>
+            <Button
+              onClick={handleApplyFilters}
+              size="lg"
+              fullWidth
+              variant={hasFilterChanges() ? 'primary' : 'secondary'}
+              disabled={!hasFilterChanges()}
+            >
               Apply Filter
             </Button>
           </div>

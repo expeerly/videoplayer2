@@ -224,7 +224,8 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           title="Show/Hide Menu"
           aria-label={isOpen ? t('menu_close.aria_label') : t('menu_open.aria_label')}
           id="menu-button"
-          className="p-2 h-10 w-10 md:p-3 md:h-12 md:w-12 ml-auto"
+          size="sm"
+          className="p-2 md:p-3 ml-auto"
         >
           {!isOpen ? (
             <MenuIcon />
@@ -236,8 +237,8 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           )}
         </Button>
         <div
-          className={`flex gap-5 justify-between flex-col fixed top-[78px] right-0 w-full overflow-auto bg-light-gray md:items-center md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
-             ${isOpen ? 'h-[calc(100%-78px)] border-t md:h-full md:border-t-0 ' : 'h-0 overflow-hidden md:overflow-visible'}`}
+          className={`flex gap-5 justify-between flex-col fixed top-[70px] right-0 w-full overflow-auto bg-light-gray md:items-center md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
+             ${isOpen ? 'h-[calc(100%-70px)] border-t md:h-full md:border-t-0 ' : 'h-0 overflow-hidden md:overflow-visible'}`}
         >
           <div
             id="dropdown-menu"

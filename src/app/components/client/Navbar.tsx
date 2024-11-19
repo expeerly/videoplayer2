@@ -21,6 +21,7 @@ const NavbarComponent: FunctionComponent = () => {
             hidden: pathname === '/',
             ' sm:hidden': pathname !== '/',
           })}
+          size="sm"
         >
           <LeftChevronIcon />
         </Button>

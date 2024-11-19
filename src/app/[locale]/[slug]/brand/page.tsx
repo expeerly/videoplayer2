@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 
 const Page: NextPage = () => {
   return (
-    <div className="h-full bg-white">
+    <div className="h-[calc(100vh-64px)] bg-white">
       <Filter />
     </div>
   );
