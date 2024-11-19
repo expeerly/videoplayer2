@@ -41,8 +41,8 @@ export type MenuItem = {
     href: string;
     hasLogo?: boolean;
   }[];
-  itemsLabel?: string | undefined;
-  devider?: boolean | undefined;
+  itemsLabel?: string;
+  devider?: boolean;
 };
 
 export const categroies = [
@@ -94,20 +94,20 @@ export const defaultMenuItems: MenuItem[] = [
   {
     devider: true,
 
-    key: 'learnMore',
+    key: 'learn_more',
     label: 'Learn more',
     icon: InfoIcon,
     href: 'https://www.get.expeerly.com/about-us',
   },
-  { key: 'submitVideoReview', label: 'Submit a video review', icon: VideoIcon },
+  { key: 'submit_video_review', label: 'Submit a video review', icon: VideoIcon },
   {
-    key: 'forBrandsAndBusinesses',
+    key: 'for_brands',
     label: 'For brands & businesses',
     icon: TagIcon,
     href: 'https://www.get.expeerly.com/for-brands',
   },
   {
-    key: 'forMarketplaces',
+    key: 'for_marketplaces',
     label: 'For marketplaces',
     icon: CartIcon,
     href: 'https://www.get.expeerly.com/for-marketplaces',
@@ -222,6 +222,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           aria-haspopup="true"
           aria-expanded={isOpen}
           title="Show/Hide Menu"
+          aria-label={isOpen ? t('menu_close.aria_label') : t('menu_open.aria_label')}
           id="menu-button"
           className="p-2 h-10 w-10 md:p-3 md:h-12 md:w-12 ml-auto"
         >
@@ -267,12 +268,13 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                             'md:bg-light-gray': openSubmenuKey === item.key,
                           }
                         )}
-                        title="item.label"
+                        title={t(`${item.key}.label`)}
                         aria-expanded={openSubmenuKey === item.key}
+                        aria-label={t(`${item.key}.aria_label`)}
                       >
                         <span className="flex gap-4 items-center">
                           <item.icon />
-                          <span className="text-black">{t(item.key)}</span>
+                          <span className="text-black">{t(`${item.key}.label`)}</span>
                         </span>
                         <span className="ml-2">
                           {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
@@ -290,11 +292,12 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                           {item.itemsLabel && (
                             <Link
                               role="menuitem"
-                              title={item.itemsLabel}
+                              title={t(`${item.key}.label`)}
                               href={`${item.href}`}
                               className="px-1 text-pink-500 cursor-pointer font-bold text-base flex items-center flex-row w-full text-left md:px-2 py-2 gap-3"
+                              aria-label={t(`${item.key}.aria_label`)}
                             >
-                              {t(item.itemsLabel)}
+                              {t(`${item.key}.label`)}
                               <ArrowRightIcon />
                             </Link>
                           )}
@@ -320,10 +323,11 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                       role="menuitem"
                       className="px-1 w-full flex items-center text-transparent hover:bg-light-gray md:px-2 rounded-lg py-2 gap-4 transition-colors duration-200"
                       href={`${item.href}`}
-                      title={item.label}
+                      title={t(`${item.key}.label`)}
+                      aria-label={t(`${item.key}.aria_label`)}
                     >
                       <item.icon />
-                      <span className="text-black">{t(item.key)}</span>
+                      <span className="text-black">{t(`${item.key}.label`)}</span>
                     </Link>
                   )}
                 </li>
@@ -335,8 +339,10 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
               fullWidth
               href="https://app.expeerly.com/?m=signup&user=creator"
               className="w-full md:w-[150px]"
+              aria-label={t('sign_up.aria_label')}
+              title={t('sign_up.label')}
             >
-              {t('signUp')}
+              {t('sign_up.label')}
             </Button>
 
             <Button
@@ -344,8 +350,10 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
               href="https://app.expeerly.com/"
               className="w-full md:w-[150px]"
               variant="outline"
+              aria-label={t('login.aria_label')}
+              title={t('login.label')}
             >
-              {t('login')}
+              {t('login.label')}
             </Button>
           </div>
         </div>

@@ -1,9 +1,21 @@
 import React, { FunctionComponent } from 'react';
-import { brands } from './BrandsSlider';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Slider } from '@/src/app/components/client/Slider';
 import { Button } from '@/src/app/components/server/Button';
 import { MobileSlider } from '@/src/app/components/server/MobileSlider';
+
+const brands = [
+  { imgURL: '/brands/logo.svg', id: 1 },
+  { imgURL: '/brands/logo1.svg', id: 2 },
+  { imgURL: '/brands/logo2.svg', id: 3 },
+  { imgURL: '/brands/logo3.svg', id: 4 },
+  { imgURL: '/brands/logo4.svg', id: 5 },
+  { imgURL: '/brands/logo5.svg', id: 6 },
+  { imgURL: '/brands/logo6.svg', id: 7 },
+  { imgURL: '/brands/logo7.svg', id: 8 },
+  { imgURL: '/brands/logo8.svg', id: 9 },
+  { imgURL: '/brands/logo.svg', id: 10 },
+];
 
 export const ConversionSlider: FunctionComponent = async () => {
   const t = await getDictionary();
@@ -22,7 +34,7 @@ export const ConversionSlider: FunctionComponent = async () => {
         <p className="text-white px-5 text-center mb-10"> {t.home_retailer_body_text}</p>
         <div className=" hidden w-full md:flex">
           <Slider
-            slides={[brands[0]]}
+            slides={brands}
             classNameStyle={{
               leftButtonClassName: '!bg-blue-left-gradient',
               rightButtonClassName: '!bg-blue-right-gradient',
@@ -32,7 +44,7 @@ export const ConversionSlider: FunctionComponent = async () => {
         </div>
         <div className=" flex w-full md:hidden">
           <MobileSlider
-            slides={[brands[0]]}
+            slides={brands}
             styleClassNames={{
               cardClassName: 'bg-white',
             }}

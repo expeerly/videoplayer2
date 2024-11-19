@@ -4,44 +4,41 @@ import { SlideProps, SliderCard } from './SliderCard';
 import clsx from 'clsx';
 
 const brands = [
-  [
-    { name: 'Travel' },
-    { name: 'Automobile' },
-    { name: 'Health & Wellness' },
-    { name: 'Arts & Crafts' },
-    { name: 'Baby & Child Care' },
-    { name: 'Home & Kitchen' },
-    { name: 'Beauty & Personal Care' },
-    { name: 'Books & Media' },
-    { name: 'Clothes and Fashion' },
-    { name: 'Food & Beverages' },
-    { name: 'Electronics & Gadgets' },
-    { name: 'Sports & Fitness' },
-    { name: 'Pets & Animals' },
-    { name: 'Furniture' },
-    { name: 'Toys & Games' },
-  ],
-  [
-    { name: 'Travel' },
-    { name: 'Automobile' },
-    { name: 'Health & Wellness' },
-    { name: 'Arts & Crafts' },
-    { name: 'Baby & Child Care' },
-    { name: 'Home & Kitchen' },
-    { name: 'Beauty & Personal Care' },
-    { name: 'Books & Media' },
-    { name: 'Clothes and Fashion' },
-    { name: 'Food & Beverages' },
-    { name: 'Electronics & Gadgets' },
-    { name: 'Sports & Fitness' },
-    { name: 'Pets & Animals' },
-    { name: 'Furniture' },
-    { name: 'Toys & Games' },
-  ],
+  { name: 'Travel' },
+  { name: 'Automobile' },
+  { name: 'Health & Wellness' },
+  { name: 'Arts & Crafts' },
+  { name: 'Baby & Child Care' },
+  { name: 'Home & Kitchen' },
+  { name: 'Beauty & Personal Care' },
+  { name: 'Books & Media' },
+  { name: 'Clothes and Fashion' },
+  { name: 'Food & Beverages' },
+  { name: 'Electronics & Gadgets' },
+  { name: 'Sports & Fitness' },
+  { name: 'Pets & Animals' },
+  { name: 'Furniture' },
+  { name: 'Toys & Games' },
+  { name: 'Travel' },
+  { name: 'Automobile' },
+  { name: 'Health & Wellness' },
+  { name: 'Arts & Crafts' },
+  { name: 'Baby & Child Care' },
+  { name: 'Home & Kitchen' },
+  { name: 'Beauty & Personal Care' },
+  { name: 'Books & Media' },
+  { name: 'Clothes and Fashion' },
+  { name: 'Food & Beverages' },
+  { name: 'Electronics & Gadgets' },
+  { name: 'Sports & Fitness' },
+  { name: 'Pets & Animals' },
+  { name: 'Furniture' },
+  { name: 'Toys & Games' },
+  { icon: '🚗' },
 ];
 
 type Props = {
-  slides?: SlideProps[][];
+  slides?: SlideProps[];
   styleClassNames?: {
     leftShadowClassName?: string;
     rightShadowClassName?: string;
@@ -50,6 +47,11 @@ type Props = {
     rowClassName?: string;
   };
 };
+
+const distributeSlides = <T extends SlideProps>(slides: T[]): T[][] =>
+  Array.from({ length: Math.ceil(slides.length / 10) }, (_, i) =>
+    slides.slice(i * 10, (i + 1) * 10)
+  );
 
 const BASE_CONTAINER_CLASSES = 'w-full relative overflow-hidden space-y-6';
 const BASE_ROW_CLASSES =
@@ -78,7 +80,7 @@ export const MobileSlider: FunctionComponent<Props> = ({ slides = brands, styleC
 
   return (
     <ul className={clsx(BASE_CONTAINER_CLASSES, styleClassNames?.rowContainerClassName)}>
-      {slides.map((row, index) => (
+      {distributeSlides(slides).map((row, index) => (
         <li
           ref={el => setRowRef(el, index)}
           key={`row-${index}`}

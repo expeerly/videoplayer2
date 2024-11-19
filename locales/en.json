@@ -12,28 +12,6 @@
   "home_retailer_body_text": "Are you a retailer wanting to display video reviews for free?",
   "home_h2_how_expeerly_works": "How expeerly works",
   "home_how_it_works_body_text": "Expeerly is a place for consumers to get insights about what other shoppers think of products and services. The video reviews are shared by our community of reviewers from our the globe.",
-  "cta_button_how_it_works": "Learn more",
-  "footer": {
-    "contactUs": "Contact us",
-    "aboutUs": "About us",
-    "termsCompanies": "Terms Companies",
-    "termsReviewers": "Terms Reviewers",
-    "privacyPolicy": "Privacy Policy"
-  },
-  "menu": {
-    "explore": "Explore",
-    "brands": "Brands",
-    "reviewers": "Reviewers",
-    "categories": "Categories",
-    "learnMore": "Learn more",
-    "submitVideoReview": "Submit a Video Review",
-    "forBrandsAndBusinesses": "For brands & businesses",
-    "forMarketplaces": "For marketplaces",
-    "language": "English (EN)",
-    "viewAllCategories": "View all categories",
-    "signUp": "Sign up",
-    "login": "Login"
-  },
   "explore_all_reviewers": {
     "label": "Explore All Reviewers",
     "aria_label": "Explore profiles of all video reviewers on Experify",
@@ -48,5 +26,128 @@
     "label": "Integrate Video Reviews now",
     "aria_label": "Integrate video reviews into your online store now with Experify",
     "alt_text": "Button to integrate video reviews into your online store on Experify"
+  },
+  "learn_more": {
+    "label": "Learn more",
+    "aria_label": "Learn more about how Expeerly works"
+  },
+  "contact_us": {
+    "label": "Contact us",
+    "aria_label": "This is how you can contact Expeerly"
+  },
+  "about_us": {
+    "label": "About us",
+    "aria_label": "Learn more about the Expeerly team"
+  },
+  "terms_companies": {
+    "label": "Terms Companies",
+    "aria_label": "These are the terms & conditions for companies"
+  },
+  "terms_reviewers": {
+    "label": "Terms Reviewers",
+    "aria_label": "These are the terms & conditions for reviewers"
+  },
+  "privacy_policy": {
+    "label": "Privacy Policy",
+    "aria_label": "Find out more about our privacy policy"
+  },
+  "menu": {
+    "explore": {
+      "label": "Explore",
+      "aria_label": "Discover all videos"
+    },
+    "brands": {
+      "label": "Brands",
+      "aria_label": "Discover all brands"
+    },
+    "reviewers": {
+      "label": "Reviewers",
+      "aria_label": "Discover all reviewers"
+    },
+    "categories": {
+      "label": "Categories",
+      "aria_label": "Discover all categories"
+    },
+    "submit_video_review": {
+      "label": "Submit a Video Review",
+      "aria_label": "Submit a video review as a reviewer"
+    },
+    "for_brands": {
+      "label": "For brands & businesses",
+      "aria_label": "Find out more about Expeerly as a brand or company"
+    },
+    "for_marketplaces": {
+      "label": "For marketplaces",
+      "aria_label": "Find out more about Expeerly as a marketplace or online shop"
+    },
+    "language": {
+      "label": "English (EN)",
+      "aria_label": "Set language version"
+    },
+    "learn_more": {
+      "label": "Learn more",
+      "aria_label": "Learn more about how Expeerly works"
+    },
+    "sign_up": {
+      "label": "Sign up",
+      "aria_label": "Sign up for Expeerly"
+    },
+    "login": {
+      "label": "Login",
+      "aria_label": "Log in to your Expeerly account"
+    },
+    "menu_open": {
+      "label": "",
+      "aria_label": "Open right menu"
+    },
+    "menu_close": {
+      "label": "",
+      "aria_label": "Close right menu"
+    }
+  },
+  "review": {
+    "label": "Review",
+    "aria_label": "Go to details about review"
+  },
+  "faq_product_details": {
+    "label": "FAQ/Product details",
+    "aria_label": "Go to frequently asked questions and product details"
+  },
+
+  "buy_now": {
+    "label": "Buy now",
+    "aria_label": "Go to the product shown in the video"
+  },
+  "learn_more_brand": {
+    "label": "Learn more",
+    "aria_label": "Find out more about Expeerly as a brand or company"
+  },
+  "learn_more_reviewer": {
+    "label": "Learn more",
+    "aria_label": "Learn how to become an Expeerly Reviewer"
+  },
+  "scroll_reviews": {
+    "label": "",
+    "aria_label": "Scroll to the reviews"
+  },
+  "filter_brands": {
+    "label": "Brands",
+    "aria_label": "Filter brands only"
+  },
+  "filter_categories": {
+    "label": "Categories",
+    "aria_label": "Filter categories only"
+  },
+  "view_all": {
+    "label": "View all",
+    "aria_label": "View all filters"
+  },
+  "apply_filter": {
+    "label": "Apply filter",
+    "aria_label": "Apply filters"
+  },
+  "open_filter": {
+    "label": "",
+    "aria_label": "Open filter"
   }
 }
