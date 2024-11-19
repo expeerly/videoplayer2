@@ -149,5 +149,9 @@
   "open_filter": {
     "label": "",
     "aria_label": "Applica filtro"
+  },
+  "delete_filter": {
+    "label": "Cancella filtro",
+    "aria_label": "Ausgewählte Filter löschen"
   }
 }

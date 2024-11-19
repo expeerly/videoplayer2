@@ -197,7 +197,8 @@ const FilterComponent: FunctionComponent = () => {
   const buttonState = useMemo(() => {
     if (totalAppliedCount > 0 && !hasFilterChanges()) {
       return {
-        text: `Delete Filter (${totalAppliedCount})`,
+        text: `${t('delete_filter.label')} (${totalAppliedCount})`,
+        ariaLabel: t('delete_filter.aria_label'),
         onClick: handleClearFilters,
         disabled: false,
         variant: 'primary' as const,
@@ -211,6 +212,7 @@ const FilterComponent: FunctionComponent = () => {
             ? `${t('apply_filter.label')} (${totalSelectedCount})`
             : t('apply_filter.label'),
         onClick: handleApplyFilters,
+        ariaLabel: t('apply_filter.aria_label'),
         disabled: false,
         variant: 'primary' as const,
       };
@@ -218,6 +220,7 @@ const FilterComponent: FunctionComponent = () => {
 
     return {
       text: t('apply_filter.label'),
+      ariaLabel: t('apply_filter.aria_label'),
       onClick: handleApplyFilters,
       disabled: true,
       variant: 'secondary' as const,
@@ -376,7 +379,7 @@ const FilterComponent: FunctionComponent = () => {
               variant={buttonState.variant}
               disabled={buttonState.disabled}
               className="disabled:bg-gray-200 disabled:text-gray-500 disabled:hover:bg-gray-200 disabled:hover:text-gray-500 disabled:opacity-100 w-full px-0 text-center"
-              aria-label={t('apply_filter.aria_label')}
+              aria-label={buttonState.ariaLabel}
             >
               {buttonState.text}
             </Button>

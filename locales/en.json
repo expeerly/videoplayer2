@@ -149,5 +149,9 @@
   "open_filter": {
     "label": "",
     "aria_label": "Open filter"
+  },
+  "delete_filter": {
+    "label": "Delete selected filters",
+    "aria_label": "Delete filter"
   }
 }
