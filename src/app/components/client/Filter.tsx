@@ -1,6 +1,5 @@
 'use client';
-import { FunctionComponent, memo, useCallback, useEffect, useRef, useState } from 'react';
-
+import { FunctionComponent, memo, useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslations } from 'use-intl';
 import { CloseIcon, FilterIcon } from '@/src/assets/icons';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
@@ -67,78 +66,95 @@ const FilterComponent: FunctionComponent = () => {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('categories');
 
-  // Track both current and applied filters
-  const [pendingFilters, setPendingFilters] = useState({
-    brand: searchParams.get('brand'),
-    category: searchParams.get('category'),
-  });
+  const initialFilters = useMemo(
+    () => ({
+      brand: searchParams.getAll('brand') || [],
+      category: searchParams.getAll('category') || [],
+    }),
+    [searchParams]
+  );
 
-  const [appliedFilters, setAppliedFilters] = useState({
-    brand: searchParams.get('brand'),
-    category: searchParams.get('category'),
-  });
+  const [pendingFilters, setPendingFilters] = useState(initialFilters);
+  const [appliedFilters, setAppliedFilters] = useState(initialFilters);
+
+  const totalSelectedCount = useMemo(
+    () => pendingFilters.brand.length + pendingFilters.category.length,
+    [pendingFilters]
+  );
+
+  const totalAppliedCount = useMemo(
+    () => appliedFilters.brand.length + appliedFilters.category.length,
+    [appliedFilters]
+  );
 
   const hasFilterChanges = useCallback(() => {
-    return (
-      pendingFilters.brand !== appliedFilters.brand ||
-      pendingFilters.category !== appliedFilters.category
-    );
+    if (pendingFilters.brand.length === 0 && pendingFilters.category.length === 0) {
+      return appliedFilters.brand.length > 0 || appliedFilters.category.length > 0;
+    }
+
+    const brandsDiff =
+      pendingFilters.brand.length !== appliedFilters.brand.length ||
+      pendingFilters.brand.some(b => !appliedFilters.brand.includes(b));
+
+    const categoriesDiff =
+      pendingFilters.category.length !== appliedFilters.category.length ||
+      pendingFilters.category.some(c => !appliedFilters.category.includes(c));
+
+    return brandsDiff || categoriesDiff;
   }, [pendingFilters, appliedFilters]);
 
-  const updatePendingFilters = useCallback((type: 'brand' | 'category', value: string | null) => {
-    setPendingFilters(prev => ({ ...prev, [type]: value }));
+  const updatePendingFilters = useCallback((type: 'brand' | 'category', name: string) => {
+    setPendingFilters(prev => {
+      const currentArray = prev[type];
+      if (currentArray.includes(name)) {
+        return {
+          ...prev,
+          [type]: currentArray.filter(item => item !== name),
+        };
+      }
+      if (currentArray.length >= 5) return prev;
+      return {
+        ...prev,
+        [type]: [...currentArray, name],
+      };
+    });
   }, []);
 
   const handleItemToggle = useCallback(
     (name: string) => {
       const type = activeTab === 'categories' ? 'category' : 'brand';
-      const currentValue = pendingFilters[type];
-      updatePendingFilters(type, currentValue === name ? null : name);
+      updatePendingFilters(type, name);
     },
-    [activeTab, pendingFilters, updatePendingFilters]
+    [activeTab, updatePendingFilters]
   );
 
   const handleApplyFilters = useCallback(() => {
-    // Don't proceed if nothing has changed
-    if (!hasFilterChanges()) {
-      return;
-    }
+    const params = new URLSearchParams();
+    pendingFilters.brand.forEach(brand => params.append('brand', brand));
+    pendingFilters.category.forEach(category => params.append('category', category));
 
-    const params = new URLSearchParams(searchParams.toString());
-
-    // Update brand filter
-    if (pendingFilters.brand) {
-      params.set('brand', pendingFilters.brand);
-    } else {
-      params.delete('brand');
-    }
-
-    // Update category filter
-    if (pendingFilters.category) {
-      params.set('category', pendingFilters.category);
-    } else {
-      params.delete('category');
-    }
-
-    // Store the successfully applied filters
     setAppliedFilters({
-      brand: pendingFilters.brand,
-      category: pendingFilters.category,
+      brand: [...pendingFilters.brand],
+      category: [...pendingFilters.category],
     });
 
-    // Update URL
     router.push(`${pathname}?${params.toString()}`);
-  }, [pendingFilters, searchParams, pathname, router, hasFilterChanges]);
+  }, [pendingFilters, pathname, router]);
+
+  const handleClearFilters = useCallback(() => {
+    setPendingFilters({ brand: [], category: [] });
+    setAppliedFilters({ brand: [], category: [] });
+    router.push(pathname);
+  }, [pathname, router]);
 
   const toggleMenu = useCallback(() => {
     setIsOpen(prev => !prev);
   }, []);
 
-  useEffect(() => {
+  const handleBodyScroll = useCallback((isMenuOpen: boolean) => {
     if (window.innerWidth < 768) {
-      if (isOpen) {
+      if (isMenuOpen) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
         setTimeout(() => {
           document.body.style.position = 'fixed';
           document.body.style.width = '100%';
@@ -152,14 +168,12 @@ const FilterComponent: FunctionComponent = () => {
         document.body.style.overflow = '';
       }
     }
+  }, []);
 
-    return () => {
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
+  useEffect(() => {
+    handleBodyScroll(isOpen);
+    return () => handleBodyScroll(false);
+  }, [isOpen, handleBodyScroll]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -173,57 +187,138 @@ const FilterComponent: FunctionComponent = () => {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   useEffect(() => {
-    if (pathname) {
-      setIsOpen(false);
-    }
+    if (pathname) setIsOpen(false);
   }, [pathname]);
 
+  const buttonState = useMemo(() => {
+    if (totalAppliedCount > 0 && !hasFilterChanges()) {
+      return {
+        text: `Delete Filter (${totalAppliedCount})`,
+        onClick: handleClearFilters,
+        disabled: false,
+        variant: 'primary' as const,
+      };
+    }
+
+    if (hasFilterChanges()) {
+      return {
+        text:
+          totalSelectedCount > 0
+            ? `${t('apply_filter.label')} (${totalSelectedCount})`
+            : t('apply_filter.label'),
+        onClick: handleApplyFilters,
+        disabled: false,
+        variant: 'primary' as const,
+      };
+    }
+
+    return {
+      text: t('apply_filter.label'),
+      onClick: handleApplyFilters,
+      disabled: true,
+      variant: 'secondary' as const,
+    };
+  }, [
+    totalAppliedCount,
+    hasFilterChanges,
+    totalSelectedCount,
+    t,
+    handleClearFilters,
+    handleApplyFilters,
+  ]);
+
+  const activeItems = useMemo(
+    () => (activeTab === 'categories' ? categories : brands),
+    [activeTab]
+  );
+
+  const activePendingFilters = useMemo(
+    () => (activeTab === 'categories' ? pendingFilters.category : pendingFilters.brand),
+    [activeTab, pendingFilters]
+  );
+
+  const FilterCards = memo(
+    ({
+      items,
+      pendingFilters,
+      onToggle,
+    }: {
+      items: ItemType[];
+      pendingFilters: string[];
+      onToggle: (name: string) => void;
+    }) => (
+      <>
+        {items.map(item => (
+          <FilterCard
+            key={item.name}
+            name={item.name}
+            icon={item.icon}
+            logo={item.logo}
+            checked={pendingFilters.includes(item.name)}
+            onChange={onToggle}
+          />
+        ))}
+      </>
+    )
+  );
+
+  FilterCards.displayName = 'FilterCards';
+
+  const containerClassName = clsx('z-[999999999] md:z-[999999] inset-0', {
+    'fixed h-100% bg-light-gray md:bg-transparent md:relative': isOpen,
+  });
+
+  const buttonContainerClassName = clsx({
+    'absolute right-5 top-[15px] md:static md:top-0 md:right-0': isOpen,
+    'mt-5 mr-5 md:m-0': !isOpen,
+  });
+
   return (
-    <div
-      className={clsx('z-[999999999] md:z-[999999] inset-0', {
-        'fixed  h-100% bg-light-gray md:bg-transparent md:relative': isOpen,
-      })}
-    >
-      <Button
-        isOnlyIcon
-        variant="secondary"
-        onClick={toggleMenu}
-        type="button"
-        aria-haspopup="true"
-        aria-expanded={isOpen}
-        title="Show/Hide Menu"
-        aria-label={isOpen ? t('menu.menu_close.aria_label') : t('menu.menu_open.aria_label')}
-        id="menu-button"
-        className={clsx(
-          'p-2 max-h-10 max-w-10 ml-auto md:mr-[50px] md:mt-[50px] md:p-3 md:h-12 md:w-12',
-          {
-            'absolute right-5 top-[15px] md:static md:top-0 md:right-0': isOpen,
-            'mt-5 mr-5 ': !isOpen,
-          }
-        )}
-      >
-        {!isOpen ? <FilterIcon /> : <CloseIcon />}
-      </Button>
+    <div className={containerClassName}>
+      <div className={buttonContainerClassName}>
+        <Button
+          isOnlyIcon
+          variant="secondary"
+          onClick={toggleMenu}
+          type="button"
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+          title="Show/Hide Menu"
+          aria-label={isOpen ? t('menu.menu_close.aria_label') : t('menu.menu_open.aria_label')}
+          id="menu-button"
+          className="p-2 max-h-10 max-w-10 ml-auto md:mr-[50px] md:mt-[50px] md:p-3 md:h-12 md:w-12 relative"
+        >
+          {totalAppliedCount > 0 && (
+            <span className="absolute top-0 right-0 w-4 h-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">
+              {totalAppliedCount}
+            </span>
+          )}
+          {!isOpen ? <FilterIcon /> : <CloseIcon />}
+        </Button>
+      </div>
 
       <div
         id="dropdown-menu"
-        className={`w-full md:w-[434px] md:right-[50px] md:absolute  md:top-[100px] ${
-          isOpen ? 'h-full w-full flex md:h-max ' : 'h-0 w-0 overflow-hidden'
+        className={`w-full md:w-[434px] md:right-[50px] md:absolute md:top-[50px] ${
+          isOpen ? 'h-full w-full flex md:h-max' : 'h-0 w-0 overflow-hidden'
         }`}
         aria-orientation="vertical"
         aria-labelledby="menu-button"
         ref={menuRef}
       >
         <div className="w-full h-full flex justify-between flex-col md:h-auto bg-light-gray rounded-lg">
-          <div className="flex justify-center items-center h-[70px] px-10 py-5 border-b  md:py-4 md:h-[58px]">
-            <h3 className="text-base font-normal capitalize text-center">{activeTab}</h3>
+          {/* Header */}
+          <div className="flex justify-center items-center h-[70px] px-10 py-5 border-b md:py-4 md:h-[58px]">
+            <h3 className="text-base font-normal capitalize text-center">
+              {t(`filter_${activeTab}.label`)}
+            </h3>
           </div>
+
+          {/* Tab buttons */}
           <div className="flex gap-4 px-5 py-5 md:px-10">
             {(['brands', 'categories'] as const).map(tab => (
               <Button
@@ -231,62 +326,59 @@ const FilterComponent: FunctionComponent = () => {
                 onClick={() => setActiveTab(tab)}
                 variant={tab === activeTab ? 'primary' : 'outline'}
                 className="capitalize w-max md:w-full"
+                aria-label={t(`filter_${tab}.aria_label`)}
               >
-                {tab}
+                {t(`filter_${tab}.label`)}
               </Button>
             ))}
           </div>
-          {/* <div className="w-full overflow-x-auto overflow-y-hidden px-5 mb-3 flex gap-1">
-            <div
-              key={pendingFilters?.[activeTab]}
-              className="flex w-max items-center gap-[6px] px-4 py-[7.5px] bg-gray-100 border border-gray-300 text-gray-600 rounded-full text-sm"
-            >
-              <span className="text-sm">{pendingFilters?.[activeTab]}</span>
-              <button
-                onClick={() => handleItemToggle(i!)}
-                className="focus:outline-none"
+
+          {/* Selected filters */}
+          <div className="w-full overflow-x-auto overflow-y-hidden px-5 mb-3 flex gap-1">
+            {activePendingFilters.map(item => (
+              <div
+                key={item}
+                className="flex text-nowrap w-max items-center gap-[6px] px-4 py-[7.5px] bg-gray-100 border border-gray-300 text-gray-600 rounded-full text-sm"
               >
-                <CloseIcon className="h-4" />
-              </button>
-            </div>
-          </div> */}
+                <span className="text-sm">{item}</span>
+                <button onClick={() => handleItemToggle(item)} className="focus:outline-none">
+                  <CloseIcon className="h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Filter cards */}
           <div className="flex-1 overflow-y-auto md:max-h-[424px]">
             <div className="px-5 h-max overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 md:px-10">
-              {(activeTab === 'categories' ? categories : brands).map(item => {
-                const isChecked =
-                  pendingFilters.category === item.name || pendingFilters.brand === item.name;
-
-                return (
-                  <FilterCard
-                    name={item.name}
-                    icon={item.icon}
-                    logo={item.logo}
-                    checked={isChecked}
-                    key={item.name}
-                    onChange={handleItemToggle}
-                  />
-                );
-              })}
+              <FilterCards
+                items={activeItems}
+                pendingFilters={activePendingFilters}
+                onToggle={handleItemToggle}
+              />
             </div>
           </div>
 
+          {/* Footer buttons */}
           <div className="flex gap-4 py-3 px-5 border-t justify-center md:px-10 md:border-t-0 md:pb-[30px]">
             <Button
               href={`/video-reviews/${activeTab === 'brands' ? 'brand' : 'productcategory'}`}
               variant="outline"
               size="lg"
-              fullWidth
+              aria-label={t('view_all.aria_label')}
+              className="w-full px-0 text-center"
             >
-              View All
+              {t('view_all.label')}
             </Button>
             <Button
-              onClick={handleApplyFilters}
+              onClick={buttonState.onClick}
               size="lg"
-              fullWidth
-              variant={hasFilterChanges() ? 'primary' : 'secondary'}
-              disabled={!hasFilterChanges()}
+              variant={buttonState.variant}
+              disabled={buttonState.disabled}
+              className="disabled:bg-gray-200 disabled:text-gray-500 disabled:hover:bg-gray-200 disabled:hover:text-gray-500 disabled:opacity-100 w-full px-0 text-center"
+              aria-label={t('apply_filter.aria_label')}
             >
-              Apply Filter
+              {buttonState.text}
             </Button>
           </div>
         </div>
