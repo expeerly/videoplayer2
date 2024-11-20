@@ -1,15 +1,15 @@
 'use client';
 
 import { FunctionComponent, memo, PropsWithChildren } from 'react';
-import Link, { LinkProps } from 'next/link';
-import { usePathname } from '@/src/i18n/routing';
+import { Link, usePathname } from '@/src/i18n/routing';
+import { LinkProps } from 'next/link';
 
 type ActiveLinkProps<T> = {
   className?: string;
   label?: string;
   title?: string;
   'aria-label'?: string;
-} & T;
+} & Omit<T, 'locale'>;
 
 const ActiveLinkComponent: FunctionComponent<PropsWithChildren<ActiveLinkProps<LinkProps>>> = ({
   children,

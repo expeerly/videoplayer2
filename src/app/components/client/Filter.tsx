@@ -2,10 +2,11 @@
 import { FunctionComponent, memo, useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslations } from 'use-intl';
 import { CloseIcon, FilterIcon } from '@/src/assets/icons';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { FilterCard } from '../server/FilterCard';
 import { Button } from '../server/Button';
 import clsx from 'clsx';
+import { usePathname, useRouter } from '@/src/i18n/routing';
+import { useSearchParams } from 'next/navigation';
 
 type TabType = 'brands' | 'categories';
 
@@ -272,7 +273,7 @@ const FilterComponent: FunctionComponent = () => {
   FilterCards.displayName = 'FilterCards';
 
   const containerClassName = clsx('z-[999999999] md:z-[999999] inset-0', {
-    'fixed h-100% bg-light-gray md:bg-transparent md:relative': isOpen,
+    'fixed h-100% bg-gray-100 md:bg-transparent md:relative': isOpen,
   });
 
   const buttonContainerClassName = clsx({
@@ -293,7 +294,7 @@ const FilterComponent: FunctionComponent = () => {
           title="Show/Hide Menu"
           aria-label={isOpen ? t('menu.menu_close.aria_label') : t('menu.menu_open.aria_label')}
           id="menu-button"
-          className="p-2 max-h-10 max-w-10 ml-auto md:mr-[50px] md:mt-[50px] md:p-3 md:h-12 md:w-12 relative"
+          className="p-2 max-h-10 max-w-10 ml-auto md:mr-12 md:mt-10 md:p-3 md:h-12 md:w-12 relative"
         >
           {totalAppliedCount > 0 && (
             <span className="absolute top-0 right-0 w-4 h-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">
@@ -306,23 +307,21 @@ const FilterComponent: FunctionComponent = () => {
 
       <div
         id="dropdown-menu"
-        className={`w-full md:w-[434px] md:right-[50px] md:absolute md:top-[50px] ${
+        className={`w-full md:w-[434px] md:right-[112px] md:absolute md:top-[0px] ${
           isOpen ? 'h-full w-full flex md:h-max' : 'h-0 w-0 overflow-hidden'
         }`}
         aria-orientation="vertical"
         aria-labelledby="menu-button"
         ref={menuRef}
       >
-        <div className="w-full h-full flex justify-between flex-col md:h-auto bg-light-gray rounded-lg">
+        <div className="w-full h-full flex justify-between flex-col md:h-auto md:bg-white rounded-lg md:shadow-md">
           {/* Header */}
           <div className="flex justify-center items-center h-[70px] px-10 py-5 border-b md:py-4 md:h-[58px]">
-            <h3 className="text-base font-normal capitalize text-center">
-              {t(`filter_${activeTab}.label`)}
-            </h3>
+            <h3 className="text-base font-normal capitalize text-center">{t('filter')}</h3>
           </div>
 
           {/* Tab buttons */}
-          <div className="flex gap-4 px-5 py-5 md:px-10">
+          <div className="flex gap-4 px-5 py-5">
             {(['brands', 'categories'] as const).map(tab => (
               <Button
                 key={tab}
@@ -337,23 +336,20 @@ const FilterComponent: FunctionComponent = () => {
           </div>
 
           {/* Selected filters */}
-          <div className="w-full overflow-x-auto overflow-y-hidden px-5 mb-3 flex gap-1">
+          <div className="w-full overflow-x-auto overflow-y-hidden px-5 mb-3 flex gap-1 flex-wrap md:flex-nowrap ">
             {activePendingFilters.map(item => (
               <div
                 key={item}
                 className="flex text-nowrap w-max items-center gap-[6px] px-4 py-[7.5px] bg-gray-100 border border-gray-300 text-gray-600 rounded-full text-sm"
               >
                 <span className="text-sm">{item}</span>
-                <button onClick={() => handleItemToggle(item)} className="focus:outline-none">
-                  <CloseIcon className="h-4" />
-                </button>
               </div>
             ))}
           </div>
 
           {/* Filter cards */}
           <div className="flex-1 overflow-y-auto md:max-h-[424px]">
-            <div className="px-5 h-max overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 md:px-10">
+            <div className="px-5 h-max overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600">
               <FilterCards
                 items={activeItems}
                 pendingFilters={activePendingFilters}
@@ -362,14 +358,13 @@ const FilterComponent: FunctionComponent = () => {
             </div>
           </div>
 
-          {/* Footer buttons */}
-          <div className="flex gap-4 py-3 px-5 border-t justify-center md:px-10 md:border-t-0 md:pb-[30px]">
+          <div className=" flex-wrap flex gap-4 py-3 px-5 border-t justify-center md:border-t-0 md:pb-[30px] mobileL:flex-nowrap">
             <Button
               href={`/video-reviews/${activeTab === 'brands' ? 'brand' : 'productcategory'}`}
               variant="outline"
               size="lg"
               aria-label={t('view_all.aria_label')}
-              className="w-full px-0 text-center"
+              className=" !px-0 text-center w-full"
             >
               {t('view_all.label')}
             </Button>
@@ -378,7 +373,7 @@ const FilterComponent: FunctionComponent = () => {
               size="lg"
               variant={buttonState.variant}
               disabled={buttonState.disabled}
-              className="disabled:bg-gray-200 disabled:text-gray-500 disabled:hover:bg-gray-200 disabled:hover:text-gray-500 disabled:opacity-100 w-full px-0 text-center"
+              className="disabled:bg-gray-200 disabled:text-gray-500 disabled:hover:bg-gray-200 disabled:hover:text-gray-500 disabled:opacity-100 w-full !px-0 text-center"
               aria-label={buttonState.ariaLabel}
             >
               {buttonState.text}
