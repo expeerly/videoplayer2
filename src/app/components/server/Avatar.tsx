@@ -30,9 +30,9 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
   };
 
   const fallbackOptions: Record<AvatarFallback, React.ReactNode> = {
-    user: <PlayIcon className="w-full h-full p-2 text-gray-400" />,
+    user: <PlayIcon className="w-full h-full p-2 text-grey-400" />,
     initials: (
-      <span className="text-gray-600 font-medium">
+      <span className="text-grey-700 font-medium">
         {alt
           .split(' ')
           .map(word => word[0])
@@ -45,7 +45,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
   return (
     <div
       className={clsx(
-        'inline-flex items-center justify-center bg-gray-100 overflow-hidden rounded-full',
+        'inline-flex items-center justify-center bg-grey-100 overflow-hidden rounded-full',
         sizeClasses[size],
         className
       )}

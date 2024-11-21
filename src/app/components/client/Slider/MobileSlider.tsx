@@ -1,7 +1,8 @@
 'use client';
-import React, { FunctionComponent, useCallback, useEffect, useRef } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef } from 'react';
 import { SlideProps, SliderCard } from './SliderCard';
 import clsx from 'clsx';
+import { distributeSlides } from './utils/distributeSlides';
 
 const brands = [
   { name: 'Travel' },
@@ -33,8 +34,7 @@ const brands = [
   { name: 'Sports & Fitness' },
   { name: 'Pets & Animals' },
   { name: 'Furniture' },
-  { name: 'Toys & Games' },
-  { icon: '🚗' },
+  { name: 'Toys & Games', icon: '🚗' },
 ];
 
 type Props = {
@@ -47,11 +47,6 @@ type Props = {
     rowClassName?: string;
   };
 };
-
-const distributeSlides = <T extends SlideProps>(slides: T[]): T[][] =>
-  Array.from({ length: Math.ceil(slides.length / 10) }, (_, i) =>
-    slides.slice(i * 10, (i + 1) * 10)
-  );
 
 const BASE_CONTAINER_CLASSES = 'w-full relative overflow-hidden space-y-6';
 const BASE_ROW_CLASSES =
@@ -78,9 +73,11 @@ export const MobileSlider: FunctionComponent<Props> = ({ slides = brands, styleC
     rowRefs.current[index] = el;
   }, []);
 
+  const distributedSlides = useMemo(() => distributeSlides(slides), [slides]);
+
   return (
     <ul className={clsx(BASE_CONTAINER_CLASSES, styleClassNames?.rowContainerClassName)}>
-      {distributeSlides(slides).map((row, index) => (
+      {distributedSlides.map((row, index) => (
         <li
           ref={el => setRowRef(el, index)}
           key={`row-${index}`}

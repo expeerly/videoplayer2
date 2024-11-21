@@ -1,27 +1,37 @@
 'use client';
-import React, { FunctionComponent, memo } from 'react';
+import React, { FunctionComponent, memo, useCallback } from 'react';
 import Link from 'next/link';
 import { DropDownMenu } from './DropDownMenu';
 import { Button } from '../server/Button';
 import clsx from 'clsx';
 import { LeftChevronIcon } from '@/src/assets/icons';
-import { usePathname } from '@/src/i18n/routing';
+import { usePathname, useRouter } from '@/src/i18n/routing';
 import Image from 'next/image';
 
 const NavbarComponent: FunctionComponent = () => {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const goBack = useCallback(() => {
+    if (pathname !== '/') {
+      router.back();
+    } else {
+      router.push('/');
+    }
+  }, [pathname, router]);
 
   return (
-    <header className="flex items-center z-[999999999] flex-row w-full bg-white justify-between  py-[15px] px-4 md:py-5 md:px-8 mid-lg:px-12 border-b md:sticky top-0">
+    <header className="flex items-center z-40 flex-row w-full bg-white justify-between  py-[15px] px-4 md:py-5 md:px-8 mid-lg:px-12 border-b md:sticky top-0">
       <div className="flex gap-2 items-center">
         <Button
           isOnlyIcon
           variant="secondary"
           className={clsx({
             hidden: pathname === '/',
-            ' sm:hidden': pathname !== '/',
+            ' md:hidden': pathname !== '/',
           })}
           size="sm"
+          onClick={goBack}
         >
           <LeftChevronIcon />
         </Button>
@@ -30,7 +40,7 @@ const NavbarComponent: FunctionComponent = () => {
           title="expeerly"
           aria-label="logo"
           className={clsx({
-            'w-[30px] flex sm:w-max overflow-hidden': pathname !== '/',
+            'w-[30px] flex md:w-max overflow-hidden': pathname !== '/',
           })}
         >
           <Image

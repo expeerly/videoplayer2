@@ -56,9 +56,9 @@ const styleClasses = ({
       'disabled:bg-pink-300 disabled:hover:bg-pink-300 ': variant === 'primary',
 
       // Secondary variant
-      'bg-navy-100 text-gray-800 hover:bg-gray-200 active:bg-gray-300 focus:ring-0':
+      'bg-navy-100 text-grey-700 hover:bg-grey-200 active:bg-grey-300 focus:ring-0':
         variant === 'secondary',
-      'disabled:bg-gray-100 disabled:hover:bg-gray-100 ': variant === 'secondary',
+      'disabled:bg-grey-100 disabled:hover:bg-grey-100 ': variant === 'secondary',
 
       // Outline variant
       'border-2 m-0 border-pink-500 text-pink-500 bg-transparent hover:border-pink-600 hover:text-pink-600':
@@ -68,10 +68,10 @@ const styleClasses = ({
         variant === 'outline',
 
       // Ghost variant
-      'text-black bg-transparent hover:bg-gray-50 hover:text-gray-700 border-white border-2 hover:border-gray-50':
+      'text-black bg-transparent hover:bg-grey-100 hover:text-grey-700 border-white border-2 hover:border-grey-100':
         variant === 'ghost',
-      'active:bg-gray-100 focus:ring-0': variant === 'ghost',
-      'disabled:text-gray-300 disabled:hover:bg-transparent ': variant === 'ghost',
+      'active:bg-grey-100 focus:ring-0': variant === 'ghost',
+      'disabled:text-grey-300 disabled:hover:bg-transparent ': variant === 'ghost',
 
       // Sizes with icon-only support
       'text-sm px-4  gap-1.5': size === 'sm' && !isOnlyIcon,

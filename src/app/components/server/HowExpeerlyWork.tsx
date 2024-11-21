@@ -11,7 +11,7 @@ export const HowExpeerlyWorks: FunctionComponent = async () => {
         <h2 className="text-xl md:text-2xl text-center font-extrabold mb-4">
           {t.home_h2_how_expeerly_works}
         </h2>
-        <p className="text-gray-700 mb-6 w-full sm:max-w-2xl mx-auto">
+        <p className="text-grey-700 mb-6 w-full sm:max-w-2xl mx-auto">
           {t.home_how_it_works_body_text}
         </p>
         <Button

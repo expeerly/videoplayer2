@@ -1,8 +1,17 @@
 'use client';
 
-import React, { useState, useRef, useCallback, memo, useEffect, FunctionComponent } from 'react';
-import { SlideProps, SliderCard } from '../server/SliderCard';
-import { LeftChevronIcon, RightChevronIcon } from '@/src/assets/icons';
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  memo,
+  useEffect,
+  FunctionComponent,
+  useMemo,
+} from 'react';
+import { SlideProps, SliderCard } from './SliderCard';
+import { SliderNavigationButton } from '../../server/SliderNavigationButton';
+import { distributeSlides } from './utils/distributeSlides';
 
 interface SliderProps {
   slides?: SlideProps[];
@@ -14,13 +23,6 @@ interface SliderProps {
     rowClassName?: string;
   };
 }
-
-// Constants
-const BUTTON_STYLES = {
-  container: 'flex items-center px-2 absolute w-28 h-full top-1/2 -translate-y-1/2 z-10',
-  button:
-    'bg-white rounded-full shadow-md py-3 px-4 hover:bg-gray-50 focus:outline-none focus:ring-0',
-};
 
 const DEFAULT_CATEGORIES: SlideProps[] = [
   { name: 'Travel', icon: '✈️' },
@@ -45,26 +47,18 @@ const DEFAULT_CATEGORIES: SlideProps[] = [
   { name: 'Beauty & Personal Care', icon: '💅' },
 ];
 
-const distributeSlides = <T extends SlideProps>(slides: T[]): T[][] =>
-  Array.from({ length: Math.ceil(slides.length / 10) }, (_, i) =>
-    slides.slice(i * 10, (i + 1) * 10)
-  );
-
 const SliderComponent: FunctionComponent<SliderProps> = ({
   slides = DEFAULT_CATEGORIES,
   classNameStyle = {},
 }) => {
-  // State
   const [position, setPosition] = useState(-50);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
 
-  // Refs
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  // Update navigation arrows visibility
   useEffect(() => {
     const containerWidth = containerRef.current?.offsetWidth || 0;
     const sliderWidth = sliderRef.current?.scrollWidth || 0;
@@ -77,7 +71,6 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
     setShowRightArrow(canScrollRight);
   }, [position]);
 
-  // Handlers
   const handleScroll = useCallback((direction: 'left' | 'right') => {
     const containerWidth = containerRef.current?.offsetWidth || 0;
     const sliderWidth = sliderRef.current?.scrollWidth || 0;
@@ -97,41 +90,22 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
     setIsTransitioning(false);
   };
 
-  // Navigation button renderer
-  const renderNavigationButton = (direction: 'left' | 'right') => {
-    const show = direction === 'left' ? showLeftArrow : showRightArrow;
-    if (!show) return null;
-
-    const buttonClassName =
-      direction === 'left'
-        ? classNameStyle.leftButtonClassName
-        : classNameStyle.rightButtonClassName;
-
-    const gradientClass =
-      direction === 'left' ? 'bg-gradient-to-r from-white' : 'bg-gradient-to-l from-white';
-    const positionClass = direction === 'left' ? 'left-0 justify-start' : 'right-0 justify-end';
-
-    return (
-      <div
-        className={`${BUTTON_STYLES.container} ${gradientClass} ${positionClass} ${buttonClassName || ''}`}
-      >
-        <button
-          onClick={() => handleScroll(direction === 'left' ? 'right' : 'left')}
-          className={BUTTON_STYLES.button}
-          aria-label={direction === 'left' ? 'Previous' : 'Next'}
-        >
-          {direction === 'left' ? <LeftChevronIcon /> : <RightChevronIcon />}
-        </button>
-      </div>
-    );
-  };
-
-  const distributedSlides = distributeSlides(slides);
+  const distributedSlides = useMemo(() => distributeSlides(slides), [slides]);
 
   return (
     <div ref={containerRef} className="relative overflow-hidden w-full max-w-7xl mx-auto">
-      {renderNavigationButton('left')}
-      {renderNavigationButton('right')}
+      <SliderNavigationButton
+        direction="left"
+        showLeftArrow={showLeftArrow}
+        handleScroll={handleScroll}
+        classNameStyle={{ leftButtonClassName: classNameStyle.leftButtonClassName }}
+      />
+      <SliderNavigationButton
+        direction="right"
+        showRightArrow={showRightArrow}
+        handleScroll={handleScroll}
+        classNameStyle={{ rightButtonClassName: classNameStyle.rightButtonClassName }}
+      />
 
       <div
         ref={sliderRef}

@@ -1,4 +1,4 @@
-import { Filter } from '@/src/app/components/client/Filter';
+import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { NextPage } from 'next';
 
 const Page: NextPage = () => {

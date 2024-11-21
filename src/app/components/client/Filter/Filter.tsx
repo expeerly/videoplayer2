@@ -2,20 +2,16 @@
 import { FunctionComponent, memo, useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslations } from 'use-intl';
 import { CloseIcon, FilterIcon } from '@/src/assets/icons';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { FilterCard } from '../server/FilterCard';
-import { Button } from '../server/Button';
+import { FilterItemProps } from './FilterCard';
+import { Button } from '../../server/Button';
 import clsx from 'clsx';
+import { usePathname, useRouter } from '@/src/i18n/routing';
+import { useSearchParams } from 'next/navigation';
+import { FilterCards } from './FilterCards';
 
 type TabType = 'brands' | 'categories';
 
-type ItemType = {
-  name: string;
-  icon?: string;
-  logo?: string;
-};
-
-const categories: ItemType[] = [
+const categories: FilterItemProps[] = [
   { name: 'Travel', icon: '✈️' },
   { name: 'Automobile', icon: '🚗' },
   { name: 'Health & Wellness', icon: '❤️' },
@@ -38,7 +34,7 @@ const categories: ItemType[] = [
   { name: 'Tools & Home Improvement', icon: '🔧' },
 ];
 
-const brands: ItemType[] = [
+const brands: FilterItemProps[] = [
   { name: 'Dyson', logo: '/brands/logo.svg' },
   { name: 'Philips', logo: '/brands/logo1.svg' },
   { name: 'Sony', logo: '/brands/logo13.svg' },
@@ -66,20 +62,18 @@ const FilterComponent: FunctionComponent = () => {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('categories');
 
-  const initialFilters = useMemo(
+  const appliedFilters = useMemo(
     () => ({
-      brand: searchParams.getAll('brand') || [],
-      category: searchParams.getAll('category') || [],
+      brand: searchParams.getAll('brand'),
+      category: searchParams.getAll('category'),
     }),
     [searchParams]
   );
-
-  const [pendingFilters, setPendingFilters] = useState(initialFilters);
-  const [appliedFilters, setAppliedFilters] = useState(initialFilters);
+  const [pendingFilters, setPendingFilters] = useState(appliedFilters);
 
   const totalSelectedCount = useMemo(
     () => pendingFilters.brand.length + pendingFilters.category.length,
-    [pendingFilters]
+    [pendingFilters.brand.length, pendingFilters.category.length]
   );
 
   const totalAppliedCount = useMemo(
@@ -87,21 +81,26 @@ const FilterComponent: FunctionComponent = () => {
     [appliedFilters]
   );
 
-  const hasFilterChanges = useCallback(() => {
+  const hasFilterChanges = useMemo(() => {
+    const currentAppliedFilters = {
+      brand: searchParams.getAll('brand'),
+      category: searchParams.getAll('category'),
+    };
+
     if (pendingFilters.brand.length === 0 && pendingFilters.category.length === 0) {
-      return appliedFilters.brand.length > 0 || appliedFilters.category.length > 0;
+      return currentAppliedFilters.brand.length > 0 || currentAppliedFilters.category.length > 0;
     }
 
     const brandsDiff =
-      pendingFilters.brand.length !== appliedFilters.brand.length ||
-      pendingFilters.brand.some(b => !appliedFilters.brand.includes(b));
+      pendingFilters.brand.length !== currentAppliedFilters.brand.length ||
+      pendingFilters.brand.some(b => !currentAppliedFilters.brand.includes(b));
 
     const categoriesDiff =
-      pendingFilters.category.length !== appliedFilters.category.length ||
-      pendingFilters.category.some(c => !appliedFilters.category.includes(c));
+      pendingFilters.category.length !== currentAppliedFilters.category.length ||
+      pendingFilters.category.some(c => !currentAppliedFilters.category.includes(c));
 
     return brandsDiff || categoriesDiff;
-  }, [pendingFilters, appliedFilters]);
+  }, [pendingFilters, searchParams]);
 
   const updatePendingFilters = useCallback((type: 'brand' | 'category', name: string) => {
     setPendingFilters(prev => {
@@ -133,23 +132,17 @@ const FilterComponent: FunctionComponent = () => {
     pendingFilters.brand.forEach(brand => params.append('brand', brand));
     pendingFilters.category.forEach(category => params.append('category', category));
 
-    setAppliedFilters({
-      brand: [...pendingFilters.brand],
-      category: [...pendingFilters.category],
-    });
-
     router.push(`${pathname}?${params.toString()}`);
   }, [pendingFilters, pathname, router]);
 
   const handleClearFilters = useCallback(() => {
     setPendingFilters({ brand: [], category: [] });
-    setAppliedFilters({ brand: [], category: [] });
     router.push(pathname);
   }, [pathname, router]);
 
   const toggleMenu = useCallback(() => {
-    setIsOpen(prev => !prev);
-  }, []);
+    setIsOpen(!isOpen);
+  }, [isOpen]);
 
   const handleBodyScroll = useCallback((isMenuOpen: boolean) => {
     if (window.innerWidth < 768) {
@@ -195,7 +188,7 @@ const FilterComponent: FunctionComponent = () => {
   }, [pathname]);
 
   const buttonState = useMemo(() => {
-    if (totalAppliedCount > 0 && !hasFilterChanges()) {
+    if (totalAppliedCount > 0 && !hasFilterChanges) {
       return {
         text: `${t('delete_filter.label')} (${totalAppliedCount})`,
         ariaLabel: t('delete_filter.aria_label'),
@@ -205,7 +198,7 @@ const FilterComponent: FunctionComponent = () => {
       };
     }
 
-    if (hasFilterChanges()) {
+    if (hasFilterChanges) {
       return {
         text:
           totalSelectedCount > 0
@@ -244,35 +237,17 @@ const FilterComponent: FunctionComponent = () => {
     [activeTab, pendingFilters]
   );
 
-  const FilterCards = memo(
-    ({
-      items,
-      pendingFilters,
-      onToggle,
-    }: {
-      items: ItemType[];
-      pendingFilters: string[];
-      onToggle: (name: string) => void;
-    }) => (
-      <>
-        {items.map(item => (
-          <FilterCard
-            key={item.name}
-            name={item.name}
-            icon={item.icon}
-            logo={item.logo}
-            checked={pendingFilters.includes(item.name)}
-            onChange={onToggle}
-          />
-        ))}
-      </>
-    )
+  const filterCardsProps = useMemo(
+    () => ({
+      items: activeItems,
+      pendingFilters: activePendingFilters,
+      onToggle: handleItemToggle,
+    }),
+    [activeItems, activePendingFilters, handleItemToggle]
   );
 
-  FilterCards.displayName = 'FilterCards';
-
-  const containerClassName = clsx('z-[999999999] md:z-[999999] inset-0', {
-    'fixed h-100% bg-light-gray md:bg-transparent md:relative': isOpen,
+  const containerClassName = clsx('z-50 inset-0', {
+    'fixed h-100% bg-grey-100 md:bg-transparent md:relative': isOpen,
   });
 
   const buttonContainerClassName = clsx({
@@ -293,7 +268,7 @@ const FilterComponent: FunctionComponent = () => {
           title="Show/Hide Menu"
           aria-label={isOpen ? t('menu.menu_close.aria_label') : t('menu.menu_open.aria_label')}
           id="menu-button"
-          className="p-2 max-h-10 max-w-10 ml-auto md:mr-[50px] md:mt-[50px] md:p-3 md:h-12 md:w-12 relative"
+          className="p-2 z-30 max-h-10 max-w-10 ml-auto md:mr-12 md:mt-10 md:p-3 md:h-12 md:w-12 relative"
         >
           {totalAppliedCount > 0 && (
             <span className="absolute top-0 right-0 w-4 h-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">
@@ -306,29 +281,27 @@ const FilterComponent: FunctionComponent = () => {
 
       <div
         id="dropdown-menu"
-        className={`w-full md:w-[434px] md:right-[50px] md:absolute md:top-[50px] ${
+        className={`w-full md:w-[434px] md:right-[112px] md:absolute md:top-[0px] ${
           isOpen ? 'h-full w-full flex md:h-max' : 'h-0 w-0 overflow-hidden'
         }`}
         aria-orientation="vertical"
         aria-labelledby="menu-button"
         ref={menuRef}
       >
-        <div className="w-full h-full flex justify-between flex-col md:h-auto bg-light-gray rounded-lg">
+        <div className="w-full h-full flex justify-between flex-col md:h-auto md:bg-white rounded-lg md:shadow-md">
           {/* Header */}
-          <div className="flex justify-center items-center h-[70px] px-10 py-5 border-b md:py-4 md:h-[58px]">
-            <h3 className="text-base font-normal capitalize text-center">
-              {t(`filter_${activeTab}.label`)}
-            </h3>
+          <div className="flex items-center h-[70px] px-5 pt-5 md:pt-3 md:h-[42px]">
+            <h3 className="text-base font-normal capitalize text-left">{t('filter')}</h3>
           </div>
 
           {/* Tab buttons */}
-          <div className="flex gap-4 px-5 py-5 md:px-10">
+          <div className="flex gap-4 px-5 py-5">
             {(['brands', 'categories'] as const).map(tab => (
               <Button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 variant={tab === activeTab ? 'primary' : 'outline'}
-                className="capitalize w-max md:w-full"
+                className="capitalize w-max md:w-full h-11 md:h-10"
                 aria-label={t(`filter_${tab}.aria_label`)}
               >
                 {t(`filter_${tab}.label`)}
@@ -337,39 +310,29 @@ const FilterComponent: FunctionComponent = () => {
           </div>
 
           {/* Selected filters */}
-          <div className="w-full overflow-x-auto overflow-y-hidden px-5 mb-3 flex gap-1">
-            {activePendingFilters.map(item => (
-              <div
-                key={item}
-                className="flex text-nowrap w-max items-center gap-[6px] px-4 py-[7.5px] bg-gray-100 border border-gray-300 text-gray-600 rounded-full text-sm"
-              >
-                <span className="text-sm">{item}</span>
-                <button onClick={() => handleItemToggle(item)} className="focus:outline-none">
-                  <CloseIcon className="h-4" />
-                </button>
-              </div>
-            ))}
-          </div>
+          {activePendingFilters.length > 0 && (
+            <div className="w-full px-5 mb-3 flex gap-1 flex-wrap text-grey-700 text-base font-normal">
+              <span>{t('selected')}:</span>
+              {activePendingFilters.map((item, i) => (
+                <span key={item}>
+                  {item}
+                  {i < activePendingFilters.length - 1 && ','}
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Filter cards */}
-          <div className="flex-1 overflow-y-auto md:max-h-[424px]">
-            <div className="px-5 h-max overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 md:px-10">
-              <FilterCards
-                items={activeItems}
-                pendingFilters={activePendingFilters}
-                onToggle={handleItemToggle}
-              />
-            </div>
-          </div>
 
-          {/* Footer buttons */}
-          <div className="flex gap-4 py-3 px-5 border-t justify-center md:px-10 md:border-t-0 md:pb-[30px]">
+          <FilterCards {...filterCardsProps} />
+
+          <div className="flex-wrap flex gap-4 py-3 px-5 border-t justify-center md:border-t-0 md:pb-[30px] mobileL:flex-nowrap">
             <Button
               href={`/video-reviews/${activeTab === 'brands' ? 'brand' : 'productcategory'}`}
               variant="outline"
               size="lg"
               aria-label={t('view_all.aria_label')}
-              className="w-full px-0 text-center"
+              className="h-11 !px-0 text-center w-full"
             >
               {t('view_all.label')}
             </Button>
@@ -378,7 +341,7 @@ const FilterComponent: FunctionComponent = () => {
               size="lg"
               variant={buttonState.variant}
               disabled={buttonState.disabled}
-              className="disabled:bg-gray-200 disabled:text-gray-500 disabled:hover:bg-gray-200 disabled:hover:text-gray-500 disabled:opacity-100 w-full px-0 text-center"
+              className="h-11 disabled:bg-grey-200 disabled:border-grey-200 border disabled:text-grey-500 disabled:hover:bg-grey-200 disabled:hover:text-grey-500 disabled:opacity-100 w-full !px-0 text-center"
               aria-label={buttonState.ariaLabel}
             >
               {buttonState.text}

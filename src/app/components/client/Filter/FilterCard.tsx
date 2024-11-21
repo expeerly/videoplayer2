@@ -1,16 +1,20 @@
+'use client';
 import clsx from 'clsx';
 import Image from 'next/image';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, memo } from 'react';
 
-export type FilterCardProps = {
-  icon?: string;
+export type FilterItemProps = {
   name: string;
+  icon?: string;
   logo?: string;
-  checked?: boolean;
-  onChange?: (name: string) => void;
 };
 
-export const FilterCard: FunctionComponent<FilterCardProps> = ({
+export type FilterCardProps = {
+  checked?: boolean;
+  onChange?: (name: string) => void;
+} & FilterItemProps;
+
+const FilterCardComponent: FunctionComponent<FilterCardProps> = ({
   icon,
   name,
   logo,
@@ -23,7 +27,7 @@ export const FilterCard: FunctionComponent<FilterCardProps> = ({
 
   return (
     <div
-      className="flex items-center gap-6 py-3  hover:bg-gray-50 cursor-pointer"
+      className="flex items-center gap-6 py-3  px-1 rounded-lg hover:bg-grey-100 cursor-pointer min-h-14"
       onClick={e => {
         if (!(e.target as HTMLElement).closest('input')) {
           onChange?.(name);
@@ -50,7 +54,7 @@ export const FilterCard: FunctionComponent<FilterCardProps> = ({
       </div>
       <div className="flex items-center gap-2">
         {icon && icon}
-        <span className="text-base text-gray-900">{name}</span>
+        <span className="text-base text-grey-700">{name}</span>
         {logo && (
           <Image
             src={logo}
@@ -67,3 +71,5 @@ export const FilterCard: FunctionComponent<FilterCardProps> = ({
     </div>
   );
 };
+
+export const FilterCard = memo(FilterCardComponent);

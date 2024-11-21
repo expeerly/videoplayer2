@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import { getDictionary } from '@/src/lib/dictionary';
-import { Slider } from '@/src/app/components/client/Slider';
+import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { Button } from '@/src/app/components/server/Button';
-import { MobileSlider } from '@/src/app/components/server/MobileSlider';
+import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 
 const brands = [
   { imgURL: '/brands/logo.svg', id: 1 },
@@ -27,7 +27,7 @@ export const ConversionSlider: FunctionComponent = async () => {
         backgroundImage: `url(/BackgroundImage.svg)`,
       }}
     >
-      <div className=" z-20 w-full sm:max-w-[1170px] flex flex-col justify-center items-center  gap-4 py-10 sm:py-20 ">
+      <div className=" z-10 w-full sm:max-w-[1170px] flex flex-col justify-center items-center  gap-4 py-10 sm:py-20 ">
         <h2 className="font-extrabold px-5 text-2xl text-white text-center">
           {t.home_h2_retailer}
         </h2>

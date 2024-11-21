@@ -24,12 +24,12 @@ import {
   VideoIcon,
   WorldIcon,
 } from '@/src/assets/icons';
-import Link from 'next/link';
+
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import { useTranslations } from 'use-intl';
 import { Button } from '@/src/app/components/server/Button';
 import clsx from 'clsx';
-import { usePathname } from '@/src/i18n/routing';
+import { Link, usePathname } from '@/src/i18n/routing';
 
 export type MenuItem = {
   key: string;
@@ -45,7 +45,7 @@ export type MenuItem = {
   devider?: boolean;
 };
 
-export const categroies = [
+const categroies = [
   { label: 'Arts & Crafts', href: '/video-reviews/productcategory/1' },
   { label: 'Automotive', href: '/video-reviews/productcategory/2' },
   { label: 'Baby & Child Care', href: '/video-reviews/productcategory/3' },
@@ -68,7 +68,7 @@ export const categroies = [
   { label: 'Travel', href: '/video-reviews/productcategory/20' },
 ];
 
-export const defaultMenuItems: MenuItem[] = [
+const defaultMenuItems: MenuItem[] = [
   { key: 'explore', label: 'Explore', icon: BinocularsIcon, href: '/explore' },
   {
     key: 'brands',
@@ -118,10 +118,10 @@ export const defaultMenuItems: MenuItem[] = [
     label: 'English (EN)',
     icon: WorldIcon,
     items: [
-      { label: 'Deutsch (DE)', href: '/de' },
-      { label: 'English (EN)', href: '/en' },
-      { label: 'French (FR)', href: '/fr' },
-      { label: 'Italian (IT)', href: '/it' },
+      { label: 'Deutsch (DE)', href: 'de' },
+      { label: 'English (EN)', href: 'en' },
+      { label: 'French (FR)', href: 'fr' },
+      { label: 'Italian (IT)', href: 'it' },
     ],
   },
 ];
@@ -205,13 +205,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   return (
     <>
       <div
-        className={`hidden fixed right-0 top-[90px] h-[calc(100%-90px)]  md:w-[75%] mid-lg:w-[calc(100%-275px)]  bg-black bg-opacity-25 md:block ${
-          isOpen ? 'opacity-100 h-full' : 'opacity-0 h-0 pointer-events-none'
-        }`}
-        aria-hidden="true"
-      />
-      <div
-        className={`relative z-[9999999] md:flex md:flex-row-reverse md:items-center ${className}`}
+        className={`relative z-10 md:flex md:flex-row-reverse md:items-center ${className}`}
         ref={menuRef}
       >
         <Button
@@ -237,12 +231,12 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           )}
         </Button>
         <div
-          className={`flex gap-5 justify-between flex-col fixed top-[70px] right-0 w-full overflow-auto bg-light-gray md:items-center md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
+          className={`flex gap-5 justify-between flex-col fixed top-[70px] right-0 w-full overflow-auto bg-grey-100 md:items-center md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
              ${isOpen ? 'h-[calc(100%-70px)] border-t md:h-full md:border-t-0 ' : 'h-0 overflow-hidden md:overflow-visible'}`}
         >
           <div
             id="dropdown-menu"
-            className={`md:bg-white md:right md:absolute md:top-[69px] w-full md:shadow-lg h-max ${
+            className={`md:bg-white md:right md:absolute md:top-[69px] w-full md:shadow-lg h-max rounded-lg ${
               isOpen ? 'block' : 'hidden'
             }`}
             aria-orientation="vertical"
@@ -254,7 +248,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
             >
               {menuItems.map(item => (
                 <li key={item.key} role="presentation" className="">
-                  {item.devider && <div className="border-b border-gray-300 my-4 mx-1" />}
+                  {item.devider && <div className="border-b border-grey-300 my-4 mx-1" />}
                   {item.items ? (
                     <div
                       role="presentation"
@@ -264,9 +258,10 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                         onClick={() => toggleSubmenu(item.key)}
                         role="menuitem"
                         className={clsx(
-                          'w-full flex items-center justify-between px-1 rounded-lg py-2 text-transparent md:px-2 md:hover:bg-gray-50 transition-colors duration-200',
+                          'w-full flex items-center justify-between px-1 rounded-lg py-2 md:px-2 md:hover:bg-grey-100 transition-colors duration-200',
                           {
-                            'md:bg-light-gray': openSubmenuKey === item.key,
+                            'md:bg-grey-100 text-grey-700': openSubmenuKey === item.key,
+                            ' text-transparent': openSubmenuKey !== item.key,
                           }
                         )}
                         title={t(`${item.key}.label`)}
@@ -275,21 +270,21 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                       >
                         <span className="flex gap-4 items-center">
                           <item.icon />
-                          <span className="text-black">{t(`${item.key}.label`)}</span>
+                          <span className="text-grey-700">{t(`${item.key}.label`)}</span>
                         </span>
                         <span className="ml-2">
                           {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
                         </span>
                       </button>
                       <div
-                        className={` w-full md:absolute md:-left-full md:top-0 md:flex md:justify-end overflow-hidden overflow-y-auto ${
+                        className={` w-full md:absolute md:-left-full md:top-0 md:flex md:justify-end overflow-hidden overflow-y-auto rounded-lg ${
                           openSubmenuKey === item.key
                             ? 'h-auto opacity-100 visible md:h-[586px] '
                             : 'opacity-0 invisible pointer-events-none h-0'
                         }`}
                         role="menu"
                       >
-                        <div className=" h-max  w-full md:w-max py-4 bg-white md:shadow-lg  md:border md:min-w-[279px] md:border-gray-100 px-6 mr-2">
+                        <div className=" h-max  w-full md:w-max py-4 bg-white md:shadow-lg  md:border md:min-w-[279px] rounded-lg md:border-grey-100 px-6 mr-2">
                           {item.itemsLabel && (
                             <Link
                               role="menuitem"
@@ -306,10 +301,11 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                             {item.items.map((subItem, index) => (
                               <li key={index} role="presentation">
                                 <Link
+                                  locale={item.key === 'language' ? subItem.href : undefined}
                                   role="menuitem"
-                                  href={subItem.href}
+                                  href={item.key === 'language' ? pathname : subItem.href}
                                   title={subItem.label}
-                                  className="flex items-center gap-2 w-full text-left pl-2 pr-14 py-2 rounded-lg text-black hover:bg-gray-50"
+                                  className="flex items-center gap-2 w-full text-left pl-2 pr-14 py-2 rounded-lg text-ray-700 hover:bg-grey-100"
                                 >
                                   {subItem.label}
                                 </Link>
@@ -322,20 +318,26 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                   ) : (
                     <Link
                       role="menuitem"
-                      className="px-1 w-full flex items-center text-transparent hover:bg-light-gray md:px-2 rounded-lg py-2 gap-4 transition-colors duration-200"
+                      className={clsx(
+                        'px-1 w-full flex items-center hover:bg-grey-100 md:px-2 rounded-lg py-2 gap-4 transition-colors duration-200',
+                        {
+                          'text-grey-700': pathname.includes(item.href!),
+                          'text-transparent': pathname !== item.href,
+                        }
+                      )}
                       href={`${item.href}`}
                       title={t(`${item.key}.label`)}
                       aria-label={t(`${item.key}.aria_label`)}
                     >
                       <item.icon />
-                      <span className="text-black">{t(`${item.key}.label`)}</span>
+                      <span className="text-grey-700">{t(`${item.key}.label`)}</span>
                     </Link>
                   )}
                 </li>
               ))}
             </ul>
           </div>
-          <div className=" p-4 flex flex-col sm:flex-row items-center gap-3 md:p-0 my-auto">
+          <div className=" p-4 flex flex-col sm:flex-row items-center gap-3 md:p-0 my-auto md:ml-auto md:mr-[22px]">
             <Button
               fullWidth
               href="https://app.expeerly.com/?m=signup&user=creator"

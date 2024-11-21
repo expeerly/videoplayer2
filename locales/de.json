@@ -150,5 +150,7 @@
   "delete_filter": {
     "label": "Filter löschen",
     "aria_label": "Ausgewählte Filter löschen"
-  }
+  },
+  "filter": "Filter",
+  "selected": "Ausgewählt"
 }
