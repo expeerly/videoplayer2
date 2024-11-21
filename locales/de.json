@@ -154,5 +154,6 @@
     "label": "Filter löschen",
     "aria_label": "Ausgewählte Filter löschen"
   },
-  "filter": "Filter"
+  "filter": "Filter",
+  "selected": "Ausgewählt"
 }

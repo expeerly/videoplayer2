@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { Slider } from '@/src/app/components/client/Slider';
-import { MobileSlider } from '@/src/app/components/server/MobileSlider';
+import { Slider } from '@/src/app/components/client/Slider/Slider';
+import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Button } from '@/src/app/components/server/Button';
 import { getDictionary } from '@/src/lib/dictionary';
 
@@ -36,7 +36,7 @@ export const BrandsSlider: FunctionComponent = async () => {
         backgroundImage: `url(/BackgroundImage.svg)`,
       }}
     >
-      <div className="z-50 w-full flex flex-col justify-center items-center gap-4 pt-9 pb-14 sm:pb-20 sm:max-w-[1170px]">
+      <div className="z-10 w-full flex flex-col justify-center items-center gap-4 pt-9 pb-14 sm:pb-20 sm:max-w-[1170px]">
         <div className="w-full px-10 flex justify-center items-center flex-col gap-1 sm:w-full">
           <h2 className="font-extrabold text-2xl text-center text-white sm:w-full">
             {t.home_h2_brand_section}

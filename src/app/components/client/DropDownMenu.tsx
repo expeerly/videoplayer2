@@ -205,7 +205,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   return (
     <>
       <div
-        className={`relative z-[9999999] md:flex md:flex-row-reverse md:items-center ${className}`}
+        className={`relative z-10 md:flex md:flex-row-reverse md:items-center ${className}`}
         ref={menuRef}
       >
         <Button
@@ -231,7 +231,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
           )}
         </Button>
         <div
-          className={`flex gap-5 justify-between flex-col fixed top-[70px] right-0 w-full overflow-auto bg-light-gray md:items-center md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
+          className={`flex gap-5 justify-between flex-col fixed top-[70px] right-0 w-full overflow-auto bg-grey-100 md:items-center md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
              ${isOpen ? 'h-[calc(100%-70px)] border-t md:h-full md:border-t-0 ' : 'h-0 overflow-hidden md:overflow-visible'}`}
         >
           <div
@@ -248,7 +248,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
             >
               {menuItems.map(item => (
                 <li key={item.key} role="presentation" className="">
-                  {item.devider && <div className="border-b border-gray-300 my-4 mx-1" />}
+                  {item.devider && <div className="border-b border-grey-300 my-4 mx-1" />}
                   {item.items ? (
                     <div
                       role="presentation"
@@ -258,9 +258,9 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                         onClick={() => toggleSubmenu(item.key)}
                         role="menuitem"
                         className={clsx(
-                          'w-full flex items-center justify-between px-1 rounded-lg py-2 md:px-2 md:hover:bg-gray-50 transition-colors duration-200',
+                          'w-full flex items-center justify-between px-1 rounded-lg py-2 md:px-2 md:hover:bg-grey-100 transition-colors duration-200',
                           {
-                            'md:bg-light-gray text-gray-700': openSubmenuKey === item.key,
+                            'md:bg-grey-100 text-grey-700': openSubmenuKey === item.key,
                             ' text-transparent': openSubmenuKey !== item.key,
                           }
                         )}
@@ -270,7 +270,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                       >
                         <span className="flex gap-4 items-center">
                           <item.icon />
-                          <span className="text-gray-700">{t(`${item.key}.label`)}</span>
+                          <span className="text-grey-700">{t(`${item.key}.label`)}</span>
                         </span>
                         <span className="ml-2">
                           {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
@@ -284,7 +284,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                         }`}
                         role="menu"
                       >
-                        <div className=" h-max  w-full md:w-max py-4 bg-white md:shadow-lg  md:border md:min-w-[279px] rounded-lg md:border-gray-100 px-6 mr-2">
+                        <div className=" h-max  w-full md:w-max py-4 bg-white md:shadow-lg  md:border md:min-w-[279px] rounded-lg md:border-grey-100 px-6 mr-2">
                           {item.itemsLabel && (
                             <Link
                               role="menuitem"
@@ -305,7 +305,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                                   role="menuitem"
                                   href={item.key === 'language' ? pathname : subItem.href}
                                   title={subItem.label}
-                                  className="flex items-center gap-2 w-full text-left pl-2 pr-14 py-2 rounded-lg text-ray-700 hover:bg-gray-50"
+                                  className="flex items-center gap-2 w-full text-left pl-2 pr-14 py-2 rounded-lg text-ray-700 hover:bg-grey-100"
                                 >
                                   {subItem.label}
                                 </Link>
@@ -319,9 +319,9 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                     <Link
                       role="menuitem"
                       className={clsx(
-                        'px-1 w-full flex items-center hover:bg-light-gray md:px-2 rounded-lg py-2 gap-4 transition-colors duration-200',
+                        'px-1 w-full flex items-center hover:bg-grey-100 md:px-2 rounded-lg py-2 gap-4 transition-colors duration-200',
                         {
-                          'text-gray-700': pathname.includes(item.href!),
+                          'text-grey-700': pathname.includes(item.href!),
                           'text-transparent': pathname !== item.href,
                         }
                       )}
@@ -330,7 +330,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                       aria-label={t(`${item.key}.aria_label`)}
                     >
                       <item.icon />
-                      <span className="text-gray-700">{t(`${item.key}.label`)}</span>
+                      <span className="text-grey-700">{t(`${item.key}.label`)}</span>
                     </Link>
                   )}
                 </li>

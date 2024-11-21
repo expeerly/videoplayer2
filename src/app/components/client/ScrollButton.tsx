@@ -17,7 +17,7 @@ const ScrollButtonComponent: FunctionComponent<ScrollButtonProps> = ({ className
   return (
     <button
       onClick={handleScroll}
-      className={`bg-white rounded-full p-3 hover:bg-gray-100 transition-colors duration-200 cursor-pointer ${className}`}
+      className={`bg-white rounded-full p-3 hover:bg-grey-100 transition-colors duration-200 cursor-pointer ${className}`}
       aria-label={`Scroll to reviewer story section`}
     >
       <DownArrowIcon height={14} width={14} />

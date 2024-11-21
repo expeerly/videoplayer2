@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { getDictionary } from '@/src/lib/dictionary';
-import { Slider } from '@/src/app/components/client/Slider';
-import { MobileSlider } from '@/src/app/components/server/MobileSlider';
+import { Slider } from '@/src/app/components/client/Slider/Slider';
+import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 
 export const CategoriesSlider: FunctionComponent = async () => {
   const t = await getDictionary();
