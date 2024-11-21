@@ -15,18 +15,15 @@
   "cta_button_how_it_works": "En savoir plus",
   "explore_all_reviewers": {
     "label": "Découvrir tous les testeurs",
-    "aria_label": "Explorer les profils de tous les testeurs vidéo sur Experify",
-    "alt_text": "Bouton pour voir tous les testeurs vidéo sur Experify"
+    "aria_label": "Explorer les profils de tous les testeurs vidéo sur Expeerly"
   },
   "get_video_reviewed": {
     "label": "Utiliser des avis vidéo",
-    "aria_label": "Demandez une revue vidéo pour votre produit sur Experify",
-    "alt_text": "Bouton pour demander une revue vidéo de votre produit sur Experify"
+    "aria_label": "Demandez une revue vidéo pour votre produit sur Expeerly"
   },
   "integrate_video": {
     "label": "Intégrez des avis vidéo",
-    "aria_label": "Intégrez dès maintenant des revues vidéo à votre boutique en ligne avec Experify",
-    "alt_text": "Bouton pour intégrer des revues vidéo à votre boutique en ligne sur Experify"
+    "aria_label": "Intégrez dès maintenant des revues vidéo à votre boutique en ligne avec Expeerly"
   },
   "learn_more": {
     "label": "En savoir plus",

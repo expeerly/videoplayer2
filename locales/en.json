@@ -14,18 +14,15 @@
   "home_how_it_works_body_text": "Expeerly is a place for consumers to get insights about what other shoppers think of products and services. The video reviews are shared by our community of reviewers from our the globe.",
   "explore_all_reviewers": {
     "label": "Explore All Reviewers",
-    "aria_label": "Explore profiles of all video reviewers on Experify",
-    "alt_text": "Button to view all video reviewers on Experify"
+    "aria_label": "Explore profiles of all video reviewers on Expeerly"
   },
   "get_video_reviewed": {
     "label": "Get Video Reviewed",
-    "aria_label": "Request a video review for your product on Experify",
-    "alt_text": "Button to get your product reviewed with a video on Experify"
+    "aria_label": "Request a video review for your product on Expeerly"
   },
   "integrate_video": {
     "label": "Integrate Video Reviews now",
-    "aria_label": "Integrate video reviews into your online store now with Experify",
-    "alt_text": "Button to integrate video reviews into your online store on Experify"
+    "aria_label": "Integrate video reviews into your online store now with Expeerly"
   },
   "learn_more": {
     "label": "Learn more",
