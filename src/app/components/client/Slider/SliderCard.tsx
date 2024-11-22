@@ -1,7 +1,7 @@
 'use client';
 import clsx from 'clsx';
 import Image from 'next/image';
-import React, { FunctionComponent, memo } from 'react';
+import React, { FunctionComponent } from 'react';
 
 export type SlideProps = {
   icon?: JSX.Element | string;
@@ -15,7 +15,7 @@ type Props = {
   className?: string;
 };
 
-const SliderCardComponent: FunctionComponent<Props> = ({ data, className }) => {
+export const SliderCard: FunctionComponent<Props> = ({ data, className }) => {
   return (
     <button
       className={clsx(
@@ -39,5 +39,3 @@ const SliderCardComponent: FunctionComponent<Props> = ({ data, className }) => {
     </button>
   );
 };
-
-export const SliderCard = memo(SliderCardComponent);

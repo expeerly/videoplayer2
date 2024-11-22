@@ -2,7 +2,6 @@ import { FunctionComponent, SVGProps } from 'react';
 
 import { BinocularsIcon, CategoriesIcon, SpeechBubbleIcon, StoreIcon } from '@/src/assets/icons';
 import { ActiveLink } from '../client/ActiveLink';
-import { BottomBar } from '../client/BottomBar';
 import { getDictionary } from '@/src/lib/dictionary';
 
 type NavItemKey = 'explore' | 'brands' | 'categories' | 'reviewers';
@@ -64,7 +63,6 @@ export const Sidebar: FunctionComponent = async () => {
           </ul>
         </nav>
       </aside>
-      <BottomBar />
     </>
   );
 };

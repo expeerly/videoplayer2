@@ -4,7 +4,7 @@ import { SlideProps, SliderCard } from './SliderCard';
 import clsx from 'clsx';
 import { distributeSlides } from './utils/distributeSlides';
 
-const brands = [
+const brands: SlideProps[] = [
   { name: 'Travel' },
   { name: 'Automobile' },
   { name: 'Health & Wellness' },

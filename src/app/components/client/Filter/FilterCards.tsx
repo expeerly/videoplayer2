@@ -1,5 +1,5 @@
 'use client';
-import { FunctionComponent, memo } from 'react';
+import { FunctionComponent } from 'react';
 import { FilterCard, FilterItemProps } from './FilterCard';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
   onToggle: (name: string) => void;
 };
 
-const FilterCardsComponent: FunctionComponent<Props> = ({ items, pendingFilters, onToggle }) => (
+export const FilterCards: FunctionComponent<Props> = ({ items, pendingFilters, onToggle }) => (
   <div className="flex-1 overflow-y-auto md:max-h-[424px]">
     <div className="px-4 h-max overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600">
       {items.map(item => (
@@ -24,5 +24,3 @@ const FilterCardsComponent: FunctionComponent<Props> = ({ items, pendingFilters,
     </div>
   </div>
 );
-
-export const FilterCards = memo(FilterCardsComponent);

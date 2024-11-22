@@ -10,7 +10,7 @@ import React, {
   useMemo,
 } from 'react';
 import { SlideProps, SliderCard } from './SliderCard';
-import { SliderNavigationButton } from '../../server/SliderNavigationButton';
+import { SliderNavigationButton } from './SliderNavigationButton';
 import { distributeSlides } from './utils/distributeSlides';
 
 interface SliderProps {

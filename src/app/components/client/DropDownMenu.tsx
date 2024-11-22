@@ -27,9 +27,10 @@ import {
 
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import { useTranslations } from 'use-intl';
-import { Button } from '@/src/app/components/server/Button';
 import clsx from 'clsx';
 import { Link, usePathname } from '@/src/i18n/routing';
+import { Button } from './Button/Button';
+import { StyledLink } from '../server/StyledLink';
 
 export type MenuItem = {
   key: string;
@@ -338,7 +339,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
             </ul>
           </div>
           <div className=" p-4 flex flex-col sm:flex-row items-center gap-3 md:p-0 my-auto md:ml-auto md:mr-[22px]">
-            <Button
+            <StyledLink
               fullWidth
               href="https://app.expeerly.com/?m=signup&user=creator"
               className="w-full md:w-[150px]"
@@ -346,9 +347,9 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
               title={t('sign_up.label')}
             >
               {t('sign_up.label')}
-            </Button>
+            </StyledLink>
 
-            <Button
+            <StyledLink
               fullWidth
               href="https://app.expeerly.com/"
               className="w-full md:w-[150px]"
@@ -357,7 +358,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
               title={t('login.label')}
             >
               {t('login.label')}
-            </Button>
+            </StyledLink>
           </div>
         </div>
       </div>

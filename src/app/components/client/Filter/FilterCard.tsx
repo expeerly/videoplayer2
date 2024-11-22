@@ -1,7 +1,6 @@
-'use client';
 import clsx from 'clsx';
 import Image from 'next/image';
-import React, { FunctionComponent, memo } from 'react';
+import React, { FunctionComponent } from 'react';
 
 export type FilterItemProps = {
   name: string;
@@ -14,7 +13,7 @@ export type FilterCardProps = {
   onChange?: (name: string) => void;
 } & FilterItemProps;
 
-const FilterCardComponent: FunctionComponent<FilterCardProps> = ({
+export const FilterCard: FunctionComponent<FilterCardProps> = ({
   icon,
   name,
   logo,
@@ -71,5 +70,3 @@ const FilterCardComponent: FunctionComponent<FilterCardProps> = ({
     </div>
   );
 };
-
-export const FilterCard = memo(FilterCardComponent);

@@ -3,11 +3,12 @@ import { FunctionComponent, memo, useCallback, useEffect, useRef, useState, useM
 import { useTranslations } from 'use-intl';
 import { CloseIcon, FilterIcon } from '@/src/assets/icons';
 import { FilterItemProps } from './FilterCard';
-import { Button } from '../../server/Button';
 import clsx from 'clsx';
 import { usePathname, useRouter } from '@/src/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 import { FilterCards } from './FilterCards';
+import { Button } from '../Button/Button';
+import { StyledLink } from '../../server/StyledLink';
 
 type TabType = 'brands' | 'categories';
 
@@ -327,7 +328,7 @@ const FilterComponent: FunctionComponent = () => {
           <FilterCards {...filterCardsProps} />
 
           <div className="flex-wrap flex gap-4 py-3 px-5 border-t justify-center md:border-t-0 md:pb-[30px] mobileL:flex-nowrap">
-            <Button
+            <StyledLink
               href={`/video-reviews/${activeTab === 'brands' ? 'brand' : 'productcategory'}`}
               variant="outline"
               size="lg"
@@ -335,7 +336,7 @@ const FilterComponent: FunctionComponent = () => {
               className="h-11 !px-0 text-center w-full"
             >
               {t('view_all.label')}
-            </Button>
+            </StyledLink>
             <Button
               onClick={buttonState.onClick}
               size="lg"

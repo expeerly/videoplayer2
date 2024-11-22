@@ -2,7 +2,7 @@
 import React, { FunctionComponent, memo, useCallback } from 'react';
 import Link from 'next/link';
 import { DropDownMenu } from './DropDownMenu';
-import { Button } from '../server/Button';
+import { Button } from './Button/Button';
 import clsx from 'clsx';
 import { LeftChevronIcon } from '@/src/assets/icons';
 import { usePathname, useRouter } from '@/src/i18n/routing';
