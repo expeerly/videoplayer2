@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
-import { StyledLink } from './StyledLink';
+import { Button } from '../client/Button';
 
 const brands = [
   { imgURL: '/brands/logo.svg', id: 1 },
@@ -51,7 +51,7 @@ export const ConversionSlider: FunctionComponent = async () => {
           />
         </div>
         <div className="px-5 w-full mt-12 flex justify-center sm:w-max">
-          <StyledLink
+          <Button
             size="lg"
             variant="secondary"
             href="https://www.get.expeerly.com/for-marketplaces"
@@ -61,7 +61,7 @@ export const ConversionSlider: FunctionComponent = async () => {
             title={t.integrate_video.label}
           >
             {t.integrate_video.label}
-          </StyledLink>
+          </Button>
         </div>
       </div>
     </section>

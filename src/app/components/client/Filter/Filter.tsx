@@ -7,8 +7,7 @@ import clsx from 'clsx';
 import { usePathname, useRouter } from '@/src/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 import { FilterCards } from './FilterCards';
-import { Button } from '../Button/Button';
-import { StyledLink } from '../../server/StyledLink';
+import { Button } from '../Button';
 
 type TabType = 'brands' | 'categories';
 
@@ -247,14 +246,22 @@ const FilterComponent: FunctionComponent = () => {
     [activeItems, activePendingFilters, handleItemToggle]
   );
 
-  const containerClassName = clsx('z-50 inset-0', {
-    'fixed h-100% bg-grey-100 md:bg-transparent md:relative': isOpen,
-  });
+  const containerClassName = useMemo(
+    () =>
+      clsx('z-50 inset-0', {
+        'fixed h-100% bg-grey-100 md:bg-transparent md:relative': isOpen,
+      }),
+    [isOpen]
+  );
 
-  const buttonContainerClassName = clsx({
-    'absolute right-5 top-[15px] md:static md:top-0 md:right-0': isOpen,
-    'mt-5 mr-5 md:m-0': !isOpen,
-  });
+  const buttonContainerClassName = useMemo(
+    () =>
+      clsx({
+        'absolute right-5 top-[15px] md:static md:top-0 md:right-0': isOpen,
+        'mt-5 mr-5 md:m-0': !isOpen,
+      }),
+    [isOpen]
+  );
 
   return (
     <div className={containerClassName}>
@@ -328,7 +335,7 @@ const FilterComponent: FunctionComponent = () => {
           <FilterCards {...filterCardsProps} />
 
           <div className="flex-wrap flex gap-4 py-3 px-5 border-t justify-center md:border-t-0 md:pb-[30px] mobileL:flex-nowrap">
-            <StyledLink
+            <Button
               href={`/video-reviews/${activeTab === 'brands' ? 'brand' : 'productcategory'}`}
               variant="outline"
               size="lg"
@@ -336,7 +343,7 @@ const FilterComponent: FunctionComponent = () => {
               className="h-11 !px-0 text-center w-full"
             >
               {t('view_all.label')}
-            </StyledLink>
+            </Button>
             <Button
               onClick={buttonState.onClick}
               size="lg"

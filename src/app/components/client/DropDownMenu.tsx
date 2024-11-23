@@ -1,5 +1,3 @@
-'use client';
-
 import React, {
   FunctionComponent,
   memo,
@@ -8,6 +6,7 @@ import React, {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from 'react';
 import {
   BinocularsIcon,
@@ -24,13 +23,11 @@ import {
   VideoIcon,
   WorldIcon,
 } from '@/src/assets/icons';
-
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import { useTranslations } from 'use-intl';
 import clsx from 'clsx';
 import { Link, usePathname } from '@/src/i18n/routing';
-import { Button } from './Button/Button';
-import { StyledLink } from '../server/StyledLink';
+import { Button } from './Button';
 
 export type MenuItem = {
   key: string;
@@ -142,19 +139,32 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   const t = useTranslations('menu');
   const pathname = usePathname();
 
+  // Event Handlers
+  const toggleMenu = useCallback(() => {
+    setIsOpen(!isOpen);
+    setOpenSubmenuKey(null);
+  }, [isOpen]);
+
+  const toggleSubmenu = useCallback(
+    (key: string) => {
+      setOpenSubmenuKey(openSubmenuKey === key ? null : key);
+    },
+    [openSubmenuKey]
+  );
+
+  // Effects
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (window.innerWidth > 768)
+      if (window.innerWidth > 768) {
         if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
           setIsOpen(false);
           setOpenSubmenuKey(null);
         }
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -166,9 +176,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   useEffect(() => {
     if (window.innerWidth < 768) {
       if (isOpen) {
-        // First scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
         setTimeout(() => {
           document.body.style.position = 'fixed';
           document.body.style.width = '100%';
@@ -191,24 +199,101 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
     };
   }, [isOpen]);
 
-  const toggleMenu = useCallback(() => {
-    setIsOpen(!isOpen);
-    setOpenSubmenuKey(null);
-  }, [isOpen]);
+  // Memoized Classes
+  const containerClasses = useMemo(
+    () => clsx('relative z-10', 'md:flex md:flex-row-reverse md:items-center', className),
+    [className]
+  );
 
-  const toggleSubmenu = useCallback(
-    (key: string) => {
-      setOpenSubmenuKey(openSubmenuKey === key ? null : key);
-    },
+  const dropdownContainerClasses = useMemo(
+    () =>
+      clsx(
+        'flex gap-5 justify-between flex-col',
+        'fixed top-[70px] right-0 w-full overflow-auto bg-grey-100',
+        'md:items-center md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full',
+        isOpen
+          ? ['h-[calc(100%-70px)]', 'border-t', 'md:h-full md:border-t-0']
+          : ['h-0', 'overflow-hidden', 'md:overflow-visible']
+      ),
+    [isOpen]
+  );
+
+  const dropdownMenuClasses = useMemo(
+    () =>
+      clsx(
+        'md:bg-white',
+        'md:right',
+        'md:absolute',
+        'md:top-[69px]',
+        'w-full',
+        'md:shadow-lg',
+        'h-max',
+        'rounded-lg',
+        isOpen ? 'block' : 'hidden'
+      ),
+    [isOpen]
+  );
+
+  const menuListClasses = useMemo(
+    () => clsx('pt-4 px-5 pb-[32px]', 'h-max', 'md:px-3', 'md:overflow-visible', 'md:pt-[35px]'),
+    []
+  );
+
+  const submenuButtonClasses = useCallback(
+    (itemKey: string) =>
+      clsx(
+        'w-full flex items-center justify-between',
+        'px-1 rounded-lg py-2',
+        'md:px-2 md:hover:bg-grey-100',
+        'transition-colors duration-200',
+        {
+          'md:bg-grey-100 text-grey-700': openSubmenuKey === itemKey,
+          'text-transparent': openSubmenuKey !== itemKey,
+        }
+      ),
     [openSubmenuKey]
+  );
+
+  const submenuContentClasses = useCallback(
+    (itemKey: string) =>
+      clsx(
+        'w-full',
+        'md:absolute md:-left-full md:top-0 md:flex md:justify-end',
+        'overflow-hidden overflow-y-auto rounded-lg',
+        openSubmenuKey === itemKey
+          ? ['h-auto opacity-100 visible', 'md:h-[586px]']
+          : ['opacity-0 invisible pointer-events-none h-0']
+      ),
+    [openSubmenuKey]
+  );
+
+  const menuItemLinkClasses = useCallback(
+    (itemHref: string) =>
+      clsx(
+        'px-1 w-full flex items-center',
+        'hover:bg-grey-100',
+        'md:px-2 rounded-lg py-2 gap-4',
+        'transition-colors duration-200',
+        {
+          'text-grey-700': pathname.includes(itemHref),
+          'text-transparent': pathname !== itemHref,
+        }
+      ),
+    [pathname]
+  );
+
+  const bottomButtonsContainerClasses = useMemo(
+    () =>
+      clsx(
+        'p-4 flex flex-col sm:flex-row items-center gap-3',
+        'md:p-0 my-auto md:ml-auto md:mr-[22px]'
+      ),
+    []
   );
 
   return (
     <>
-      <div
-        className={`relative z-10 md:flex md:flex-row-reverse md:items-center ${className}`}
-        ref={menuRef}
-      >
+      <div className={containerClasses} ref={menuRef}>
         <Button
           isOnlyIcon
           variant="secondary"
@@ -231,25 +316,19 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
             </>
           )}
         </Button>
-        <div
-          className={`flex gap-5 justify-between flex-col fixed top-[70px] right-0 w-full overflow-auto bg-grey-100 md:items-center md:static md:top-0 md:bg-transparent md:w-[393px] md:h-full
-             ${isOpen ? 'h-[calc(100%-70px)] border-t md:h-full md:border-t-0 ' : 'h-0 overflow-hidden md:overflow-visible'}`}
-        >
+
+        <div className={dropdownContainerClasses}>
           <div
             id="dropdown-menu"
-            className={`md:bg-white md:right md:absolute md:top-[69px] w-full md:shadow-lg h-max rounded-lg ${
-              isOpen ? 'block' : 'hidden'
-            }`}
+            className={dropdownMenuClasses}
             aria-orientation="vertical"
             aria-labelledby="menu-button"
           >
-            <ul
-              role="menu"
-              className="pt-4 px-5 pb-[32px]  h-max md:px-3 md:overflow-visible md:pt-[35px] "
-            >
+            <ul role="menu" className={menuListClasses}>
               {menuItems.map(item => (
-                <li key={item.key} role="presentation" className="">
+                <li key={item.key} role="presentation">
                   {item.devider && <div className="border-b border-grey-300 my-4 mx-1" />}
+
                   {item.items ? (
                     <div
                       role="presentation"
@@ -258,13 +337,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                       <button
                         onClick={() => toggleSubmenu(item.key)}
                         role="menuitem"
-                        className={clsx(
-                          'w-full flex items-center justify-between px-1 rounded-lg py-2 md:px-2 md:hover:bg-grey-100 transition-colors duration-200',
-                          {
-                            'md:bg-grey-100 text-grey-700': openSubmenuKey === item.key,
-                            ' text-transparent': openSubmenuKey !== item.key,
-                          }
-                        )}
+                        className={submenuButtonClasses(item.key)}
                         title={t(`${item.key}.label`)}
                         aria-expanded={openSubmenuKey === item.key}
                         aria-label={t(`${item.key}.aria_label`)}
@@ -277,15 +350,9 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                           {openSubmenuKey === item.key ? <DownArrowIcon /> : <RightChevronIcon />}
                         </span>
                       </button>
-                      <div
-                        className={` w-full md:absolute md:-left-full md:top-0 md:flex md:justify-end overflow-hidden overflow-y-auto rounded-lg ${
-                          openSubmenuKey === item.key
-                            ? 'h-auto opacity-100 visible md:h-[586px] '
-                            : 'opacity-0 invisible pointer-events-none h-0'
-                        }`}
-                        role="menu"
-                      >
-                        <div className=" h-max  w-full md:w-max py-4 bg-white md:shadow-lg  md:border md:min-w-[279px] rounded-lg md:border-grey-100 px-6 mr-2">
+
+                      <div className={submenuContentClasses(item.key)} role="menu">
+                        <div className="h-max w-full md:w-max py-4 bg-white md:shadow-lg md:border md:min-w-[279px] rounded-lg md:border-grey-100 px-6 mr-2">
                           {item.itemsLabel && (
                             <Link
                               role="menuitem"
@@ -298,6 +365,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                               <ArrowRightIcon />
                             </Link>
                           )}
+
                           <ul role="menu">
                             {item.items.map((subItem, index) => (
                               <li key={index} role="presentation">
@@ -319,13 +387,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                   ) : (
                     <Link
                       role="menuitem"
-                      className={clsx(
-                        'px-1 w-full flex items-center hover:bg-grey-100 md:px-2 rounded-lg py-2 gap-4 transition-colors duration-200',
-                        {
-                          'text-grey-700': pathname.includes(item.href!),
-                          'text-transparent': pathname !== item.href,
-                        }
-                      )}
+                      className={menuItemLinkClasses(item.href!)}
                       href={`${item.href}`}
                       title={t(`${item.key}.label`)}
                       aria-label={t(`${item.key}.aria_label`)}
@@ -338,8 +400,9 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
               ))}
             </ul>
           </div>
-          <div className=" p-4 flex flex-col sm:flex-row items-center gap-3 md:p-0 my-auto md:ml-auto md:mr-[22px]">
-            <StyledLink
+
+          <div className={bottomButtonsContainerClasses}>
+            <Button
               fullWidth
               href="https://app.expeerly.com/?m=signup&user=creator"
               className="w-full md:w-[150px]"
@@ -347,9 +410,9 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
               title={t('sign_up.label')}
             >
               {t('sign_up.label')}
-            </StyledLink>
+            </Button>
 
-            <StyledLink
+            <Button
               fullWidth
               href="https://app.expeerly.com/"
               className="w-full md:w-[150px]"
@@ -358,7 +421,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
               title={t('login.label')}
             >
               {t('login.label')}
-            </StyledLink>
+            </Button>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { getDictionary } from '@/src/lib/dictionary';
-import { StyledLink } from './StyledLink';
+import { Button } from '../client/Button';
 
 export const ExpolreReviewers: FunctionComponent = async () => {
   const t = await getDictionary();
@@ -14,7 +14,7 @@ export const ExpolreReviewers: FunctionComponent = async () => {
       <ReviewGrid />
       <ReviewGrid />
       <div className="w-full sm:max-w-[300px] px-5 mid-lg:px-0">
-        <StyledLink
+        <Button
           title={t.explore_all_reviewers.label}
           aria-label={t.explore_all_reviewers.aria_label}
           href="/video-reviews/reviewer"
@@ -23,7 +23,7 @@ export const ExpolreReviewers: FunctionComponent = async () => {
           fullWidth
         >
           {t.explore_all_reviewers.label}
-        </StyledLink>
+        </Button>
       </div>
     </section>
   );

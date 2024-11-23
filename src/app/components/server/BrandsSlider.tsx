@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { getDictionary } from '@/src/lib/dictionary';
-import { StyledLink } from './StyledLink';
+import { Button } from '../client/Button';
 
 export const brands = [
   { imgURL: '/brands/logo.svg', id: 1 },
@@ -62,7 +62,7 @@ export const BrandsSlider: FunctionComponent = async () => {
           />
         </div>
         <div className="px-5 w-full flex justify-center sm:w-[340px]">
-          <StyledLink
+          <Button
             size="lg"
             variant="secondary"
             href="/for-brands"
@@ -72,7 +72,7 @@ export const BrandsSlider: FunctionComponent = async () => {
             aria-label={t.get_video_reviewed.aria_label}
           >
             {t.get_video_reviewed.label}
-          </StyledLink>
+          </Button>
         </div>
       </div>
     </section>
