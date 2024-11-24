@@ -1,9 +1,21 @@
 import React, { FunctionComponent } from 'react';
-import { brands } from './BrandsSlider';
 import { getDictionary } from '@/src/lib/dictionary';
-import { Slider } from '@/src/app/components/client/Slider';
-import { Button } from '@/src/app/components/server/Button';
-import { MobileSlider } from '@/src/app/components/server/MobileSlider';
+import { Slider } from '@/src/app/components/client/Slider/Slider';
+import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
+import { Button } from '../client/Button';
+
+const brands = [
+  { imgURL: '/brands/logo.svg', id: 1 },
+  { imgURL: '/brands/logo1.svg', id: 2 },
+  { imgURL: '/brands/logo2.svg', id: 3 },
+  { imgURL: '/brands/logo3.svg', id: 4 },
+  { imgURL: '/brands/logo4.svg', id: 5 },
+  { imgURL: '/brands/logo5.svg', id: 6 },
+  { imgURL: '/brands/logo6.svg', id: 7 },
+  { imgURL: '/brands/logo7.svg', id: 8 },
+  { imgURL: '/brands/logo8.svg', id: 9 },
+  { imgURL: '/brands/logo.svg', id: 10 },
+];
 
 export const ConversionSlider: FunctionComponent = async () => {
   const t = await getDictionary();
@@ -15,14 +27,14 @@ export const ConversionSlider: FunctionComponent = async () => {
         backgroundImage: `url(/BackgroundImage.svg)`,
       }}
     >
-      <div className=" z-20 w-full sm:max-w-[1170px] flex flex-col justify-center items-center  gap-4 py-10 sm:py-20 ">
+      <div className=" z-10 w-full sm:max-w-[1170px] flex flex-col justify-center items-center  gap-4 py-10 sm:py-20 ">
         <h2 className="font-extrabold px-5 text-2xl text-white text-center">
           {t.home_h2_retailer}
         </h2>
         <p className="text-white px-5 text-center mb-10"> {t.home_retailer_body_text}</p>
         <div className=" hidden w-full md:flex">
           <Slider
-            slides={[brands[0]]}
+            slides={brands}
             classNameStyle={{
               leftButtonClassName: '!bg-blue-left-gradient',
               rightButtonClassName: '!bg-blue-right-gradient',
@@ -32,7 +44,7 @@ export const ConversionSlider: FunctionComponent = async () => {
         </div>
         <div className=" flex w-full md:hidden">
           <MobileSlider
-            slides={[brands[0]]}
+            slides={brands}
             styleClassNames={{
               cardClassName: 'bg-white',
             }}
@@ -45,8 +57,10 @@ export const ConversionSlider: FunctionComponent = async () => {
             href="https://www.get.expeerly.com/for-marketplaces"
             fullWidth
             className=" bg-white text-center"
+            aria-label={t.integrate_video.aria_label}
+            title={t.integrate_video.label}
           >
-            {t.cta_button_retailer}
+            {t.integrate_video.label}
           </Button>
         </div>
       </div>

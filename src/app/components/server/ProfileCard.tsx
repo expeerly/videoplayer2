@@ -32,15 +32,15 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = ({
         </div>
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
-            <h2 className=" font-bold text-gray-700">{title}</h2>
+            <h2 className=" font-bold text-grey-700">{title}</h2>
             <RightChevronIcon className="w-2 h-3" />
           </div>
-          <p className="text-sm text-gray-500">{subTitle}</p>
+          <p className="text-sm text-grey-500">{subTitle}</p>
         </div>
       </div>
 
       <div className="flex  sm:w-2/5 items-center mt-2">
-        <p className=" text-gray-700 ml-0 line-clamp-2">{description}</p>
+        <p className=" text-grey-700 ml-0 line-clamp-2">{description}</p>
       </div>
     </div>
   );

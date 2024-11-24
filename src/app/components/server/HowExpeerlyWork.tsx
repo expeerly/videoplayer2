@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { getDictionary } from '@/src/lib/dictionary';
-import { Button } from '@/src/app/components/server/Button';
+import { Button } from '../client/Button';
 
 export const HowExpeerlyWorks: FunctionComponent = async () => {
   const t = await getDictionary();
@@ -11,7 +11,7 @@ export const HowExpeerlyWorks: FunctionComponent = async () => {
         <h2 className="text-xl md:text-2xl text-center font-extrabold mb-4">
           {t.home_h2_how_expeerly_works}
         </h2>
-        <p className="text-gray-700 mb-6 w-full sm:max-w-2xl mx-auto">
+        <p className="text-grey-700 mb-6 w-full sm:max-w-2xl mx-auto">
           {t.home_how_it_works_body_text}
         </p>
         <Button
@@ -19,8 +19,9 @@ export const HowExpeerlyWorks: FunctionComponent = async () => {
           className="w-full sm:w-[300px] mx-auto"
           href="https://www.get.expeerly.com/about-us"
           variant="outline"
+          aria-label={t.learn_more.aria_label}
         >
-          {t.cta_button_how_it_works}
+          {t.learn_more.label}
         </Button>
       </div>
     </section>

@@ -1,34 +1,43 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, SVGProps } from 'react';
 
 import { BinocularsIcon, CategoriesIcon, SpeechBubbleIcon, StoreIcon } from '@/src/assets/icons';
 import { ActiveLink } from '../client/ActiveLink';
-import { BottomBar } from '../client/BottomBar';
 import { getDictionary } from '@/src/lib/dictionary';
 
-export const navItems = [
-  { key: 'explore', name: 'Explore', icon: BinocularsIcon, href: '/explore' },
+type NavItemKey = 'explore' | 'brands' | 'categories' | 'reviewers';
+
+interface NavItem {
+  key: NavItemKey;
+  icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+  href: string;
+}
+
+export const navItems: NavItem[] = [
+  { key: 'explore', icon: BinocularsIcon, href: '/explore' },
   {
     key: 'brands',
-    name: 'Brands',
     icon: StoreIcon,
     href: '/video-reviews/brand',
   },
   {
     key: 'categories',
-    name: 'Categories',
     icon: CategoriesIcon,
     href: '/video-reviews/productcategory',
   },
   {
     key: 'reviewers',
-    name: 'Reviewers',
     icon: SpeechBubbleIcon,
     href: '/video-reviews/reviewers',
   },
 ];
 
+type Dictionary = {
+  [key in NavItemKey]: { label: string; aria_label: string };
+};
+
 export const Sidebar: FunctionComponent = async () => {
-  const t: { [key: string]: string } = (await getDictionary()).menu;
+  const t = (await getDictionary()).menu as Dictionary;
+
   return (
     <>
       <aside className="min-h-screen md:w-[25%] mid-lg:w-[275px] border-e hidden md:flex">
@@ -40,12 +49,13 @@ export const Sidebar: FunctionComponent = async () => {
                 <li key={item.key}>
                   <ActiveLink
                     className="my-2 w-full"
-                    key={item.name}
+                    key={item.key}
                     href={item.href}
-                    title={item.name}
+                    title={t[item.key].label}
+                    aria-label={t[item.key].aria_label}
                   >
                     <Icon />
-                    <span className="text-black">{t[item.key]}</span>
+                    <span className="text-black">{t[item.key].label}</span>
                   </ActiveLink>
                 </li>
               );
@@ -53,7 +63,6 @@ export const Sidebar: FunctionComponent = async () => {
           </ul>
         </nav>
       </aside>
-      <BottomBar />
     </>
   );
 };

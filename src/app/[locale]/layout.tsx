@@ -8,7 +8,7 @@ import { Navbar } from '@/src/app/components/client/Navbar';
 import { PropsWithChildren } from 'react';
 import { notFound } from 'next/navigation';
 import { routing } from '@/src/i18n/routing';
-import { BottomBar } from '@/src/app/components/client/BottomBar';
+import { BottomBar } from '@/src/app/components/server/BottomBar';
 
 export const metadata: Metadata = {
   title: 'Expeerly App',

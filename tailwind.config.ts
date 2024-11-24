@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss';
 import tailwindScrollbar from 'tailwind-scrollbar';
+import tailwindForms from '@tailwindcss/forms';
 
 const config: Config = {
   content: ['./components/**/*.{js,ts,jsx,tsx,mdx}', './src/**/*.{js,ts,jsx,tsx,mdx}'],
@@ -21,8 +22,9 @@ const config: Config = {
           600: '#DE1777',
           700: '#C6186B',
         },
-        'light-gray': '#F7F7F7',
-        gray: {
+        grey: {
+          100: '#F7F7F7',
+          200: '#E8E8EA',
           300: '#D1D1D4',
           400: '#BBB9BF',
           700: '#0E0E0F',
@@ -33,6 +35,7 @@ const config: Config = {
         },
         navy: {
           100: '#EFEDF4',
+          500: '#2C1277',
         },
         yellow: {
           500: '#FFC122',
@@ -70,6 +73,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [tailwindScrollbar({ preferredStrategy: 'pseudoelements' })],
+  plugins: [tailwindScrollbar({ preferredStrategy: 'pseudoelements' }), tailwindForms()],
 };
 export default config;

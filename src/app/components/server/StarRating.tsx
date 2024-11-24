@@ -48,14 +48,14 @@ export const StarRating: FunctionComponent<StarRatingProps> = ({
         ) : showPartialStar ? (
           <div className="relative">
             <StarIcon
-              className={`absolute top-0 left-0 [&>path]:fill-gray-400 [&>path]:stroke-gray-400`}
+              className={`absolute top-0 left-0 [&>path]:fill-grey-400 [&>path]:stroke-grey-400`}
             />
             <div className="relative overflow-hidden" style={{ width: `${fillPercentage * 100}%` }}>
               <StarIcon className={`[&>path]:stroke-yellow-500 [&>path]:fill-yellow-500`} />
             </div>
           </div>
         ) : (
-          <StarIcon className="[&>path]:fill-gray-400 [&>path]:stroke-gray-400" />
+          <StarIcon className="[&>path]:fill-grey-400 [&>path]:stroke-grey-400" />
         )}
       </div>
     );
@@ -65,7 +65,7 @@ export const StarRating: FunctionComponent<StarRatingProps> = ({
     <div className={`flex items-center gap-1 ${sizeMap[size].container} ${className}`}>
       {[...Array(totalStars)].map((_, index) => renderStar(index))}
       {showRating && (
-        <span className={`ml-2 ${sizeMap[size].text} text-gray-600`}>
+        <span className={`ml-2 ${sizeMap[size].text} text-grey-500`}>
           {rating.toFixed(1)}/{totalStars}
         </span>
       )}

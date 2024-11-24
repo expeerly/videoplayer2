@@ -15,7 +15,7 @@ export const FilterIcon: FunctionComponent<SVGProps<SVGSVGElement>> = props => {
       </mask>
       <g mask="url(#mask0_2960_20923)">
         <path
-          className="fill-gray-700"
+          className="fill-grey-700"
           d="M7 18V16H3V14H7V12H9V18H7ZM11 16V14H21V16H11ZM15 12V6H17V8H21V10H17V12H15ZM3 10V8H13V10H3Z"
         />
       </g>

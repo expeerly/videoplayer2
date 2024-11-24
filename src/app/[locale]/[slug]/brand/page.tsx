@@ -1,9 +1,10 @@
+import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { NextPage } from 'next';
 
 const Page: NextPage = () => {
   return (
-    <div className="h-full">
-      <h1>Brands</h1>
+    <div className="h-[calc(100vh-64px)] bg-white">
+      <Filter />
     </div>
   );
 };
