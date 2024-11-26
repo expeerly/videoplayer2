@@ -1,7 +1,7 @@
 'use client';
 import React, { FunctionComponent } from 'react';
 import { ReviewGrid } from '../server/ReviewGrid';
-import { BecomeReviewer } from '../server/BecomeReviewer';
+import { BecomeReviewer } from './BecomeReviewer';
 import Pagination from './Pagination';
 import { ProfileCardProps } from './ProfileCard';
 

@@ -73,9 +73,11 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = ({
         </div>
       </Link>
 
-      <div className="flex  sm:w-2/5 items-center mt-2">
-        <p className=" text-grey-700 ml-0 line-clamp-2">{description}</p>
-      </div>
+      {!!description && (
+        <div className="flex  sm:w-2/5 items-center mt-2">
+          <p className=" text-grey-700 ml-0 line-clamp-2">{description}</p>
+        </div>
+      )}
     </div>
   );
 };

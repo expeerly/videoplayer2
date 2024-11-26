@@ -179,5 +179,9 @@
   "all_brands_body_text": "In this overview you will find all video reviews from all brands that can be found on expeerly. Find a large selection of rating videos and test videos.",
   "all_brands_footer_text": "On expeerly you will find a comprehensive collection of video reviews and test reports on numerous brands and products from Dyson, Moulinex, Miele and many more! Our platform offers you a wide selection of honest reviews to help you make informed purchasing decisions. Whether you're looking for electronics, household supplies, clothing, books, travel or other categories, you'll find honest video reviews from real users. See how the items perform in practice, what advantages and disadvantages they offer and whether they really do what they promise. Trust the experiences of others and discover which brands and products are really worth it. So you can be sure that you are making the best purchase decision for your everyday life.",
   "all_brands_site_title": "All expeerly video reviews of all brands",
-  "all_brands_meta_description": "Find video testimonials, video reviews and video tests for all brands. Discover opinions and how other people experience the brands."
+  "all_brands_meta_description": "Find video testimonials, video reviews and video tests for all brands. Discover opinions and how other people experience the brands.",
+  "cta_block_all_brands_categories": {
+    "title": "Video reviews for brands",
+    "desc": "Are you a brand looking to boost sales?"
+  }
 }
