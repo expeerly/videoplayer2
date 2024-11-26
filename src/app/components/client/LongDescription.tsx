@@ -22,7 +22,13 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
   }, [text, maxLength]);
 
   const toggleExpansion = useCallback(() => {
-    setIsExpanded(prev => !prev);
+    setIsExpanded(prev => {
+      // If we're closing the expanded view, scroll to top
+      if (prev) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return !prev;
+    });
   }, []);
 
   const truncatedText = useMemo(() => text.slice(0, maxLength), [text, maxLength]);
@@ -33,15 +39,15 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
 
   return (
     <div className={`w-full max-w-2xl ${className}`}>
-      <p className="text-base leading-relaxed text-grey-500">
+      <p onClick={toggleExpansion} className="text-sm md:text-base text-gray-500 cursor-pointer">
         {displayText}
         {!isExpanded && shouldShowButton && '...'}
         {shouldShowButton && (
           <button
-            onClick={toggleExpansion}
-            className="inline-flex items-center font-bold text-black"
+            className="inline-flex items-center font-bold text-black ml-1 hover:text-gray-700 transition-colors"
+            aria-label={isExpanded ? 'Show less text' : 'Show more text'}
           >
-            {isExpanded ? <>less</> : <>more</>}
+            {isExpanded ? 'less' : 'more'}
           </button>
         )}
       </p>

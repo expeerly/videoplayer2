@@ -1,38 +1,16 @@
 'use client';
 
-import React, { FunctionComponent, memo, useCallback, useMemo, useEffect, useState } from 'react';
+import React, { FunctionComponent, memo, useMemo } from 'react';
 import Link from 'next/link';
 import { DropDownMenu } from './DropDownMenu';
-import { Button } from './Button';
 import clsx from 'clsx';
-import { LeftChevronIcon } from '@/src/assets/icons';
-import { usePathname, useRouter } from '@/src/i18n/routing';
+import { usePathname } from '@/src/i18n/routing';
 import Image from 'next/image';
+import { BackButton } from './BackButton';
 
 const NavbarComponent: FunctionComponent = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const isHomePage = pathname === '/';
-  const [previousPath, setPreviousPath] = useState<string>('/');
-
-  // Track navigation history
-  useEffect(() => {
-    if (pathname !== previousPath) {
-      setPreviousPath(pathname);
-    }
-  }, [pathname, previousPath]);
-
-  const goBack = useCallback(() => {
-    if (!isHomePage) {
-      if (previousPath && previousPath !== pathname) {
-        router.push(previousPath);
-      } else {
-        router.push('/');
-      }
-    } else {
-      router.push('/');
-    }
-  }, [isHomePage, router, pathname, previousPath]);
 
   // Memoized class combinations
   const headerClasses = useMemo(
@@ -43,22 +21,13 @@ const NavbarComponent: FunctionComponent = () => {
         // Positioning
         'z-40 top-0',
         // Spacing
-        'py-[15px] px-4 md:py-5 md:px-8 mid-lg:px-12',
+        'py-[15px] px-5 md:py-5 md:px-8 mid-lg:px-12',
         // Styling
         'bg-white border-b',
         // Sticky behavior
         'md:sticky'
       ),
     []
-  );
-
-  const backButtonClasses = useMemo(
-    () =>
-      clsx({
-        hidden: isHomePage,
-        'md:hidden': !isHomePage,
-      }),
-    [isHomePage]
   );
 
   const logoLinkClasses = useMemo(
@@ -85,16 +54,7 @@ const NavbarComponent: FunctionComponent = () => {
   return (
     <header className={headerClasses}>
       <div className="flex gap-2 items-center">
-        <Button
-          isOnlyIcon
-          variant="secondary"
-          className={backButtonClasses}
-          size="sm"
-          onClick={goBack}
-          aria-label="Go back to previous page"
-        >
-          <LeftChevronIcon />
-        </Button>
+        <BackButton />
         <Link href="/" title="expeerly" aria-label="logo" className={logoLinkClasses}>
           <Image
             src="/expeerly-logo.svg"
