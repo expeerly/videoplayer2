@@ -42,11 +42,7 @@ export const PaginationContainer: FunctionComponent<ReviewGridProps> = ({
           </React.Fragment>
         ))}
       <section className="py-8">
-        <Pagination
-          currentPage={1}
-          totalPages={totalSections}
-          onPageChange={page => console.log(page)}
-        />
+        <Pagination currentPage={1} totalPages={100} onPageChange={page => console.log(page)} />
       </section>
       <div className=" md:hidden">
         <BecomeReviewer />

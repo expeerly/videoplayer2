@@ -2,6 +2,7 @@
 
 import { FunctionComponent, useMemo, memo, useCallback } from 'react';
 import clsx from 'clsx';
+import { LeftChevronIcon, RightChevronIcon } from '@/src/assets/icons';
 
 type PaginationProps = {
   currentPage: number;
@@ -14,11 +15,11 @@ type PaginationProps = {
 
 const PaginationComponent: FunctionComponent<PaginationProps> = ({
   currentPage,
-  totalPages,
+  totalPages = 100,
   onPageChange,
   className = '',
   showFirstLast = true,
-  maxVisiblePages = 7,
+  maxVisiblePages = 4,
 }) => {
   const getPageNumbers = useMemo(() => {
     const pages: (number | string)[] = [];
@@ -59,7 +60,7 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
   const navigationButtonClassName = useMemo(
     () =>
       clsx(
-        'p-2 rounded-lg transition-colors',
+        'p-2 rounded-lg transition-colors !text-grey-500',
         'hover:bg-gray-100 disabled:hover:bg-transparent',
         'disabled:opacity-50 disabled:cursor-not-allowed'
       ),
@@ -73,10 +74,10 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
         'text-sm font-medium',
         {
           'bg-pink-500 text-white': currentPage === page,
-          'hover:bg-gray-100': currentPage !== page && page !== '...',
+          'hover:bg-grey-100': currentPage !== page && page !== '...',
           'cursor-default': page === '...',
-          'text-gray-700': page !== '...' && currentPage !== page,
-          'text-gray-400': page === '...',
+          'text-grey-700': page !== '...' && currentPage !== page,
+          'text-grey-700 ': page === '...',
         }
       ),
     [currentPage]
@@ -93,21 +94,14 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
 
   return (
     <nav className={navClassName} aria-label="Pagination">
-      {showFirstLast && (
+      {showFirstLast && currentPage !== 1 && (
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className={navigationButtonClassName}
           aria-label="Previous page"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <LeftChevronIcon className="[&>path]:stroke-grey-500" />
         </button>
       )}
 
@@ -124,16 +118,13 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
         </button>
       ))}
 
-      {showFirstLast && (
+      {showFirstLast && currentPage !== totalPages && (
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
           className={navigationButtonClassName}
           aria-label="Next page"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <RightChevronIcon className="[&>path]:stroke-grey-500" />
         </button>
       )}
     </nav>
