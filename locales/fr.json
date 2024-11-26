@@ -165,7 +165,7 @@
       "aria_label": "Accédez à la catégorie de {brandname}"
     },
     "home_retailer_icons": {
-      "aria_label": "Accédez à la boutique en ligne de {{partnername}}"
+      "aria_label": "Accédez à la boutique en ligne de {partnername}"
     },
     "filters_brand": {
       "aria_label": "Filtrer la marque {brandname}"
@@ -176,5 +176,9 @@
     "share": {
       "aria_label": "Partager cette page"
     }
-  }
+  },
+  "all_brands_body_text": "Dans cet aperçu, vous trouverez toutes les critiques vidéo de toutes les marques disponibles sur expeerly. Retrouvez une large sélection de vidéos d'évaluation et de vidéos de test.",
+  "all_brands_footer_text": "Sur expeerly, vous trouverez une collection complète de critiques vidéo et de rapports de tests sur de nombreuses marques et produits de Dyson, Moulinex, Miele et bien d'autres encore ! Notre plateforme vous propose une large sélection d'avis honnêtes pour vous aider à prendre des décisions d'achat éclairées. Que vous recherchiez des appareils électroniques, des articles ménagers, des vêtements, des livres, des voyages ou d'autres catégories, vous trouverez des critiques vidéo honnêtes d'utilisateurs réels. Voyez comment les articles fonctionnent dans la pratique, quels avantages et inconvénients ils offrent et s'ils tiennent réellement leurs promesses. Faites confiance aux expériences des autres et découvrez quelles marques et quels produits en valent vraiment la peine. Vous pouvez ainsi être sûr de prendre la meilleure décision d'achat pour votre vie quotidienne.",
+  "all_brands_site_title": "Toutes les critiques vidéo expertes de toutes les marques",
+  "all_brands_meta_description": "Retrouvez des témoignages vidéo, des critiques vidéo et des tests vidéo pour toutes les marques. Découvrez les opinions et comment les autres perçoivent les marques."
 }
