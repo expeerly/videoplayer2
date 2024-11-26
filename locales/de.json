@@ -152,5 +152,28 @@
     "aria_label": "Ausgewählte Filter löschen"
   },
   "filter": "Filter",
-  "selected": "Ausgewählt"
+  "selected": "Ausgewählt",
+  "dynamic_texts": {
+    "home_hero_reviewer": {
+      "aria_label": "Gehe zum Testerprofil von {firstname}"
+    },
+    "home_brand_icons": {
+      "aria_label": "Gehe zum Brandprofil von {brandname}"
+    },
+    "home_category_icons": {
+      "aria_label": "Gehe zur Kategorie von {brandname}"
+    },
+    "home_retailer_icons": {
+      "aria_label": "Gehe zum Onlineshop von {{partnername}}"
+    },
+    "filters_brand": {
+      "aria_label": "Brand {brandname} filtern"
+    },
+    "filters_category": {
+      "aria_label": "Kategorie {categoriesname} filtern"
+    },
+    "share": {
+      "aria_label": "Diese Seite teilen"
+    }
+  }
 }

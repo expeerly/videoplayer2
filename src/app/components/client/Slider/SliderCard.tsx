@@ -1,6 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import React, { FunctionComponent, useMemo } from 'react';
 
@@ -9,16 +10,28 @@ export type SlideProps = {
   name?: string;
   imgURL?: string;
   id?: number | string;
+  title?: string;
 };
 
 type Props = {
   data: SlideProps;
   className?: string;
+  isBrand?: boolean;
 };
 
-export const SliderCard: FunctionComponent<Props> = ({ data, className }) => {
+export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand = false }) => {
+  const t = useTranslations('dynamic_texts');
+
   // Memoized aria label
-  const ariaLabel = useMemo(() => data?.name ?? `slide-${data?.id}`, [data?.name, data?.id]);
+  const ariaLabel = useMemo(
+    () =>
+      isBrand
+        ? t('home_brand_icons.aria_label', {
+            brandname: data?.name ?? data?.title,
+          })
+        : t('home_category_icons.aria_label', { brandname: data?.name ?? data?.title }),
+    [data, isBrand, t]
+  );
 
   // Memoized class combinations
   const buttonClasses = useMemo(

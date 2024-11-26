@@ -63,12 +63,12 @@ export const StarRating: FunctionComponent<StarRatingProps> = ({
 
   return (
     <div className={`flex items-center gap-1 ${sizeMap[size].container} ${className}`}>
-      {[...Array(totalStars)].map((_, index) => renderStar(index))}
       {showRating && (
-        <span className={`ml-2 ${sizeMap[size].text} text-grey-500`}>
-          {rating.toFixed(1)}/{totalStars}
+        <span className={`${sizeMap[size].text} text-sm font-medium text-[#111827]`}>
+          {rating.toFixed(1)}
         </span>
       )}
+      {[...Array(totalStars)].map((_, index) => renderStar(index))}
     </div>
   );
 };

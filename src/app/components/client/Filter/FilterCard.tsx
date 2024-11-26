@@ -1,5 +1,6 @@
 'use client';
 import clsx from 'clsx';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import React, { FunctionComponent, useCallback, useMemo } from 'react';
 
@@ -7,20 +8,25 @@ export type FilterItemProps = {
   name: string;
   icon?: string;
   logo?: string;
+  title?: string;
 };
 
 export type FilterCardProps = {
   checked?: boolean;
   onChange?: (name: string) => void;
+  isBrand?: boolean;
 } & FilterItemProps;
 
 export const FilterCard: FunctionComponent<FilterCardProps> = ({
   icon,
   name,
   logo,
+  title,
   checked = false,
   onChange,
+  isBrand = false,
 }) => {
+  const t = useTranslations('dynamic_texts');
   // Event Handlers
   const handleChange = useCallback(() => {
     onChange?.(name);
@@ -98,8 +104,19 @@ export const FilterCard: FunctionComponent<FilterCardProps> = ({
     [checked]
   );
 
+  // Memoized aria label
+  const ariaLabel = useMemo(
+    () =>
+      isBrand
+        ? t('filters_brand.aria_label', {
+            brandname: name ?? title,
+          })
+        : t('filters_category.aria_label', { categoriesname: name ?? title }),
+    [name, title, isBrand, t]
+  );
+
   return (
-    <div className={containerClasses} onClick={handleContainerClick}>
+    <div className={containerClasses} onClick={handleContainerClick} aria-label={ariaLabel}>
       <div className={checkboxContainerClasses}>
         <input
           type="checkbox"

@@ -5,16 +5,16 @@ import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Button } from '../client/Button';
 
 const brands = [
-  { imgURL: '/brands/logo.svg', id: 1 },
-  { imgURL: '/brands/logo1.svg', id: 2 },
-  { imgURL: '/brands/logo2.svg', id: 3 },
-  { imgURL: '/brands/logo3.svg', id: 4 },
-  { imgURL: '/brands/logo4.svg', id: 5 },
-  { imgURL: '/brands/logo5.svg', id: 6 },
-  { imgURL: '/brands/logo6.svg', id: 7 },
-  { imgURL: '/brands/logo7.svg', id: 8 },
-  { imgURL: '/brands/logo8.svg', id: 9 },
-  { imgURL: '/brands/logo.svg', id: 10 },
+  { imgURL: '/brands/logo.svg', id: 1, title: 'Dyson' },
+  { imgURL: '/brands/logo1.svg', id: 2, title: 'Philips' },
+  { imgURL: '/brands/logo2.svg', id: 3, title: 'Sony' },
+  { imgURL: '/brands/logo3.svg', id: 4, title: 'Tefal' },
+  { imgURL: '/brands/logo4.svg', id: 5, title: 'Zalando' },
+  { imgURL: '/brands/logo5.svg', id: 6, title: 'Get Your Guide' },
+  { imgURL: '/brands/logo6.svg', id: 7, title: 'Koenig' },
+  { imgURL: '/brands/logo7.svg', id: 8, title: 'Bauknecht' },
+  { imgURL: '/brands/logo8.svg', id: 9, title: 'Dyson_1' },
+  { imgURL: '/brands/logo.svg', id: 10, title: 'Philips_2' },
 ];
 
 export const ConversionSlider: FunctionComponent = async () => {
@@ -40,6 +40,7 @@ export const ConversionSlider: FunctionComponent = async () => {
               rightButtonClassName: '!bg-blue-right-gradient',
               cardClassName: 'bg-white',
             }}
+            isBrand
           />
         </div>
         <div className=" flex w-full md:hidden">
@@ -48,6 +49,7 @@ export const ConversionSlider: FunctionComponent = async () => {
             styleClassNames={{
               cardClassName: 'bg-white',
             }}
+            isBrand
           />
         </div>
         <div className="px-5 w-full mt-12 flex justify-center sm:w-max">

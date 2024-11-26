@@ -15,6 +15,7 @@ import { distributeSlides } from './utils/distributeSlides';
 
 interface SliderProps {
   slides?: SlideProps[];
+  isBrand?: boolean;
   classNameStyle?: {
     leftButtonClassName?: string;
     rightButtonClassName?: string;
@@ -50,6 +51,7 @@ const DEFAULT_CATEGORIES: SlideProps[] = [
 const SliderComponent: FunctionComponent<SliderProps> = ({
   slides = DEFAULT_CATEGORIES,
   classNameStyle = {},
+  isBrand,
 }) => {
   const [position, setPosition] = useState(-50);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -123,7 +125,11 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
                 <ul className={`inline-flex gap-4 ${(rowIndex + 1) % 2 === 0 ? 'pr-20' : 'pl-20'}`}>
                   {row.map((category, index) => (
                     <li key={`${category.name}-${index}`} className="h-full w-full">
-                      <SliderCard data={category} className={classNameStyle.cardClassName} />
+                      <SliderCard
+                        data={category}
+                        className={classNameStyle.cardClassName}
+                        isBrand={isBrand}
+                      />
                     </li>
                   ))}
                 </ul>

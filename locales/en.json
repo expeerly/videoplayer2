@@ -152,5 +152,28 @@
     "aria_label": "Delete selected filters"
   },
   "filter": "Filter",
-  "selected": "Selected"
+  "selected": "Selected",
+  "dynamic_texts": {
+    "home_hero_reviewer": {
+      "aria_label": "Go to the tester profile of {firstname}"
+    },
+    "home_brand_icons": {
+      "aria_label": "Go to the brand profile of {brandname}"
+    },
+    "home_category_icons": {
+      "aria_label": "Go to category of {brandname}"
+    },
+    "home_retailer_icons": {
+      "aria_label": "Go to {{partnername}}'s online shop"
+    },
+    "filters_brand": {
+      "aria_label": "Filter brand {brandname}"
+    },
+    "filters_category": {
+      "aria_label": "Filter category {categoriesname}."
+    },
+    "share": {
+      "aria_label": "Share this page"
+    }
+  }
 }

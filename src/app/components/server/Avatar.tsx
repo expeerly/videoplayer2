@@ -26,7 +26,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
     sm: 'w-8 h-8',
     md: 'w-10 h-10',
     lg: 'w-12 h-12',
-    xl: 'w-16 h-16',
+    xl: 'w-14 h-14',
   };
 
   const fallbackOptions: Record<AvatarFallback, React.ReactNode> = {
@@ -45,7 +45,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
   return (
     <div
       className={clsx(
-        'inline-flex items-center justify-center bg-grey-100 overflow-hidden rounded-full',
+        'inline-flex items-center justify-center bg-grey-200 overflow-hidden rounded-full',
         sizeClasses[size],
         className
       )}
@@ -56,7 +56,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
         <Image
           src={src}
           alt={alt}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
             const target = e.target as HTMLImageElement;
             target.style.display = 'none';

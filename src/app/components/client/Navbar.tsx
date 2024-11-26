@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FunctionComponent, memo, useCallback, useMemo } from 'react';
+import React, { FunctionComponent, memo, useCallback, useMemo, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DropDownMenu } from './DropDownMenu';
 import { Button } from './Button';
@@ -13,14 +13,26 @@ const NavbarComponent: FunctionComponent = () => {
   const pathname = usePathname();
   const router = useRouter();
   const isHomePage = pathname === '/';
+  const [previousPath, setPreviousPath] = useState<string>('/');
+
+  // Track navigation history
+  useEffect(() => {
+    if (pathname !== previousPath) {
+      setPreviousPath(pathname);
+    }
+  }, [pathname, previousPath]);
 
   const goBack = useCallback(() => {
     if (!isHomePage) {
-      router.back();
+      if (previousPath && previousPath !== pathname) {
+        router.push(previousPath);
+      } else {
+        router.push('/');
+      }
     } else {
       router.push('/');
     }
-  }, [isHomePage, router]);
+  }, [isHomePage, router, pathname, previousPath]);
 
   // Memoized class combinations
   const headerClasses = useMemo(
@@ -79,6 +91,7 @@ const NavbarComponent: FunctionComponent = () => {
           className={backButtonClasses}
           size="sm"
           onClick={goBack}
+          aria-label="Go back to previous page"
         >
           <LeftChevronIcon />
         </Button>
@@ -89,6 +102,7 @@ const NavbarComponent: FunctionComponent = () => {
             width={113.75}
             alt="Expeerly Logo"
             className={logoImageClasses}
+            priority
           />
         </Link>
       </div>
