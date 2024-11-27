@@ -50,13 +50,6 @@ const config: Config = {
             fontWeight: '700',
           },
         ],
-        h2: [
-          '24px',
-          {
-            lineHeight: '1.25',
-            fontWeight: '500',
-          },
-        ],
         body: [
           '16px',
           {

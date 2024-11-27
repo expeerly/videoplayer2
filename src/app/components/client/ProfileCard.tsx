@@ -62,7 +62,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = ({
         </div>
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
-            <h2 className=" font-bold text-grey-700">{title}</h2>
+            <h3 className=" font-bold text-grey-700">{title}</h3>
             {rating && variant === 'primary' && <StarRating rating={rating} />}
             <RightChevronIcon className="w-2 h-3" />
           </div>

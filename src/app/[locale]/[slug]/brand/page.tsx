@@ -56,8 +56,10 @@ const Page: NextPage = async () => {
             description: '',
           }}
         />
-        <section className="text-center max-w-[460px] mx-auto py-10">
-          <h2 className="text-2xl font-extrabold text-grey-700 mb-4">SEO text lorem ipsum</h2>
+        <section className=" max-w-[460px] mx-auto py-10 px-5 md:px-0">
+          <h2 className="text-2xl font-extrabold text-grey-700 mb-4 md:text-center">
+            SEO text lorem ipsum
+          </h2>
           <p className="text-grey-700 text-base font-normal">{t.all_brands_footer_text}</p>
         </section>
       </div>

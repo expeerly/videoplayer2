@@ -51,8 +51,10 @@ const Page: NextPage = () => {
             description: '',
           }}
         />
-        <section className="text-center max-w-[460px] mx-auto py-10">
-          <h2 className="text-2xl font-extrabold text-grey-700 mb-4">SEO text lorem ipsum</h2>
+        <section className="max-w-[460px] mx-auto py-10 px-5 md:px-0">
+          <h2 className="text-2xl font-extrabold text-grey-700 mb-4 md:text-center ">
+            SEO text lorem ipsum
+          </h2>
           <p className="text-grey-700 text-base font-normal">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pretium dictum felis, at
             porttitor nisi accumsan et. Curabitur volutpat risus at nisi finibus, eget suscipit leo.

@@ -10,6 +10,12 @@
   }
 }
 
+@layer base {
+  h2 {
+    @apply text-lg font-extrabold leading-normal md:text-2xl;
+  }
+}
+
 :root {
   --font-mulish: 'Mulish', sans-serif;
 }
