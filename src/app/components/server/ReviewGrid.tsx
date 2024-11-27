@@ -9,6 +9,8 @@ type ReviewGridProps = {
     containerClassName?: string;
     cardClassName?: string;
     gridClassName?: string;
+    headerContainerClassName?: string;
+    headerProfileClassName?: string;
   };
   maxReviews?: number;
 };
@@ -57,7 +59,7 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
 }) => {
   return (
     <div className={clsx('w-full flex flex-col gap-5', classNames?.containerClassName)}>
-      <div className="pl-5 mid-lg:pl-0">
+      <div className={clsx('pl-5 mid-lg:pl-0', classNames?.headerContainerClassName)}>
         <ProfileCard {...headerData} />
       </div>
 

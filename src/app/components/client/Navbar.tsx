@@ -1,10 +1,9 @@
 'use client';
 
 import React, { FunctionComponent, memo, useMemo } from 'react';
-import Link from 'next/link';
 import { DropDownMenu } from './DropDownMenu';
 import clsx from 'clsx';
-import { usePathname } from '@/src/i18n/routing';
+import { Link, usePathname } from '@/src/i18n/routing';
 import Image from 'next/image';
 import { BackButton } from './BackButton';
 

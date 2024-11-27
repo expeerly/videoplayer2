@@ -89,7 +89,7 @@ export const MobileSlider: FunctionComponent<Props> = ({
   useEffect(() => {
     rowRefs.current.forEach((rowRef, index) => {
       const rowIndex = index + 1;
-      if (rowRef && rowIndex % 2 === 0) {
+      if ((rowRef && rowIndex % 2 === 0) || (rowRef && !isMultiRow)) {
         const scrollableWidth = rowRef.scrollWidth - rowRef.clientWidth;
         rowRef.scrollLeft = scrollableWidth * 0.1;
       }

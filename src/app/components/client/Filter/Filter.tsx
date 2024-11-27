@@ -257,8 +257,8 @@ const FilterComponent: FunctionComponent = () => {
   const buttonContainerClassName = useMemo(
     () =>
       clsx('absolute', {
-        ' right-5 top-[15px]  md:top-10 md:right-12': isOpen,
-        ' top-5 right-5 md:m-0 md:top-10 md:right-12': !isOpen,
+        ' right-5 top-[15px] md:top-10 md:right-8 mid-lg:right-12': isOpen,
+        ' top-5 right-5 md:m-0 md:top-10 md:right-8 mid-lg:right-12': !isOpen,
       }),
     [isOpen]
   );

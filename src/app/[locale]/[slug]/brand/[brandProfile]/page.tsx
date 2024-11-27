@@ -13,32 +13,37 @@ Dyson technology. Solving the problems others ignore. Be the first to know about
 const Page: NextPage = () => {
   return (
     <div className="w-full bg-white">
-      <div className={'absolute top-5 right-5 md:m-0 md:top-10 md:right-12'}>
-        <Button
-          isOnlyIcon
-          variant="secondary"
-          type="button"
-          aria-haspopup="true"
-          title="Show/Hide Menu"
-          id="menu-button"
-          className=" !p-0.5 z-30 max-h-10 max-w-10 ml-auto  md:h-12 md:w-12 flex justify-center items-center"
-        >
-          <ShareIcon />
-        </Button>
-      </div>
-      <div className=" w-full mx-auto  md:max-w-[532px] pt-5 md:pt-10">
+      <div className=" w-full mx-auto md:max-w-[532px] pt-5 md:pt-10">
         <section>
           <div className="px-5 md:px-0">
             <div className="flex gap-4 mb-6">
-              <Avatar size="xl" className="flex h-10 w-10 md:h-14 md:w-14" alt="Dyson" />
-              <div className="flex flex-1 flex-col gap-3">
-                <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 w-[calc(100%-70px)] md:w-full">
+              <Avatar className="flex h-10 w-10 md:h-14 md:w-14 my-auto md:m-0" alt="Dyson" />
+              <div className="flex flex-1 flex-col gap-0.5 md:gap-3">
+                <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 sm:w-[calc(100%-70px)] md:w-[90%]">
                   Dyson title in 2 lines example. Video Reviews
                 </h1>
                 <div className="flex gap-1">
                   <StarRating rating={4.5} />
                   <p className="text-grey-500">{'(1,218)'}</p>
                 </div>
+              </div>
+              <div
+                className={
+                  'flex flex-col gap-0.5 justify-center items-center md:absolute md:m-0 md:top-10 md:right-8 mid-lg:right-12'
+                }
+              >
+                <Button
+                  isOnlyIcon
+                  variant="secondary"
+                  type="button"
+                  aria-haspopup="true"
+                  title="Show/Hide Menu"
+                  id="menu-button"
+                  className=" !p-0.5 z-30 max-h-10 max-w-10 ml-auto md:h-12 md:w-12 flex justify-center items-center"
+                >
+                  <ShareIcon />
+                </Button>
+                <p className="text-grey-600 text-xs font-bold">Share</p>
               </div>
             </div>
             <LongDescription text={sampleText} />

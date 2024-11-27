@@ -30,7 +30,10 @@ export const PaginationContainer: FunctionComponent<ReviewGridProps> = ({
             <section className="py-4 md:py-8">
               <ReviewGrid
                 headerData={headerData}
-                classNames={{ gridClassName: 'md:flex-wrap md:gap-[15.5px] md:px-0' }}
+                classNames={{
+                  gridClassName: 'md:flex-wrap md:gap-[15.5px] md:px-0',
+                  headerContainerClassName: 'md:pl-0',
+                }}
                 maxReviews={9}
               />
             </section>
