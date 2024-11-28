@@ -26,9 +26,7 @@ const config: Config = {
           100: '#F7F7F7',
           200: '#E8E8EA',
           300: '#D1D1D4',
-          400: '#BBB9BF',
           500: '#8D8B94',
-          600: '#555359',
           700: '#0E0E0F',
         },
         blue: {
@@ -48,13 +46,6 @@ const config: Config = {
           {
             lineHeight: '1.25',
             fontWeight: '700',
-          },
-        ],
-        body: [
-          '16px',
-          {
-            lineHeight: '1.5',
-            fontWeight: '400',
           },
         ],
       },

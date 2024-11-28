@@ -43,7 +43,7 @@ const Page: NextPage = () => {
                 >
                   <ShareIcon />
                 </Button>
-                <p className="text-grey-600 text-xs font-bold">Share</p>
+                <p className="text-grey-700 text-xs font-bold">Share</p>
               </div>
             </div>
             <LongDescription text={sampleText} />

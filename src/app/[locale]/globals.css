@@ -8,11 +8,11 @@
   html {
     font-family: 'Mulish', system-ui, sans-serif;
   }
-}
-
-@layer base {
   h2 {
     @apply text-lg font-extrabold leading-normal md:text-2xl;
+  }
+  body {
+    @apply text-sm md:text-base;
   }
 }
 

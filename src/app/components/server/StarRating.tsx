@@ -48,14 +48,14 @@ export const StarRating: FunctionComponent<StarRatingProps> = ({
         ) : showPartialStar ? (
           <div className="relative">
             <StarIcon
-              className={`absolute top-0 left-0 [&>path]:fill-grey-400 [&>path]:stroke-grey-400`}
+              className={`absolute top-0 left-0 [&>path]:fill-grey-500 [&>path]:stroke-grey-500`}
             />
             <div className="relative overflow-hidden" style={{ width: `${fillPercentage * 100}%` }}>
               <StarIcon className={`[&>path]:stroke-yellow-500 [&>path]:fill-yellow-500`} />
             </div>
           </div>
         ) : (
-          <StarIcon className="[&>path]:fill-grey-400 [&>path]:stroke-grey-400" />
+          <StarIcon className="[&>path]:fill-grey-500 [&>path]:stroke-grey-500" />
         )}
       </div>
     );

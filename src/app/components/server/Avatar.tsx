@@ -30,7 +30,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
   };
 
   const fallbackOptions: Record<AvatarFallback, React.ReactNode> = {
-    user: <PlayIcon className="w-full h-full p-2 text-grey-400" />,
+    user: <PlayIcon className="w-full h-full p-2" />,
     initials: (
       <span className="text-grey-700 font-medium">
         {alt
