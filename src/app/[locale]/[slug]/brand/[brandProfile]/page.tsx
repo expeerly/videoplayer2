@@ -1,6 +1,6 @@
 import { Button } from '@/src/app/components/client/Button';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
-import { PaginationContainer } from '@/src/app/components/client/PaginationContainer';
+import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { Avatar } from '@/src/app/components/server/Avatar';
 import { StarRating } from '@/src/app/components/server/StarRating';
 import { ShareIcon } from '@/src/assets/icons';
@@ -60,7 +60,8 @@ const Page: NextPage = () => {
             description: '',
             dataType: 'brand',
           }}
-        />
+          isBecomeReviewer={false}
+        ></PaginationContainer>
         <section className=" max-w-[460px] mx-auto py-10 px-5 md:px-0">
           <h2 className="text-2xl font-extrabold text-grey-700 mb-4 md:text-center">
             SEO text lorem ipsum

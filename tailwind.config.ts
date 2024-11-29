@@ -40,15 +40,6 @@ const config: Config = {
           500: '#FFC122',
         },
       },
-      fontSize: {
-        h1: [
-          '24px',
-          {
-            lineHeight: '1.25',
-            fontWeight: '700',
-          },
-        ],
-      },
       screens: {
         mobileS: '320px',
         mobileM: '375px',

@@ -1,8 +1,8 @@
-'use client';
 import React, { FunctionComponent, ReactNode } from 'react';
-import { Pagination } from './Pagination';
-import { ProfileCardProps } from './ProfileCard';
-import { ReviewGrid } from '../server/ReviewGrid';
+import { Pagination } from '../client/Pagination';
+import { ProfileCardProps } from '../client/ProfileCard';
+import { ReviewGrid } from './ReviewGrid';
+import { BecomeReviewer } from './BecomeReviewer';
 
 type Props = {
   headerData?: ProfileCardProps;
@@ -12,12 +12,12 @@ type Props = {
     gridClassName?: string;
   };
   totalSections?: number;
-  becomeReviewer?: ReactNode;
+  isBecomeReviewer?: ReactNode;
 };
 
 export const PaginationContainer: FunctionComponent<Props> = ({
   totalSections = 4,
-  becomeReviewer,
+  isBecomeReviewer = true,
   headerData,
 }) => {
   return (
@@ -36,15 +36,21 @@ export const PaginationContainer: FunctionComponent<Props> = ({
                 maxReviews={9}
               />
             </section>
-            {becomeReviewer && index === 1 && (
-              <div className="hidden md:block">{becomeReviewer}</div>
+            {isBecomeReviewer && index === 1 && (
+              <div className="hidden md:block">
+                <BecomeReviewer />
+              </div>
             )}
           </React.Fragment>
         ))}
       <section className="py-8">
-        <Pagination totalPages={50} onPageChange={page => console.log(page)} />
+        <Pagination totalPages={50} />
       </section>
-      {becomeReviewer && <div className=" md:hidden">{becomeReviewer}</div>}
+      {isBecomeReviewer && (
+        <div className=" md:hidden">
+          <BecomeReviewer />
+        </div>
+      )}
     </div>
   );
 };

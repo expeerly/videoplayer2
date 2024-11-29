@@ -15,6 +15,8 @@
   "cta_button_how_it_works": "Scopri di più",
   "more": "Altro",
   "less": "Menu",
+  "forward_arrow": "",
+  "back_arrow": "",
   "explore_all_reviewers": {
     "label": "Scopri tutti i tester",
     "aria_label": "Esplora i profili di tutti i recensioni video su Expeerly"

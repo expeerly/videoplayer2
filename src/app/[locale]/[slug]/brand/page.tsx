@@ -1,9 +1,8 @@
 import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
-import { PaginationContainer } from '@/src/app/components/client/PaginationContainer';
+import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
-import { BecomeReviewer } from '@/src/app/components/server/BecomeReviewer';
 import { brands } from '@/src/app/components/server/BrandsSlider';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
@@ -56,7 +55,6 @@ const Page: NextPage = async () => {
             dataType: 'brand',
             description: '',
           }}
-          becomeReviewer={<BecomeReviewer />}
         />
         <section className=" max-w-[460px] mx-auto py-10 px-5 md:px-0">
           <h2 className="text-2xl font-extrabold text-grey-700 mb-4 md:text-center">

@@ -3,6 +3,7 @@
 import { FunctionComponent, useMemo, memo, useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { LeftChevronIcon, RightChevronIcon } from '@/src/assets/icons';
+import { useTranslations } from 'next-intl';
 
 export type PaginationProps = {
   totalPages?: number;
@@ -16,7 +17,7 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
   className = '',
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-
+  const t = useTranslations();
   const pageNumbers = useMemo(() => {
     if (totalPages <= 5) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -81,7 +82,7 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className={navigationButtonClassName}
-          aria-label="Previous page"
+          aria-label={t('back_arrow')}
         >
           <LeftChevronIcon className="[&>path]:stroke-grey-500" />
         </button>
@@ -104,7 +105,7 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           className={navigationButtonClassName}
-          aria-label="Next page"
+          aria-label={t('forward_arrow')}
         >
           <RightChevronIcon className="[&>path]:stroke-grey-500" />
         </button>
