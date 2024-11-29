@@ -1,9 +1,8 @@
-'use client';
 import React, { FunctionComponent } from 'react';
-import { VideoThumbnail } from '../server/VideoThumbnail';
-import { StarRating } from '../server/StarRating';
+import { VideoThumbnail } from './VideoThumbnail';
+import { StarRating } from './StarRating';
 import { PlayIcon } from '@/src/assets/icons/PlayIcon';
-import { Avatar } from '../server/Avatar';
+import { Avatar } from './Avatar';
 import clsx from 'clsx';
 
 type Props = {

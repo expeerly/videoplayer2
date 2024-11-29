@@ -51,10 +51,8 @@ const Page: NextPage = () => {
             dataType: 'category',
             description: '',
           }}
-        >
-          {' '}
-          <BecomeReviewer />{' '}
-        </PaginationContainer>
+          becomeReviewer={<BecomeReviewer />}
+        />
         <section className="max-w-[460px] mx-auto py-10 px-5 md:px-0">
           <h2 className="text-2xl font-extrabold text-grey-700 mb-4 md:text-center ">
             SEO text lorem ipsum

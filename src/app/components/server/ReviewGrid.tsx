@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { ReviewCard } from '../client/ReviewCard';
+import { ReviewCard } from '../server/ReviewCard';
 import { ProfileCard, ProfileCardProps } from '../client/ProfileCard';
 import clsx from 'clsx';
 

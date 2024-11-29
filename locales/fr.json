@@ -13,6 +13,8 @@
   "home_h2_how_expeerly_works": "Comment fonctionne expeerly",
   "home_how_it_works_body_text": "Expeerly est un endroit où les consommateurs peuvent découvrir les avis d'autres acheteurs sur les produits et services. Les avis vidéo sont partagés par notre communauté de testeurs du monde entier.",
   "cta_button_how_it_works": "En savoir plus",
+  "more": "Plus",
+  "less": "Moins",
   "explore_all_reviewers": {
     "label": "Découvrir tous les testeurs",
     "aria_label": "Explorer les profils de tous les testeurs vidéo sur Expeerly"

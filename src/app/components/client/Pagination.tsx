@@ -1,56 +1,37 @@
 'use client';
 
-import { FunctionComponent, useMemo, memo, useCallback } from 'react';
+import { FunctionComponent, useMemo, memo, useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { LeftChevronIcon, RightChevronIcon } from '@/src/assets/icons';
 
-type PaginationProps = {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+export type PaginationProps = {
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
   className?: string;
-  showFirstLast?: boolean;
-  maxVisiblePages?: number;
 };
 
 const PaginationComponent: FunctionComponent<PaginationProps> = ({
-  currentPage,
-  totalPages = 100,
+  totalPages = 50,
   onPageChange,
   className = '',
-  showFirstLast = true,
-  maxVisiblePages = 4,
 }) => {
-  const getPageNumbers = useMemo(() => {
-    const pages: (number | string)[] = [];
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-    if (totalPages <= maxVisiblePages) {
+  const pageNumbers = useMemo(() => {
+    if (totalPages <= 5) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    const sidePages = Math.floor((maxVisiblePages - 3) / 2);
-
-    if (currentPage <= sidePages + 3) {
-      pages.push(...Array.from({ length: maxVisiblePages - 1 }, (_, i) => i + 1));
-      pages.push('...', totalPages);
-    } else if (currentPage >= totalPages - (sidePages + 2)) {
-      pages.push(1, '...');
-      pages.push(
-        ...Array.from(
-          { length: maxVisiblePages - 1 },
-          (_, i) => totalPages - (maxVisiblePages - 2) + i
-        )
-      );
-    } else {
-      pages.push(1, '...');
-      for (let i = currentPage - sidePages; i <= currentPage + sidePages; i++) {
-        pages.push(i);
-      }
-      pages.push('...', totalPages);
+    if (currentPage <= 3) {
+      return [1, 2, 3, '...', totalPages];
     }
 
-    return pages;
-  }, [currentPage, totalPages, maxVisiblePages]);
+    if (currentPage >= totalPages - 2) {
+      return [1, '...', totalPages - 2, totalPages - 1, totalPages];
+    }
+
+    return [1, '...', currentPage, '...', totalPages];
+  }, [currentPage, totalPages]);
 
   const navClassName = useMemo(
     () => clsx('flex items-center justify-center gap-1', className),
@@ -85,8 +66,9 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
 
   const handlePageChange = useCallback(
     (page: number) => {
+      setCurrentPage(page);
       if (page >= 1 && page <= totalPages) {
-        onPageChange(page);
+        onPageChange?.(page);
       }
     },
     [onPageChange, totalPages]
@@ -94,7 +76,7 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
 
   return (
     <nav className={navClassName} aria-label="Pagination">
-      {showFirstLast && currentPage !== 1 && (
+      {currentPage !== 1 && (
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -105,7 +87,7 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
         </button>
       )}
 
-      {getPageNumbers.map((page, idx) => (
+      {pageNumbers.map((page, idx) => (
         <button
           key={`${page}-${idx}`}
           onClick={() => typeof page === 'number' && handlePageChange(page)}
@@ -118,7 +100,7 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
         </button>
       ))}
 
-      {showFirstLast && currentPage !== totalPages && (
+      {currentPage < totalPages - 2 && (
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           className={navigationButtonClassName}
@@ -131,6 +113,4 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
   );
 };
 
-const Pagination = memo(PaginationComponent);
-
-export default Pagination;
+export const Pagination = memo(PaginationComponent);
