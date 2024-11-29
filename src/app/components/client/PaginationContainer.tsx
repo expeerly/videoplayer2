@@ -1,7 +1,6 @@
 'use client';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, PropsWithChildren } from 'react';
 import { ReviewGrid } from '../server/ReviewGrid';
-import { BecomeReviewer } from './BecomeReviewer';
 import Pagination from './Pagination';
 import { ProfileCardProps } from './ProfileCard';
 
@@ -16,10 +15,11 @@ type ReviewGridProps = {
   isBecomeReviewer?: boolean;
 };
 
-export const PaginationContainer: FunctionComponent<ReviewGridProps> = ({
+export const PaginationContainer: FunctionComponent<PropsWithChildren<ReviewGridProps>> = ({
   headerData,
   totalSections = 4,
   isBecomeReviewer = true,
+  children,
 }) => {
   return (
     <div>
@@ -37,19 +37,13 @@ export const PaginationContainer: FunctionComponent<ReviewGridProps> = ({
                 maxReviews={9}
               />
             </section>
-            {isBecomeReviewer && index === 1 && (
-              <div className="hidden md:block">
-                <BecomeReviewer />
-              </div>
-            )}
+            {isBecomeReviewer && index === 1 && <div className="hidden md:block">{children}</div>}
           </React.Fragment>
         ))}
       <section className="py-8">
         <Pagination currentPage={1} totalPages={100} onPageChange={page => console.log(page)} />
       </section>
-      <div className=" md:hidden">
-        <BecomeReviewer />
-      </div>
+      <div className=" md:hidden">{children}</div>
     </div>
   );
 };

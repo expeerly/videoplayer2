@@ -1,12 +1,12 @@
 'use client';
 
-import React, { FunctionComponent, memo, useCallback, useMemo, useEffect, useState } from 'react';
+import React, { FunctionComponent, useCallback, useMemo, useEffect, useState } from 'react';
 import { Button } from './Button';
 import clsx from 'clsx';
 import { LeftChevronIcon } from '@/src/assets/icons';
 import { usePathname, useRouter } from '@/src/i18n/routing';
 
-const BackButtonComponent: FunctionComponent = () => {
+export const BackButton: FunctionComponent = () => {
   const router = useRouter();
   const [navigationHistory, setNavigationHistory] = useState<string[]>(['/']);
   const pathname = usePathname();
@@ -60,5 +60,3 @@ const BackButtonComponent: FunctionComponent = () => {
     </Button>
   );
 };
-
-export const BackButton = memo(BackButtonComponent);
