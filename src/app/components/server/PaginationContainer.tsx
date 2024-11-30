@@ -1,6 +1,6 @@
 import React, { FunctionComponent, ReactNode } from 'react';
 import { Pagination } from '../client/Pagination';
-import { ProfileCardProps } from '../client/ProfileCard';
+import { ProfileCardProps } from './ProfileCard';
 import { ReviewGrid } from './ReviewGrid';
 import { BecomeReviewer } from './BecomeReviewer';
 

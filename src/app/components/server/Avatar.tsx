@@ -57,14 +57,6 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
           src={src}
           alt={alt}
           className="w-full h-full object-contain"
-          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-            const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
-            const nextSibling = target.nextSibling as HTMLElement;
-            if (nextSibling) {
-              nextSibling.style.display = 'flex';
-            }
-          }}
           height={20}
           width={20}
         />

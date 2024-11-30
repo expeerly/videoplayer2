@@ -8,16 +8,16 @@ import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getDictionary();
+  const { t } = await getDictionary();
 
   return {
-    title: t.all_brands_site_title,
-    description: t.all_brands_meta_description,
+    title: t('all_brands_site_title'),
+    description: t('all_brands_meta_description'),
   };
 }
 
 const Page: NextPage = async () => {
-  const t = await getDictionary();
+  const { t } = await getDictionary();
   return (
     <div className="w-full bg-white">
       <Filter />
@@ -27,7 +27,7 @@ const Page: NextPage = async () => {
             <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 mb-5 w-[calc(100%-70px)] md:w-full">
               Video Reviews: All Brands
             </h1>
-            <LongDescription text={t.all_brands_body_text} />
+            <LongDescription text={t('all_brands_body_text')} />
           </div>
           <div className="mt-8">
             <div className="hidden md:block">
@@ -60,7 +60,7 @@ const Page: NextPage = async () => {
           <h2 className="text-2xl font-extrabold text-grey-700 mb-4 md:text-center">
             SEO text lorem ipsum
           </h2>
-          <p className="text-grey-700 text-base font-normal">{t.all_brands_footer_text}</p>
+          <p className="text-grey-700 text-base font-normal">{t('all_brands_footer_text')}</p>
         </section>
       </div>
     </div>

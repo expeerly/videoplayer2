@@ -1,10 +1,9 @@
-'use client';
 import { RightChevronIcon } from '@/src/assets/icons';
-import { Avatar } from '../server/Avatar';
-import { FunctionComponent, useMemo } from 'react';
-import { StarRating } from '../server/StarRating';
+import { Avatar } from './Avatar';
+import { FunctionComponent } from 'react';
+import { StarRating } from './StarRating';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { getDictionary } from '@/src/lib/dictionary';
 
 export type ProfileCardProps = {
   description?: string;
@@ -24,7 +23,7 @@ const tempData = {
     'I love cooking and getting people around in our garden, specially when weather is good...',
 };
 
-export const ProfileCard: FunctionComponent<ProfileCardProps> = ({
+export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
   description = tempData.description,
   title = tempData.title,
   rating,
@@ -34,25 +33,21 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = ({
   profileSlug,
   dataType,
 }) => {
-  const t = useTranslations('dynamic_texts');
-
-  const ariaLabel = useMemo(
-    () =>
-      dataType === 'category'
-        ? t('home_category_icons.aria_label', { brandname: title })
-        : dataType === 'brand'
-          ? t('home_brand_icons.aria_label', { brandname: title })
-          : t('home_hero_reviewer.aria_label', {
-              firstname: title,
-            }),
-    [dataType, title, t]
-  );
+  const { t } = await getDictionary();
 
   return (
     <div>
       <Link
         href={`${profileSlug}`}
-        aria-label={ariaLabel}
+        aria-label={
+          dataType === 'category'
+            ? t('dynamic_texts.home_category_icons.aria_label', { brandname: title })
+            : dataType === 'brand'
+              ? t('dynamic_texts.home_brand_icons.aria_label', { brandname: title })
+              : t('dynamic_texts.home_hero_reviewer.aria_label', {
+                  firstname: title,
+                })
+        }
         className="flex items-center gap-4 py-b bg-white  w-max"
       >
         <div className="relative">

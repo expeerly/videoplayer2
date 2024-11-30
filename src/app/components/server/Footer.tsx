@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getDictionary } from '@/src/lib/dictionary';
 
 export const Footer: FunctionComponent = async () => {
-  const t = await getDictionary();
+  const { t } = await getDictionary();
   return (
     <footer className="w-full md:max-w-[calc(100%-25%)] mid-lg:max-w-[calc(100%-275px)] border-l ml-auto px-5 pt-8 pb-14 border-t bg-white md:pb-8">
       <div className="max-w-4xl mx-auto  pt-4 flex justify-center">
@@ -12,35 +12,35 @@ export const Footer: FunctionComponent = async () => {
             <Link
               href="mailto:hello@expeerly.com"
               className="text-grey-700 font-bold"
-              aria-label={t.contact_us.aria_label}
+              aria-label={t('contact_us.aria_label')}
             >
-              {t.contact_us.label}
+              {t('contact_us.label')}
             </Link>
             <Link
               href="https://www.get.expeerly.com/terms-and-conditions-companies"
               className="text-grey-700 font-bold"
-              aria-label={t.terms_companies.aria_label}
+              aria-label={t('terms_companies.aria_label')}
               target="_blank"
             >
-              {t.terms_companies.label}
+              {t('terms_companies.label')}
             </Link>
           </div>
           <div className="flex flex-col gap-6">
             <Link
               href="https://www.get.expeerly.com/about-us"
               className="text-grey-700 font-bold"
-              aria-label={t.about_us.aria_label}
+              aria-label={t('about_us.aria_label')}
               target="_blank"
             >
-              {t.about_us.label}
+              {t('about_us.label')}
             </Link>
             <Link
               href="https://www.get.expeerly.com/terms-and-conditions-creators"
               className="text-grey-700 font-bold"
-              aria-label={t.terms_reviewers.aria_label}
+              aria-label={t('terms_reviewers.aria_label')}
               target="_blank"
             >
-              {t.terms_reviewers.label}
+              {t('terms_reviewers.label')}
             </Link>
           </div>
 
@@ -48,10 +48,10 @@ export const Footer: FunctionComponent = async () => {
             <Link
               href="https://www.get.expeerly.com/privacy-policy"
               className="text-grey-700 font-bold"
-              aria-label={t.privacy_policy.aria_label}
+              aria-label={t('privacy_policy.aria_label')}
               target="_blank"
             >
-              {t.privacy_policy.label}
+              {t('privacy_policy.label')}
             </Link>
 
             <div className=" text-grey-500">© Expeerly AG, {new Date().getFullYear()}</div>

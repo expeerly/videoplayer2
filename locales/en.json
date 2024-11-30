@@ -14,6 +14,8 @@
   "home_how_it_works_body_text": "Expeerly is a place for consumers to get insights about what other shoppers think of products and services. The video reviews are shared by our community of reviewers from our the globe.",
   "more": "More",
   "less": "Less",
+  "forward_arrow": "",
+  "back_arrow": "",
   "explore_all_reviewers": {
     "label": "Explore All Reviewers",
     "aria_label": "Explore profiles of all video reviewers on Expeerly"

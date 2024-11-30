@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { ReviewCard } from '../server/ReviewCard';
-import { ProfileCard, ProfileCardProps } from '../client/ProfileCard';
+import { ProfileCard, ProfileCardProps } from './ProfileCard';
 import clsx from 'clsx';
 
 type ReviewGridProps = {

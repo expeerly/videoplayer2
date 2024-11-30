@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { getDictionary } from '@/src/lib/dictionary';
 
 export const HeroSection: FunctionComponent = async () => {
-  const t = await getDictionary();
+  const { t } = await getDictionary();
 
   return (
     <div className="bg-gradient-to-b from-blue-500 to-[#2C1277] w-full md:bg-none">
@@ -33,10 +33,10 @@ export const HeroSection: FunctionComponent = async () => {
               className="h-max w-max -mt-2"
             />
             <h1 className="text-[42px] leading-normal lg:text-5xl font-extrabold">
-              {t.home_h1_title}
+              {t('home_h1_title')}
             </h1>
           </div>
-          <p className="text-base w-[80%] md:w-[50%] lg:w-[40%] ">{t.home_top_body_text}</p>
+          <p className="text-base w-[80%] md:w-[50%] lg:w-[40%] ">{t('home_top_body_text')}</p>
           <ScrollButton className="mt-5 mobileL:mt-10" />
         </div>
       </div>

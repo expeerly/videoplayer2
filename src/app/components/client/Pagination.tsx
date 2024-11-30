@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, useMemo, memo, useCallback, useState } from 'react';
+import { FunctionComponent, useMemo, useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { LeftChevronIcon, RightChevronIcon } from '@/src/assets/icons';
 import { useTranslations } from 'next-intl';
@@ -11,7 +11,7 @@ export type PaginationProps = {
   className?: string;
 };
 
-const PaginationComponent: FunctionComponent<PaginationProps> = ({
+export const Pagination: FunctionComponent<PaginationProps> = ({
   totalPages = 50,
   onPageChange,
   className = '',
@@ -49,7 +49,7 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
     []
   );
 
-  const getPageButtonClassName = useMemo(
+  const pageButtonClassName = useMemo(
     () => (page: number | string) =>
       clsx(
         'w-8 h-8 flex items-center justify-center rounded-full transition-colors',
@@ -93,7 +93,7 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
           key={`${page}-${idx}`}
           onClick={() => typeof page === 'number' && handlePageChange(page)}
           disabled={page === '...'}
-          className={getPageButtonClassName(page)}
+          className={pageButtonClassName(page)}
           aria-current={currentPage === page ? 'page' : undefined}
           aria-label={`Page ${page}`}
         >
@@ -113,5 +113,3 @@ const PaginationComponent: FunctionComponent<PaginationProps> = ({
     </nav>
   );
 };
-
-export const Pagination = memo(PaginationComponent);
