@@ -9,11 +9,11 @@ import { getDictionary } from '../../lib/dictionary';
 import { ReviewGrid } from '../components/server/ReviewGrid';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getDictionary();
+  const { t } = await getDictionary();
 
   return {
-    title: t.home_site_title,
-    description: t.home_meta_description,
+    title: t('home_site_title'),
+    description: t('home_meta_description'),
   };
 }
 

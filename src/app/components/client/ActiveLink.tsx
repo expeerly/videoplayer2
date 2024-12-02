@@ -1,8 +1,8 @@
 'use client';
 
 import { FunctionComponent, PropsWithChildren } from 'react';
-import { Link, usePathname } from '@/src/i18n/routing';
-import { LinkProps } from 'next/link';
+import { usePathname } from '@/src/i18n/routing';
+import Link, { LinkProps } from 'next/link';
 
 type ActiveLinkProps<T> = {
   className?: string;

@@ -1,8 +1,23 @@
+// middleware.ts
 import createMiddleware from 'next-intl/middleware';
-import { routing } from './i18n/routing';
+import { NextRequest } from 'next/server';
 
-export default createMiddleware(routing);
+const defaultLocale = 'en';
+const locales = ['en', 'fr', 'it', 'de'];
 
+// Create the middleware configuration
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix: 'as-needed', // This is the key setting
+});
+
+// Export the middleware
+export default function middleware(request: NextRequest) {
+  return intlMiddleware(request);
+}
+
+// Configure matching paths
 export const config = {
-  matcher: '/((?!api|static|.*\\..*|_next).*)',
+  matcher: ['/', '/(fr|it)/:path*', '/((?!api|_next|_vercel|.*\\..*).*)'],
 };

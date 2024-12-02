@@ -13,6 +13,11 @@
   "home_h2_how_expeerly_works": "Come funziona expeerly",
   "home_how_it_works_body_text": "Expeerly è un luogo in cui i consumatori possono scoprire cosa pensano altri acquirenti di prodotti e servizi. Le recensioni video sono condivise dalla nostra comunità di recensori da tutto il mondo.",
   "cta_button_how_it_works": "Scopri di più",
+  "more": "Altro",
+  "less": "Menu",
+  "forward_arrow": "Une page avant",
+  "back_arrow": "Une page zurück",
+  "pagination": "Vai alla pagina {pagenumber}",
   "explore_all_reviewers": {
     "label": "Scopri tutti i tester",
     "aria_label": "Esplora i profili di tutti i recensioni video su Expeerly"
@@ -95,11 +100,9 @@
       "aria_label": "Accedi al tuo account Expeerly"
     },
     "menu_open": {
-      "label": "",
       "aria_label": "Apri il menu a destra"
     },
     "menu_close": {
-      "label": "",
       "aria_label": "Chiudi il menu a destra"
     }
   },
@@ -124,7 +127,6 @@
     "aria_label": "Scopri come diventare un Revisore Expeerly"
   },
   "scroll_reviews": {
-    "label": "",
     "aria_label": "Scorri fino alle recensioni"
   },
   "filter_brands": {
@@ -144,7 +146,6 @@
     "aria_label": "Applica filtri"
   },
   "open_filter": {
-    "label": "",
     "aria_label": "Applica filtro"
   },
   "delete_filter": {
@@ -152,5 +153,36 @@
     "aria_label": "Ausgewählte Filter löschen"
   },
   "filter": "filtro",
-  "selected": "Selezionato"
+  "selected": "Selezionato",
+  "dynamic_texts": {
+    "home_hero_reviewer": {
+      "aria_label": "Vai al profilo tester di {firstname}"
+    },
+    "home_brand_icons": {
+      "aria_label": "Vai al profilo del brand di {brandname}"
+    },
+    "home_category_icons": {
+      "aria_label": "Vai alla categoria di {brandname}"
+    },
+    "home_retailer_icons": {
+      "aria_label": "Vai al negozio online di {partnername}"
+    },
+    "filters_brand": {
+      "aria_label": "Filtra il marchio {brandname}"
+    },
+    "filters_category": {
+      "aria_label": "Filtra la categoria {categoriesname}."
+    },
+    "share": {
+      "aria_label": "Condividi questa pagina"
+    }
+  },
+  "all_brands_body_text": "In questa panoramica troverai tutte le recensioni video di tutti i marchi che puoi trovare su expeerly. Trova un'ampia selezione di video di valutazione e video di prova.",
+  "all_brands_footer_text": "Su expeerly troverai una raccolta completa di recensioni video e rapporti di test su numerosi marchi e prodotti Dyson, Moulinex, Miele e molti altri! La nostra piattaforma ti offre un'ampia selezione di recensioni oneste per aiutarti a prendere decisioni di acquisto informate. Che tu stia cercando prodotti di elettronica, articoli per la casa, abbigliamento, libri, viaggi o altre categorie, troverai recensioni video oneste di utenti reali. Scopri come si comportano gli articoli nella pratica, quali vantaggi e svantaggi offrono e se fanno davvero ciò che promettono. Affidati alle esperienze degli altri e scopri quali marchi e prodotti valgono davvero la pena. Così puoi essere sicuro di prendere la decisione d'acquisto migliore per la tua vita quotidiana.",
+  "all_brands_site_title": "Tutte le recensioni video di tutti i marchi",
+  "all_brands_meta_description": "Trova testimonianze video, recensioni video e test video per tutti i marchi. Scopri le opinioni e il modo in cui altre persone sperimentano i marchi.",
+  "cta_block_all_brands_categories": {
+    "title": "Recensioni video per marchie",
+    "desc": "Sei un marchio che cerca di aumentare le vendite?"
+  }
 }

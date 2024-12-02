@@ -48,9 +48,16 @@ type StyleClassNames = {
 type Props = {
   slides?: SlideProps[];
   styleClassNames?: StyleClassNames;
+  isMultiRow?: boolean;
+  isBrand?: boolean;
 };
 
-export const MobileSlider: FunctionComponent<Props> = ({ slides = BRANDS, styleClassNames }) => {
+export const MobileSlider: FunctionComponent<Props> = ({
+  slides = BRANDS,
+  styleClassNames,
+  isMultiRow,
+  isBrand,
+}) => {
   // Refs
   const rowRefs = useRef<(HTMLLIElement | null)[]>([]);
 
@@ -82,7 +89,7 @@ export const MobileSlider: FunctionComponent<Props> = ({ slides = BRANDS, styleC
   useEffect(() => {
     rowRefs.current.forEach((rowRef, index) => {
       const rowIndex = index + 1;
-      if (rowRef && rowIndex % 2 === 0) {
+      if ((rowRef && rowIndex % 2 === 0) || (rowRef && !isMultiRow)) {
         const scrollableWidth = rowRef.scrollWidth - rowRef.clientWidth;
         rowRef.scrollLeft = scrollableWidth * 0.1;
       }
@@ -90,7 +97,10 @@ export const MobileSlider: FunctionComponent<Props> = ({ slides = BRANDS, styleC
   }, []);
 
   // Memoized data
-  const distributedSlides = useMemo(() => distributeSlides(slides), [slides]);
+  const distributedSlides = useMemo(
+    () => (isMultiRow ? distributeSlides(slides) : [slides]),
+    [slides, isMultiRow]
+  );
 
   // Memoized render functions
   const renderSlide = useCallback(
@@ -100,10 +110,11 @@ export const MobileSlider: FunctionComponent<Props> = ({ slides = BRANDS, styleC
           className={styleClassNames?.cardClassName}
           key={`${brand.name}-${idx}`}
           data={brand}
+          isBrand={isBrand}
         />
       </li>
     ),
-    [styleClassNames?.cardClassName]
+    [styleClassNames?.cardClassName, isBrand]
   );
 
   const renderRow = useCallback(

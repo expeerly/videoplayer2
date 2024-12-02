@@ -31,12 +31,8 @@ export const navItems: NavItem[] = [
   },
 ];
 
-type Dictionary = {
-  [key in NavItemKey]: { label: string; aria_label: string };
-};
-
 export const Sidebar: FunctionComponent = async () => {
-  const t = (await getDictionary()).menu as Dictionary;
+  const { t } = await getDictionary();
 
   return (
     <>
@@ -51,11 +47,11 @@ export const Sidebar: FunctionComponent = async () => {
                     className="my-2 w-full"
                     key={item.key}
                     href={item.href}
-                    title={t[item.key].label}
-                    aria-label={t[item.key].aria_label}
+                    title={t(`menu.${[item.key]}.label`)}
+                    aria-label={t(`menu.${[item.key]}.aria_label`)}
                   >
                     <Icon />
-                    <span className="text-black">{t[item.key].label}</span>
+                    <span className="text-black">{t(`menu.${[item.key]}.label`)}</span>
                   </ActiveLink>
                 </li>
               );

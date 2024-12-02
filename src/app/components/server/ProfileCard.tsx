@@ -1,12 +1,19 @@
 import { RightChevronIcon } from '@/src/assets/icons';
 import { Avatar } from './Avatar';
 import { FunctionComponent } from 'react';
+import { StarRating } from './StarRating';
+import Link from 'next/link';
+import { getDictionary } from '@/src/lib/dictionary';
 
 export type ProfileCardProps = {
   description?: string;
   title?: string;
   subTitle?: string;
   imageUrl?: string;
+  rating?: number;
+  variant?: 'primary' | 'secondary';
+  profileSlug?: string;
+  dataType?: 'reviewer' | 'brand' | 'category';
 };
 
 const tempData = {
@@ -16,15 +23,33 @@ const tempData = {
     'I love cooking and getting people around in our garden, specially when weather is good...',
 };
 
-export const ProfileCard: FunctionComponent<ProfileCardProps> = ({
+export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
   description = tempData.description,
   title = tempData.title,
+  rating,
   subTitle = tempData.subTitle,
   imageUrl,
+  variant = 'primary',
+  profileSlug,
+  dataType,
 }) => {
+  const { t } = await getDictionary();
+
   return (
     <div>
-      <div className="flex items-center gap-4 py-b bg-white  max-w-sm">
+      <Link
+        href={`${profileSlug}`}
+        aria-label={
+          dataType === 'category'
+            ? t('dynamic_texts.home_category_icons.aria_label', { brandname: title })
+            : dataType === 'brand'
+              ? t('dynamic_texts.home_brand_icons.aria_label', { brandname: title })
+              : t('dynamic_texts.home_hero_reviewer.aria_label', {
+                  firstname: title,
+                })
+        }
+        className="flex items-center gap-4 py-b bg-white  w-max"
+      >
         <div className="relative">
           <div className="w-10 h-10 rounded-full overflow-hidden">
             <Avatar src={imageUrl} alt={title} />
@@ -32,16 +57,22 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = ({
         </div>
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
-            <h2 className=" font-bold text-grey-700">{title}</h2>
+            <h3 className=" font-bold text-grey-700">{title}</h3>
+            {rating && variant === 'primary' && <StarRating rating={rating} />}
             <RightChevronIcon className="w-2 h-3" />
           </div>
-          <p className="text-sm text-grey-500">{subTitle}</p>
+          <div className="flex gap-2">
+            {rating && variant === 'secondary' && <StarRating rating={rating} />}
+            <p className="text-sm text-grey-500">{subTitle}</p>
+          </div>
         </div>
-      </div>
+      </Link>
 
-      <div className="flex  sm:w-2/5 items-center mt-2">
-        <p className=" text-grey-700 ml-0 line-clamp-2">{description}</p>
-      </div>
+      {!!description && (
+        <div className="flex  sm:w-2/5 items-center mt-2">
+          <p className=" text-grey-700 ml-0 line-clamp-2">{description}</p>
+        </div>
+      )}
     </div>
   );
 };

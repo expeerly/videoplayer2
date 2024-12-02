@@ -116,10 +116,10 @@ const defaultMenuItems: MenuItem[] = [
     label: 'English (EN)',
     icon: WorldIcon,
     items: [
-      { label: 'Deutsch (DE)', href: 'de' },
       { label: 'English (EN)', href: 'en' },
-      { label: 'French (FR)', href: 'fr' },
-      { label: 'Italian (IT)', href: 'it' },
+      { label: 'Deutsch (DE)', href: 'de' },
+      { label: 'Français (FR)', href: 'fr' },
+      { label: 'Italiano (IT)', href: 'it' },
     ],
   },
 ];

@@ -26,11 +26,11 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
     sm: 'w-8 h-8',
     md: 'w-10 h-10',
     lg: 'w-12 h-12',
-    xl: 'w-16 h-16',
+    xl: 'w-14 h-14',
   };
 
   const fallbackOptions: Record<AvatarFallback, React.ReactNode> = {
-    user: <PlayIcon className="w-full h-full p-2 text-grey-400" />,
+    user: <PlayIcon className="w-full h-full p-2" />,
     initials: (
       <span className="text-grey-700 font-medium">
         {alt
@@ -45,7 +45,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
   return (
     <div
       className={clsx(
-        'inline-flex items-center justify-center bg-grey-100 overflow-hidden rounded-full',
+        'flex items-center justify-center bg-grey-200 overflow-hidden rounded-full',
         sizeClasses[size],
         className
       )}
@@ -56,15 +56,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
         <Image
           src={src}
           alt={alt}
-          className="w-full h-full object-cover"
-          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-            const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
-            const nextSibling = target.nextSibling as HTMLElement;
-            if (nextSibling) {
-              nextSibling.style.display = 'flex';
-            }
-          }}
+          className="w-full h-full object-contain"
           height={20}
           width={20}
         />

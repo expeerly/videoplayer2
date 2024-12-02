@@ -3,6 +3,7 @@ import { VideoThumbnail } from './VideoThumbnail';
 import { StarRating } from './StarRating';
 import { PlayIcon } from '@/src/assets/icons/PlayIcon';
 import { Avatar } from './Avatar';
+import clsx from 'clsx';
 
 type Props = {
   review: {
@@ -12,21 +13,26 @@ type Props = {
     brand: string;
     productName: string;
   };
+  className?: string;
 };
 
-export const ReviewCard: FunctionComponent<Props> = ({ review }) => {
+export const ReviewCard: FunctionComponent<Props> = ({ review, className }) => {
   return (
     <div
       key={review.id}
-      className={`
-        relative rounded-[10px] overflow-hidden box-border
-        min-w-[160px] w-[160px] mobileS:w-[50%-50px] mobileS:min-w-[50%-50px]
-        mobileM:min-w-[167] mobileM:w-[calc(50%-20px)]
-        mobileL:w-[calc(45%-20px)] mobileL:min-w-[calc(45%-20px)]
-        mid-tablet:w-[calc(35%-25x)] mid-tablet:min-w-[calc(35%-25px)]
-        sm:w-[calc(30%-20px)] sm:min-w-[calc(30%-20px)]
-        md:w-[167px] md:max-w-[167px] md:min-w-[167px]
-      `}
+      className={clsx(
+        'relative rounded-[10px] overflow-hidden box-border',
+        {
+          'min-w-[160px] w-[160px]': true,
+          'mobileS:w-[50%-50px] mobileS:min-w-[50%-50px]': true,
+          'mobileM:min-w-[167] mobileM:w-[calc(50%-20px)]': true,
+          'mobileL:w-[calc(45%-20px)] mobileL:min-w-[calc(45%-20px)]': true,
+          'mid-tablet:w-[calc(35%-25x)] mid-tablet:min-w-[calc(35%-25px)]': true,
+          'sm:w-[calc(30%-20px)] sm:min-w-[calc(30%-20px)]': true,
+          'md:w-[167px] md:max-w-[167px] md:min-w-[167px]': true,
+        },
+        className
+      )}
     >
       <div className={`h-[273px] relative group cursor-pointer w-full`}>
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40" />

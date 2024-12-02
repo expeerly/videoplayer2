@@ -26,9 +26,8 @@ const config: Config = {
           100: '#F7F7F7',
           200: '#E8E8EA',
           300: '#D1D1D4',
-          400: '#BBB9BF',
-          700: '#0E0E0F',
           500: '#8D8B94',
+          700: '#0E0E0F',
         },
         blue: {
           500: '#4B49EB',
@@ -40,29 +39,6 @@ const config: Config = {
         yellow: {
           500: '#FFC122',
         },
-      },
-      fontSize: {
-        h1: [
-          '24px',
-          {
-            lineHeight: '1.25',
-            fontWeight: '700',
-          },
-        ],
-        h2: [
-          '24px',
-          {
-            lineHeight: '1.25',
-            fontWeight: '500',
-          },
-        ],
-        body: [
-          '16px',
-          {
-            lineHeight: '1.5',
-            fontWeight: '400',
-          },
-        ],
       },
       screens: {
         mobileS: '320px',

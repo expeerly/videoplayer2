@@ -248,17 +248,18 @@ const FilterComponent: FunctionComponent = () => {
 
   const containerClassName = useMemo(
     () =>
-      clsx('z-50 inset-0', {
-        'fixed h-100% bg-grey-100 md:bg-transparent md:relative': isOpen,
+      clsx(' inset-0', {
+        'z-50 md:z-10 fixed h-100% bg-grey-100 md:bg-transparent md:static': isOpen,
+        'w-10 overflow-hidden z-10': !isOpen,
       }),
     [isOpen]
   );
 
   const buttonContainerClassName = useMemo(
     () =>
-      clsx({
-        'absolute right-5 top-[15px] md:static md:top-0 md:right-0': isOpen,
-        'mt-5 mr-5 md:m-0': !isOpen,
+      clsx('', {
+        'absolute right-5 top-[15px] md:top-10 md:right-8 mid-lg:right-12': isOpen,
+        'h-max w-max static md:absolute md:m-0 md:top-10 md:right-8 mid-lg:right-12': !isOpen,
       }),
     [isOpen]
   );
@@ -276,7 +277,7 @@ const FilterComponent: FunctionComponent = () => {
           title="Show/Hide Menu"
           aria-label={isOpen ? t('menu.menu_close.aria_label') : t('menu.menu_open.aria_label')}
           id="menu-button"
-          className="p-2 z-30 max-h-10 max-w-10 ml-auto md:mr-12 md:mt-10 md:p-3 md:h-12 md:w-12 relative"
+          className="p-2 z-30 max-h-10 max-w-10 md:p-3 md:h-12 md:w-12 relative"
         >
           {totalAppliedCount > 0 && (
             <span className="absolute top-0 right-0 w-4 h-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">
@@ -289,7 +290,7 @@ const FilterComponent: FunctionComponent = () => {
 
       <div
         id="dropdown-menu"
-        className={`w-full md:w-[434px] md:right-[112px] md:absolute md:top-[0px] ${
+        className={`w-full md:w-[434px] md:right-[112px] md:absolute md:top-10 ${
           isOpen ? 'h-full w-full flex md:h-max' : 'h-0 w-0 overflow-hidden'
         }`}
         aria-orientation="vertical"
@@ -297,12 +298,10 @@ const FilterComponent: FunctionComponent = () => {
         ref={menuRef}
       >
         <div className="w-full h-full flex justify-between flex-col md:h-auto md:bg-white rounded-lg md:shadow-md">
-          {/* Header */}
           <div className="flex items-center h-[70px] px-5 pt-5 md:pt-3 md:h-[42px]">
             <h3 className="text-base font-normal capitalize text-left">{t('filter')}</h3>
           </div>
 
-          {/* Tab buttons */}
           <div className="flex gap-4 px-5 py-5">
             {(['brands', 'categories'] as const).map(tab => (
               <Button
@@ -317,7 +316,6 @@ const FilterComponent: FunctionComponent = () => {
             ))}
           </div>
 
-          {/* Selected filters */}
           {activePendingFilters.length > 0 && (
             <div className="w-full px-5 mb-3 flex gap-1 flex-wrap text-grey-700 text-base font-normal">
               <span>{t('selected')}:</span>
@@ -329,8 +327,6 @@ const FilterComponent: FunctionComponent = () => {
               ))}
             </div>
           )}
-
-          {/* Filter cards */}
 
           <FilterCards {...filterCardsProps} />
 
