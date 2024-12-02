@@ -16,6 +16,7 @@
   "less": "Weniger",
   "forward_arrow": "",
   "back_arrow": "",
+  "pagination": "Go to page {pagenumber}",
   "cta_button_how_it_works": "Mehr erfahren",
   "explore_all_reviewers": {
     "label": "Alle Tester entdecken",

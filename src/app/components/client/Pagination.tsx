@@ -75,8 +75,6 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
     [onPageChange, totalPages]
   );
 
-  console.log(currentPage < totalPages - 2);
-
   return (
     <nav className={navClassName} aria-label="Pagination">
       <button
@@ -97,7 +95,7 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
           disabled={page === '...'}
           className={pageButtonClassName(page)}
           aria-current={currentPage === page ? 'page' : undefined}
-          aria-label={`Page ${page}`}
+          aria-label={t('pagination', { pagenumber: page })}
         >
           {page}
         </button>

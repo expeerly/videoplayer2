@@ -17,6 +17,7 @@
   "less": "Moins",
   "forward_arrow": "",
   "back_arrow": "",
+  "pagination": "Aller à la page {pagenumber}",
   "explore_all_reviewers": {
     "label": "Découvrir tous les testeurs",
     "aria_label": "Explorer les profils de tous les testeurs vidéo sur Expeerly"
