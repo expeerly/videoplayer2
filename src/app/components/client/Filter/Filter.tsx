@@ -248,9 +248,9 @@ const FilterComponent: FunctionComponent = () => {
 
   const containerClassName = useMemo(
     () =>
-      clsx('z-50 inset-0', {
-        'fixed h-100% bg-grey-100 md:bg-transparent md:relative': isOpen,
-        'w-10 overflow-hidden': !isOpen,
+      clsx(' inset-0', {
+        'z-50 md:z-10 fixed h-100% bg-grey-100 md:bg-transparent md:static': isOpen,
+        'w-10 overflow-hidden z-10': !isOpen,
       }),
     [isOpen]
   );
