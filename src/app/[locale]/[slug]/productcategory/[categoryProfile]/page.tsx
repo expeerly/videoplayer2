@@ -4,6 +4,8 @@ import { PaginationContainer } from '@/src/app/components/server/PaginationConta
 import { Avatar } from '@/src/app/components/server/Avatar';
 import { ShareIcon } from '@/src/assets/icons';
 import { NextPage } from 'next';
+import { PageHeading } from '@/src/app/components/server/PageHeading';
+import { SEOSection } from '@/src/app/components/server/SEOSection';
 
 const sampleText = `
 Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
@@ -18,10 +20,7 @@ const Page: NextPage = () => {
             <div className="flex gap-4 mb-6">
               <Avatar className="my-auto flex h-10 w-10 md:h-14 md:w-14 md:m-0" alt="Dyson" />
               <div className="flex flex-1 flex-col gap-0.5 md:gap-3">
-                <h1 className="t text-lg md:text-2xl font-extrabold text-grey-700 sm:w-[calc(100%-70px)] md:w-[90%]">
-                  Beauty & Personal Care Video Reviews
-                </h1>
-
+                <PageHeading>Beauty & Personal Care Video Reviews</PageHeading>
                 <p className="text-gray-500">{'1,218 reviews'}</p>
               </div>
               <div
@@ -59,15 +58,12 @@ const Page: NextPage = () => {
           }}
           isBecomeReviewer={false}
         />
-        <section className="max-w-[460px] mx-auto py-10 px-5 md:px-0">
-          <h2 className="text-2xl font-extrabold text-grey-700 mb-4 md:text-center ">
-            SEO text lorem ipsum
-          </h2>
-          <p className="text-grey-700 text-base font-normal">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pretium dictum felis, at
-            porttitor nisi accumsan et. Curabitur volutpat risus at nisi finibus, eget suscipit leo.
-          </p>
-        </section>
+
+        <SEOSection
+          heading="SEO text lorem ipsum"
+          content=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pretium dictum felis, at
+            porttitor nisi accumsan et. Curabitur volutpat risus at nisi finibus, eget suscipit leo."
+        />
       </div>
     </div>
   );

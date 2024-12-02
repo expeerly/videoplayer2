@@ -4,6 +4,8 @@ import { PaginationContainer } from '@/src/app/components/server/PaginationConta
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { NextPage } from 'next';
+import { SEOSection } from '@/src/app/components/server/SEOSection';
+import { PageHeading } from '@/src/app/components/server/PageHeading';
 
 const sampleText = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
@@ -20,13 +22,13 @@ veritatis et quasi architecto beatae vitae dicta sunt explicabo.
 const Page: NextPage = () => {
   return (
     <div className="w-full bg-white">
-      <Filter />
       <div className="w-full mx-auto md:max-w-[532px] pt-5 md:pt-10">
         <section>
           <div className="px-5 md:px-0">
-            <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 mb-5 w-[calc(100%-70px)] md:w-full">
-              Avis Vidéos: Categories de Produit
-            </h1>
+            <div className="flex justify-between">
+              <PageHeading>Avis Vidéos: Categories de Produit</PageHeading>
+              <Filter />
+            </div>
             <LongDescription text={sampleText} />
           </div>
           <div className="mt-8">
@@ -51,15 +53,7 @@ const Page: NextPage = () => {
             description: '',
           }}
         />
-        <section className="max-w-[460px] mx-auto py-10 px-5 md:px-0">
-          <h2 className="text-2xl font-extrabold text-grey-700 mb-4 md:text-center ">
-            SEO text lorem ipsum
-          </h2>
-          <p className="text-grey-700 text-base font-normal">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pretium dictum felis, at
-            porttitor nisi accumsan et. Curabitur volutpat risus at nisi finibus, eget suscipit leo.
-          </p>
-        </section>
+        <SEOSection heading="SEO text lorem ipsum" content={sampleText} />
       </div>
     </div>
   );

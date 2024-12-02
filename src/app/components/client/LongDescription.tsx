@@ -1,67 +1,65 @@
 'use client';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
-import React, { useState, useEffect, FunctionComponent, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef, FunctionComponent } from 'react';
 
 type LongDescriptionProps = {
   text: string;
-  maxLength?: number;
+  maxLines?: number;
   className?: string;
 };
 
 export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
   text,
-  maxLength = 150,
+  maxLines = 3,
   className = '',
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowButton, setShouldShowButton] = useState(false);
+  const contentRef = useRef<HTMLParagraphElement>(null);
   const t = useTranslations();
+
   useEffect(() => {
-    if (text.length > maxLength) {
-      setShouldShowButton(true);
+    const checkOverflow = () => {
+      const element = contentRef.current;
+      if (!element) return;
+
+      const style = window.getComputedStyle(element);
+      const lineHeight = parseInt(style.lineHeight);
+      const height = element.offsetHeight;
+
+      const hasOverflow = height > lineHeight * maxLines;
+      setShouldShowButton(hasOverflow);
+    };
+
+    // Check on mount
+    checkOverflow();
+  }, [maxLines, text]);
+
+  const toggleExpansion = () => {
+    if (isExpanded) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [text, maxLength]);
-
-  const toggleExpansion = useCallback(() => {
-    setIsExpanded(prev => {
-      if (prev) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      return !prev;
-    });
-  }, []);
-
-  const truncatedText = useMemo(() => text.slice(0, maxLength), [text, maxLength]);
-  const displayText = useMemo(
-    () => (isExpanded ? text : truncatedText),
-    [isExpanded, truncatedText, text]
-  );
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <div className={`w-full max-w-2xl ${className}`}>
       <p
-        onClick={toggleExpansion}
-        className={clsx('text-sm md:text-base text-gray-500 cursor-pointer', {
-          hidden: isExpanded,
-        })}
-      >
-        {displayText}
-        {!isExpanded && shouldShowButton && '...'}
-        {shouldShowButton && (
-          <b className="inline-flex items-center  text-black ml-1">{t('more')}</b>
+        ref={contentRef}
+        onClick={shouldShowButton ? toggleExpansion : undefined}
+        className={clsx(
+          'text-sm md:text-base text-gray-500',
+          shouldShowButton && 'cursor-pointer',
+          !isExpanded && shouldShowButton && 'line-clamp-3'
         )}
-      </p>
-
-      <p
-        onClick={toggleExpansion}
-        className={clsx('text-sm md:text-base text-gray-500 cursor-pointer', {
-          hidden: !isExpanded,
-          block: isExpanded,
-        })}
       >
         {text}
-        {shouldShowButton && <b className="inline-flex items-center  text-black">{t('less')}</b>}
+        {shouldShowButton && (
+          <b className="inline-flex items-center text-black ml-1">
+            {isExpanded ? t('less') : t('more')}
+          </b>
+        )}
       </p>
     </div>
   );

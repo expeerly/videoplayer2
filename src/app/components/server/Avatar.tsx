@@ -45,7 +45,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
   return (
     <div
       className={clsx(
-        'inline-flex items-center justify-center bg-grey-200 overflow-hidden rounded-full',
+        'flex items-center justify-center bg-grey-200 overflow-hidden rounded-full',
         sizeClasses[size],
         className
       )}

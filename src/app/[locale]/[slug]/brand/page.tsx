@@ -6,6 +6,8 @@ import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { brands } from '@/src/app/components/server/BrandsSlider';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
+import { PageHeading } from '@/src/app/components/server/PageHeading';
+import { SEOSection } from '@/src/app/components/server/SEOSection';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
@@ -20,13 +22,13 @@ const Page: NextPage = async () => {
   const { t } = await getDictionary();
   return (
     <div className="w-full bg-white">
-      <Filter />
       <div className=" w-full mx-auto  md:max-w-[532px] pt-5 md:pt-10">
         <section>
           <div className="px-5 md:px-0">
-            <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 mb-5 w-[calc(100%-70px)] md:w-full">
-              Video Reviews: All Brands
-            </h1>
+            <div className="flex justify-between">
+              <PageHeading>Video Reviews: All Brands</PageHeading>
+              <Filter />
+            </div>
             <LongDescription text={t('all_brands_body_text')} />
           </div>
           <div className="mt-8">
@@ -56,12 +58,8 @@ const Page: NextPage = async () => {
             description: '',
           }}
         />
-        <section className=" max-w-[460px] mx-auto py-10 px-5 md:px-0">
-          <h2 className="text-2xl font-extrabold text-grey-700 mb-4 md:text-center">
-            SEO text lorem ipsum
-          </h2>
-          <p className="text-grey-700 text-base font-normal">{t('all_brands_footer_text')}</p>
-        </section>
+
+        <SEOSection heading="SEO text lorem ipsum" content={t('all_brands_footer_text')} />
       </div>
     </div>
   );

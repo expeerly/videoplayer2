@@ -250,15 +250,16 @@ const FilterComponent: FunctionComponent = () => {
     () =>
       clsx('z-50 inset-0', {
         'fixed h-100% bg-grey-100 md:bg-transparent md:relative': isOpen,
+        'w-10 overflow-hidden': !isOpen,
       }),
     [isOpen]
   );
 
   const buttonContainerClassName = useMemo(
     () =>
-      clsx('absolute', {
-        ' right-5 top-[15px] md:top-10 md:right-8 mid-lg:right-12': isOpen,
-        ' top-5 right-5 md:m-0 md:top-10 md:right-8 mid-lg:right-12': !isOpen,
+      clsx('', {
+        'absolute right-5 top-[15px] md:top-10 md:right-8 mid-lg:right-12': isOpen,
+        'h-max w-max static md:absolute md:m-0 md:top-10 md:right-8 mid-lg:right-12': !isOpen,
       }),
     [isOpen]
   );
@@ -276,7 +277,7 @@ const FilterComponent: FunctionComponent = () => {
           title="Show/Hide Menu"
           aria-label={isOpen ? t('menu.menu_close.aria_label') : t('menu.menu_open.aria_label')}
           id="menu-button"
-          className="p-2 z-30 max-h-10 max-w-10 ml-auto md:p-3 md:h-12 md:w-12 relative"
+          className="p-2 z-30 max-h-10 max-w-10 md:p-3 md:h-12 md:w-12 relative"
         >
           {totalAppliedCount > 0 && (
             <span className="absolute top-0 right-0 w-4 h-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">

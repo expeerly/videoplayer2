@@ -42,7 +42,7 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
   const navigationButtonClassName = useMemo(
     () =>
       clsx(
-        'p-2 rounded-lg transition-colors !text-grey-500',
+        'w-8 h-8  flex items-center justify-center rounded-full transition-colors !text-grey-500',
         'hover:bg-gray-100 disabled:hover:bg-transparent',
         'disabled:opacity-50 disabled:cursor-not-allowed'
       ),
@@ -75,18 +75,20 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
     [onPageChange, totalPages]
   );
 
+  console.log(currentPage < totalPages - 2);
+
   return (
     <nav className={navClassName} aria-label="Pagination">
-      {currentPage !== 1 && (
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className={navigationButtonClassName}
-          aria-label={t('back_arrow')}
-        >
-          <LeftChevronIcon className="[&>path]:stroke-grey-500" />
-        </button>
-      )}
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className={clsx(navigationButtonClassName, {
+          invisible: currentPage === 1,
+        })}
+        aria-label={t('back_arrow')}
+      >
+        <LeftChevronIcon className="[&>path]:stroke-grey-500" />
+      </button>
 
       {pageNumbers.map((page, idx) => (
         <button
@@ -101,15 +103,16 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
         </button>
       ))}
 
-      {currentPage < totalPages - 2 && (
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          className={navigationButtonClassName}
-          aria-label={t('forward_arrow')}
-        >
-          <RightChevronIcon className="[&>path]:stroke-grey-500" />
-        </button>
-      )}
+      <button
+        onClick={() => handlePageChange(currentPage + 1)}
+        className={clsx(navigationButtonClassName, {
+          invisible: currentPage > totalPages - 3,
+        })}
+        aria-label={t('forward_arrow')}
+        disabled={currentPage > totalPages - 3}
+      >
+        <RightChevronIcon className="[&>path]:stroke-grey-500" />
+      </button>
     </nav>
   );
 };
