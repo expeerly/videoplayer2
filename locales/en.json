@@ -14,8 +14,8 @@
   "home_how_it_works_body_text": "Expeerly is a place for consumers to get insights about what other shoppers think of products and services. The video reviews are shared by our community of reviewers from our the globe.",
   "more": "More",
   "less": "Less",
-  "forward_arrow": "",
-  "back_arrow": "",
+  "forward_arrow": "One page forward",
+  "back_arrow": "One page back",
   "pagination": "Go to page {pagenumber}",
   "explore_all_reviewers": {
     "label": "Explore All Reviewers",
@@ -99,11 +99,9 @@
       "aria_label": "Log in to your Expeerly account"
     },
     "menu_open": {
-      "label": "",
       "aria_label": "Open right menu"
     },
     "menu_close": {
-      "label": "",
       "aria_label": "Close right menu"
     }
   },
@@ -129,7 +127,6 @@
     "aria_label": "Learn how to become an Expeerly Reviewer"
   },
   "scroll_reviews": {
-    "label": "",
     "aria_label": "Scroll to the reviews"
   },
   "filter_brands": {
@@ -149,7 +146,6 @@
     "aria_label": "Apply filters"
   },
   "open_filter": {
-    "label": "",
     "aria_label": "Open filter"
   },
   "delete_filter": {
