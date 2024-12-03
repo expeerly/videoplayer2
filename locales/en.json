@@ -17,6 +17,7 @@
   "forward_arrow": "",
   "back_arrow": "",
   "pagination": "Go to page {pagenumber}",
+  "interests": "Interests",
   "explore_all_reviewers": {
     "label": "Explore All Reviewers",
     "aria_label": "Explore profiles of all video reviewers on Expeerly"
@@ -124,10 +125,6 @@
     "label": "Learn more",
     "aria_label": "Find out more about Expeerly as a brand or company"
   },
-  "learn_more_reviewer": {
-    "label": "Learn more",
-    "aria_label": "Learn how to become an Expeerly Reviewer"
-  },
   "scroll_reviews": {
     "label": "",
     "aria_label": "Scroll to the reviews"
@@ -180,6 +177,12 @@
     "share": {
       "aria_label": "Share this page"
     }
+  },
+  "CTABlockAllReviewers": {
+    "experienceShare": "Share your experience. Earn money.",
+    "becomeReviewer": "Become a reviewer, get access to exclusive product launches and earn money.",
+    "learnMore": "Learn more",
+    "learnMore_arialabel": "Learn how to become an Expeerly Reviewer"
   },
   "all_brands_body_text": "In this overview you will find all video reviews from all brands that can be found on expeerly. Find a large selection of rating videos and test videos.",
   "all_brands_footer_text": "On expeerly you will find a comprehensive collection of video reviews and test reports on numerous brands and products from Dyson, Moulinex, Miele and many more! Our platform offers you a wide selection of honest reviews to help you make informed purchasing decisions. Whether you're looking for electronics, household supplies, clothing, books, travel or other categories, you'll find honest video reviews from real users. See how the items perform in practice, what advantages and disadvantages they offer and whether they really do what they promise. Trust the experiences of others and discover which brands and products are really worth it. So you can be sure that you are making the best purchase decision for your everyday life.",

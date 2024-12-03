@@ -18,6 +18,7 @@
   "forward_arrow": "",
   "back_arrow": "",
   "pagination": "Vai alla pagina {pagenumber}",
+  "interests": "Interesse",
   "explore_all_reviewers": {
     "label": "Scopri tutti i tester",
     "aria_label": "Esplora i profili di tutti i recensioni video su Expeerly"
@@ -124,10 +125,6 @@
     "label": "Scopri di più",
     "aria_label": "Scopri di più su Expeerly come marchio o azienda"
   },
-  "learn_more_reviewer": {
-    "label": "Scopri di più",
-    "aria_label": "Scopri come diventare un Revisore Expeerly"
-  },
   "scroll_reviews": {
     "label": "",
     "aria_label": "Scorri fino alle recensioni"
@@ -180,6 +177,12 @@
     "share": {
       "aria_label": "Condividi questa pagina"
     }
+  },
+  "CTABlockAllReviewers": {
+    "experienceShare": "Condividi la tua esperienza. Guadagna denaro.",
+    "becomeReviewer": "Diventa recensore, ottieni accesso a lanci di prodotti esclusivi e guadagna denaro.",
+    "learnMore": "Scopri di più",
+    "learnMore_arialabel": "Scopri come diventare un Revisore Expeerly"
   },
   "all_brands_body_text": "In questa panoramica troverai tutte le recensioni video di tutti i marchi che puoi trovare su expeerly. Trova un'ampia selezione di video di valutazione e video di prova.",
   "all_brands_footer_text": "Su expeerly troverai una raccolta completa di recensioni video e rapporti di test su numerosi marchi e prodotti Dyson, Moulinex, Miele e molti altri! La nostra piattaforma ti offre un'ampia selezione di recensioni oneste per aiutarti a prendere decisioni di acquisto informate. Che tu stia cercando prodotti di elettronica, articoli per la casa, abbigliamento, libri, viaggi o altre categorie, troverai recensioni video oneste di utenti reali. Scopri come si comportano gli articoli nella pratica, quali vantaggi e svantaggi offrono e se fanno davvero ciò che promettono. Affidati alle esperienze degli altri e scopri quali marchi e prodotti valgono davvero la pena. Così puoi essere sicuro di prendere la decisione d'acquisto migliore per la tua vita quotidiana.",

@@ -1,15 +1,20 @@
 import { Button } from '@/src/app/components/client/Button';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
+import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
+import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { Avatar } from '@/src/app/components/server/Avatar';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { ShareIcon } from '@/src/assets/icons';
+import { getDictionary } from '@/src/lib/dictionary';
 import { NextPage } from 'next';
 
 const sampleText = `
 Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
 `.trim();
 
-const Page: NextPage = () => {
+const Page: NextPage = async () => {
+  const { t } = await getDictionary();
+
   return (
     <div className="w-full bg-white">
       <div className="px-5 w-full mx-auto md:max-w-[716px] pt-5 md:pt-10 lg:px-0">
@@ -51,11 +56,22 @@ const Page: NextPage = () => {
           </div>
         </section>
 
-        <section className=" py-10 md:py-[70px]">
+        <section className="pt-5 md:pt-[50px]">
+          <h3 className="text-lg font-extrabold mb-4 text-grey-700 md:hidden">{t('interests')}</h3>
+          <div className="hidden md:block">
+            <Slider />
+          </div>
+          <div className="md:hidden">
+            <MobileSlider />
+          </div>
+        </section>
+
+        <section className=" py-7 md:py-[50px]">
           <ReviewGrid
             classNames={{
-              gridClassName: 'flex-wrap justify-between gap-6 md:gap-[15.5px] !px-0',
-              cardClassName: '!w-[167px] max-!w-[167px] min-!w-[167px]',
+              gridClassName: 'flex-wrap !gap-4 !px-0',
+              cardClassName:
+                'min-w-[167px] w-[167px] mobileS:min-w-[167px] mobileS:w-[167px] mobileM:min-w-[167px] mobileM:w-[167px] mobileL:min-w-[167px] mobileL:w-[167px] mid-tablet:min-w-[167px] mid-tablet:w-[167px] sm:min-w-[167px] sm:w-[167px] md:min-w-[167px] md:w-[167px] md:max-w-[167px]',
             }}
             maxReviews={9}
             hasProfileHeader={false}

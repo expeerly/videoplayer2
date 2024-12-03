@@ -13,12 +13,14 @@ type Props = {
   };
   totalSections?: number;
   isBecomeReviewer?: ReactNode;
+  dataType?: 'reviewer' | 'brand' | 'category';
 };
 
 export const PaginationContainer: FunctionComponent<Props> = ({
   totalSections = 4,
   isBecomeReviewer = true,
   headerData,
+  dataType,
 }) => {
   return (
     <div>
@@ -38,7 +40,7 @@ export const PaginationContainer: FunctionComponent<Props> = ({
             </section>
             {isBecomeReviewer && index === 1 && (
               <div className="hidden md:block">
-                <BecomeReviewer />
+                <BecomeReviewer isReviewer={dataType === 'reviewer'} />
               </div>
             )}
           </React.Fragment>
@@ -48,7 +50,7 @@ export const PaginationContainer: FunctionComponent<Props> = ({
       </section>
       {isBecomeReviewer && (
         <div className=" md:hidden">
-          <BecomeReviewer />
+          <BecomeReviewer isReviewer={dataType === 'reviewer'} />
         </div>
       )}
     </div>

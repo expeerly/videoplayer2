@@ -38,6 +38,7 @@ const Page: NextPage = () => {
             dataType: 'reviewer',
             description: '',
           }}
+          dataType="reviewer"
         />
 
         <SEOSection
