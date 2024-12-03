@@ -23,7 +23,7 @@ const Page: NextPage = () => {
                 className="flex h-10 w-10 min-w-10 md:h-14 md:w-14 md:min-w-14 my-auto md:m-0"
                 alt="Dyson"
               />
-              <div className="flex flex-1 flex-col gap-0.5 md:gap-3">
+              <div className="flex flex-1 flex-col ">
                 <PageHeading>Dyson title in 2 lines example. Video Reviews</PageHeading>
                 <div className="flex gap-1">
                   <StarRating rating={4.5} />
