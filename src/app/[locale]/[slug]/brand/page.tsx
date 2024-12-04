@@ -57,6 +57,15 @@ const Page: NextPage = async () => {
             dataType: 'brand',
             description: '',
           }}
+          ctaBlock={{
+            heading: t('cta_block_all_brands_categories.title'),
+            desc: t('cta_block_all_brands_categories.desc'),
+            button: {
+              label: t('learn_more.label'),
+              ariaLabel: t('learn_more.aria_label'),
+              href: 'https://www.get.expeerly.com/for-brands',
+            },
+          }}
         />
 
         <SEOSection heading="SEO text lorem ipsum" content={t('all_brands_footer_text')} />

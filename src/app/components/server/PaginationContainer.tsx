@@ -1,8 +1,8 @@
-import React, { FunctionComponent, ReactNode } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Pagination } from '../client/Pagination';
 import { ProfileCardProps } from './ProfileCard';
 import { ReviewGrid } from './ReviewGrid';
-import { BecomeReviewer } from './BecomeReviewer';
+import { CTABlock, CTABlockProps } from './CTABlock';
 
 type Props = {
   headerData?: ProfileCardProps;
@@ -12,15 +12,13 @@ type Props = {
     gridClassName?: string;
   };
   totalSections?: number;
-  isBecomeReviewer?: ReactNode;
-  dataType?: 'reviewer' | 'brand' | 'category';
+  ctaBlock?: CTABlockProps;
 };
 
 export const PaginationContainer: FunctionComponent<Props> = ({
   totalSections = 4,
-  isBecomeReviewer = true,
   headerData,
-  dataType,
+  ctaBlock,
 }) => {
   return (
     <div>
@@ -38,9 +36,9 @@ export const PaginationContainer: FunctionComponent<Props> = ({
                 maxReviews={9}
               />
             </section>
-            {isBecomeReviewer && index === 1 && (
+            {!!ctaBlock && index === 1 && (
               <div className="hidden md:block">
-                <BecomeReviewer isReviewer={dataType === 'reviewer'} />
+                <CTABlock {...ctaBlock} />
               </div>
             )}
           </React.Fragment>
@@ -48,9 +46,9 @@ export const PaginationContainer: FunctionComponent<Props> = ({
       <section className="py-8">
         <Pagination totalPages={50} />
       </section>
-      {isBecomeReviewer && (
+      {!!ctaBlock && (
         <div className=" md:hidden">
-          <BecomeReviewer isReviewer={dataType === 'reviewer'} />
+          <CTABlock {...ctaBlock} />
         </div>
       )}
     </div>
