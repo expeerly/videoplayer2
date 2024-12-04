@@ -56,7 +56,6 @@ const Page: NextPage = () => {
             description: '',
             dataType: 'category',
           }}
-          isBecomeReviewer={false}
         />
 
         <SEOSection

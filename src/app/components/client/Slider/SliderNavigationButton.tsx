@@ -14,7 +14,7 @@ type SliderNavigationButtonProps = {
 
 // Constants
 const BUTTON_STYLES = {
-  container: 'flex items-center px-2 absolute w-28 h-full top-1/2 -translate-y-1/2 z-10',
+  container: 'flex items-center px-2 absolute w-28 h-full top-1/2 -translate-y-1/2 z-[5]',
   button:
     'bg-white rounded-full shadow-md py-3 px-4 hover:bg-gray-50 focus:outline-none focus:ring-0',
 };

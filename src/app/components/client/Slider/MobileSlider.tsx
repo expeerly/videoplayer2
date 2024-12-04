@@ -94,7 +94,7 @@ export const MobileSlider: FunctionComponent<Props> = ({
         rowRef.scrollLeft = scrollableWidth * 0.1;
       }
     });
-  }, []);
+  }, [isMultiRow]);
 
   // Memoized data
   const distributedSlides = useMemo(

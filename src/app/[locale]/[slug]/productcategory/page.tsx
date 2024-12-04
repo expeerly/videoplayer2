@@ -6,6 +6,7 @@ import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { NextPage } from 'next';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
+import { getDictionary } from '@/src/lib/dictionary';
 
 const sampleText = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
@@ -19,7 +20,9 @@ doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
 veritatis et quasi architecto beatae vitae dicta sunt explicabo.
 `.trim();
 
-const Page: NextPage = () => {
+const Page: NextPage = async () => {
+  const { t } = await getDictionary();
+
   return (
     <div className="w-full bg-white">
       <div className="w-full mx-auto md:max-w-[532px] pt-5 md:pt-10">
@@ -51,6 +54,15 @@ const Page: NextPage = () => {
             subTitle: '1,218 reviews',
             dataType: 'category',
             description: '',
+          }}
+          ctaBlock={{
+            heading: t('cta_block_all_brands_categories.title'),
+            desc: t('cta_block_all_brands_categories.desc'),
+            button: {
+              label: t('learn_more.label'),
+              ariaLabel: t('learn_more.aria_label'),
+              href: 'https://www.get.expeerly.com/for-brands',
+            },
           }}
         />
         <SEOSection heading="SEO text lorem ipsum" content={sampleText} />
