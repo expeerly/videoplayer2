@@ -3,10 +3,15 @@
 import React, { FunctionComponent, useCallback, useMemo, useEffect, useState } from 'react';
 import { Button } from './Button';
 import clsx from 'clsx';
-import { LeftChevronIcon } from '@/src/assets/icons';
+import { CloseIcon, LeftChevronIcon } from '@/src/assets/icons';
 import { usePathname, useRouter } from '@/src/i18n/routing';
 
-export const BackButton: FunctionComponent = () => {
+type Props = {
+  variant?: 'primary' | 'secondary';
+  className?: string;
+};
+
+export const BackButton: FunctionComponent<Props> = ({ variant = 'primary', className }) => {
   const router = useRouter();
   const [navigationHistory, setNavigationHistory] = useState<string[]>(['/']);
   const pathname = usePathname();
@@ -40,11 +45,14 @@ export const BackButton: FunctionComponent = () => {
 
   const backButtonClasses = useMemo(
     () =>
-      clsx({
-        hidden: isHomePage,
-        'md:hidden': !isHomePage,
-      }),
-    [isHomePage]
+      clsx(
+        {
+          hidden: isHomePage,
+          'md:hidden': !isHomePage && variant !== 'secondary',
+        },
+        className
+      ),
+    [isHomePage, className, variant]
   );
 
   return (
@@ -56,7 +64,8 @@ export const BackButton: FunctionComponent = () => {
       onClick={goBack}
       aria-label="Go back to previous page"
     >
-      <LeftChevronIcon />
+      {variant === 'primary' && <LeftChevronIcon />}
+      {variant === 'secondary' && <CloseIcon className="[&>g>path]:!fill-white" />}
     </Button>
   );
 };

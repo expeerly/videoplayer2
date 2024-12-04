@@ -18,6 +18,19 @@
   "back_arrow": "",
   "pagination": "Go to page {pagenumber}",
   "interests": "Interests",
+  "reviewSummary": "Review summary",
+  "productDetails": "Product details",
+  "brandName": "Brand name",
+  "productName": "Product name",
+  "gtinEan": "GTIN/EAN",
+  "vendorProductNumber": "Vendor product number",
+  "productHighlights": "Product highlights",
+  "frequentlyAskedQuestions": "Frequently asked questions",
+  "moreVideosOn": "More videos on",
+  "buyNow": {
+    "label": "Buy now",
+    "ariaLabel": "Go to the product shown in the video"
+  },
   "explore_all_reviewers": {
     "label": "Explore All Reviewers",
     "aria_label": "Explore profiles of all video reviewers on Expeerly"
@@ -116,7 +129,6 @@
     "label": "FAQ/Product details",
     "aria_label": "Go to frequently asked questions and product details"
   },
-
   "buy_now": {
     "label": "Buy now",
     "aria_label": "Go to the product shown in the video"

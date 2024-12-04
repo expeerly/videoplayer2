@@ -19,6 +19,19 @@
   "back_arrow": "",
   "pagination": "Vai alla pagina {pagenumber}",
   "interests": "Interesse",
+  "reviewSummary": "Riepilogo della revisione",
+  "productDetails": "Dettagli del prodotto",
+  "brandName": "Marchio",
+  "productName": "Nome del prodotto",
+  "gtinEan": "GTIN/EAN",
+  "vendorProductNumber": "Numero del prodotto del venditore",
+  "productHighlights": "Vantaggi del prodotto",
+  "frequentlyAskedQuestions": "Domande frequenti",
+  "moreVideosOn": "Altri video su",
+  "buyNow": {
+    "label": "Acquista ora",
+    "ariaLabel": "Vai al prodotto mostrato nel video"
+  },
   "explore_all_reviewers": {
     "label": "Scopri tutti i tester",
     "aria_label": "Esplora i profili di tutti i recensioni video su Expeerly"
