@@ -8,7 +8,7 @@ type VideoPlayerProps = {
 
 export const VideoPlayer: FunctionComponent<VideoPlayerProps> = ({ playbackId, isVisible }) => {
   return (
-    <div className="md:max-w-[392px] w-full h-full relative aspect-[9/16]">
+    <div className="w-full h-full relative">
       <MuxPlayer
         autoPlay={isVisible}
         loop={true}

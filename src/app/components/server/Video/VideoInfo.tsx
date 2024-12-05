@@ -38,7 +38,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
         <VideoActions video={video} isVideo />
       </div>
 
-      <div className="absolute bottom-5 px-5 justify-between flex items-center w-full text-white">
+      <div className="absolute bottom-11  px-5 justify-between flex items-center w-full text-white">
         <div className="flex gap-2 items-center flex-1">
           <Avatar />
           <div className="flex flex-col flex-1">
@@ -46,7 +46,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
               <h2 className="text-sm font-semibold">@{brand}</h2>
             </Link>
             <Link href={`/explore/productcategory/${category}`}>
-              <p className="text-sm">{category}</p>
+              <p className="text-sm font-bold">{category}</p>
             </Link>
             <div className="flex gap-2 items-center">
               <span>{rating}</span>
@@ -54,7 +54,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
             </div>
           </div>
         </div>
-        <Button color="danger">Buy Now</Button>
+        <Button className="!text-sm">Buy Now</Button>
       </div>
     </>
   );

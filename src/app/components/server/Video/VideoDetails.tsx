@@ -5,10 +5,11 @@ import { PageHeading } from '../PageHeading';
 import { Button } from '../../client/Button';
 import { ReviewGrid } from '../ReviewGrid';
 import { getDictionary } from '@/src/lib/dictionary';
+import { SectionHeading } from './SectionHeading';
 
 const videoData = {
   id: '1',
-  playbackId: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
+  playbackId: 'qs2vN7D3ArOWe7i2sEVgHhlNcaZKayH3mf01i1ujAjKk',
   caption: '🚴‍♂️ Epic mountain biking trails! #mtb #adventure',
   username: 'adventu',
   likes: 15420,
@@ -108,35 +109,35 @@ export const VideoDetails: FunctionComponent = async () => {
           </div>
         </section>
         <section className=" pt-7 mb-5 md:py-8 ">
-          <h4 className="text-2xl text-[#080218] font-medium mb-2">
+          <h4 className="text-2xl text-grey-700 font-medium mb-2">
             {t('reviewSummary')} {`{{productname}}`}
           </h4>
-          <p className="text-[#080218] font-normal text-base">{videoDetails.summary}</p>
+          <p className="text-grey-700 font-normal text-base">{videoDetails.summary}</p>
         </section>
 
         <hr className=" border-gray-200" />
 
         <section className=" my-5 md:pt-6 md:pb-8">
-          <h2 className="text-2xl font-medium mb-4">{t('productDetails')}</h2>
+          <SectionHeading className="mb-4">{t('productDetails')}</SectionHeading>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="space-y-6">
               <div>
-                <div className="text-[#707070] font-bold">{t('brandName')}</div>
-                <div className="text-[#080218]">{videoDetails.brandName}</div>
+                <div className="text-grey-500 font-bold text-sm">{t('brandName')}</div>
+                <div className="text-grey-700">{videoDetails.brandName}</div>
               </div>
               <div>
-                <div className="text-[#707070] font-bold">{t('productName')}</div>
-                <div className="text-[#080218]">{videoDetails.productName}</div>
+                <div className="text-grey-500 font-bold text-sm">{t('productName')}</div>
+                <div className="text-grey-700">{videoDetails.productName}</div>
               </div>
             </div>
             <div className="space-y-6">
               <div>
-                <div className="text-[#707070] font-bold">{t('gtinEan')}</div>
-                <div className="text-[#080218]">{videoDetails.gtin}</div>
+                <div className="text-grey-500 font-bold text-sm">{t('gtinEan')}</div>
+                <div className="text-grey-700">{videoDetails.gtin}</div>
               </div>
               <div>
-                <div className="text-[#707070] font-bold">{t('vendorProductNumber')}</div>
-                <div className="text-[#080218]">{videoDetails.vendorProductNo}</div>
+                <div className="text-grey-500 font-bold text-sm">{t('vendorProductNumber')}</div>
+                <div className="text-grey-700">{videoDetails.vendorProductNo}</div>
               </div>
             </div>
           </div>
@@ -144,53 +145,35 @@ export const VideoDetails: FunctionComponent = async () => {
         <hr className=" mb-5 md:mb-6 border-gray-200" />
 
         <section>
-          <h2 className="text-2xl font-medium mb-1.5">{t('productHighlights')}</h2>
+          <SectionHeading className="mb-1.5">{t('productHighlights')}</SectionHeading>
           <div className="flex items-center gap-1 mb-4">
-            <span className="font-medium text-[#0E0E0F]">{videoDetails.rating}</span>
+            <span className="font-medium text-grey-700">{videoDetails.rating}</span>
             <div className="flex gap-0.5">
               <StarRating rating={videoDetails.rating} showRating={false} />
             </div>
-          </div>
-
-          <div className="space-y-1 text-[#080218]">
-            <h3>Pros</h3>
-            <ul className="space-y-2 text-sm">
-              <li className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-black" />
-                Fast styling
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-black" />
-                Silent
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-black" />
-                Simple to use
-              </li>
-            </ul>
           </div>
         </section>
 
         <hr className="my-5 md:my-6 border-gray-200" />
 
         <section>
-          <h1 className="font-medium text-2xl text-[#080218]">What Marisa thinks</h1>
-          <p className="text-[#080218] mt-1.5">{videoDetails.whatReviewerThinks}</p>
+          <SectionHeading>What Marisa thinks</SectionHeading>
+          <p className=" mt-1.5">{videoDetails.whatReviewerThinks}</p>
         </section>
 
         <hr className="my-5 md:my-8 border-gray-200" />
 
         <section>
-          <h2 className="text-2xl font-medium mb-1.5">{t('frequentlyAskedQuestions')}</h2>
+          <SectionHeading className="mb-1.5">{t('frequentlyAskedQuestions')}</SectionHeading>
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#080218] mt-2" />
-                  <h3 className="text-base font-bold text-[#080218]">{faq.question}</h3>
+                  <div className="w-1.5 h-1.5 rounded-full  mt-2" />
+                  <h3 className="text-lg font-bold text-grey-700">{faq.question}</h3>
                 </div>
                 <div className="pl-3.5">
-                  <p className="font-normal text-sm text-[#080218] pb-4">{faq.answer}</p>
+                  <p className="font-normal text-base text-grey-700 pb-4">{faq.answer}</p>
                 </div>
               </div>
             ))}
@@ -201,17 +184,24 @@ export const VideoDetails: FunctionComponent = async () => {
           {t('buyNow.label')}
         </Button>
       </div>
-      <div className="flex w-full justify-center flex-col gap-6 mb-16 md:mx-auto">
-        <h1 className="px-5 text-left font-extrabold text-2xl text-[#0E0E0F] w-full md:text-center">
+      <div className="flex w-max justify-center flex-col gap-6 mb-16 md:mx-auto">
+        <h1 className="px-5 text-left font-extrabold text-2xl text-grey-700 w-full md:text-center">
           {t('moreVideosOn')} the Airwrap Styler
         </h1>
-        <ReviewGrid
-          hasProfileHeader={false}
-          classNames={{
-            gridClassName: '!gap-[15px] md:justify-center',
-          }}
-          maxReviews={3}
-        />
+        <div className="w-[531px]">
+          <ReviewGrid
+            classNames={{
+              gridClassName: '!gap-[15px] md:justify-center',
+            }}
+            maxReviews={3}
+            headerData={{
+              title: 'Dyson Airwrap Styler',
+              rating: 4.5,
+              subTitle: '38',
+              variant: 'secondary',
+            }}
+          />
+        </div>
       </div>
     </div>
   );
