@@ -35,7 +35,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
       </div>
 
       <div className=" absolute right-5 top-3.5 h-4/5 text-white  flex md:hidden ">
-        <VideoActions video={video} isVideo />
+        <VideoActions video={video} />
       </div>
 
       <div className="absolute bottom-11  px-5 justify-between flex items-center w-full text-white">
