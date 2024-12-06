@@ -1,5 +1,5 @@
 'use client';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useCallback, useState } from 'react';
 import { MoreIcon, ShareIcon } from '@/src/assets/icons';
 import { Video } from '../server/Video/VideoCard';
 import Link from 'next/link';
@@ -8,10 +8,25 @@ import { ShareDialog } from './ShareDialog';
 
 type VideoActionsProps = {
   video: Video;
+  isVideoDetails?: boolean;
 };
 
-export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video }) => {
+export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVideoDetails }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const scrollToElement = useCallback(() => {
+    try {
+      const element = document.getElementById('details');
+
+      if (element) {
+        element.scrollIntoView({
+          block: 'start',
+        });
+      }
+    } catch (error) {
+      console.error('Error scrolling to element:', error);
+    }
+  }, []);
 
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
@@ -25,15 +40,28 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video }) =>
           <span className="text-sm">Share</span>
         </button>
 
-        <Link
-          className="flex flex-col items-center"
-          href={`/video-reviews/${video.category}/${video.brandName}/${video.productName}/${video.playbackId}`}
-        >
-          <div className="w-10 h-10 text-sm font-semibold rounded-full bg-grey-500 flex items-center justify-center">
-            <MoreIcon />
-          </div>
-          More
-        </Link>
+        {!isVideoDetails ? (
+          <Link
+            className="flex flex-col items-center"
+            href={
+              isVideoDetails
+                ? `/video-reviews/${video.category}/${video.brandName}/${video.productName}/${video.playbackId}`
+                : ''
+            }
+          >
+            <div className="w-10 h-10 text-sm font-semibold rounded-full bg-grey-500 flex items-center justify-center">
+              <MoreIcon />
+            </div>
+            More
+          </Link>
+        ) : (
+          <button onClick={() => scrollToElement()}>
+            <div className="w-10 h-10 text-sm font-semibold rounded-full bg-grey-500 flex items-center justify-center">
+              <MoreIcon />
+            </div>
+            More
+          </button>
+        )}
       </div>
 
       <ShareDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />

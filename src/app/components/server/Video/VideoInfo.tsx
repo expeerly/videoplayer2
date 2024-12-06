@@ -12,6 +12,7 @@ type VideoInfoProps = {
   category: string;
   rating: number;
   video: Video;
+  isVideoDetails?: boolean;
 };
 
 export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
@@ -19,6 +20,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
   category,
   rating,
   video,
+  isVideoDetails,
 }) => {
   return (
     <>
@@ -28,27 +30,26 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
       >
         <Avatar size="sm" />
         <span>Carmo L.</span>
-        {/* <CircleCheck /> */}
       </Link>
       <div className=" absolute w-full flex md:hidden top-20 left-0 ">
         <VideoTags variant="outlined" />
       </div>
 
       <div className=" absolute right-5 top-3.5 h-4/5 text-white  flex md:hidden ">
-        <VideoActions video={video} />
+        <VideoActions video={video} isVideoDetails={isVideoDetails} />
       </div>
 
-      <div className="absolute bottom-11  px-5 justify-between flex items-center w-full text-white">
+      <div className="absolute bottom-24  px-5 justify-between flex items-center w-full text-white">
         <div className="flex gap-2 items-center flex-1">
           <Avatar />
           <div className="flex flex-col flex-1">
             <Link href={`/explore/brand/${brand}`}>
-              <h2 className="text-sm font-semibold">@{brand}</h2>
+              <h2 className="text-sm font-bold">@{brand}</h2>
             </Link>
             <Link href={`/explore/productcategory/${category}`}>
               <p className="text-sm font-bold">{category}</p>
             </Link>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center -mt-0.5">
               <span>{rating}</span>
               <StarRating size="sm" rating={rating} showRating={false} />
             </div>

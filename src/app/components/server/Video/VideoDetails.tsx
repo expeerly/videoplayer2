@@ -6,6 +6,8 @@ import { Button } from '../../client/Button';
 import { ReviewGrid } from '../ReviewGrid';
 import { getDictionary } from '@/src/lib/dictionary';
 import { SectionHeading } from './SectionHeading';
+import { ScrollToSection } from '../../client/ScrollToSection';
+import { Divider } from './Divider';
 
 const videoData = {
   id: '1',
@@ -87,27 +89,16 @@ export const VideoDetails: FunctionComponent = async () => {
   return (
     <div className="w-full items-center flex flex-col md:w-max md:mx-auto">
       <div className="flex w-full h-max md:h-[calc(100vh-120px)] ">
-        <VideoCard isVisible key={videoData.id} video={videoData} />
+        <VideoCard isVisible key={videoData.id} video={videoData} isVideoDetails />
       </div>
-      <div className="w-full px-5 flex flex-col md:max-w-[450px] mx-auto pt-7 md:pt-2 md:px-0">
-        <section>
+      <div className="w-full px-5 flex flex-col md:max-w-[450px] mx-auto pt-7 md:pt-2 md:px-0 relative">
+        <div id="details" className="absolute  top-0  md:-top-20" />
+        <ScrollToSection>
           <PageHeading>
             Discover Mary’s Dyson Airwrap Multi-Styler Review: Effortless Hair Styling Made
             Stunningly Simple!
           </PageHeading>
-          <div className="flex gap-3 mt-8 flex-wrap mobileM:flex-nowrap">
-            <Button
-              aria-label={t('review.aria_label')}
-              size="lg"
-              className="w-full text-sm px-6 mobileM:w-max"
-            >
-              {t('review.label')}
-            </Button>
-            <Button size="lg" variant="outline" className="w-full text-sm px-6 mobileM:w-max">
-              FAQS & Product Details
-            </Button>
-          </div>
-        </section>
+        </ScrollToSection>
         <section className=" pt-7 mb-5 md:py-8 ">
           <h4 className="text-2xl text-grey-700 font-medium mb-2">
             {t('reviewSummary')} {`{{productname}}`}
@@ -115,7 +106,7 @@ export const VideoDetails: FunctionComponent = async () => {
           <p className="text-grey-700 font-normal text-base">{videoDetails.summary}</p>
         </section>
 
-        <hr className=" border-gray-200" />
+        <Divider />
 
         <section className=" my-5 md:pt-6 md:pb-8">
           <SectionHeading className="mb-4">{t('productDetails')}</SectionHeading>
@@ -142,7 +133,7 @@ export const VideoDetails: FunctionComponent = async () => {
             </div>
           </div>
         </section>
-        <hr className=" mb-5 md:mb-6 border-gray-200" />
+        <Divider className=" mb-5 md:mb-6" />
 
         <section>
           <SectionHeading className="mb-1.5">{t('productHighlights')}</SectionHeading>
@@ -154,17 +145,19 @@ export const VideoDetails: FunctionComponent = async () => {
           </div>
         </section>
 
-        <hr className="my-5 md:my-6 border-gray-200" />
+        <Divider className="my-5 md:my-6" />
 
-        <section>
+        <section className="relative">
+          <div className="absolute top-0 md:-top-20" id="whatReviewerThinks" />
           <SectionHeading>What Marisa thinks</SectionHeading>
           <p className=" mt-1.5">{videoDetails.whatReviewerThinks}</p>
         </section>
 
-        <hr className="my-5 md:my-8 border-gray-200" />
+        <Divider className="my-5 md:my-8" />
 
-        <section>
-          <SectionHeading className="mb-1.5">{t('frequentlyAskedQuestions')}</SectionHeading>
+        <section className="relative">
+          <div className="absolute top-0 md:-top-20" id="faqs" />
+          <SectionHeading className="mb-3">{t('frequentlyAskedQuestions')}</SectionHeading>
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <div key={index} className="space-y-2">
@@ -184,11 +177,11 @@ export const VideoDetails: FunctionComponent = async () => {
           {t('buyNow.label')}
         </Button>
       </div>
-      <div className="flex w-max justify-center flex-col gap-6 mb-16 md:mx-auto">
+      <div className="flex w-full justify-center flex-col gap-6 mb-16 md:mx-auto md:w-max">
         <h1 className="px-5 text-left font-extrabold text-2xl text-grey-700 w-full md:text-center">
           {t('moreVideosOn')} the Airwrap Styler
         </h1>
-        <div className="w-[531px]">
+        <div className="w-full md:max-w-[531px]">
           <ReviewGrid
             classNames={{
               gridClassName: '!gap-[15px] md:justify-center',
