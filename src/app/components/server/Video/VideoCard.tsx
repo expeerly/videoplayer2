@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import { VideoActions } from '../../client/VideoActions';
 import { VideoInfo } from './VideoInfo';
-import { VideoPlayer } from './VideoPlayer';
+import { VideoPlayer } from '../../client/VideoPlayer';
 
 export interface Video {
   id: string;
@@ -16,20 +16,20 @@ export interface Video {
 
 interface VideoCardProps {
   video: Video;
-  isVisible: boolean;
   isVideoDetails?: boolean;
+  isFirst?: boolean;
 }
 
 export const VideoCard: FunctionComponent<VideoCardProps> = ({
   video,
-  isVisible,
   isVideoDetails,
+  isFirst,
 }) => {
   return (
-    <div className=" pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] h-[100svh] w-full flex flex-col gap-3 snap-start items-center justify-center md:h-full md:p-0">
+    <div className=" h-full flex-1 w-full flex flex-col gap-3 snap-start items-center justify-center md:h-full md:p-0">
       <div className=" flex gap-4 w-full h-full items-end md:h-[90%] md:max-w-[448px]">
         <div className="relative h-full w-full flex bg-black md:aspect-[9/16] group">
-          <VideoPlayer isVisible={isVisible} playbackId={video.playbackId} />
+          <VideoPlayer isFirst={isFirst} playbackId={video.playbackId} />
           <VideoInfo
             brand={'Dyson'}
             category={'Supersonic Professional'}

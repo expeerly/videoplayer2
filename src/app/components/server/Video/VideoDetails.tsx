@@ -89,7 +89,7 @@ export const VideoDetails: FunctionComponent = async () => {
   return (
     <div className="w-full items-center flex flex-col md:w-max md:mx-auto">
       <div className="flex w-full h-max md:h-[calc(100vh-120px)] ">
-        <VideoCard isVisible key={videoData.id} video={videoData} isVideoDetails />
+        <VideoCard key={videoData.id} video={videoData} isVideoDetails isFirst />
       </div>
       <div className="w-full px-5 flex flex-col md:max-w-[450px] mx-auto pt-7 md:pt-2 md:px-0 relative">
         <div id="details" className="absolute  top-0  md:-top-20" />

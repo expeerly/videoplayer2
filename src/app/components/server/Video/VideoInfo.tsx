@@ -35,7 +35,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
         <VideoTags variant="outlined" />
       </div>
 
-      <div className=" absolute right-5 top-3.5 h-4/5 text-white  flex md:hidden ">
+      <div className=" absolute right-5 top-3.5 h-3/4 text-white  flex md:hidden ">
         <VideoActions video={video} isVideoDetails={isVideoDetails} />
       </div>
 
