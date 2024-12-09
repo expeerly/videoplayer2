@@ -60,11 +60,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
         {!isVideoDetails ? (
           <Link
             className="flex flex-col items-center"
-            href={
-              isVideoDetails
-                ? `/video-reviews/${video.category}/${video.brandName}/${video.productName}/${video.playbackId}`
-                : ''
-            }
+            href={`/video-reviews/${video.category}/${video.brandName}/${video.productName}/${video.playbackId}`}
           >
             <div className="w-10 h-10 text-sm font-semibold rounded-full bg-grey-500 flex items-center justify-center">
               <MoreIcon />

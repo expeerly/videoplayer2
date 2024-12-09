@@ -1,20 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import Link from 'next/link';
 import { getDictionary } from '@/src/lib/dictionary';
-import { headers } from 'next/headers';
 
 export const Footer: FunctionComponent = async () => {
-  const headersList = await headers();
-  const pathname = await headersList.get('referer');
   const { t } = await getDictionary();
-
-  const isExplorePage = pathname?.match(/[^/]+$/)?.[0] === 'explore';
 
   return (
     <footer
-      className={`w-full md:max-w-[calc(100%-25%)] mid-lg:max-w-[calc(100%-275px)] border-l ml-auto px-5 pt-8 pb-14 border-t bg-white md:pb-8 ${
-        isExplorePage ? 'hidden' : 'block'
-      }`}
+      className={`w-full md:max-w-[calc(100%-25%)] mid-lg:max-w-[calc(100%-275px)] border-l ml-auto px-5 pt-8 pb-14 border-t bg-white md:pb-8 `}
     >
       <div className="max-w-4xl mx-auto  pt-4 flex justify-center">
         <div className="grid gap-6   sm:grid-cols-3 grid-cols-2 w-[660px]  sm:gap-4 text-sm mb-4">
