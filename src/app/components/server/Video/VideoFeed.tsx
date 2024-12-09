@@ -6,9 +6,9 @@ type Props = {
 
 export const VideoFeed = ({ videos }: Props) => {
   return (
-    <div className="fixed z-[99999] inset-0 h-full w-full md:absolute md:h-[calc(100vh-85px)] overflow-hidden">
+    <div className="fixed z-[99999] my-auto h-full w-full overflow-hidden md:h-[calc(100vh-85px)] md:w-[75%] md:right-0 md:bottom-0">
       <div
-        className="h-[90vh] w-full overflow-y-scroll snap-y snap-mandatory scrollbar-none md:h-full"
+        className="h-[92vh] w-full overflow-y-scroll snap-y snap-mandatory scrollbar-none md:h-full"
         style={{
           overscrollBehavior: 'none',
           WebkitOverflowScrolling: 'touch',
