@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FunctionComponent, useCallback, useMemo, useEffect, useState } from 'react';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import { Button } from './Button';
 import clsx from 'clsx';
 import { CloseIcon, LeftChevronIcon } from '@/src/assets/icons';
@@ -13,35 +13,20 @@ type Props = {
 
 export const BackButton: FunctionComponent<Props> = ({ variant = 'primary', className }) => {
   const router = useRouter();
-  const [navigationHistory, setNavigationHistory] = useState<string[]>(['/']);
   const pathname = usePathname();
   const isHomePage = pathname === '/';
-
-  // Track navigation history
-  useEffect(() => {
-    setNavigationHistory(prevHistory => {
-      if (prevHistory[prevHistory.length - 1] !== pathname) {
-        return [...prevHistory, pathname].slice(-10);
-      }
-      return prevHistory;
-    });
-  }, [pathname]);
 
   const goBack = useCallback(() => {
     if (isHomePage) {
       return;
     }
 
-    if (navigationHistory.length > 1) {
-      const previousPaths = navigationHistory.slice(0, -1);
-      const previousPath = previousPaths[previousPaths.length - 1];
-
-      setNavigationHistory(previousPaths);
-      router.push(previousPath);
+    if (window && window.history.length > 2) {
+      router.back();
     } else {
       router.push('/');
     }
-  }, [isHomePage, router, navigationHistory]);
+  }, [isHomePage, router]);
 
   const backButtonClasses = useMemo(
     () =>

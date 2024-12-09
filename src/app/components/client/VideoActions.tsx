@@ -28,6 +28,22 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     }
   }, []);
 
+  const handleShare = useCallback(async () => {
+    if (window.innerWidth < 768 && navigator.share) {
+      try {
+        await navigator.share({
+          title: video.productName,
+          text: `Check out this video review of ${video.productName} by ${video.brandName}`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      setIsOpen(true);
+    }
+  }, [video]);
+
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
       <BackButton variant="secondary" className={`!bg-grey-500 bg-opacity-50 md:bg-opacity-100`} />
@@ -35,7 +51,8 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
       <div className="flex flex-col gap-6">
         <button className="flex flex-col items-center gap-1">
           <div className="w-10 h-10 bg-grey-500 rounded-full flex items-center justify-center text-white">
-            <ShareIcon onClick={() => setIsOpen(true)} />
+            <ShareIcon onClick={handleShare} />
+            <span className="text-blue-600">{!!navigator.share}</span>
           </div>
           <span className="text-sm">Share</span>
         </button>
@@ -55,7 +72,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
             More
           </Link>
         ) : (
-          <button onClick={() => scrollToElement()}>
+          <button onClick={scrollToElement}>
             <div className="w-10 h-10 text-sm font-semibold rounded-full bg-grey-500 flex items-center justify-center">
               <MoreIcon />
             </div>
