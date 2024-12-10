@@ -36,7 +36,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
   const { t } = await getDictionary();
 
   return (
-    <div>
+    <>
       <Link
         href={`${profileSlug}`}
         aria-label={
@@ -73,6 +73,6 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
           <p className=" text-grey-700 ml-0 line-clamp-2">{description}</p>
         </div>
       )}
-    </div>
+    </>
   );
 };

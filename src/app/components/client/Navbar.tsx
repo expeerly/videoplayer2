@@ -24,9 +24,15 @@ const NavbarComponent: FunctionComponent = () => {
         // Styling
         'bg-white border-b',
         // Sticky behavior
-        'md:sticky'
+        'md:sticky',
+        {
+          'hidden md:flex':
+            pathname === '/explore' ||
+            pathname.split('/')?.length === 6 ||
+            pathname.split('/')?.length === 5,
+        }
       ),
-    []
+    [pathname]
   );
 
   const logoLinkClasses = useMemo(

@@ -17,39 +17,44 @@ type ReviewGridProps = {
 };
 const tempreviews = [
   {
-    id: 1,
+    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
     rating: 4.5,
     view: 1200,
     brand: 'TechGurau',
     productName: 'Smartphone XYZ',
+    category: 'Electronics',
   },
   {
-    id: 2,
+    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
     rating: 4.5,
     view: 1200,
     brand: 'TechGurau',
     productName: 'Smartphone XYZ',
+    category: 'Electronics',
   },
   {
-    id: 3,
+    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
     rating: 4.5,
     view: 1200,
     brand: 'TechGurau',
     productName: 'Smartphone XYZ',
+    category: 'Electronics',
   },
   {
-    id: 4,
+    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
     rating: 4.5,
     view: 1200,
     brand: 'TechGurau',
     productName: 'Smartphone XYZ',
+    category: 'Electronics',
   },
   {
-    id: 5,
+    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
     rating: 3.5,
     view: 1200,
     brand: 'TechGurau',
     productName: 'Smartphone XYZ',
+    category: 'Electronics',
   },
 ];
 
