@@ -188,7 +188,11 @@
       "aria_label": "Kategorie {categoriesname} filtern"
     },
     "share": {
+      "label": "Teilen",
       "aria_label": "Diese Seite teilen"
+    },
+    "share_action": {
+      "aria_label": "Check out this video review of {productName} by {brandName}"
     }
   },
   "CTABlockAllReviewers": {

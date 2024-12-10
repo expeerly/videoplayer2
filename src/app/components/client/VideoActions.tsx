@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { BackButton } from './BackButton';
 import { ShareDialog } from './ShareDialog';
 import isMobile from 'is-mobile';
+import { useTranslations } from 'next-intl';
 
 type VideoActionsProps = {
   video: Video;
@@ -14,6 +15,7 @@ type VideoActionsProps = {
 
 export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVideoDetails }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const t = useTranslations();
 
   const scrollToElement = useCallback(() => {
     try {
@@ -34,7 +36,10 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
       try {
         await navigator.share({
           title: video.productName,
-          text: `Check out this video review of ${video.productName} by ${video.brandName}`,
+          text: t('dynamic_texts.share_action.aria_label', {
+            productName: video.productName,
+            brandName: video.brandName,
+          }),
           url: window.location.href,
         });
       } catch (error) {
@@ -43,7 +48,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     } else {
       setIsOpen(true);
     }
-  }, [video]);
+  }, [t, video.brandName, video.productName]);
 
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
@@ -54,6 +59,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
           <div className="w-10 h-10 bg-grey-500 rounded-full flex items-center justify-center text-white">
             <ShareIcon onClick={handleShare} />
           </div>
+          {t('dynamic_texts.share.label')}
         </button>
 
         {!isVideoDetails ? (
@@ -64,14 +70,14 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
             <div className="w-10 h-10 text-sm font-semibold rounded-full bg-grey-500 flex items-center justify-center">
               <MoreIcon />
             </div>
-            More
+            {t('more')}
           </Link>
         ) : (
-          <button onClick={scrollToElement}>
+          <button onClick={scrollToElement} className="flex flex-col items-center">
             <div className="w-10 h-10 text-sm font-semibold rounded-full bg-grey-500 flex items-center justify-center">
               <MoreIcon />
             </div>
-            More
+            <p>{t('more')}</p>
           </button>
         )}
       </div>
