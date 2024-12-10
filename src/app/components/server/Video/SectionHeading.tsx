@@ -9,7 +9,7 @@ export const SectionHeading: FunctionComponent<PropsWithChildren<Props>> = ({
   className,
 }) => {
   return (
-    <h2 className={`text-lg font-extrabold md:font-medium md:text-2xl text-[#080218] ${className}`}>
+    <h2 className={`text-lg font-extrabold md:font-medium md:text-2xl text-navy-500 ${className}`}>
       {children}
     </h2>
   );

@@ -6,12 +6,14 @@ import { ShareIcon } from '@/src/assets/icons';
 import { NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
+import { getDictionary } from '@/src/lib/dictionary';
 
 const sampleText = `
 Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
 `.trim();
 
-const Page: NextPage = () => {
+const Page: NextPage = async () => {
+  const t = await getDictionary();
   return (
     <div className="w-full bg-white">
       <div className=" w-full mx-auto  md:max-w-[532px] pt-5 md:pt-10">
@@ -39,7 +41,9 @@ const Page: NextPage = () => {
                 >
                   <ShareIcon />
                 </Button>
-                <p className="text-grey-700 text-xs font-bold">Share</p>
+                <p className="text-grey-700 text-xs font-bold">
+                  {t.messages.dynamic_texts.share.label}
+                </p>
               </div>
             </div>
             <LongDescription text={sampleText} />

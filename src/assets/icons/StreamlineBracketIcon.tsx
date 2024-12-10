@@ -10,13 +10,13 @@ export const StreamlineBracketIcon: FunctionComponent<SVGProps<SVGSVGElement>> =
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <g clip-path="url(#clip0_1698_47367)">
+      <g clipPath="url(#clip0_1698_47367)">
         <path
           d="M9.64282 24L1.64282 16L9.64282 8M23.3571 24L31.3571 16L23.3571 8"
           stroke="black"
-          stroke-width="2.28571"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2.28571"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </g>
       <defs>
