@@ -5,6 +5,7 @@ import { Video } from '../server/Video/VideoCard';
 import Link from 'next/link';
 import { BackButton } from './BackButton';
 import { ShareDialog } from './ShareDialog';
+import isMobile from 'is-mobile';
 
 type VideoActionsProps = {
   video: Video;
@@ -29,7 +30,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
   }, []);
 
   const handleShare = useCallback(async () => {
-    if (window.innerWidth < 768 && navigator.share) {
+    if (isMobile() && navigator.share) {
       try {
         await navigator.share({
           title: video.productName,
@@ -52,9 +53,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
         <button className="flex flex-col items-center gap-1">
           <div className="w-10 h-10 bg-grey-500 rounded-full flex items-center justify-center text-white">
             <ShareIcon onClick={handleShare} />
-            <span className="text-blue-600">{!!navigator.share}</span>
           </div>
-          <span className="text-sm">Share</span>
         </button>
 
         {!isVideoDetails ? (
