@@ -1,19 +1,24 @@
 'use client';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useCallback, useState } from 'react';
 import { MoreIcon, ShareIcon } from '@/src/assets/icons';
 import { Video } from '../server/Video/VideoCard';
-import Link from 'next/link';
 import { BackButton } from './BackButton';
 import { ShareDialog } from './ShareDialog';
 import isMobile from 'is-mobile';
 import { useTranslations } from 'next-intl';
+import { Drawer } from './Drawer';
 
 type VideoActionsProps = {
   video: Video;
   isVideoDetails?: boolean;
+  detailDrawer?: ReactNode;
 };
 
-export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVideoDetails }) => {
+export const VideoActions: FunctionComponent<VideoActionsProps> = ({
+  video,
+  isVideoDetails,
+  detailDrawer,
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const t = useTranslations();
 
@@ -67,19 +72,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
           {t('dynamic_texts.share.label')}
         </button>
 
-        {!isVideoDetails ? (
-          <Link
-            className={`flex flex-col items-center text-sm font-semibold`}
-            href={`/video-reviews/${video.category}/${video.brandName}/${video.productName}/${video.playbackId}`}
-          >
-            <div
-              className={` w-10 h-10 rounded-full bg-grey-500 flex items-center justify-center !bg-opacity-50 md:!bg-opacity-100`}
-            >
-              <MoreIcon />
-            </div>
-            {t('more')}
-          </Link>
-        ) : (
+        {isVideoDetails ? (
           <button
             onClick={scrollToElement}
             className={`flex flex-col items-center text-sm font-semibold`}
@@ -91,6 +84,8 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
             </div>
             <p>{t('more')}</p>
           </button>
+        ) : (
+          <Drawer>{detailDrawer}</Drawer>
         )}
       </div>
 

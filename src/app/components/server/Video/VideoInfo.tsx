@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, ReactNode } from 'react';
 import { VideoActions } from '../../client/VideoActions';
 import { Video } from './VideoCard';
 import { Button } from '../../client/Button';
@@ -13,6 +13,7 @@ type VideoInfoProps = {
   rating: number;
   video: Video;
   isVideoDetails?: boolean;
+  detailDrawer?: ReactNode;
 };
 
 export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
@@ -21,6 +22,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
   rating,
   video,
   isVideoDetails,
+  detailDrawer,
 }) => {
   return (
     <>
@@ -34,7 +36,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
       </Link>
 
       <div className=" absolute right-5 top-3.5 h-3/4 text-white  flex sm:hidden ">
-        <VideoActions video={video} isVideoDetails={isVideoDetails} />
+        <VideoActions video={video} isVideoDetails={isVideoDetails} detailDrawer={detailDrawer} />
       </div>
 
       <div className="absolute bottom-14  px-5 justify-between flex items-center w-full text-white">

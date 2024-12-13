@@ -83,14 +83,20 @@ const videoDetails = {
             or spend too much time on it.`,
 };
 
-export const VideoDetails: FunctionComponent = async () => {
+type Props = {
+  isExplore?: boolean;
+};
+
+export const VideoDetails: FunctionComponent<Props> = async ({ isExplore }) => {
   const { t } = await getDictionary();
 
   return (
-    <div className="w-full items-center flex flex-col md:w-max md:mx-auto">
-      <div className="flex w-full h-[90vh] md:h-[calc(100vh-120px)] ">
-        <VideoCard key={videoData.id} video={videoData} isVideoDetails isFirst />
-      </div>
+    <div className="w-full items-center flex flex-col md:w-max md:mx-auto overflow-auto h-full z-50">
+      {!isExplore && (
+        <div className="flex w-full h-[90vh] md:h-[calc(100vh-120px)] ">
+          <VideoCard key={videoData.id} video={videoData} isVideoDetails isFirst />
+        </div>
+      )}
       <div className="w-full px-5 flex flex-col md:max-w-[450px] mx-auto pt-7 md:pt-2 md:px-0 relative">
         <div id="details" className="absolute  top-0  md:-top-20" />
         <ScrollToSection>
@@ -150,7 +156,7 @@ export const VideoDetails: FunctionComponent = async () => {
         <section className="relative">
           <div className="absolute top-0 md:-top-20" id="whatReviewerThinks" />
           <SectionHeading>What Marisa thinks</SectionHeading>
-          <p className=" mt-1.5">{videoDetails.whatReviewerThinks}</p>
+          <p className=" mt-1.5 text-grey-700">{videoDetails.whatReviewerThinks}</p>
         </section>
 
         <Divider className="my-5 md:my-8" />

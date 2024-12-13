@@ -1,4 +1,5 @@
 import { Video, VideoCard } from './VideoCard';
+import { VideoDetails } from './VideoDetails';
 
 type Props = {
   videos: Video[];
@@ -15,7 +16,12 @@ export const VideoFeed = ({ videos }: Props) => {
         }}
       >
         {videos.map((video, i) => (
-          <VideoCard key={video.id} video={video} isFirst={i === 0} />
+          <VideoCard
+            key={video.id}
+            video={video}
+            isFirst={i === 0}
+            detailDrawer={<VideoDetails isExplore></VideoDetails>}
+          />
         ))}
       </div>
     </div>

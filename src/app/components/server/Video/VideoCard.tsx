@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 import { VideoActions } from '../../client/VideoActions';
 import { VideoInfo } from './VideoInfo';
 import { VideoPlayer } from '../../client/VideoPlayer';
@@ -18,12 +18,14 @@ interface VideoCardProps {
   video: Video;
   isVideoDetails?: boolean;
   isFirst?: boolean;
+  detailDrawer?: ReactNode;
 }
 
 export const VideoCard: FunctionComponent<VideoCardProps> = ({
   video,
   isVideoDetails,
   isFirst,
+  detailDrawer,
 }) => {
   return (
     <>
@@ -39,10 +41,15 @@ export const VideoCard: FunctionComponent<VideoCardProps> = ({
               rating={4.2}
               video={video}
               isVideoDetails={isVideoDetails}
+              detailDrawer={detailDrawer}
             />
           </div>
           <div className="hidden w-0 h-full sm:flex sm:w-auto">
-            <VideoActions video={video} isVideoDetails={isVideoDetails} />
+            <VideoActions
+              video={video}
+              isVideoDetails={isVideoDetails}
+              detailDrawer={detailDrawer}
+            />
           </div>
         </div>
       </div>
