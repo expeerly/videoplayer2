@@ -4,7 +4,7 @@ import { VideoFeed } from '../../components/server/Video/VideoFeed';
 const sampleVideos: Video[] = [
   {
     id: '1',
-    playbackId: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks', // Mountain biking video
+    playbackId: 'qs2vN7D3ArOWe7i2sEVgHhlNcaZKayH3mf01i1ujAjKk', // Mountain biking video
     caption: '🚴‍♂️ Epic mountain biking trails! #mtb #adventure',
     username: 'adventu',
     userAvatar: '/avatars/user1.jpg',

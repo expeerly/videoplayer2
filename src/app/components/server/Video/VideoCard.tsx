@@ -26,22 +26,26 @@ export const VideoCard: FunctionComponent<VideoCardProps> = ({
   isFirst,
 }) => {
   return (
-    <div className=" h-full flex-1 w-full flex flex-col gap-3 snap-start items-center justify-center md:h-full md:p-0">
-      <div className=" flex gap-4 w-full h-full items-end md:h-[90%] md:max-w-[448px]">
-        <div className="relative h-full w-full flex bg-black md:aspect-[9/16] group">
-          <VideoPlayer isFirst={isFirst} playbackId={video.playbackId} />
-          <VideoInfo
-            brand={'Dyson'}
-            category={'Supersonic Professional'}
-            rating={4.2}
-            video={video}
-            isVideoDetails={isVideoDetails}
-          />
-        </div>
-        <div className="hidden w-0 h-full  md:flex md:w-[50px]">
-          <VideoActions video={video} isVideoDetails={isVideoDetails} />
+    <>
+      <div className=" h-full flex-1 w-full flex flex-col gap-3 snap-start items-center justify-center md:h-full md:p-0">
+        <div className="flex gap-4 w-max mx-auto h-max sm:h-max items-end">
+          <div className="relative h-full flex">
+            <div className="w-screen h-full sm:max-w-[441px]">
+              <VideoPlayer isFirst={isFirst} playbackId={video.playbackId} />
+            </div>
+            <VideoInfo
+              brand={'Dyson'}
+              category={'Supersonic Professional'}
+              rating={4.2}
+              video={video}
+              isVideoDetails={isVideoDetails}
+            />
+          </div>
+          <div className="hidden w-0 h-full sm:flex sm:w-auto">
+            <VideoActions video={video} isVideoDetails={isVideoDetails} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

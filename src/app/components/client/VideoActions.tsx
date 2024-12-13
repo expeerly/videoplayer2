@@ -52,11 +52,16 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
 
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
-      <BackButton variant="secondary" className={`!bg-grey-500 bg-opacity-50 md:bg-opacity-100`} />
+      <BackButton
+        variant="secondary"
+        className={`!bg-opacity-50 md:!bg-opacity-100 !bg-grey-500`}
+      />
 
       <div className="flex flex-col gap-6">
-        <button className="flex flex-col items-center gap-1">
-          <div className="w-10 h-10 bg-grey-500 rounded-full flex items-center justify-center text-white">
+        <button className="flex flex-col items-center gap-1 text-sm font-semibold">
+          <div
+            className={`w-10 h-10 bg-grey-500 rounded-full flex items-center justify-center text-white !bg-opacity-50 md:!bg-opacity-100`}
+          >
             <ShareIcon onClick={handleShare} />
           </div>
           {t('dynamic_texts.share.label')}
@@ -64,17 +69,24 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
 
         {!isVideoDetails ? (
           <Link
-            className="flex flex-col items-center"
+            className={`flex flex-col items-center text-sm font-semibold`}
             href={`/video-reviews/${video.category}/${video.brandName}/${video.productName}/${video.playbackId}`}
           >
-            <div className="w-10 h-10 text-sm font-semibold rounded-full bg-grey-500 flex items-center justify-center">
+            <div
+              className={` w-10 h-10 rounded-full bg-grey-500 flex items-center justify-center !bg-opacity-50 md:!bg-opacity-100`}
+            >
               <MoreIcon />
             </div>
             {t('more')}
           </Link>
         ) : (
-          <button onClick={scrollToElement} className="flex flex-col items-center">
-            <div className="w-10 h-10 text-sm font-semibold rounded-full bg-grey-500 flex items-center justify-center">
+          <button
+            onClick={scrollToElement}
+            className={`flex flex-col items-center text-sm font-semibold`}
+          >
+            <div
+              className={` w-10 h-10 rounded-full bg-grey-500 flex items-center justify-center !bg-opacity-50 md:!bg-opacity-100`}
+            >
               <MoreIcon />
             </div>
             <p>{t('more')}</p>

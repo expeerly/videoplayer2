@@ -88,7 +88,7 @@ export const VideoDetails: FunctionComponent = async () => {
 
   return (
     <div className="w-full items-center flex flex-col md:w-max md:mx-auto">
-      <div className="flex w-full h-max md:h-[calc(100vh-120px)] ">
+      <div className="flex w-full h-[90vh] md:h-[calc(100vh-120px)] ">
         <VideoCard key={videoData.id} video={videoData} isVideoDetails isFirst />
       </div>
       <div className="w-full px-5 flex flex-col md:max-w-[450px] mx-auto pt-7 md:pt-2 md:px-0 relative">
@@ -100,9 +100,9 @@ export const VideoDetails: FunctionComponent = async () => {
           </PageHeading>
         </ScrollToSection>
         <section className=" pt-7 mb-5 md:py-8 ">
-          <h4 className="text-2xl text-grey-700 font-medium mb-2">
+          <SectionHeading className="mb-2 ">
             {t('reviewSummary')} {`{{productname}}`}
-          </h4>
+          </SectionHeading>
           <p className="text-grey-700 font-normal text-base">{videoDetails.summary}</p>
         </section>
 
@@ -110,24 +110,24 @@ export const VideoDetails: FunctionComponent = async () => {
 
         <section className=" my-5 md:pt-6 md:pb-8">
           <SectionHeading className="mb-4">{t('productDetails')}</SectionHeading>
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-6">
               <div>
-                <div className="text-grey-500 font-bold text-sm">{t('brandName')}</div>
+                <h3 className="text-grey-500 font-bold text-sm">{t('brandName')}</h3>
                 <div className="text-grey-700">{videoDetails.brandName}</div>
               </div>
               <div>
-                <div className="text-grey-500 font-bold text-sm">{t('productName')}</div>
+                <h3 className="text-grey-500 font-bold text-sm">{t('productName')}</h3>
                 <div className="text-grey-700">{videoDetails.productName}</div>
               </div>
             </div>
             <div className="space-y-6">
               <div>
-                <div className="text-grey-500 font-bold text-sm">{t('gtinEan')}</div>
+                <h3 className="text-grey-500 font-bold text-sm">{t('gtinEan')}</h3>
                 <div className="text-grey-700">{videoDetails.gtin}</div>
               </div>
               <div>
-                <div className="text-grey-500 font-bold text-sm">{t('vendorProductNumber')}</div>
+                <h3 className="text-grey-500 font-bold text-sm">{t('vendorProductNumber')}</h3>
                 <div className="text-grey-700">{videoDetails.vendorProductNo}</div>
               </div>
             </div>
@@ -162,10 +162,9 @@ export const VideoDetails: FunctionComponent = async () => {
             {faqs.map((faq, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full  mt-2" />
-                  <h3 className="text-lg font-bold text-grey-700">{faq.question}</h3>
+                  <h3 className="text-base font-bold text-grey-700">{faq.question}</h3>
                 </div>
-                <div className="pl-3.5">
+                <div>
                   <p className="font-normal text-base text-grey-700 pb-4">{faq.answer}</p>
                 </div>
               </div>
@@ -176,6 +175,8 @@ export const VideoDetails: FunctionComponent = async () => {
         <Button size="lg" className=" mt-5 mb-6 md:mt-8" aria-label={t('buyNow.ariaLabel')}>
           {t('buyNow.label')}
         </Button>
+
+        <Divider className="my-5 md:my-6" />
       </div>
       <div className="flex w-full justify-center flex-col gap-6 mb-16 md:mx-auto md:w-max">
         <h1 className="px-5 text-left font-extrabold text-2xl text-grey-700 w-full md:text-center">
@@ -192,6 +193,7 @@ export const VideoDetails: FunctionComponent = async () => {
               rating: 4.5,
               subTitle: '38',
               variant: 'secondary',
+              description: '',
             }}
           />
         </div>

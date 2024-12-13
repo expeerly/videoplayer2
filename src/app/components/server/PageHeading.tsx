@@ -10,10 +10,10 @@ type Props = {
 };
 
 const sizeClasses = {
-  sm: 'text-base md:text-lg',
-  md: 'text-lg md:text-xl',
-  lg: 'text-lg md:text-2xl',
-  xl: 'text-xl md:text-3xl',
+  sm: 'text-lg',
+  md: 'text-xl',
+  lg: 'text-2xl',
+  xl: 'text-3xl',
 };
 
 export const PageHeading: FunctionComponent<PropsWithChildren<Props>> = ({

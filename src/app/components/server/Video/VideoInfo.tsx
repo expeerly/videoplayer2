@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from 'react';
-import { VideoTags } from './VideoTags';
 import { VideoActions } from '../../client/VideoActions';
 import { Video } from './VideoCard';
 import { Button } from '../../client/Button';
 import { StarRating } from '../StarRating';
 import { Avatar } from '../Avatar';
 import { Link } from '@/src/i18n/routing';
+import { BlueTick } from '@/src/assets/icons';
 
 type VideoInfoProps = {
   brand: string;
@@ -30,16 +30,14 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({
       >
         <Avatar size="sm" />
         <span>Carmo L.</span>
+        <BlueTick />
       </Link>
-      <div className=" absolute w-full flex md:hidden top-20 left-0 ">
-        <VideoTags variant="outlined" />
-      </div>
 
-      <div className=" absolute right-5 top-3.5 h-3/4 text-white  flex md:hidden ">
+      <div className=" absolute right-5 top-3.5 h-3/4 text-white  flex sm:hidden ">
         <VideoActions video={video} isVideoDetails={isVideoDetails} />
       </div>
 
-      <div className="absolute bottom-24  px-5 justify-between flex items-center w-full text-white">
+      <div className="absolute bottom-14  px-5 justify-between flex items-center w-full text-white">
         <div className="flex gap-2 items-center flex-1">
           <Avatar />
           <div className="flex flex-col flex-1">
