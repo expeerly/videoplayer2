@@ -29,10 +29,10 @@ export const VideoCard: FunctionComponent<VideoCardProps> = ({
 }) => {
   return (
     <>
-      <div className=" h-full flex-1 w-full flex flex-col gap-3 snap-start items-center justify-center md:h-full md:p-0">
-        <div className="flex gap-4 w-max mx-auto h-max sm:h-max items-end">
+      <div className=" h-full flex-1 w-full flex flex-col gap-3 snap-start items-center justify-center md:h-full md:p-0 mb-2.5">
+        <div className="flex gap-4 w-max mx-auto h-full items-end">
           <div className="relative h-full flex">
-            <div className="w-screen h-full sm:max-w-[441px]">
+            <div className="w-screen h-full sm:max-w-[441px] relative">
               <VideoPlayer isFirst={isFirst} playbackId={video.playbackId} />
             </div>
             <VideoInfo

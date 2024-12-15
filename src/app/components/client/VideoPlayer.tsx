@@ -33,48 +33,8 @@ export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, isFirst = fa
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (playerRef) {
-      playerRef.current?.shadowRoot?.childNodes.forEach(node => {
-        if (node.nodeName === 'MEDIA-THEME') {
-          node.childNodes.forEach(child => {
-            if (child.nodeName === 'MUX-VIDEO') {
-              const muxVideo = child as Element;
-              muxVideo.shadowRoot?.childNodes.forEach(muxNode => {
-                if (muxNode.nodeName === 'SLOT') {
-                  const slotElement = muxNode as Element;
-                  const nameAttribute = slotElement.getAttribute('name');
-
-                  if (nameAttribute === 'media') {
-                    slotElement.childNodes.forEach(slotChild => {
-                      if (slotChild.nodeName === 'VIDEO') {
-                        const videoElement = slotChild as HTMLVideoElement;
-                        const styleSheet = `
-                        video::-webkit-media-text-track-container {
-                          transform: translateY(-120px) !important;
-                        }
-                          video{
-                          height: max-content !important;
-
-                          }
-                        `;
-                        const styleElement = document.createElement('style');
-                        styleElement.textContent = styleSheet;
-                        videoElement.appendChild(styleElement);
-                      }
-                    });
-                  }
-                }
-              });
-            }
-          });
-        }
-      });
-    }
-  }, []);
-
   return (
-    <div ref={containerRef} className={`w-full h-max relative overflow-hidden aspect-[9/16]`}>
+    <div ref={containerRef} className={`w-full h-full relative `}>
       <MuxPlayer
         onCanPlay={() => setCanPlay(true)}
         ref={playerRef}

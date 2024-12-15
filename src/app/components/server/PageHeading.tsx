@@ -27,7 +27,7 @@ export const PageHeading: FunctionComponent<PropsWithChildren<Props>> = ({
   return (
     <Component
       className={clsx(
-        'flex-1 font-extrabold text-gray-700 mb-1 md:mb-3 md:w-full text-wrap',
+        'flex-1 font-extrabold text-grey-700 mb-1 md:mb-3 md:w-full text-wrap',
         sizeClasses[size],
         className
       )}
