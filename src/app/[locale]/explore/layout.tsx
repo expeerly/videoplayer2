@@ -4,7 +4,7 @@ import React, { FunctionComponent } from 'react';
 import { VideoDetails } from '../../components/server/Video/VideoDetails';
 import Drawer from '../../components/client/Drawer';
 
-const sampleVideos: Video[] = [
+export const sampleVideos: Video[] = [
   {
     id: '1',
     playbackId: 'qs2vN7D3ArOWe7i2sEVgHhlNcaZKayH3mf01i1ujAjKk',

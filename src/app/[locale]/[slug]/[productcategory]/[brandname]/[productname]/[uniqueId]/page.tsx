@@ -19,6 +19,7 @@ const videoData = {
   category: 'Adventure',
   brandName: 'Dyson',
   productName: 'Supersonic',
+  rating: 2.3,
 };
 
 const Page: NextPage = async () => {
