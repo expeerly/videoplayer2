@@ -1,6 +1,7 @@
 export { ArrowRightIcon } from './ArrowRightIcon';
 export { BinocularsIcon } from './BinocularsIcon';
 export { BlueTick } from './BlueTick';
+export { BagIcon } from './BagIcon';
 export { CartIcon } from './CartIcon';
 export { CategoriesIcon } from './CategoriesIcon';
 export { CloseIcon } from './CloseIcon';

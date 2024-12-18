@@ -27,7 +27,7 @@ const NavbarComponent: FunctionComponent = () => {
         'md:sticky',
         {
           'hidden md:flex':
-            pathname === '/explore' ||
+            pathname.includes('/explore') ||
             pathname.split('/')?.length === 6 ||
             pathname.split('/')?.length === 5,
         }

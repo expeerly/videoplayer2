@@ -9,6 +9,7 @@ import { PropsWithChildren } from 'react';
 import { notFound } from 'next/navigation';
 import { routing } from '@/src/i18n/routing';
 import { BottomBar } from '@/src/app/components/client/BottomBar';
+import SharedContextProvider from '../context';
 
 export const metadata: Metadata = {
   title: 'Expeerly App',
@@ -41,17 +42,19 @@ export default async function RootLayout({
     <html lang={locale}>
       <body className={`h-full antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <div className="flex h-full flex-col font-mulish">
-            <Navbar />
-            <div className="flex w-full flex-col-reverse md:flex-row">
-              <Sidebar />
-              <BottomBar />
-              <main className="flex-1 w-full md:w-[75%] mid-lg:w-[calc(100%-275px)] relative ">
-                {children}
-              </main>
+          <SharedContextProvider>
+            <div className="flex h-full w-full flex-col font-mulish">
+              <Navbar />
+              <div className="flex w-full flex-col-reverse md:flex-row">
+                <Sidebar />
+                <BottomBar />
+                <main className="flex-1 w-full md:w-[75%] mid-lg:w-[calc(100%-275px)] relative ">
+                  {children}
+                </main>
+              </div>
+              <Footer />
             </div>
-            <Footer />
-          </div>
+          </SharedContextProvider>
         </NextIntlClientProvider>
       </body>
     </html>

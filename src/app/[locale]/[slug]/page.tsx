@@ -55,7 +55,7 @@ const sampleVideos: Video[] = [
 ];
 const Page: NextPage = () => {
   return (
-    <div>
+    <div className="h-max">
       <VideoFeed videos={sampleVideos} />
     </div>
   );

@@ -1,40 +1,44 @@
 'use client';
-import React, { FunctionComponent, ReactNode, useCallback, useState } from 'react';
-import { MoreIcon, ShareIcon } from '@/src/assets/icons';
+import React, { FunctionComponent, useCallback, useState } from 'react';
+import { BagIcon, CloseIcon, MoreIcon, ShareIcon } from '@/src/assets/icons';
 import { Video } from '../server/Video/VideoCard';
-import { BackButton } from './BackButton';
 import { ShareDialog } from './ShareDialog';
 import isMobile from 'is-mobile';
 import { useTranslations } from 'next-intl';
-import { Drawer } from './Drawer';
+import { useSharedDispatch, useSharedState } from '../../context/reducer';
+import { Button } from './Button';
 
 type VideoActionsProps = {
   video: Video;
   isVideoDetails?: boolean;
-  detailDrawer?: ReactNode;
 };
 
-export const VideoActions: FunctionComponent<VideoActionsProps> = ({
-  video,
-  isVideoDetails,
-  detailDrawer,
-}) => {
+export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVideoDetails }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const t = useTranslations();
+  const dispatch = useSharedDispatch();
+  const { videoDetailsDrawer } = useSharedState();
 
-  const scrollToElement = useCallback(() => {
-    try {
-      const element = document.getElementById('details');
+  const moreButtonHandler = useCallback(() => {
+    if (isVideoDetails) {
+      try {
+        const element = document.getElementById('details');
 
-      if (element) {
-        element.scrollIntoView({
-          block: 'start',
-        });
+        if (element) {
+          element.scrollIntoView({
+            block: 'start',
+          });
+        }
+      } catch (error) {
+        console.error('Error scrolling to element:', error);
       }
-    } catch (error) {
-      console.error('Error scrolling to element:', error);
+    } else {
+      dispatch({
+        type: 'VIDEO_DETAILS_DRAWER',
+        payload: !videoDetailsDrawer,
+      });
     }
-  }, []);
+  }, [isVideoDetails, videoDetailsDrawer, dispatch]);
 
   const handleShare = useCallback(async () => {
     if (isMobile() && navigator.share) {
@@ -57,10 +61,15 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({
 
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
-      <BackButton
-        variant="secondary"
-        className={`!bg-opacity-50 md:!bg-opacity-100 !bg-grey-500`}
-      />
+      <Button
+        isOnlyIcon
+        variant={'secondary'}
+        size="sm"
+        className="!bg-opacity-50 md:!bg-opacity-100 !bg-grey-500"
+        href="/"
+      >
+        <CloseIcon className="[&>g>path]:!fill-white" />
+      </Button>
 
       <div className="flex flex-col gap-6">
         <button className="flex flex-col items-center gap-1 text-sm font-semibold">
@@ -72,21 +81,26 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({
           {t('dynamic_texts.share.label')}
         </button>
 
-        {isVideoDetails ? (
-          <button
-            onClick={scrollToElement}
-            className={`flex flex-col items-center text-sm font-semibold`}
+        <button
+          onClick={moreButtonHandler}
+          className={`flex flex-col items-center text-sm font-semibold`}
+        >
+          <div
+            className={` w-10 h-10 rounded-full bg-grey-500 flex items-center justify-center !bg-opacity-50 md:!bg-opacity-100`}
           >
-            <div
-              className={` w-10 h-10 rounded-full bg-grey-500 flex items-center justify-center !bg-opacity-50 md:!bg-opacity-100`}
-            >
-              <MoreIcon />
-            </div>
-            <p>{t('more')}</p>
-          </button>
-        ) : (
-          <Drawer>{detailDrawer}</Drawer>
-        )}
+            <MoreIcon />
+          </div>
+          <p>{t('more')}</p>
+        </button>
+
+        <button onClick={() => {}} className={`flex flex-col items-center text-sm font-semibold`}>
+          <div
+            className={` w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center !bg-opacity-50 md:!bg-opacity-100`}
+          >
+            <BagIcon />
+          </div>
+          <p>{'Shop'}</p>
+        </button>
       </div>
 
       <ShareDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />

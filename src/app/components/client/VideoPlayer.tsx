@@ -2,43 +2,34 @@
 
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import MuxPlayer, { MuxPlayerRefAttributes } from '@mux/mux-player-react';
+import { usePathname } from '@/src/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   playbackId: string;
-  isFirst?: boolean;
 };
 
-export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, isFirst = false }) => {
+export const VideoPlayer: FunctionComponent<Props> = ({ playbackId }) => {
   const playerRef = useRef<MuxPlayerRefAttributes>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [canPlay, setCanPlay] = useState(false);
-
+  const pathname = usePathname();
+  const t = useTranslations();
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!playerRef.current) return;
-        if (entry.isIntersecting) {
-          playerRef.current.play().catch(console.log);
-        } else {
-          playerRef.current.pause();
-        }
-      },
-      { threshold: 0.6 }
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+    if (!playerRef.current) return;
+    if (pathname.includes(`/explore/${playbackId}`)) {
+      playerRef.current.play().catch(console.log);
+    } else {
+      playerRef.current.pause();
     }
-
-    return () => observer.disconnect();
-  }, []);
+  }, [pathname, playbackId]);
 
   return (
     <div ref={containerRef} className={`w-full h-full relative `}>
       <MuxPlayer
         onCanPlay={() => setCanPlay(true)}
         ref={playerRef}
-        autoPlay={isFirst}
+        autoPlay={true}
         loop
         muted={false}
         playbackId={playbackId}
@@ -52,7 +43,7 @@ export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, isFirst = fa
       />
       {canPlay === false && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  h-full w-full flex items-center justify-center bg-black">
-          Loading...{' '}
+          {t('loading')}
         </div>
       )}
     </div>
