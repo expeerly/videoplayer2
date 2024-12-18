@@ -27,7 +27,7 @@ const Page: NextPage = async () => {
 
   return (
     <div className="w-full items-center flex flex-col md:w-max md:mx-auto overflow-auto h-full z-50">
-      <div className="flex w-full h-[90vh] md:h-[calc(100vh-120px)] ">
+      <div className="flex w-full h-[90vh] md:h-[calc(100vh-150px)] pt-6">
         <VideoCard key={videoData.id} video={videoData} isVideoDetails isFirst />
       </div>
       <div className="w-full px-5 flex flex-col md:max-w-[497px] mx-auto pt-7 md:pt-2 md:px-0 relative">
@@ -38,7 +38,9 @@ const Page: NextPage = async () => {
             Stunningly Simple!
           </PageHeading>
         </ScrollToSection>
-        <VideoDetails />
+        <div className="pt-7">
+          <VideoDetails />
+        </div>
         <Divider className="my-5 md:my-6" />
       </div>
 

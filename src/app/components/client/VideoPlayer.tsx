@@ -15,21 +15,21 @@ export const VideoPlayer: FunctionComponent<Props> = ({ playbackId }) => {
   const [canPlay, setCanPlay] = useState(false);
   const pathname = usePathname();
   const t = useTranslations();
+
   useEffect(() => {
     if (!playerRef.current) return;
-    if (pathname.includes(`/explore/${playbackId}`)) {
+    if (pathname.includes(`/explore/${playbackId}`) && canPlay) {
       playerRef.current.play().catch(console.log);
     } else {
       playerRef.current.pause();
     }
-  }, [pathname, playbackId]);
+  }, [pathname, playbackId, canPlay]);
 
   return (
     <div ref={containerRef} className={`w-full h-full relative `}>
       <MuxPlayer
         onCanPlay={() => setCanPlay(true)}
         ref={playerRef}
-        autoPlay={true}
         loop
         muted={false}
         playbackId={playbackId}

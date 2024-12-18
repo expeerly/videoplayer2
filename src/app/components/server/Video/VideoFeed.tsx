@@ -1,7 +1,7 @@
 'use client';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Video, VideoCard } from './VideoCard';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from '@/src/i18n/routing';
 
 type Props = {
   videos: Video[];
@@ -49,6 +49,15 @@ export const VideoFeed: FunctionComponent<Props> = ({ videos }) => {
 
     return () => observer.disconnect();
   }, [videos, currentIndex, router]);
+
+  useEffect(() => {
+    console.log({
+      pathname,
+    });
+    if (pathname === '/explore') {
+      router.push(`/explore/${videos[0].playbackId}`, { scroll: false });
+    }
+  }, [pathname]);
 
   return (
     <div
