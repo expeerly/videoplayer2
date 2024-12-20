@@ -62,7 +62,7 @@ export const VideoFeed: FunctionComponent<Props> = ({ videos }) => {
   return (
     <div
       ref={containerRef}
-      className="h-[91vh] mx-auto w-max overflow-y-scroll snap-y snap-mandatory scrollbar-none mb-2.5 relative sm:h-full"
+      className="h-[91vh] flex-1 mx-auto w-full overflow-y-scroll snap-y snap-mandatory scrollbar-none mb-2.5 relative sm:h-full"
       style={{
         overscrollBehavior: 'contain',
         WebkitOverflowScrolling: 'touch',
