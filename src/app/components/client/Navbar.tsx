@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FunctionComponent, memo, useCallback, useEffect, useMemo } from 'react';
+import React, { FunctionComponent, memo, useEffect, useMemo } from 'react';
 import { DropDownMenu } from './DropDownMenu';
 import clsx from 'clsx';
 import { Link, usePathname } from '@/src/i18n/routing';
@@ -59,7 +59,7 @@ const NavbarComponent: FunctionComponent = () => {
     [isHomePage]
   );
 
-  const historyHandleChange = useCallback(() => {
+  useEffect(() => {
     if (
       pathname.includes('/explore') &&
       userHistory[userHistory.length - 1]?.includes('/explore')
@@ -67,11 +67,7 @@ const NavbarComponent: FunctionComponent = () => {
       return;
     }
     dispatch({ type: 'USER_HISTORY', payload: [...userHistory, pathname] });
-  }, [dispatch, pathname, userHistory]);
-
-  useEffect(() => {
-    historyHandleChange();
-  }, [pathname, historyHandleChange]);
+  }, [dispatch, pathname]);
 
   return (
     <header className={headerClasses}>
