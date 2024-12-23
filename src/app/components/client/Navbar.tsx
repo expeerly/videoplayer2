@@ -1,15 +1,18 @@
 'use client';
 
-import React, { FunctionComponent, memo, useMemo } from 'react';
+import React, { FunctionComponent, memo, useCallback, useEffect, useMemo } from 'react';
 import { DropDownMenu } from './DropDownMenu';
 import clsx from 'clsx';
 import { Link, usePathname } from '@/src/i18n/routing';
 import Image from 'next/image';
 import { BackButton } from './BackButton';
+import { useSharedDispatch, useSharedState } from '../../context/reducer';
 
 const NavbarComponent: FunctionComponent = () => {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
+  const dispatch = useSharedDispatch();
+  const { userHistory } = useSharedState();
 
   // Memoized class combinations
   const headerClasses = useMemo(
@@ -55,6 +58,20 @@ const NavbarComponent: FunctionComponent = () => {
       ),
     [isHomePage]
   );
+
+  const historyHandleChange = useCallback(() => {
+    if (
+      pathname.includes('/explore') &&
+      userHistory[userHistory.length - 1]?.includes('/explore')
+    ) {
+      return;
+    }
+    dispatch({ type: 'USER_HISTORY', payload: [...userHistory, pathname] });
+  }, [dispatch, pathname, userHistory]);
+
+  useEffect(() => {
+    historyHandleChange();
+  }, [pathname, historyHandleChange]);
 
   return (
     <header className={headerClasses}>

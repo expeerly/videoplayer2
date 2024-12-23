@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { VideoFeed } from '../../components/server/Video/VideoFeed';
+import { VideoFeed } from '../../components/client/VideoFeed';
 import { sampleVideos } from '../explore/layout';
 
 const Page: NextPage = () => {

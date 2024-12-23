@@ -1,168 +1,99 @@
-'use client';
-import clsx from 'clsx';
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  FunctionComponent,
-  PropsWithChildren,
-  useMemo,
-} from 'react';
+import { FunctionComponent, PropsWithChildren, useEffect, useRef } from 'react';
+import {
+  AnimatePresence,
+  motion,
+  animate,
+  useMotionTemplate,
+  useMotionValue,
+  useTransform,
+  PanInfo,
+} from 'framer-motion';
 
-interface DrawerProps {
+const SHEET_MARGIN = 56;
+
+type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onOpenChange?: (isOpen: boolean) => void;
-  className?: string;
-}
+};
 
-export const MobileDrawer: FunctionComponent<PropsWithChildren<DrawerProps>> = ({
+export const MobileDrawer: FunctionComponent<PropsWithChildren<Props>> = ({
   children,
   isOpen,
   onClose,
-  onOpenChange,
-  className = '',
 }) => {
-  const [state, setState] = useState({
-    isDragging: false,
-    startY: 0,
-    startHeight: 0,
-  });
+  const currentRef = useRef<HTMLDivElement>(null);
+  const h = window.innerHeight - SHEET_MARGIN;
+  const y = useMotionValue(h);
+  const bgOpacity = useTransform(y, [0, h], [0.4, 0]);
+  const bg = useMotionTemplate`rgba(0, 0, 0, ${bgOpacity})`;
 
-  const drawerRef = useRef<HTMLDivElement>(null);
-  const dragHandleRef = useRef<HTMLDivElement>(null);
-
+  // Prevent body scroll when drawer is open
   useEffect(() => {
-    const preventPullToRefresh = (e: TouchEvent) => {
-      if (dragHandleRef.current?.contains(e.target as Node)) {
-        e.preventDefault();
-      }
-    };
-
-    document.body.addEventListener('touchmove', preventPullToRefresh, { passive: false });
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
     return () => {
-      document.body.removeEventListener('touchmove', preventPullToRefresh);
+      document.body.style.overflow = 'auto';
     };
   }, [isOpen]);
 
-  const handleDragStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (!dragHandleRef.current?.contains(e.target as Node)) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    setState(prev => ({
-      ...prev,
-      isDragging: true,
-      startY: clientY,
-      startHeight: drawerRef.current?.offsetHeight || 0,
-    }));
-  }, []);
-
-  const handleDrag = useCallback(
-    (e: MouseEvent | TouchEvent) => {
-      if (!state.isDragging || !drawerRef.current) return;
-
-      if ('touches' in e) {
-        e.preventDefault();
-      }
-
-      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-      const delta = state.startY - clientY;
-      const newHeight = state.startHeight + delta;
-      const viewportHeight = window.innerHeight;
-      const minHeight = viewportHeight * 0.8;
-
-      if (newHeight < minHeight) {
-        onClose();
-        return;
-      }
-
-      drawerRef.current.style.height = `${newHeight}px`;
-    },
-    [state.isDragging, state.startY, state.startHeight, onClose]
-  );
-
-  const handleDragEnd = useCallback(() => {
-    if (!drawerRef.current) return;
-
-    const currentHeight = drawerRef.current.offsetHeight;
-    const viewportHeight = window.innerHeight;
-    const minHeight = viewportHeight * 0.5;
-
-    if (currentHeight < minHeight) {
+  const handleDragEnd = (
+    _: MouseEvent | TouchEvent | PointerEvent,
+    { offset, velocity }: PanInfo
+  ) => {
+    if (offset.y > window.innerHeight * 0.75 || velocity.y > 10) {
       onClose();
     } else {
-      drawerRef.current.style.height = '';
-      setState(prev => ({ ...prev, isDragging: false }));
+      animate(y, 0, {
+        type: 'inertia',
+        bounceStiffness: 300,
+        bounceDamping: 40,
+        timeConstant: 300,
+        min: 0,
+        max: 0,
+      });
     }
-  }, [onClose]);
+  };
 
-  useEffect(() => {
-    if (state.isDragging) {
-      const options = { passive: false };
-      window.addEventListener('mousemove', handleDrag);
-      window.addEventListener('mouseup', handleDragEnd);
-      window.addEventListener('touchmove', handleDrag, options);
-      window.addEventListener('touchend', handleDragEnd);
-
-      return () => {
-        window.removeEventListener('mousemove', handleDrag);
-        window.removeEventListener('mouseup', handleDragEnd);
-        window.removeEventListener('touchmove', handleDrag);
-        window.removeEventListener('touchend', handleDragEnd);
-      };
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
     }
-  }, [state.isDragging, handleDrag, handleDragEnd]);
-
-  useEffect(() => {
-    onOpenChange?.(isOpen);
-  }, [isOpen, onOpenChange]);
-
-  const baseClasses = useMemo(
-    () =>
-      clsx(
-        'fixed bg-white shadow-lg z-50 w-full h-full max-h-[calc(100vh-150px)]',
-        'transform transition-transform duration-300 ease-in-out',
-        'w-full rounded-t-2xl bottom-0 left-0 right-0',
-        {
-          'translate-y-full': !isOpen,
-          'translate-y-0': isOpen,
-        },
-        {
-          'transition-none': state.isDragging,
-        },
-        className
-      ),
-    [isOpen, state.isDragging, className]
-  );
+  };
 
   return (
-    <>
+    <AnimatePresence>
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-40"
-          onClick={onClose}
-          role="presentation"
-        />
-      )}
-      <div ref={drawerRef} className={baseClasses} role="dialog" aria-modal="true" inert={!isOpen}>
-        <div
-          ref={dragHandleRef}
-          className="w-full flex justify-center p-4 cursor-grab active:cursor-grabbing"
-          onMouseDown={handleDragStart}
-          onTouchStart={handleDragStart}
-          role="button"
-          tabIndex={0}
-          aria-label="Drag to resize drawer"
+        <motion.div
+          className="fixed inset-0 z-40 overscroll-none"
+          style={{ backgroundColor: bg }}
+          onClick={handleOverlayClick}
         >
-          <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
-        </div>
+          <motion.div
+            className="bg-white absolute w-full  rounded-t-xl shadow-lg"
+            initial={{ y: h }}
+            animate={{ y: 0 }}
+            exit={{ y: h }}
+            transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+            style={{
+              y,
+              top: SHEET_MARGIN,
+              height: `calc(100% - ${SHEET_MARGIN}px)`,
+            }}
+            drag="y"
+            dragConstraints={{ top: 0 }}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="mx-auto w-12 mt-2 h-1.5 rounded-full bg-gray-400" />
 
-        <div className="px-4 pb-4 h-full overflow-y-auto">{children}</div>
-      </div>
-    </>
+            <motion.div className="drawer-content h-full -z-10 pt-3" ref={currentRef}>
+              <div className="h-full px-5 pb-5 overflow-auto">{children}</div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

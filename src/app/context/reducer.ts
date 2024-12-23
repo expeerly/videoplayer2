@@ -4,6 +4,7 @@ import { SharedActionsProps, SharedStateProps } from './types';
 
 export const initialState: SharedStateProps = {
   videoDetailsDrawer: false,
+  userHistory: [],
 };
 
 export const SharedState = createContext<SharedStateProps>(initialState);
@@ -22,6 +23,12 @@ export const sharedReducer = (
       return {
         ...state,
         videoDetailsDrawer: action.payload,
+      };
+
+    case 'USER_HISTORY':
+      return {
+        ...state,
+        userHistory: action.payload,
       };
 
     default:

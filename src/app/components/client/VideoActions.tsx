@@ -7,7 +7,6 @@ import isMobile from 'is-mobile';
 import { useTranslations } from 'next-intl';
 import { useSharedDispatch, useSharedState } from '../../context/reducer';
 import { Button } from './Button';
-
 type VideoActionsProps = {
   video: Video;
   isVideoDetails?: boolean;
@@ -17,7 +16,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const t = useTranslations();
   const dispatch = useSharedDispatch();
-  const { videoDetailsDrawer } = useSharedState();
+  const { videoDetailsDrawer, userHistory } = useSharedState();
 
   const moreButtonHandler = useCallback(() => {
     if (isVideoDetails) {
@@ -59,6 +58,8 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     }
   }, [t, video.brandName, video.productName]);
 
+  console.log({ userHistory });
+
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
       <Button
@@ -66,7 +67,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
         variant={'secondary'}
         size="sm"
         className="!bg-opacity-50 md:!bg-opacity-100 !bg-grey-500"
-        href="/"
+        href={userHistory[userHistory.length - 2] ?? '/'}
       >
         <CloseIcon className="[&>g>path]:!fill-white" />
       </Button>

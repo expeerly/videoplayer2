@@ -1,5 +1,5 @@
 import { Video } from '@/src/app/components/server/Video/VideoCard';
-import { VideoFeed } from '@/src/app/components/server/Video/VideoFeed';
+import { VideoFeed } from '@/src/app/components/client/VideoFeed';
 import React, { FunctionComponent } from 'react';
 import { VideoDetails } from '../../components/server/Video/VideoDetails';
 import Drawer from '../../components/client/Drawer';
