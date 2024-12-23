@@ -100,7 +100,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
           >
             <BagIcon />
           </div>
-          <p>{'Shop'}</p>
+          <p>{t('Shop')}</p>
         </button>
       </div>
 
