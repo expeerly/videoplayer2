@@ -21,10 +21,12 @@ const Drawer: FunctionComponent<PropsWithChildren> = ({ children }) => {
     <>
       {isMobile ? (
         <MobileDrawer isOpen={videoDetailsDrawer} onClose={handleClose}>
+          <h1 className="text-3xl text-black">{isMobile}</h1>
           {children}
         </MobileDrawer>
       ) : (
         <DesktopDrawer isOpen={videoDetailsDrawer} onClose={handleClose}>
+          <h1 className="text-3xl text-black">{isMobile}</h1>
           {children}
         </DesktopDrawer>
       )}

@@ -1,4 +1,11 @@
-import { FunctionComponent, PropsWithChildren, useCallback, useEffect, useRef } from 'react';
+import {
+  FunctionComponent,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import {
   AnimatePresence,
   motion,
@@ -10,7 +17,7 @@ import {
   useDragControls,
 } from 'framer-motion';
 
-const SHEET_MARGIN = 56;
+const SHEET_MARGIN = 120;
 
 type Props = {
   isOpen: boolean;
@@ -24,7 +31,12 @@ export const MobileDrawer: FunctionComponent<PropsWithChildren<Props>> = ({
 }) => {
   const dragControls = useDragControls();
   const containerRef = useRef<HTMLDivElement>(null);
-  const h = window.innerHeight - SHEET_MARGIN;
+  const h = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerHeight - SHEET_MARGIN;
+    }
+    return 0; // or some default value
+  }, []);
   const y = useMotionValue(h);
   const bgOpacity = useTransform(y, [0, h], [0.4, 0]);
   const bg = useMotionTemplate`rgba(0, 0, 0, ${bgOpacity})`;
@@ -68,6 +80,7 @@ export const MobileDrawer: FunctionComponent<PropsWithChildren<Props>> = ({
       if (offset.y < 0) {
         y.set(0);
       }
+      handleDragTransitionEnd();
     },
     [y]
   );
@@ -126,13 +139,14 @@ export const MobileDrawer: FunctionComponent<PropsWithChildren<Props>> = ({
                 e.preventDefault();
                 dragControls.start(e);
               }}
+              onPointerUp={e => dragControls.start(e)}
             >
               <div className="mx-auto w-12 mt-2 mb-2 h-1.5 rounded-full bg-gray-400" />
             </motion.div>
 
             <div
               ref={containerRef}
-              className="flex-1 overflow-auto overscroll-contain px-5 pb-5 touch-auto"
+              className="flex-1 overflow-auto overscroll-contain px-5 pb-5 touch-auto flex justify-center"
             >
               {children}
             </div>

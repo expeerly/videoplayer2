@@ -12,15 +12,18 @@ export const DesktopDrawer: FunctionComponent<PropsWithChildren<Props>> = ({
   onClose,
 }) => {
   return (
-    <div>
+    <div
+      className={`fixed top-[81px] right-0 h-full z-50 bg-black/25 max-h-[calc(100vh-85px)] overflow-auto mid-lg:static mid-lg:w-max mid-lg:bg-transparent  ${isOpen ? 'w-full' : 'w-0'}`}
+    >
       <div
         className={`
+          ml-auto
           h-full 
           z-30 
           bg-white 
           shadow-lg 
           transition-all
-          duration-300 
+          duration-300
           ease-in-out 
           max-h-[calc(100vh-85px)] 
           overflow-auto

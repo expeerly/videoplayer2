@@ -58,8 +58,6 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     }
   }, [t, video.brandName, video.productName]);
 
-  console.log({ userHistory });
-
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
       <Button
@@ -100,7 +98,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
           >
             <BagIcon />
           </div>
-          <p>{t('Shop')}</p>
+          <p>{t('shop')}</p>
         </button>
       </div>
 
