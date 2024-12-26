@@ -9,13 +9,25 @@
     font-family: 'Mulish', system-ui, sans-serif;
   }
   h2 {
-    @apply text-lg font-extrabold leading-normal md:text-2xl;
+    @apply text-lg font-extrabold leading-normal;
+  }
+  h3 {
+    @apply text-base font-extrabold leading-normal;
   }
   body {
-    @apply text-sm md:text-base;
+    @apply text-base;
   }
 }
 
 :root {
   --font-mulish: 'Mulish', sans-serif;
+}
+
+mux-player {
+  --media-object-fit: cover;
+  --media-object-position: center;
+}
+
+mux-player::part(video) {
+  --media-webkit-text-track-transform: translateY(-120px) scale(0.98);
 }

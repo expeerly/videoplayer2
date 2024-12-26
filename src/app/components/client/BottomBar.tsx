@@ -16,7 +16,7 @@ export const BottomBar: FunctionComponent = () => {
         'z-30 flex flex-row justify-around fixed bottom-0 py-2 px-4 gap-1 bg-white border-t w-full md:hidden',
         {
           hidden:
-            pathname === '/explore' ||
+            pathname.includes('/explore') ||
             pathname.split('/')?.length === 6 ||
             pathname.split('/')?.length === 5,
         }

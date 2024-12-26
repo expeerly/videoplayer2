@@ -27,6 +27,8 @@
   "productHighlights": "Product highlights",
   "frequentlyAskedQuestions": "Frequently asked questions",
   "moreVideosOn": "More videos on",
+  "loading": "Loading",
+  "shop": "Shop",
   "buyNow": {
     "label": "Buy now",
     "ariaLabel": "Go to the product shown in the video"

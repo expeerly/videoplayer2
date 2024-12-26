@@ -3,15 +3,14 @@
 import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import { Button } from './Button';
 import clsx from 'clsx';
-import { CloseIcon, LeftChevronIcon } from '@/src/assets/icons';
+import { LeftChevronIcon } from '@/src/assets/icons';
 import { usePathname, useRouter } from '@/src/i18n/routing';
 
 type Props = {
-  variant?: 'primary' | 'secondary';
   className?: string;
 };
 
-export const BackButton: FunctionComponent<Props> = ({ variant = 'primary', className }) => {
+export const BackButton: FunctionComponent<Props> = ({ className }) => {
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/';
@@ -33,11 +32,11 @@ export const BackButton: FunctionComponent<Props> = ({ variant = 'primary', clas
       clsx(
         {
           hidden: isHomePage,
-          'md:hidden': !isHomePage && variant !== 'secondary',
+          'block md:hidden': !isHomePage,
         },
         className
       ),
-    [isHomePage, className, variant]
+    [isHomePage, className]
   );
 
   return (
@@ -49,8 +48,7 @@ export const BackButton: FunctionComponent<Props> = ({ variant = 'primary', clas
       onClick={goBack}
       aria-label="Go back to previous page"
     >
-      {variant === 'primary' && <LeftChevronIcon />}
-      {variant === 'secondary' && <CloseIcon className="[&>g>path]:!fill-white" />}
+      <LeftChevronIcon />
     </Button>
   );
 };

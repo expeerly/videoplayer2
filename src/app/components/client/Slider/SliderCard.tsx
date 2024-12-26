@@ -3,10 +3,10 @@
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import React, { FunctionComponent, useMemo } from 'react';
+import React, { FunctionComponent, ReactElement, useMemo } from 'react';
 
 export type SlideProps = {
-  icon?: JSX.Element | string;
+  icon?: ReactElement | string;
   name?: string;
   imgURL?: string;
   id?: number | string;
