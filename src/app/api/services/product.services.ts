@@ -11,11 +11,18 @@ export const createProducts = async (input: ProductInputType[]) => {
   if (!input || input.length === 0) {
     throw new Error('Input is required and cannot be empty');
   }
-  console.log(input);
+
+  // Ensure proper date handling for each input item
+  const processedInput = input.map(item => ({
+    ...item,
+    createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+    updatedAt: new Date(),
+  }));
+
   try {
     const data = await db
       .insert(product)
-      .values(input)
+      .values(processedInput)
       .onConflictDoUpdate({
         target: [product.id],
         set: {
@@ -35,6 +42,6 @@ export const createProducts = async (input: ProductInputType[]) => {
     return data;
   } catch (error) {
     console.error('Error creating/updating products:', error);
-    throw error; // Throw the actual error for better debugging
+    throw error;
   }
 };
