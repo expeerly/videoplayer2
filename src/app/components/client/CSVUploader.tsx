@@ -1,80 +1,113 @@
 'use client';
-import React, { FunctionComponent, useCallback, useRef } from 'react';
-import Papa from 'papaparse';
-
-type CSVData = {
-  [key: string]: string | number;
-}[];
+import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
+import { useCSVParser } from '../../hooks/useCSVParser';
+import { CSVData } from '../../context/types';
 
 interface CSVUploaderProps {
-  onDataParsed: (data: CSVData) => void;
-  onError: (error: string) => void;
+  setParsedData: (data: CSVData) => void;
+  csvHeadersData: CSVData;
+  setCSVHeadersData: (data: CSVData) => void;
 }
 
-export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({ onDataParsed, onError }) => {
+export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
+  setParsedData,
+  csvHeadersData,
+  setCSVHeadersData,
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const headerFileInputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string | undefined>();
 
+  const { parseCSVFile, isLoading, error: parseError } = useCSVParser();
   const handleFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    async (event: React.ChangeEvent<HTMLInputElement>, isHeaderFile: boolean = false) => {
       const file = event.target.files?.[0];
 
       if (!file) return;
 
       if (file.type !== 'text/csv') {
-        onError('Please upload a valid CSV file');
+        setError('Please upload a valid CSV file');
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
         return;
       }
 
-      Papa.parse(file, {
-        complete: results => {
-          if (results.errors.length) {
-            onError('Error parsing CSV file');
-            return;
-          }
+      const parsedData = await parseCSVFile(file);
+      if (isHeaderFile) {
+        if (!parsedData[0]?.ID || !parsedData[0]?.Header) {
+          setError('Header File Must have ID and Header Columns');
+          return;
+        }
+        setError(undefined);
+        setCSVHeadersData(parsedData);
+        return;
+      }
 
-          const headers = results.data[0] as string[];
-          const rows = results.data.slice(1) as string[][];
+      if (!csvHeadersData || csvHeadersData.length === 0) {
+        setError('Please upload a valid CSV file');
+        return;
+      }
 
-          const parsedData = rows.map(row =>
-            headers.reduce(
-              (acc, header, index) => ({
-                ...acc,
-                [header]: isNaN(Number(row[index])) ? row[index] : Number(row[index]),
-              }),
-              {}
-            )
-          );
-
-          onDataParsed(parsedData);
-        },
-        header: false,
-        skipEmptyLines: true,
-      });
+      setError(undefined);
+      setParsedData(parsedData);
     },
-    [onDataParsed, onError]
+    [parseCSVFile, csvHeadersData, setParsedData, setCSVHeadersData]
   );
 
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <label
-        htmlFor="csv-upload"
-        className="inline-flex items-center px-4 py-2 bg-pink-500 hover:bg-pink-600 active:bg-pink-700
+    <div className=" text-center">
+      <div className="flex justify-evenly items-center">
+        {!!csvHeadersData?.length ? (
+          <div className="flex gap-2 items-center">
+            <span className="text-sm text-gray-500">Headers File Uploaded!</span>
+            <span className="text-sm cursor-pointer" onClick={() => setCSVHeadersData([])}>
+              x
+            </span>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center">
+            <label
+              htmlFor="csv-upload"
+              className="inline-flex items-center px-4 py-2 bg-pink-500 hover:bg-pink-600 active:bg-pink-700
           text-white font-medium rounded-lg cursor-pointer transition-colors"
-      >
-        Choose CSV File
-        <input
-          ref={fileInputRef}
-          id="csv-upload"
-          type="file"
-          accept=".csv"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-      </label>
-      <p className="text-sm text-gray-500">Only CSV files are accepted</p>
+            >
+              Choose CSV Header File
+              <input
+                ref={headerFileInputRef}
+                id="csv-upload"
+                type="file"
+                accept=".csv"
+                onChange={e => handleFileChange(e, true)}
+                className="hidden"
+              />
+            </label>
+            <p className="text-sm text-gray-500">Only CSV files are accepted</p>
+          </div>
+        )}
+        {!!csvHeadersData?.length && (
+          <div className="flex flex-col items-center">
+            <label
+              htmlFor="csv-upload"
+              className="inline-flex items-center px-4 py-2 bg-pink-500 hover:bg-pink-600 active:bg-pink-700
+          text-white font-medium rounded-lg cursor-pointer transition-colors"
+            >
+              Choose CSV Data File
+              <input
+                ref={fileInputRef}
+                id="csv-upload"
+                type="file"
+                accept=".csv"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </label>
+            <p className="text-sm text-gray-500">Only CSV files are accepted</p>
+          </div>
+        )}
+      </div>
+      {(error || parseError) && <p className="text-red-500 mt-4">Error: {error}</p>}
+      {isLoading && <p className="text-gray-500 mt-4">Uploading...</p>}
     </div>
   );
 };

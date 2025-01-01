@@ -14,17 +14,15 @@ type RequestPayload = Record<string, unknown>;
 
 // API call result type
 interface ApiCallResult<T> {
-  data: ApiResponse<T> | null;
   loading: boolean;
   error: string | null;
-  get: (url: string, params?: RequestParams) => Promise<void>;
-  post: (url: string, payload: RequestPayload) => Promise<void>;
-  put: (url: string, payload: RequestPayload) => Promise<void>;
-  del: (url: string, params?: RequestParams) => Promise<void>;
+  get: (url: string, params?: RequestParams) => Promise<ApiResponse<T> | null>;
+  post: (url: string, payload: RequestPayload) => Promise<ApiResponse<T> | null>;
+  put: (url: string, payload: RequestPayload) => Promise<ApiResponse<T> | null>;
+  del: (url: string, params?: RequestParams) => Promise<ApiResponse<T> | null>;
 }
 
 export const useApiCall = <T>(): ApiCallResult<T> => {
-  const [data, setData] = useState<ApiResponse<T> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +31,7 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
       method: 'get' | 'post' | 'put' | 'delete',
       url: string,
       payload?: RequestParams | RequestPayload
-    ) => {
+    ): Promise<ApiResponse<T> | null> => {
       setLoading(true);
       setError(null);
 
@@ -54,10 +52,11 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
             response = await axios.get<ApiResponse<T>>(url, { params: payload });
         }
 
-        setData(response.data);
+        return response.data;
       } catch (err) {
         const axiosError = err as AxiosError;
         setError(axiosError.message);
+        return null;
       } finally {
         setLoading(false);
       }
@@ -85,5 +84,5 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
     [handleRequest]
   );
 
-  return { data, loading, error, get, post, put, del };
+  return { loading, error, get, post, put, del };
 };

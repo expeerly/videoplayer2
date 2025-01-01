@@ -1,8 +1,6 @@
 import { FunctionComponent } from 'react';
+import { CSVData } from '../../context/types';
 
-type CSVData = {
-  [key: string]: string | number;
-}[];
 interface DataTableProps {
   data: CSVData;
 }
