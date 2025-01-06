@@ -4,7 +4,7 @@ import { getCategory, handleCreateCategory } from '../services/category.services
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
-    const category = await handleCreateCategory(body);
+    const category = await handleCreateCategory(body.data);
     return NextResponse.json(
       {
         success: true,

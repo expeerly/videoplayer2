@@ -9,9 +9,20 @@ export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
   }
 
   try {
+    const [creators, products] = await Promise.all([
+      db.query.creator.findMany({}),
+      db.query.product.findMany({}),
+    ]);
+
+    const filteredVideos = input.filter(video => {
+      const creatorExists = creators.some(c => c.id === video.creatorId);
+      const productExists = products.some(p => p.id === video.productId);
+      return creatorExists && productExists;
+    });
+
     const data = await db
       .insert(video)
-      .values(input)
+      .values(filteredVideos)
       .onConflictDoUpdate({
         target: [video.id],
         set: {
@@ -44,5 +55,15 @@ export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
   } catch (error) {
     console.error('Error in handleCreateVideo:', error);
     throw new Error('Failed to create/update video');
+  }
+}
+
+export async function getVideosCount(): Promise<{ count: number }> {
+  try {
+    const count = await db.$count(video);
+    return { count };
+  } catch (error) {
+    console.error('Error fetching video count:', error);
+    throw new Error('Failed to fetch video count');
   }
 }

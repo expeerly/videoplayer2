@@ -4,7 +4,7 @@ import { handleCreateVideo } from '../services/video.services';
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
-    const creator = await handleCreateVideo(body);
+    const creator = await handleCreateVideo(body.data);
     return NextResponse.json(
       {
         success: true,

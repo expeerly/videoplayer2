@@ -57,7 +57,7 @@ export const CSVViewer: FunctionComponent = () => {
     const routesMap = {
       [CSVDataOptions.brand]: API_ROUTES.BRANDS,
       [CSVDataOptions.category]: API_ROUTES.CATEGORIES,
-      [CSVDataOptions.creator]: API_ROUTES.REVIEWERS,
+      [CSVDataOptions.creator]: API_ROUTES.CREATORS,
       [CSVDataOptions.product]: API_ROUTES.PRODUCTS,
       [CSVDataOptions.video]: API_ROUTES.VIDEOS,
       [CSVDataOptions.rating]: API_ROUTES.RATINGS,
@@ -65,10 +65,9 @@ export const CSVViewer: FunctionComponent = () => {
 
     try {
       const transformedData = transformDataToJSON(parsedCSVData, selectedOption);
-      const res = await post(`${process.env.NEXT_ENDPOINT_URL}${routesMap[selectedOption]}`, {
+      await post(`${process.env.NEXT_ENDPOINT_URL}${routesMap[selectedOption]}`, {
         data: transformedData,
       });
-      console.log({ res, selectedOption });
     } catch (error) {
       console.error(error ?? 'Error saving data');
     }

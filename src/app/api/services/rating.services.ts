@@ -9,9 +9,20 @@ export async function uploadRatings(ratings: Rating[]) {
   }
 
   try {
+    const [creators, products] = await Promise.all([
+      db.query.creator.findMany({}),
+      db.query.product.findMany({}),
+    ]);
+
+    const filteredRatings = ratings.filter(rating => {
+      const creatorExists = creators.some(c => c.id === rating.creatorId);
+      const productExists = products.some(p => p.id === rating.productId);
+      return creatorExists && productExists;
+    });
+
     const data = await db
       .insert(rating)
-      .values(ratings)
+      .values(filteredRatings)
       .onConflictDoUpdate({
         target: [rating.id],
         set: {

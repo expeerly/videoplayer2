@@ -4,7 +4,7 @@ import { handleCreateCreator } from '../services/creator.services';
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
-    const creator = await handleCreateCreator(body);
+    const creator = await handleCreateCreator(body.data);
     return NextResponse.json(
       {
         success: true,

@@ -4,7 +4,7 @@ import { handleCreateBrand, handleGetBrand } from '../services/brand.services';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const brand = await handleCreateBrand(body);
+    const brand = await handleCreateBrand(body.data);
     return NextResponse.json(
       {
         success: true,

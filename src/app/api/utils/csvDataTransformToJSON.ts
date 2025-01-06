@@ -22,6 +22,13 @@ const createFieldGetter =
     return data[field] ? `${data[field]}` : '';
   };
 
+export const verifyRequiredFields = (requiredFields: string[], data: CSVDataItem): boolean => {
+  const missingFields = requiredFields.filter(
+    field => !data.hasOwnProperty(field.trim()) || data[field.trim()] === ''
+  );
+  return missingFields.length === 0;
+};
+
 const createMultiLangObject = <T>(
   getField: ReturnType<typeof createFieldGetter>,
   fields: Record<string, string>
@@ -33,7 +40,7 @@ const createMultiLangObject = <T>(
       Object.fromEntries(
         Object.entries(fields).map(([key, field]) => [
           key,
-          getField(`${field}${lang === 'en' ? '' : ` ${lang.toUpperCase()}`}`) || null,
+          getField(`${field} ${lang.toUpperCase()}`) || null,
         ])
       ),
     ])
@@ -44,15 +51,18 @@ const transformers = {
   [CSVDataOptions.brand]: (data: CSVDataItem): Partial<Brand> => {
     const getField = createFieldGetter(data);
     return {
-      id: getField('unique_brand_id'),
+      id: getField('Unique bubble Id Brand'),
       brandName: getField('Company/brand name'),
       logo: getField('logo_name') || null,
       slug: getField('slugs'),
+      websiteURL: getField('Brand Website Link', false),
       brandData: createMultiLangObject<Brand['brandData']>(getField, {
         siteTitle: 'Sitetitle',
         metaDesc: 'Meta description',
+        brandBody: 'Teaser Brand body text',
+        brandFooter: 'Teaser Brand body text',
       }),
-      rating: Number(getField('Rating')),
+      rating: Number(getField('Rating', false)),
     };
   },
 
@@ -60,7 +70,7 @@ const transformers = {
     const getField = createFieldGetter(data);
     return {
       id: Number(getField('unique_category_id')),
-      logo: getField('logo'),
+      logo: getField('Category icon link'),
       categoryData: createMultiLangObject<Category['categoryData']>(getField, {
         categoryName: 'Category',
         urlSlug: 'URL slug',
@@ -70,11 +80,18 @@ const transformers = {
     };
   },
 
-  [CSVDataOptions.creator]: (data: CSVDataItem): Partial<Creator> => {
+  [CSVDataOptions.creator]: (data: CSVDataItem): Partial<Creator> & { interests: string } => {
     const getField = createFieldGetter(data);
     return {
-      id: getField('creator_unique_id'),
-      creatorName: getField('Creator first name'),
+      id: getField('Unique Bubble ID Reviewer'),
+      creatorName:
+        `${getField('Creator First Name', false)} ${getField('Creator Last Name', false)}`.trim(),
+      bio: getField('Bio', false),
+      profilePictureURL: getField('Profile Picture URL', false),
+      age: Number(getField('Age', false)),
+      location: getField('Location', false),
+      country: getField('Country', false),
+      interests: getField('Category ID', false),
     };
   },
 
@@ -88,8 +105,19 @@ const transformers = {
     };
   },
 
-  [CSVDataOptions.product]: (data: CSVDataItem): Partial<Product> => {
+  [CSVDataOptions.product]: (data: CSVDataItem): Partial<Product> | null => {
     const getField = createFieldGetter(data);
+    const requiredFields = [
+      'Unique Bubble ID Product',
+      'Unique bubble Id Brand',
+      'unique_category_id',
+      'product_name_slug',
+    ];
+    const isValid = verifyRequiredFields(requiredFields, data);
+    if (!isValid) {
+      return null;
+    }
+
     return {
       id: getField('Unique Bubble ID Product'),
       productName: getField('Product name'),
@@ -105,15 +133,14 @@ const transformers = {
   [CSVDataOptions.video]: (data: CSVDataItem): Partial<Video> => {
     const getField = createFieldGetter(data);
     const booleanField = (field: string) => getField(field)?.toLowerCase() === 'yes';
-    console.log(data);
     return {
       id: parseInt(getField('Unique expeerly player ID')),
       videoUrl: getField('Main video URL'),
       playbackId: getField('Max playback ID'),
       cannonicalTag: booleanField('Set canonical tag'),
       showRelated: booleanField('Show related videos'),
-      creatorId: getField('Creator unique ID'),
-      productId: getField('Expeerly product ID'),
+      creatorId: getField('Unique Bubble ID Reviewer'),
+      productId: getField('Unique Bubble ID Product'),
       resolution: getField('video format')?.replace(/\s/g, '') || null,
       videoTitle: createMultiLangObject(getField, { title: 'Detailed page title' }),
       subtitle: createMultiLangObject(getField, { file: 'Subtitles file' }),
@@ -142,5 +169,5 @@ const transformers = {
 export const transformDataToJSON = (data: CSVData, option: CSVDataOptions): TransformResult[] => {
   const transformer = transformers[option];
   if (!transformer) throw new Error('Invalid option');
-  return data.map(item => transformer(item));
+  return data.map(item => transformer(item)).filter(Boolean) as TransformResult[];
 };

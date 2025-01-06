@@ -4,7 +4,7 @@ import { uploadRatings } from '../services/rating.services';
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
-    const creator = await uploadRatings(body);
+    const creator = await uploadRatings(body.data);
     return NextResponse.json(
       {
         success: true,

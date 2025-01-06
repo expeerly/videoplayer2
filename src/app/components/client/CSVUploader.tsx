@@ -34,7 +34,6 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
       }
 
       const parsedData = await parseCSVFile(file);
-      console.log({ parsedData });
       if (isHeaderFile) {
         if (!parsedData[0]?.ID || !parsedData[0]?.Header) {
           setError('Header File Must have ID and Header Columns');

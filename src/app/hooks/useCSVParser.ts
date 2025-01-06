@@ -47,16 +47,17 @@ const parseCSVInfo = (rows: string[][]): CSVParseResult => {
 
 const parseRegularFile = (csvInfo: CSVParseResult): CSVData => {
   const { ids, headers, data } = csvInfo;
-  return data.map(row =>
-    headers.reduce((acc, header, index) => {
+  return data.map(row => {
+    const res = headers.reduce((acc, header, index) => {
       if (!header) return acc;
       const key = ids[index] || headers[index];
       return {
         ...acc,
         [key]: parseValue(row[index]),
       };
-    }, {})
-  );
+    }, {});
+    return res;
+  });
 };
 
 export const useCSVParser = (): UseCSVParserReturn => {
@@ -80,7 +81,6 @@ export const useCSVParser = (): UseCSVParserReturn => {
 
             const rows = results.data as string[][];
             const parsedData = parseRegularFile(parseCSVInfo(rows));
-
             resolve(parsedData);
           },
           error: (error: unknown) => {

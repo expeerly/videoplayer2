@@ -33,6 +33,7 @@ export const brand = pgTable('brand', {
   brandData: jsonb('brandData').notNull(),
   slug: text('slug').notNull().unique(),
   logo: text('logo'),
+  websiteURL: text('websiteURL'),
   rating: real('rating').default(0.0).notNull(),
   createdAt: timestamp('createdAt', {
     precision: 6,
@@ -63,6 +64,25 @@ export const category = pgTable('category', {
 export const creator = pgTable('creator', {
   id: text('id').primaryKey(),
   creatorName: text('creatorName').notNull(),
+  bio: text('bio'),
+  profilePictureURL: text('profilePictureURL'),
+  age: integer('age'),
+  location: text('location'),
+  country: text('country'),
+  createdAt: timestamp('createdAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+  updatedAt: timestamp('updatedAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+});
+
+export const creatorInterests = pgTable('creatorInterests', {
+  id: serial('id').primaryKey(),
+  creatorId: text('creatorId').references(() => creator.id),
+  categoryId: integer('categoryId').references(() => category.id),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,
@@ -170,4 +190,5 @@ export const categoryRelations = relations(category, ({ many }) => ({
 
 export const creatorRelations = relations(creator, ({ many }) => ({
   videos: many(video),
+  interests: many(creatorInterests),
 }));
