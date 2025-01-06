@@ -53,3 +53,13 @@ export async function handleGetBrand(): Promise<Brand[]> {
     throw new Error('Failed to fetch brands');
   }
 }
+
+export async function getBrandsCount(): Promise<{ count: number }> {
+  try {
+    const count = await db.$count(brand);
+    return { count };
+  } catch (error) {
+    console.error('Error fetching category count:', error);
+    throw new Error('Failed to fetch category count');
+  }
+}

@@ -39,3 +39,13 @@ export async function handleCreateCreator(input: CreatorInputType[]): Promise<Cr
     throw new Error('Failed to create/update creator');
   }
 }
+
+export async function getCreatorsCount(): Promise<{ count: number }> {
+  try {
+    const count = await db.$count(creator);
+    return { count };
+  } catch (error) {
+    console.error('Error fetching category count:', error);
+    throw new Error('Failed to fetch category count');
+  }
+}

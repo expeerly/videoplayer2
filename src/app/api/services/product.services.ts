@@ -52,3 +52,13 @@ export const createProducts = async (input: ProductInputType[]) => {
     throw error;
   }
 };
+
+export async function getProductsCount(): Promise<{ count: number }> {
+  try {
+    const count = await db.$count(product);
+    return { count };
+  } catch (error) {
+    console.error('Error fetching category count:', error);
+    throw new Error('Failed to fetch category count');
+  }
+}

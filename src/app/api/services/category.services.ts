@@ -49,3 +49,13 @@ export async function getCategory(): Promise<Category[]> {
     throw new Error('Failed to fetch categories');
   }
 }
+
+export async function getCategoryCount(): Promise<{ count: number }> {
+  try {
+    const count = await db.$count(category);
+    return { count };
+  } catch (error) {
+    console.error('Error fetching category count:', error);
+    throw new Error('Failed to fetch category count');
+  }
+}

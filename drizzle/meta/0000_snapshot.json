@@ -1,5 +1,5 @@
 {
-  "id": "7eafffbd-aae4-490a-85ee-f3e74a8b7a4f",
+  "id": "6092373f-4a2d-4c00-b64e-f660c3547464",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -265,7 +265,7 @@
           "name": "rating",
           "type": "real",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": 0
         },
         "createdAt": {
@@ -299,6 +299,76 @@
           "tableFrom": "product",
           "tableTo": "category",
           "columnsFrom": ["categoryId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.rating": {
+      "name": "rating",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "productId": {
+          "name": "productId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creatorId": {
+          "name": "creatorId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rating": {
+          "name": "rating",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp (6) with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp (6) with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "rating_productId_product_id_fk": {
+          "name": "rating_productId_product_id_fk",
+          "tableFrom": "rating",
+          "tableTo": "product",
+          "columnsFrom": ["productId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "rating_creatorId_creator_id_fk": {
+          "name": "rating_creatorId_creator_id_fk",
+          "tableFrom": "rating",
+          "tableTo": "creator",
+          "columnsFrom": ["creatorId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"

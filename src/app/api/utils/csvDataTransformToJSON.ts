@@ -15,11 +15,11 @@ export enum CSVDataOptions {
 
 const createFieldGetter =
   (data: CSVDataItem) =>
-  (field: string): string => {
-    if (!(field in data)) {
+  (field: string, isRequired = true): string => {
+    if (isRequired && !(field in data)) {
       throw new Error(`${field} is required but not found in the received data`);
     }
-    return `${data[field]}`;
+    return data[field] ? `${data[field]}` : '';
   };
 
 const createMultiLangObject = <T>(
@@ -91,12 +91,12 @@ const transformers = {
   [CSVDataOptions.product]: (data: CSVDataItem): Partial<Product> => {
     const getField = createFieldGetter(data);
     return {
-      id: getField('Expeerly product ID'),
+      id: getField('Unique Bubble ID Product'),
       productName: getField('Product name'),
       productLink: getField('Call to action link'),
       globalTradeItemNumber: getField('GTIN/EAN') || null,
       vendorProductNumber: getField('Vendor Product Number') || null,
-      brandId: getField('unique_brand_id') || null,
+      brandId: getField('Unique bubble Id Brand') || null,
       categoryId: Number(getField('unique_category_id')),
       productSlug: { en: getField('product_name_slug') || null },
     };
