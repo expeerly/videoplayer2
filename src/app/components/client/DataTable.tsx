@@ -11,7 +11,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({ data }) => {
   const headers = Object.keys(data[0]);
 
   return (
-    <div className="mt-8 overflow-auto w-full h-[600px] border rounded-lg">
+    <div className="mt-8 overflow-auto w-full h-[450px] border rounded-lg">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50 sticky top-0">
           <tr>
