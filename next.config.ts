@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  env: {
+    NEXT_ENDPOINT_URL: process.env.NEXT_ENDPOINT_URL,
+  },
 };
 
 export default withNextIntl(nextConfig);

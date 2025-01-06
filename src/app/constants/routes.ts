@@ -4,4 +4,5 @@ export const API_ROUTES = {
   REVIEWERS: '/reviewer',
   PRODUCTS: '/product',
   VIDEOS: '/video',
+  RATINGS: '/rating',
 };

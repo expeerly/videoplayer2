@@ -1,8 +1,8 @@
-import { Brand, Category, Creator, Product, Video } from '@/src/db/types';
+import { Brand, Category, Creator, Product, Rating, Video } from '@/src/db/types';
 import { CSVData } from '../../context/types';
 
 type CSVDataItem = Record<string, string | number>;
-type TransformResult = Partial<Brand | Category | Creator | Product | Video>;
+type TransformResult = Partial<Brand | Category | Creator | Product | Video | Rating>;
 
 export enum CSVDataOptions {
   brand = 'brand',
@@ -10,6 +10,7 @@ export enum CSVDataOptions {
   creator = 'creator',
   product = 'product',
   video = 'video',
+  rating = 'rating',
 }
 
 const createFieldGetter =
@@ -77,6 +78,16 @@ const transformers = {
     };
   },
 
+  [CSVDataOptions.rating]: (data: CSVDataItem): Partial<Rating> => {
+    const getField = createFieldGetter(data);
+    return {
+      id: getField('Unique Bubble ID Rating'),
+      productId: getField('Unique Bubble ID Product'),
+      creatorId: getField('Unique Bubble ID Reviewer'),
+      rating: Number(getField('Star rating')),
+    };
+  },
+
   [CSVDataOptions.product]: (data: CSVDataItem): Partial<Product> => {
     const getField = createFieldGetter(data);
     return {
@@ -88,7 +99,6 @@ const transformers = {
       brandId: getField('unique_brand_id') || null,
       categoryId: Number(getField('unique_category_id')),
       productSlug: { en: getField('product_name_slug') || null },
-      rating: Number(getField('Rating')),
     };
   },
 

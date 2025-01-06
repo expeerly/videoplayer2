@@ -12,12 +12,19 @@ export const createProducts = async (input: ProductInputType[]) => {
     throw new Error('Input is required and cannot be empty');
   }
 
-  // Ensure proper date handling for each input item
-  const processedInput = input.map(item => ({
-    ...item,
-    createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
-    updatedAt: new Date(),
-  }));
+  // Ensure proper date handling and validate categoryId
+  const processedInput = input.map(item => {
+    // Skip items with invalid categoryId (0 or undefined)
+    if (!item.categoryId || item.categoryId === 0) {
+      throw new Error(`Invalid category ID for product: ${item.productName}`);
+    }
+
+    return {
+      ...item,
+      createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+      updatedAt: new Date(),
+    };
+  });
 
   try {
     const data = await db
@@ -41,7 +48,7 @@ export const createProducts = async (input: ProductInputType[]) => {
 
     return data;
   } catch (error) {
-    console.error('Error creating/updating products:', error);
+    console.error('Error in createProducts:', error);
     throw error;
   }
 };

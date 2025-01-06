@@ -37,16 +37,21 @@ export const CSVViewer: FunctionComponent = () => {
       [CSVDataOptions.creator]: API_ROUTES.REVIEWERS,
       [CSVDataOptions.product]: API_ROUTES.PRODUCTS,
       [CSVDataOptions.video]: API_ROUTES.VIDEOS,
+      [CSVDataOptions.rating]: API_ROUTES.RATINGS,
     };
 
     try {
       const transformedData = transformDataToJSON(parsedCSVData, selectedOption);
-      const res = await post(routesMap[selectedOption], { data: transformedData });
+      const res = await post(`${process.env.NEXT_ENDPOINT_URL}${routesMap[selectedOption]}`, {
+        data: transformedData,
+      });
       console.log({ res, selectedOption });
     } catch (error) {
       console.error(error ?? 'Error saving data');
     }
   }, [selectedOption, parsedCSVData, post]);
+
+  console.log({ parsedCSVData });
 
   return (
     <div className="mx-auto px-4 py-8 max-w-screen-xl h-full overflow-hidden flex flex-col">
@@ -70,6 +75,7 @@ export const CSVViewer: FunctionComponent = () => {
                   { value: CSVDataOptions.creator, label: 'Creators' },
                   { value: CSVDataOptions.product, label: 'Products' },
                   { value: CSVDataOptions.video, label: 'Videos' },
+                  { value: CSVDataOptions.rating, label: 'Ratings' },
                 ]}
                 onChange={value => setSelectedOption(value as CSVDataOptions)}
               />

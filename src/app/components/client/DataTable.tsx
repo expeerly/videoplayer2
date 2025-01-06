@@ -18,7 +18,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({ data }) => {
             {headers.map(header => (
               <th
                 key={header}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-96"
               >
                 {header}
               </th>
@@ -33,7 +33,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({ data }) => {
                   key={`${rowIndex}-${header}`}
                   className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                 >
-                  {row[header]}
+                  <div className="min-w-52 max-w-96 text-wrap break-all">{row[header]}</div>
                 </td>
               ))}
             </tr>

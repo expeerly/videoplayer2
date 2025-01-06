@@ -83,7 +83,7 @@ export const product = pgTable('product', {
   categoryId: integer('categoryId').references(() => category.id),
   globalTradeItemNumber: text('globalTradeItemNumber'),
   vendorProductNumber: text('vendorProductNumber'),
-  rating: real('rating').default(0.0).notNull(),
+  rating: real('rating').default(0.0),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,
@@ -112,6 +112,21 @@ export const video = pgTable('video', {
   cannonicalTag: boolean('cannonicalTag').default(false).notNull(),
   showRelated: boolean('showRelated').default(false).notNull(),
   resolution: text('resolution'),
+  createdAt: timestamp('createdAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+  updatedAt: timestamp('updatedAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+});
+
+export const rating = pgTable('rating', {
+  id: text('id').primaryKey(),
+  productId: text('productId').references(() => product.id),
+  creatorId: text('creatorId').references(() => creator.id),
+  rating: real('rating').notNull(),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,
