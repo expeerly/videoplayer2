@@ -16,27 +16,35 @@ export const CSVViewer: FunctionComponent = () => {
   const [tableCounts, setTableCounts] = useState<{ [key: string]: number }>({});
   const { post, get } = useApiCall();
 
-  useEffect(() => {
-    const fetchTableCounts = async () => {
-      try {
-        const response = await get(`${process.env.NEXT_ENDPOINT_URL}/counts`);
-        if (response?.success && response.data && typeof response.data === 'object') {
-          // Ensure the data matches our expected type
-          const counts: { [key: string]: number } = {};
-          Object.entries(response.data).forEach(([key, value]) => {
-            if (typeof value === 'number') {
-              counts[key] = value;
-            }
-          });
-          setTableCounts(counts);
-        }
-      } catch (error) {
-        console.error('Error fetching table counts:', error);
-      }
-    };
+  const [loading, setLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(
+    null
+  );
 
-    fetchTableCounts();
+  const fetchTableCounts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await get(`${process.env.NEXT_ENDPOINT_URL}/counts`);
+      if (response?.success && response.data && typeof response.data === 'object') {
+        // Ensure the data matches our expected type
+        const counts: { [key: string]: number } = {};
+        Object.entries(response.data).forEach(([key, value]) => {
+          if (typeof value === 'number') {
+            counts[key] = value;
+          }
+        });
+        setTableCounts(counts);
+      }
+    } catch (error) {
+      console.error('Error fetching table counts:', error);
+    } finally {
+      setLoading(false);
+    }
   }, [get]);
+
+  useEffect(() => {
+    fetchTableCounts();
+  }, [fetchTableCounts]);
 
   const parsedCSVData = useMemo(() => {
     return csvData.map(row => {
@@ -54,6 +62,8 @@ export const CSVViewer: FunctionComponent = () => {
   }, [csvData, csvHeadersData]);
 
   const handleSave = useCallback(async () => {
+    setMessage(null);
+    setLoading(true);
     const routesMap = {
       [CSVDataOptions.brand]: API_ROUTES.BRANDS,
       [CSVDataOptions.category]: API_ROUTES.CATEGORIES,
@@ -65,15 +75,23 @@ export const CSVViewer: FunctionComponent = () => {
 
     try {
       const transformedData = transformDataToJSON(parsedCSVData, selectedOption);
-      await post(`${process.env.NEXT_ENDPOINT_URL}${routesMap[selectedOption]}`, {
+      const res = await post(`${process.env.NEXT_ENDPOINT_URL}${routesMap[selectedOption]}`, {
         data: transformedData,
       });
-    } catch (error) {
-      console.error(error ?? 'Error saving data');
-    }
-  }, [selectedOption, parsedCSVData, post]);
 
-  console.log({ parsedCSVData });
+      if (res?.success) {
+        // Reload the counts after successful save
+        setMessage({ type: 'success', message: 'Data saved successfully' });
+        setCSVData([]);
+        await fetchTableCounts();
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage({ type: 'error', message: 'Error saving data' });
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedOption, parsedCSVData, post, fetchTableCounts]);
 
   const tableCountsArray = useMemo(
     () => Object.entries(tableCounts).map(([name, count]) => ({ name, count })),
@@ -81,7 +99,7 @@ export const CSVViewer: FunctionComponent = () => {
   );
 
   return (
-    <div className="mx-auto px-4 py-8 max-w-screen-xl h-full overflow-hidden flex flex-col">
+    <div className="mx-auto px-4 py-8 max-w-screen-xl h-full flex flex-col">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold">CSV Data Viewer</h1>
 
@@ -90,7 +108,16 @@ export const CSVViewer: FunctionComponent = () => {
             setParsedData={setCSVData}
             csvHeadersData={csvHeadersData}
             setCSVHeadersData={setCSVHeadersData}
+            setLoading={setLoading}
           />
+
+          {!loading && message && (
+            <div
+              className={`flex-1 h-full flex items-center justify-center ${message.type === 'error' ? 'text-red-500' : 'text-green-500'}`}
+            >
+              <p className="text-2xl">{message.message}</p>
+            </div>
+          )}
         </div>
 
         <div className=" bg-white shadow-md rounded-lg overflow-hidden">
@@ -119,7 +146,13 @@ export const CSVViewer: FunctionComponent = () => {
         </div>
       </div>
 
-      {parsedCSVData.length > 0 && (
+      {loading && (
+        <div className="flex-1 h-full flex items-center justify-center">
+          <p className="text-2xl">Loading...</p>
+        </div>
+      )}
+
+      {!loading && parsedCSVData.length > 0 && (
         <div className="mt-8 w-full flex-1 flex flex-col">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold mb-4">Displaying {csvData.length} rows of data</h2>

@@ -7,12 +7,14 @@ interface CSVUploaderProps {
   setParsedData: (data: CSVData) => void;
   csvHeadersData: CSVData;
   setCSVHeadersData: (data: CSVData) => void;
+  setLoading: (value: boolean) => void;
 }
 
 export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
   setParsedData,
   csvHeadersData,
   setCSVHeadersData,
+  setLoading,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const headerFileInputRef = useRef<HTMLInputElement>(null);
@@ -21,6 +23,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
   const { parseCSVFile, isLoading, error: parseError } = useCSVParser();
   const handleFileChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>, isHeaderFile: boolean = false) => {
+      setLoading(true);
       const file = event.target.files?.[0];
 
       if (!file) return;
@@ -39,6 +42,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
           setError('Header File Must have ID and Header Columns');
           return;
         }
+        setLoading(false);
         setError(undefined);
         setCSVHeadersData(parsedData);
         return;
@@ -46,9 +50,12 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
 
       if (!csvHeadersData || csvHeadersData.length === 0) {
         setError('Please upload a valid CSV file');
+        setLoading(false);
+
         return;
       }
 
+      setLoading(false);
       setError(undefined);
       setParsedData(parsedData);
     },
