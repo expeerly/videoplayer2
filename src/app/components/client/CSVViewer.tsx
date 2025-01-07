@@ -9,6 +9,7 @@ import { CSVDataOptions, transformDataToJSON } from '../../api/utils/csvDataTran
 import { CSVData } from '../../context/types';
 import { API_ROUTES } from '../../constants/routes';
 import { LeftChevronIcon } from '@/src/assets/icons';
+import { LogoutButton } from './LogoutButton';
 
 export const CSVViewer: FunctionComponent = () => {
   const [selectedOption, setSelectedOption] = useState<CSVDataOptions>(CSVDataOptions.brand);
@@ -75,7 +76,7 @@ export const CSVViewer: FunctionComponent = () => {
         </Button>
 
         <h1 className="text-3xl font-bold">CSV Data Viewer</h1>
-        <div />
+        <LogoutButton />
       </div>
 
       <div className="my-auto">
