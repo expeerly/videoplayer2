@@ -124,13 +124,11 @@ export const video = pgTable('video', {
   creatorId: text('creatorId').references(() => creator.id),
   siteTitle: jsonb('siteTitle').notNull(),
   metaDescription: jsonb('metaDescription').notNull(),
-  subtitle: jsonb('subtitle').notNull(),
   summary: jsonb('summary').notNull(),
   transcript: jsonb('transcript').notNull(),
   faqs: jsonb('faqs').notNull(),
   published: boolean('published'),
   cannonicalTag: boolean('cannonicalTag').default(false).notNull(),
-  showRelated: boolean('showRelated').default(false).notNull(),
   resolution: text('resolution'),
   createdAt: timestamp('createdAt', {
     precision: 6,

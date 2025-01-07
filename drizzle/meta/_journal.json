@@ -36,6 +36,13 @@
       "when": 1736165820938,
       "tag": "0004_melted_mentor",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1736241460084,
+      "tag": "0005_fair_earthquake",
+      "breakpoints": true
     }
   ]
 }

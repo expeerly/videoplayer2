@@ -1,0 +1,17 @@
+import { Button } from '@/src/app/components/client/Button';
+import { LogoGrid } from '@/src/app/components/server/LogoGrid';
+import { LeftChevronIcon } from '@/src/assets/icons';
+
+export default async function LogosPage() {
+  const brandsLogo = await fetch(`${process.env.NEXT_ENDPOINT_URL}/brand/logos`);
+  const { data } = await brandsLogo.json();
+
+  return (
+    <div className="container mx-auto px-4 py-8 h-full overflow-auto">
+      <Button className="w-max mb-5" href={'/admin'}>
+        <LeftChevronIcon className="[&>path]:stroke-white" /> Back
+      </Button>
+      <LogoGrid data={data.length > 0 ? data : []} />
+    </div>
+  );
+}

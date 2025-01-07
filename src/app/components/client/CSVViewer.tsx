@@ -1,5 +1,5 @@
 'use client';
-import React, { FunctionComponent, useCallback, useMemo, useState, useEffect } from 'react';
+import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import { CSVUploader } from './CSVUploader';
 import { DataTable } from './DataTable';
 import { StyledSelect } from './StyledSelect';
@@ -8,43 +8,18 @@ import { useApiCall } from '@/src/hooks/useApi';
 import { CSVDataOptions, transformDataToJSON } from '../../api/utils/csvDataTransformToJSON';
 import { CSVData } from '../../context/types';
 import { API_ROUTES } from '../../constants/routes';
+import { LeftChevronIcon } from '@/src/assets/icons';
 
 export const CSVViewer: FunctionComponent = () => {
   const [selectedOption, setSelectedOption] = useState<CSVDataOptions>(CSVDataOptions.brand);
   const [csvData, setCSVData] = useState<CSVData>([]);
   const [csvHeadersData, setCSVHeadersData] = useState<CSVData>([]);
-  const [tableCounts, setTableCounts] = useState<{ [key: string]: number }>({});
-  const { post, get } = useApiCall();
+  const { post } = useApiCall();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(
     null
   );
-
-  const fetchTableCounts = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await get(`${process.env.NEXT_ENDPOINT_URL}/counts`);
-      if (response?.success && response.data && typeof response.data === 'object') {
-        // Ensure the data matches our expected type
-        const counts: { [key: string]: number } = {};
-        Object.entries(response.data).forEach(([key, value]) => {
-          if (typeof value === 'number') {
-            counts[key] = value;
-          }
-        });
-        setTableCounts(counts);
-      }
-    } catch (error) {
-      console.error('Error fetching table counts:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [get]);
-
-  useEffect(() => {
-    fetchTableCounts();
-  }, [fetchTableCounts]);
 
   const parsedCSVData = useMemo(() => {
     return csvData.map(row => {
@@ -83,7 +58,6 @@ export const CSVViewer: FunctionComponent = () => {
         // Reload the counts after successful save
         setMessage({ type: 'success', message: 'Data saved successfully' });
         setCSVData([]);
-        await fetchTableCounts();
       }
     } catch (error) {
       console.error(error);
@@ -91,59 +65,34 @@ export const CSVViewer: FunctionComponent = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedOption, parsedCSVData, post, fetchTableCounts]);
-
-  const tableCountsArray = useMemo(
-    () => Object.entries(tableCounts).map(([name, count]) => ({ name, count })),
-    [tableCounts]
-  );
+  }, [selectedOption, parsedCSVData, post]);
 
   return (
-    <div className="mx-auto px-4 py-8 max-w-screen-xl h-full flex flex-col">
-      <div className="flex justify-between">
+    <div className="mx-auto px-4 py-8 h-full flex flex-col">
+      <div className="flex items-center justify-between mb-5">
+        <Button className="w-max" href={'/admin'}>
+          <LeftChevronIcon className="[&>path]:stroke-white" /> Back
+        </Button>
+
         <h1 className="text-3xl font-bold">CSV Data Viewer</h1>
+        <div />
+      </div>
 
-        <div className="my-auto">
-          <CSVUploader
-            setParsedData={setCSVData}
-            csvHeadersData={csvHeadersData}
-            setCSVHeadersData={setCSVHeadersData}
-            setLoading={setLoading}
-          />
+      <div className="my-auto">
+        <CSVUploader
+          setParsedData={setCSVData}
+          csvHeadersData={csvHeadersData}
+          setCSVHeadersData={setCSVHeadersData}
+          setLoading={setLoading}
+        />
 
-          {!loading && message && (
-            <div
-              className={`flex-1 h-full flex items-center justify-center ${message.type === 'error' ? 'text-red-500' : 'text-green-500'}`}
-            >
-              <p className="text-2xl">{message.message}</p>
-            </div>
-          )}
-        </div>
-
-        <div className=" bg-white shadow-md rounded-lg overflow-hidden">
-          <table className="min-w-full">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Table Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Total Count
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {tableCountsArray.map(({ name, count }) => (
-                <tr key={name}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {!loading && message && (
+          <div
+            className={`flex-1 h-full flex items-center justify-center ${message.type === 'error' ? 'text-red-500' : 'text-green-500'}`}
+          >
+            <p className="text-2xl">{message.message}</p>
+          </div>
+        )}
       </div>
 
       {loading && (

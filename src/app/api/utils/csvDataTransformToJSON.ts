@@ -138,12 +138,10 @@ const transformers = {
       videoUrl: getField('Main video URL'),
       playbackId: getField('Max playback ID'),
       cannonicalTag: booleanField('Set canonical tag'),
-      showRelated: booleanField('Show related videos'),
       creatorId: getField('Unique Bubble ID Reviewer'),
       productId: getField('Unique Bubble ID Product'),
       resolution: getField('video format')?.replace(/\s/g, '') || null,
       videoTitle: createMultiLangObject(getField, { title: 'Detailed page title' }),
-      subtitle: createMultiLangObject(getField, { file: 'Subtitles file' }),
       summary: createMultiLangObject(getField, { text: 'Summary' }),
       faqs: Array.from({ length: 5 }, (_, i) => i + 1).reduce(
         (acc, num) => ({

@@ -1,6 +1,6 @@
 import { db } from '@/src/db';
 import { brand } from '@/src/db/schema';
-import { sql } from 'drizzle-orm';
+import { and, isNotNull, sql } from 'drizzle-orm';
 import { Brand, BrandInputType } from '@/src/db/types';
 
 export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[]> {
@@ -47,7 +47,10 @@ export async function handleGetBrand(selectedColumns: string[] = []): Promise<Br
       });
     }
     const data = await db.query.brand.findMany({
-      ...(selectedColumns.length > 0 && { columns }),
+      ...(selectedColumns.length > 0 && {
+        columns,
+        where: and(isNotNull(brand.brandName), isNotNull(brand.logo)),
+      }),
     });
 
     if (!data || data.length === 0) {

@@ -5,11 +5,10 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['image.mux.com'],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'image.mux.com',
+        hostname: '*',
         port: '',
         pathname: '/**',
       },

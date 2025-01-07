@@ -3,7 +3,7 @@ import { handleGetBrand } from '../../services/brand.services';
 
 export async function GET() {
   try {
-    const brands = await handleGetBrand(['logo']);
+    const brands = await handleGetBrand(['logo', 'brandName']);
     return NextResponse.json(
       {
         success: true,
