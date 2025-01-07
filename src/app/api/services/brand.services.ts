@@ -38,9 +38,17 @@ export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[
 /**
  * Gets all brands
  */
-export async function handleGetBrand(): Promise<Brand[]> {
+export async function handleGetBrand(selectedColumns: string[] = []): Promise<Brand[]> {
   try {
-    const data = await db.query.brand.findMany({});
+    const columns: { [key: string]: boolean } = {};
+    if (selectedColumns.length > 0) {
+      selectedColumns.forEach(column => {
+        columns[column] = true;
+      });
+    }
+    const data = await db.query.brand.findMany({
+      ...(selectedColumns.length > 0 && { columns }),
+    });
 
     if (!data || data.length === 0) {
       console.warn('No brands found');
