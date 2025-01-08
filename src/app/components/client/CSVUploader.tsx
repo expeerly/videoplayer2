@@ -2,6 +2,7 @@
 import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 import { useCSVParser } from '../../hooks/useCSVParser';
 import { CSVData } from '../../context/types';
+import { useApiCall } from '@/src/hooks/useApi';
 
 interface CSVUploaderProps {
   setParsedData: (data: CSVData) => void;
@@ -19,8 +20,23 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const headerFileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | undefined>();
-
+  const { post } = useApiCall();
   const { parseCSVFile, isLoading, error: parseError } = useCSVParser();
+
+  const uploadHeader = useCallback(
+    async (data: CSVData) => {
+      if (data.length > 0) {
+        const res = await post('/headings', {
+          data: {
+            data,
+          },
+        });
+        console.log({ res });
+      }
+    },
+    [post]
+  );
+
   const handleFileChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>, isHeaderFile: boolean = false) => {
       setLoading(true);
@@ -42,6 +58,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
           setError('Header File Must have ID and Header Columns');
           return;
         }
+        await uploadHeader(parsedData);
         setLoading(false);
         setError(undefined);
         setCSVHeadersData(parsedData);
@@ -59,7 +76,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
       setError(undefined);
       setParsedData(parsedData);
     },
-    [parseCSVFile, csvHeadersData, setParsedData, setCSVHeadersData]
+    [setLoading, parseCSVFile, csvHeadersData, setParsedData, setCSVHeadersData]
   );
 
   return (
@@ -92,7 +109,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
             <p className="text-sm text-gray-500">Only CSV files are accepted</p>
           </div>
         )}
-        {!!csvHeadersData?.length && (
+        {
           <div className="flex flex-col items-center">
             <label
               htmlFor="csv-upload"
@@ -111,7 +128,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
             </label>
             <p className="text-sm text-gray-500">Only CSV files are accepted</p>
           </div>
-        )}
+        }
       </div>
       {(error || parseError) && <p className="text-red-500 mt-4">Error: {error}</p>}
       {isLoading && <p className="text-gray-500 mt-4">Uploading...</p>}

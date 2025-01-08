@@ -31,7 +31,7 @@ export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[
     }
   } catch (error) {
     console.error('Error creating/updating brands:', error);
-    throw new Error('Failed to create/update brands');
+    throw new Error((error as Error).message);
   }
 }
 
@@ -71,6 +71,6 @@ export async function getBrandsCount(): Promise<{ count: number }> {
     return { count };
   } catch (error) {
     console.error('Error fetching category count:', error);
-    throw new Error('Failed to fetch category count');
+    throw new Error((error as Error).message);
   }
 }

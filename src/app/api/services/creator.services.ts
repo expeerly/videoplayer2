@@ -69,7 +69,7 @@ export async function handleCreateCreator(
     }
   } catch (error) {
     console.error('Error in handleCreateCreator:', error);
-    throw new Error('Failed to create/update creator');
+    throw new Error((error as Error).message);
   }
 }
 
@@ -79,6 +79,6 @@ export async function getCreatorsCount(): Promise<{ count: number }> {
     return { count };
   } catch (error) {
     console.error('Error fetching category count:', error);
-    throw new Error('Failed to fetch category count');
+    throw new Error((error as Error).message);
   }
 }

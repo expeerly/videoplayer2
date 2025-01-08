@@ -1,4 +1,4 @@
-import { Brand, Category, Creator, Product, Rating, Video } from '@/src/db/types';
+import { Brand, Category, Creator, LandingPage, Product, Rating, Video } from '@/src/db/types';
 import { CSVData } from '../../context/types';
 
 type CSVDataItem = Record<string, string | number>;
@@ -11,6 +11,7 @@ export enum CSVDataOptions {
   product = 'product',
   video = 'video',
   rating = 'rating',
+  landingPage = 'landingPage',
 }
 
 const createFieldGetter =
@@ -160,6 +161,29 @@ const transformers = {
       siteTitle: createMultiLangObject(getField, { title: 'Site title' }),
       metaDescription: createMultiLangObject(getField, { desc: 'Meta description' }),
       published: booleanField('published'),
+    };
+  },
+  [CSVDataOptions.landingPage]: (data: CSVDataItem): Partial<LandingPage> => {
+    const getField = createFieldGetter(data);
+    return {
+      brandsContent: createMultiLangObject(getField, {
+        bodyText: 'All brands Body text',
+        footerText: 'All brands Footer text',
+        siteTitle: 'All brands Site title',
+        metaDescription: 'All brands Meta description',
+      }),
+      categoriesContent: createMultiLangObject(getField, {
+        bodyText: 'All categories Body text',
+        footerText: 'All categories Footer text',
+        siteTitle: 'All categories Site title',
+        metaDescription: 'All categories Meta description',
+      }),
+      creatorsContent: createMultiLangObject(getField, {
+        bodyText: 'All reviewers Body text',
+        footerText: 'All reviewers Footer text',
+        siteTitle: 'All reviewers Site title',
+        metaDescription: 'All reviewers Meta description',
+      }),
     };
   },
 };

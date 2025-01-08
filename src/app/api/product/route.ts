@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createProducts } from '../services/product.services';
+import { handleError } from '../utils/errorHandler';
 
 export const POST = async (req: Request) => {
   try {
@@ -22,14 +23,6 @@ export const POST = async (req: Request) => {
       }
     );
   } catch (error) {
-    console.error('Error creating/updating products:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: 'Failed to create/update products',
-        error: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 };

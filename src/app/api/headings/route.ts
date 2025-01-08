@@ -1,15 +1,21 @@
 import { NextResponse } from 'next/server';
-import { getCategory, handleCreateCategory } from '../services/category.services';
+import { handleCreateHeadings, handleGetHeadings } from '../services/headings.services';
 import { handleError } from '../utils/errorHandler';
 
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
-    const category = await handleCreateCategory(body.data);
+
+    const existingHeadings = (await handleGetHeadings()) || {};
+
+    const headings = await handleCreateHeadings({
+      ...existingHeadings,
+      ...body.data,
+    });
     return NextResponse.json(
       {
         success: true,
-        data: category,
+        data: headings,
       },
       {
         status: 201,
@@ -22,11 +28,24 @@ export const POST = async (req: Request) => {
 
 export const GET = async () => {
   try {
-    const category = await getCategory();
+    const headings = await handleGetHeadings();
+
+    if (!headings) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Headings content not found',
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
     return NextResponse.json(
       {
         success: true,
-        data: category,
+        data: headings,
       },
       {
         status: 200,

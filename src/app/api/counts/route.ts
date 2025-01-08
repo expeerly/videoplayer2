@@ -4,6 +4,7 @@ import { getBrandsCount } from '../services/brand.services';
 import { getProductsCount } from '../services/product.services';
 import { getCreatorsCount } from '../services/creator.services';
 import { getVideosCount } from '../services/video.services';
+import { handleError } from '../utils/errorHandler';
 
 export const GET = async () => {
   try {
@@ -26,7 +27,6 @@ export const GET = async () => {
       },
     });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+    return handleError(error);
   }
 };

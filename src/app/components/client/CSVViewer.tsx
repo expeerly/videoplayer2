@@ -1,5 +1,5 @@
 'use client';
-import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 import { CSVUploader } from './CSVUploader';
 import { DataTable } from './DataTable';
 import { StyledSelect } from './StyledSelect';
@@ -15,12 +15,26 @@ export const CSVViewer: FunctionComponent = () => {
   const [selectedOption, setSelectedOption] = useState<CSVDataOptions>(CSVDataOptions.brand);
   const [csvData, setCSVData] = useState<CSVData>([]);
   const [csvHeadersData, setCSVHeadersData] = useState<CSVData>([]);
-  const { post } = useApiCall();
+  const { post, get } = useApiCall();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(
     null
   );
+
+  useEffect(() => {
+    const fetchHeadings = async () => {
+      try {
+        const response = await get(API_ROUTES.HEADINGS);
+        if (response?.success && Array.isArray(response.data)) {
+          setCSVHeadersData(response.data as CSVData);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchHeadings();
+  }, [get]);
 
   const parsedCSVData = useMemo(() => {
     return csvData.map(row => {
@@ -47,6 +61,7 @@ export const CSVViewer: FunctionComponent = () => {
       [CSVDataOptions.product]: API_ROUTES.PRODUCTS,
       [CSVDataOptions.video]: API_ROUTES.VIDEOS,
       [CSVDataOptions.rating]: API_ROUTES.RATINGS,
+      [CSVDataOptions.landingPage]: API_ROUTES.LANDING_PAGE,
     };
 
     try {

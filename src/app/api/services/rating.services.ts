@@ -37,6 +37,6 @@ export async function uploadRatings(ratings: Rating[]) {
     return data;
   } catch (error) {
     console.error('Error uploading ratings:', error);
-    throw error;
+    throw new Error((error as Error).message);
   }
 }

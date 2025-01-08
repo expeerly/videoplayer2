@@ -5,4 +5,6 @@ export const API_ROUTES = {
   PRODUCTS: '/product',
   VIDEOS: '/video',
   RATINGS: '/rating',
+  LANDING_PAGE: '/landingPage',
+  HEADINGS: '/headings',
 };

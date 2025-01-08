@@ -49,7 +49,7 @@ export const createProducts = async (input: ProductInputType[]) => {
     return data;
   } catch (error) {
     console.error('Error in createProducts:', error);
-    throw error;
+    throw new Error((error as Error).message);
   }
 };
 
@@ -59,6 +59,6 @@ export async function getProductsCount(): Promise<{ count: number }> {
     return { count };
   } catch (error) {
     console.error('Error fetching category count:', error);
-    throw new Error('Failed to fetch category count');
+    throw new Error((error as Error).message);
   }
 }

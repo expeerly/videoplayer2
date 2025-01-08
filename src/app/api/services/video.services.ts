@@ -52,7 +52,7 @@ export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
     }
   } catch (error) {
     console.error('Error in handleCreateVideo:', error);
-    throw new Error('Failed to create/update video');
+    throw new Error((error as Error).message);
   }
 }
 
@@ -62,6 +62,6 @@ export async function getVideosCount(): Promise<{ count: number }> {
     return { count };
   } catch (error) {
     console.error('Error fetching video count:', error);
-    throw new Error('Failed to fetch video count');
+    throw new Error((error as Error).message);
   }
 }

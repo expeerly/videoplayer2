@@ -27,7 +27,7 @@ export async function handleCreateCategory(input: CategoryInputType[]): Promise<
       .returning();
   } catch (error) {
     console.error('Error creating/updating category:', error);
-    throw new Error('Failed to create/update category');
+    throw new Error((error as Error).message);
   }
 }
 
@@ -46,7 +46,7 @@ export async function getCategory(): Promise<Category[]> {
     }
   } catch (error) {
     console.error('Error fetching categories:', error);
-    throw new Error('Failed to fetch categories');
+    throw new Error((error as Error).message);
   }
 }
 
@@ -56,6 +56,6 @@ export async function getCategoryCount(): Promise<{ count: number }> {
     return { count };
   } catch (error) {
     console.error('Error fetching category count:', error);
-    throw new Error('Failed to fetch category count');
+    throw new Error((error as Error).message);
   }
 }

@@ -37,19 +37,19 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
 
       try {
         let response: AxiosResponse<ApiResponse<T>>;
-
+        const apiURL = url.startsWith('http') ? url : `${process.env.NEXT_ENDPOINT_URL}${url}`;
         switch (method) {
           case 'post':
-            response = await axios.post<ApiResponse<T>>(url, payload);
+            response = await axios.post<ApiResponse<T>>(apiURL, payload);
             break;
           case 'put':
-            response = await axios.put<ApiResponse<T>>(url, payload);
+            response = await axios.put<ApiResponse<T>>(apiURL, payload);
             break;
           case 'delete':
-            response = await axios.delete<ApiResponse<T>>(url, { data: payload });
+            response = await axios.delete<ApiResponse<T>>(apiURL, { data: payload });
             break;
           default:
-            response = await axios.get<ApiResponse<T>>(url, { params: payload });
+            response = await axios.get<ApiResponse<T>>(apiURL, { params: payload });
         }
 
         return response.data;

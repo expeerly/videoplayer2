@@ -190,3 +190,31 @@ export const creatorRelations = relations(creator, ({ many }) => ({
   videos: many(video),
   interests: many(creatorInterests),
 }));
+
+export const headings = pgTable('headings', {
+  id: serial('id').primaryKey(),
+  data: jsonb('data').notNull(),
+  createdAt: timestamp('createdAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+  updatedAt: timestamp('updatedAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+});
+
+export const landingPage = pgTable('landingPage', {
+  id: serial('id').primaryKey(),
+  brandsContent: jsonb('brandsContent').notNull(),
+  categoriesContent: jsonb('categoriesContent').notNull(),
+  creatorsContent: jsonb('creatorsContent').notNull(),
+  createdAt: timestamp('createdAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+  updatedAt: timestamp('updatedAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+});
