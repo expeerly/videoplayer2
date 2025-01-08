@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
+import { Spinner } from './Spinner';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -20,6 +21,7 @@ type BaseButtonProps = {
   fullWidth?: boolean;
   isOnlyIcon?: boolean;
   className?: string;
+  loading?: boolean;
 };
 
 // Props for button element
@@ -117,6 +119,7 @@ export const Button: FunctionComponent<PropsWithChildren<UnifiedButtonProps>> = 
   isOnlyIcon = false,
   className = '',
   children,
+  loading = false,
   ...rest
 }) => {
   const classes = styleClasses({ variant, size, className, fullWidth, isOnlyIcon });
@@ -130,14 +133,18 @@ export const Button: FunctionComponent<PropsWithChildren<UnifiedButtonProps>> = 
     const { href, ...linkProps } = rest as LinkElementProps;
     return (
       <Link href={href} className={classes} {...linkProps}>
-        {content}
+        {loading ? <Spinner size={size} /> : content}
       </Link>
     );
   }
 
   return (
-    <button className={classes} {...(rest as ButtonElementProps)}>
-      {content}
+    <button
+      className={classes}
+      {...(rest as ButtonElementProps)}
+      disabled={loading ?? rest.disabled}
+    >
+      {loading ? <Spinner size={size} /> : content}
     </button>
   );
 };

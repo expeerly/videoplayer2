@@ -22,6 +22,7 @@ export async function handleCreateHeadings(input: HeadingsInputType[]): Promise<
       .onConflictDoUpdate({
         target: [headings.id],
         set: {
+          data: sql`EXCLUDED."data"`,
           updatedAt: sql`CURRENT_TIMESTAMP`,
         },
       })
@@ -39,12 +40,15 @@ export async function handleCreateHeadings(input: HeadingsInputType[]): Promise<
   }
 }
 
-export async function handleGetHeadings(): Promise<Headings | undefined> {
+export async function handleGetHeadings(): Promise<Headings> {
   try {
     const data = await db.query.headings.findFirst();
+    if (!data) {
+      throw new Error('No headings found');
+    }
     return data;
   } catch (error) {
     console.error('Error in handleGetHeadings:', error);
-    throw new Error((error as Error).message);
+    throw new Error(error instanceof Error ? error.message : 'Unknown database error');
   }
 }

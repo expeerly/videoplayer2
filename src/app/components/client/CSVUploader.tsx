@@ -9,6 +9,7 @@ interface CSVUploaderProps {
   csvHeadersData: CSVData;
   setCSVHeadersData: (data: CSVData) => void;
   setLoading: (value: boolean) => void;
+  setMessage: (message: { type: 'success' | 'error'; message: string } | null) => void;
 }
 
 export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
@@ -16,6 +17,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
   csvHeadersData,
   setCSVHeadersData,
   setLoading,
+  setMessage,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const headerFileInputRef = useRef<HTMLInputElement>(null);
@@ -25,23 +27,27 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
 
   const uploadHeader = useCallback(
     async (data: CSVData) => {
-      if (data.length > 0) {
-        const res = await post('/headings', {
+      const filteredData = data.filter(i => i['ID'] && i['Header']);
+      if (filteredData.length > 0) {
+        const data = (await post('/headings', {
           data: {
-            data,
+            data: filteredData,
           },
-        });
-        console.log({ res });
+        })) as { data: { data: CSVData }[]; success: boolean };
+        if (data?.success) {
+          setCSVHeadersData(data.data[0].data);
+          setMessage({ type: 'success', message: 'Headers uploaded successfully' });
+        }
       }
     },
-    [post]
+    [post, setCSVHeadersData, setMessage]
   );
 
   const handleFileChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>, isHeaderFile: boolean = false) => {
       setLoading(true);
+      setMessage(null);
       const file = event.target.files?.[0];
-
       if (!file) return;
 
       if (file.type !== 'text/csv') {
@@ -61,7 +67,6 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
         await uploadHeader(parsedData);
         setLoading(false);
         setError(undefined);
-        setCSVHeadersData(parsedData);
         return;
       }
 
@@ -75,6 +80,10 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
       setLoading(false);
       setError(undefined);
       setParsedData(parsedData);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     },
     [setLoading, parseCSVFile, csvHeadersData, setParsedData, setCSVHeadersData]
   );
@@ -84,7 +93,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
       <div className="flex justify-evenly items-center gap-10">
         {!!csvHeadersData?.length ? (
           <div className="flex gap-2 items-center">
-            <span className="text-sm text-gray-500">Headers File Uploaded!</span>
+            <span className="text-sm text-gray-500">Headers File</span>
             <span className="text-sm cursor-pointer" onClick={() => setCSVHeadersData([])}>
               x
             </span>

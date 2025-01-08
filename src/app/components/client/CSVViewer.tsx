@@ -10,6 +10,35 @@ import { CSVData } from '../../context/types';
 import { API_ROUTES } from '../../constants/routes';
 import { LeftChevronIcon } from '@/src/assets/icons';
 import { LogoutButton } from './LogoutButton';
+import { Spinner } from './Spinner';
+
+type HeadingsResponse = {
+  success: boolean;
+  data: {
+    data: CSVData;
+  };
+  error?: {
+    message?: string;
+  };
+};
+
+const handleError = (error: unknown, cb: (message: string) => void) => {
+  let errorMessage = 'An unexpected error occurred';
+
+  if (error instanceof Error) {
+    errorMessage = error.message;
+  } else if (typeof error === 'object' && error !== null) {
+    // Handle API error responses
+    const apiError = error as {
+      message?: string;
+      error?: { message?: string };
+    };
+
+    errorMessage = apiError.error?.message || apiError.message || errorMessage;
+  }
+
+  cb(errorMessage);
+};
 
 export const CSVViewer: FunctionComponent = () => {
   const [selectedOption, setSelectedOption] = useState<CSVDataOptions>(CSVDataOptions.brand);
@@ -25,13 +54,23 @@ export const CSVViewer: FunctionComponent = () => {
   useEffect(() => {
     const fetchHeadings = async () => {
       try {
-        const response = await get(API_ROUTES.HEADINGS);
-        if (response?.success && Array.isArray(response.data)) {
-          setCSVHeadersData(response.data as CSVData);
+        setLoading(true);
+        const response = (await get(API_ROUTES.HEADINGS)) as HeadingsResponse;
+        if (response?.success && response?.data.data) {
+          setCSVHeadersData(response.data?.data);
+        } else {
+          if (response.error?.message) {
+            setMessage({ type: 'error', message: response?.error?.message });
+          }
         }
+        console.log({ response });
       } catch (error) {
-        console.error(error);
+        const apiError = error as { error: { message: string } };
+        if (apiError?.error?.message) {
+          setMessage({ type: 'error', message: apiError?.error?.message });
+        }
       }
+      setLoading(false);
     };
     fetchHeadings();
   }, [get]);
@@ -71,13 +110,13 @@ export const CSVViewer: FunctionComponent = () => {
       });
 
       if (res?.success) {
-        // Reload the counts after successful save
         setMessage({ type: 'success', message: 'Data saved successfully' });
         setCSVData([]);
+      } else {
+        handleError(res, message => setMessage({ type: 'error', message }));
       }
     } catch (error) {
-      console.error(error);
-      setMessage({ type: 'error', message: 'Error saving data' });
+      handleError(error, message => setMessage({ type: 'error', message }));
     } finally {
       setLoading(false);
     }
@@ -100,11 +139,12 @@ export const CSVViewer: FunctionComponent = () => {
           csvHeadersData={csvHeadersData}
           setCSVHeadersData={setCSVHeadersData}
           setLoading={setLoading}
+          setMessage={setMessage}
         />
 
         {!loading && message && (
           <div
-            className={`flex-1 h-full flex items-center justify-center ${message.type === 'error' ? 'text-red-500' : 'text-green-500'}`}
+            className={`flex-1 h-full flex items-center justify-center mt-10 ${message.type === 'error' ? 'text-red-500' : 'text-green-500'}`}
           >
             <p className="text-2xl">{message.message}</p>
           </div>
@@ -112,12 +152,14 @@ export const CSVViewer: FunctionComponent = () => {
       </div>
 
       {loading && (
-        <div className="flex-1 h-full flex items-center justify-center">
-          <p className="text-2xl">Loading...</p>
+        <div className="flex-1 h-full flex items-center justify-center fixed top-0 left-0 w-full bg-black/25 z-30">
+          <p className="text-2xl">
+            <Spinner />
+          </p>
         </div>
       )}
 
-      {!loading && parsedCSVData.length > 0 && (
+      {parsedCSVData.length > 0 && (
         <div className="mt-8 w-full flex-1 flex flex-col">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold mb-4">Displaying {csvData.length} rows of data</h2>
@@ -130,11 +172,12 @@ export const CSVViewer: FunctionComponent = () => {
                   { value: CSVDataOptions.product, label: 'Products' },
                   { value: CSVDataOptions.video, label: 'Videos' },
                   { value: CSVDataOptions.rating, label: 'Ratings' },
+                  { value: CSVDataOptions.landingPage, label: 'Landing Page' },
                 ]}
                 onChange={value => setSelectedOption(value as CSVDataOptions)}
                 value={selectedOption}
               />
-              <Button onClick={handleSave}>Save</Button>
+              <Button onClick={handleSave}>{loading ? 'Saving...' : 'Save'}</Button>
             </div>
           </div>
           <DataTable data={parsedCSVData} />

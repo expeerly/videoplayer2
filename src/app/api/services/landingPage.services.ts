@@ -24,6 +24,9 @@ export async function handleCreateLandingPage(
       .onConflictDoUpdate({
         target: [landingPage.id],
         set: {
+          brandsContent: sql`EXCLUDED."brandsContent"`,
+          categoriesContent: sql`EXCLUDED."categoriesContent"`,
+          creatorsContent: sql`EXCLUDED."creatorsContent"`,
           updatedAt: sql`CURRENT_TIMESTAMP`,
         },
       })

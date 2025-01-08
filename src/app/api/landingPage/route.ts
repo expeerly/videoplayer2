@@ -6,11 +6,15 @@ export const POST = async (req: Request) => {
   try {
     const body = await req.json();
 
+    if (body.data.length === 0) {
+      throw new Error('Input is required and cannot be empty');
+    }
+
     const existingLandingPage = (await handleGetLandingPage()) || {};
 
     const landingPage = await handleCreateLandingPage({
       ...existingLandingPage,
-      ...body.data,
+      ...body.data[0],
     });
     return NextResponse.json(
       {
