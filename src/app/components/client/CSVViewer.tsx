@@ -63,7 +63,6 @@ export const CSVViewer: FunctionComponent = () => {
             setMessage({ type: 'error', message: response?.error?.message });
           }
         }
-        console.log({ response });
       } catch (error) {
         const apiError = error as { error: { message: string } };
         if (apiError?.error?.message) {
@@ -105,6 +104,10 @@ export const CSVViewer: FunctionComponent = () => {
 
     try {
       const transformedData = transformDataToJSON(parsedCSVData, selectedOption);
+      if (transformedData.length === 0) {
+        setMessage({ type: 'error', message: 'File is Empty or invalid selected option' });
+        return;
+      }
       const res = await post(`${process.env.NEXT_ENDPOINT_URL}${routesMap[selectedOption]}`, {
         data: transformedData,
       });

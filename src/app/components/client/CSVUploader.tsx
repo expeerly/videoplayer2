@@ -85,7 +85,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
         fileInputRef.current.value = '';
       }
     },
-    [setLoading, parseCSVFile, csvHeadersData, setParsedData, setCSVHeadersData]
+    [setLoading, setMessage, parseCSVFile, csvHeadersData, setParsedData, uploadHeader]
   );
 
   return (

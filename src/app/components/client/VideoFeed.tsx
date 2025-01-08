@@ -30,8 +30,6 @@ export const VideoFeed: FunctionComponent<Props> = ({ videos }) => {
             const index = videos.findIndex(v => v.playbackId === videoId);
             if (index !== -1 && index !== currentIndex) {
               setCurrentIndex(index);
-              // Update pathname
-              console.log({ videoId });
               router.push(`/explore/${videoId}`, { scroll: false });
             }
           }
