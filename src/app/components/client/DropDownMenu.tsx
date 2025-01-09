@@ -24,10 +24,12 @@ import {
   WorldIcon,
 } from '@/src/assets/icons';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
-import { useTranslations } from 'use-intl';
+import { useLocale, useTranslations } from 'use-intl';
 import clsx from 'clsx';
 import { Link, usePathname } from '@/src/i18n/routing';
 import { Button } from './Button';
+import { useSharedState } from '../../context/reducer';
+import { CategoryWithData } from '@/src/db/types';
 
 export type MenuItem = {
   key: string;
@@ -43,101 +45,88 @@ export type MenuItem = {
   devider?: boolean;
 };
 
-const categroies = [
-  { label: 'Arts & Crafts', href: '/video-reviews/productcategory/1' },
-  { label: 'Automotive', href: '/video-reviews/productcategory/2' },
-  { label: 'Baby & Child Care', href: '/video-reviews/productcategory/3' },
-  { label: 'Beauty & Personal Care', href: '/video-reviews/productcategory/4' },
-  { label: 'Books & Media', href: '/video-reviews/productcategory/5' },
-  { label: 'Clothes and Fashion', href: '/video-reviews/productcategory/6' },
-  { label: 'Electronics & Gadgets', href: '/video-reviews/productcategory/7' },
-  { label: 'Food & Beverages', href: '/video-reviews/productcategory/8' },
-  { label: 'Furniture & Decor', href: '/video-reviews/productcategory/9' },
-  { label: 'Gardening & Outdoor Living', href: '/video-reviews/productcategory/10' },
-  { label: 'Health & Wellness', href: '/video-reviews/productcategory/11' },
-  { label: 'Home & Kitchen', href: '/video-reviews/productcategory/12' },
-  { label: 'Jewelry and Watches', href: '/video-reviews/productcategory/13' },
-  { label: 'Music & Instruments', href: '/video-reviews/productcategory/14' },
-  { label: 'Office Supplies', href: '/video-reviews/productcategory/15' },
-  { label: 'Pet Supplies', href: '/video-reviews/productcategory/16' },
-  { label: 'Sports & Outdoors', href: '/video-reviews/productcategory/17' },
-  { label: 'Toys & Games', href: '/video-reviews/productcategory/18' },
-  { label: 'Tools & Home Improvement', href: '/video-reviews/productcategory/19' },
-  { label: 'Travel', href: '/video-reviews/productcategory/20' },
-];
+type Lang = 'en' | 'de' | 'fr' | 'it';
 
-const defaultMenuItems: MenuItem[] = [
-  { key: 'explore', label: 'Explore', icon: BinocularsIcon, href: '/explore' },
-  {
-    key: 'brands',
-    label: 'Brands',
-    icon: StoreIcon,
-    href: '/video-reviews/brand',
-  },
-  {
-    key: 'reviewers',
-    label: 'Reviewers',
-    icon: SpeechBubbleIcon,
-    href: '/video-reviews/reviewers',
-  },
-  {
-    key: 'categories',
-    label: 'Categories',
-    icon: CategoriesIcon,
-    items: categroies,
-    itemsLabel: 'viewAllCategories',
-    href: '/video-reviews/productcategory',
-  },
+const defaultMenuItems = (categroies: CategoryWithData[] = [], lang: Lang): MenuItem[] => {
+  return [
+    { key: 'explore', label: 'Explore', icon: BinocularsIcon, href: '/explore' },
+    {
+      key: 'brands',
+      label: 'Brands',
+      icon: StoreIcon,
+      href: '/video-reviews/brand',
+    },
+    {
+      key: 'reviewers',
+      label: 'Reviewers',
+      icon: SpeechBubbleIcon,
+      href: '/video-reviews/reviewers',
+    },
+    {
+      key: 'categories',
+      label: 'Categories',
+      icon: CategoriesIcon,
+      items: categroies.map(i => ({
+        label: i.categoryData?.names[lang],
+        href: `/video-reviews/productcategory/${i.id}`,
+      })),
+      itemsLabel: 'viewAllCategories',
+      href: '/video-reviews/productcategory',
+    },
 
-  {
-    devider: true,
+    {
+      devider: true,
 
-    key: 'learn_more',
-    label: 'Learn more',
-    icon: InfoIcon,
-    href: 'https://www.get.expeerly.com/about-us',
-  },
-  { key: 'submit_video_review', label: 'Submit a video review', icon: VideoIcon },
-  {
-    key: 'for_brands',
-    label: 'For brands & businesses',
-    icon: TagIcon,
-    href: 'https://www.get.expeerly.com/for-brands',
-  },
-  {
-    key: 'for_marketplaces',
-    label: 'For marketplaces',
-    icon: CartIcon,
-    href: 'https://www.get.expeerly.com/for-marketplaces',
-  },
-  {
-    devider: true,
-    key: 'language',
-    label: 'English (EN)',
-    icon: WorldIcon,
-    items: [
-      { label: 'English (EN)', href: 'en' },
-      { label: 'Deutsch (DE)', href: 'de' },
-      { label: 'Français (FR)', href: 'fr' },
-      { label: 'Italiano (IT)', href: 'it' },
-    ],
-  },
-];
+      key: 'learn_more',
+      label: 'Learn more',
+      icon: InfoIcon,
+      href: 'https://www.get.expeerly.com/about-us',
+    },
+    { key: 'submit_video_review', label: 'Submit a video review', icon: VideoIcon },
+    {
+      key: 'for_brands',
+      label: 'For brands & businesses',
+      icon: TagIcon,
+      href: 'https://www.get.expeerly.com/for-brands',
+    },
+    {
+      key: 'for_marketplaces',
+      label: 'For marketplaces',
+      icon: CartIcon,
+      href: 'https://www.get.expeerly.com/for-marketplaces',
+    },
+    {
+      devider: true,
+      key: 'language',
+      label: 'English (EN)',
+      icon: WorldIcon,
+      items: [
+        { label: 'English (EN)', href: 'en' },
+        { label: 'Deutsch (DE)', href: 'de' },
+        { label: 'Français (FR)', href: 'fr' },
+        { label: 'Italiano (IT)', href: 'it' },
+      ],
+    },
+  ];
+};
 
 type DropDownMenuProps = {
   menuItems?: MenuItem[];
   className?: string;
 };
 
-const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
-  menuItems = defaultMenuItems,
-  className = '',
-}) => {
+const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({ className = '' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('menu');
   const pathname = usePathname();
+  const { categories } = useSharedState();
+  const local = useLocale();
+  const menuItems = useMemo(
+    () => defaultMenuItems(categories, local === '/' ? 'en' : (local as Lang)),
+    [categories, local]
+  );
 
   // Event Handlers
   const toggleMenu = useCallback(() => {

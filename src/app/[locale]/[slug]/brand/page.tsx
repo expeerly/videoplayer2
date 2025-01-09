@@ -3,7 +3,6 @@ import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
-import { brands } from '@/src/app/components/server/BrandsSlider';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
@@ -34,7 +33,6 @@ const Page: NextPage = async () => {
           <div className="mt-8">
             <div className="hidden md:block">
               <Slider
-                slides={brands}
                 classNameStyle={{
                   cardClassName: 'bg-white',
                 }}
@@ -42,7 +40,7 @@ const Page: NextPage = async () => {
               />
             </div>
             <div className="md:hidden">
-              <MobileSlider isMultiRow={false} slides={brands} isBrand />
+              <MobileSlider isMultiRow={false} isBrand />
             </div>
           </div>
         </section>
