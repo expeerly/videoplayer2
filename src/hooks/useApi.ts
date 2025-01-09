@@ -2,25 +2,25 @@ import { useState, useCallback } from 'react';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 
 // Base response type
-interface ApiResponse<T> {
+export type ApiResponse<T> = {
   success: boolean;
   data: T;
   message?: string;
-}
+};
 
 // Request payload types
 type RequestParams = Record<string, string | number | boolean>;
 type RequestPayload = Record<string, unknown>;
 
 // API call result type
-interface ApiCallResult<T> {
+type ApiCallResult<T> = {
   loading: boolean;
   error: string | null;
   get: (url: string, params?: RequestParams) => Promise<ApiResponse<T> | null>;
   post: (url: string, payload: RequestPayload) => Promise<ApiResponse<T> | null>;
   put: (url: string, payload: RequestPayload) => Promise<ApiResponse<T> | null>;
   del: (url: string, params?: RequestParams) => Promise<ApiResponse<T> | null>;
-}
+};
 
 export const useApiCall = <T>(): ApiCallResult<T> => {
   const [loading, setLoading] = useState(false);

@@ -11,6 +11,7 @@ import { API_ROUTES } from '../../constants/routes';
 import { LeftChevronIcon } from '@/src/assets/icons';
 import { LogoutButton } from './LogoutButton';
 import { Spinner } from './Spinner';
+import { handleError, uploadData } from '@/src/utils';
 
 type HeadingsResponse = {
   success: boolean;
@@ -20,24 +21,6 @@ type HeadingsResponse = {
   error?: {
     message?: string;
   };
-};
-
-const handleError = (error: unknown, cb: (message: string) => void) => {
-  let errorMessage = 'An unexpected error occurred';
-
-  if (error instanceof Error) {
-    errorMessage = error.message;
-  } else if (typeof error === 'object' && error !== null) {
-    // Handle API error responses
-    const apiError = error as {
-      message?: string;
-      error?: { message?: string };
-    };
-
-    errorMessage = apiError.error?.message || apiError.message || errorMessage;
-  }
-
-  cb(errorMessage);
 };
 
 export const CSVViewer: FunctionComponent = () => {
@@ -106,17 +89,29 @@ export const CSVViewer: FunctionComponent = () => {
       const transformedData = transformDataToJSON(parsedCSVData, selectedOption);
       if (transformedData.length === 0) {
         setMessage({ type: 'error', message: 'File is Empty or invalid selected option' });
+        setLoading(false);
         return;
       }
-      const res = await post(`${process.env.NEXT_ENDPOINT_URL}${routesMap[selectedOption]}`, {
-        data: transformedData,
-      });
+      const { successCount, failedCount } = await uploadData(transformedData, data =>
+        post(`${process.env.NEXT_ENDPOINT_URL}${routesMap[selectedOption]}`, {
+          data,
+        }).then(response => {
+          if (!response) throw new Error('No response received');
+          return { success: response.success };
+        })
+      );
 
-      if (res?.success) {
-        setMessage({ type: 'success', message: 'Data saved successfully' });
+      if (failedCount === 0) {
+        setMessage({
+          type: 'success',
+          message: `All ${successCount} records saved successfully`,
+        });
         setCSVData([]);
       } else {
-        handleError(res, message => setMessage({ type: 'error', message }));
+        setMessage({
+          type: 'error',
+          message: `Completed with errors: ${successCount} saved, ${failedCount} failed`,
+        });
       }
     } catch (error) {
       handleError(error, message => setMessage({ type: 'error', message }));

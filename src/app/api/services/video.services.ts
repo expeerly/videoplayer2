@@ -4,55 +4,69 @@ import { sql } from 'drizzle-orm';
 import { Video } from '@/src/db/types';
 
 export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
-  if (!input || input.length === 0) {
+  if (!input?.length) {
     throw new Error('Input is required and cannot be empty');
   }
 
   try {
-    const [creators, products] = await Promise.all([
-      db.query.creator.findMany({}),
-      db.query.product.findMany({}),
+    // Get unique creator and product IDs from input
+    const uniqueCreatorIds = [...new Set(input.map(v => v.creatorId))].filter(
+      (id): id is string => id != null
+    );
+    const uniqueProductIds = [...new Set(input.map(v => v.productId))].filter(
+      (id): id is string => id != null
+    );
+
+    // Fetch only the relevant creators and products
+    const [validCreatorIds, validProductIds] = await Promise.all([
+      db.query.creator.findMany({
+        where: (creator, { inArray }) => inArray(creator.id, uniqueCreatorIds),
+        columns: { id: true },
+      }),
+      db.query.product.findMany({
+        where: (product, { inArray }) => inArray(product.id, uniqueProductIds),
+        columns: { id: true },
+      }),
     ]);
 
-    const filteredVideos = input.filter(video => {
-      const creatorExists = creators.some(c => c.id === video.creatorId);
-      const productExists = products.some(p => p.id === video.productId);
-      return creatorExists && productExists;
-    });
+    // Create sets for faster lookup
+    const creatorIdSet = new Set(validCreatorIds.map(c => c.id));
+    const productIdSet = new Set(validProductIds.map(p => p.id));
 
-    const data = await db
-      .insert(video)
-      .values(filteredVideos)
-      .onConflictDoUpdate({
-        target: [video.id],
-        set: {
-          videoTitle: sql`EXCLUDED."videoTitle"`,
-          videoUrl: sql`EXCLUDED."videoUrl"`,
-          playbackId: sql`EXCLUDED."playbackId"`,
-          productId: sql`EXCLUDED."productId"`,
-          creatorId: sql`EXCLUDED."creatorId"`,
-          siteTitle: sql`EXCLUDED."siteTitle"`,
-          metaDescription: sql`EXCLUDED."metaDescription"`,
-          summary: sql`EXCLUDED."summary"`,
-          transcript: sql`EXCLUDED."transcript"`,
-          faqs: sql`EXCLUDED."faqs"`,
-          published: sql`EXCLUDED."published"`,
-          cannonicalTag: sql`EXCLUDED."cannonicalTag"`,
-          resolution: sql`EXCLUDED."resolution"`,
-          updatedAt: sql`CURRENT_TIMESTAMP`,
-        },
-      })
-      .returning();
+    // Filter videos with valid references
+    const validVideos = input.filter(
+      video => creatorIdSet.has(video.creatorId!) && productIdSet.has(video.productId!)
+    );
 
-    if (data) {
-      return data;
-    } else {
-      console.warn('No videos found');
-      return [];
-    }
+    if (!validVideos.length) return [];
+
+    return (
+      (await db
+        .insert(video)
+        .values(validVideos)
+        .onConflictDoUpdate({
+          target: [video.id],
+          set: {
+            videoTitle: sql`EXCLUDED."videoTitle"`,
+            videoUrl: sql`EXCLUDED."videoUrl"`,
+            playbackId: sql`EXCLUDED."playbackId"`,
+            productId: sql`EXCLUDED."productId"`,
+            creatorId: sql`EXCLUDED."creatorId"`,
+            siteTitle: sql`EXCLUDED."siteTitle"`,
+            metaDescription: sql`EXCLUDED."metaDescription"`,
+            summary: sql`EXCLUDED."summary"`,
+            transcript: sql`EXCLUDED."transcript"`,
+            faqs: sql`EXCLUDED."faqs"`,
+            published: sql`EXCLUDED."published"`,
+            cannonicalTag: sql`EXCLUDED."cannonicalTag"`,
+            resolution: sql`EXCLUDED."resolution"`,
+            updatedAt: sql`CURRENT_TIMESTAMP`,
+          },
+        })
+        .returning()) ?? []
+    );
   } catch (error) {
-    console.error('Error in handleCreateVideo:', error);
-    throw new Error((error as Error).message);
+    throw error instanceof Error ? error : new Error('Failed to create videos');
   }
 }
 

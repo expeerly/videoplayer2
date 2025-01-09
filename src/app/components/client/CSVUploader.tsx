@@ -62,6 +62,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
       if (isHeaderFile) {
         if (!parsedData[0]?.ID || !parsedData[0]?.Header) {
           setError('Header File Must have ID and Header Columns');
+          setLoading(false);
           return;
         }
         await uploadHeader(parsedData);

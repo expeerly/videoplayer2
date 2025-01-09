@@ -2,7 +2,7 @@ import { Brand, Category, Creator, LandingPage, Product, Rating, Video } from '@
 import { CSVData } from '../../context/types';
 
 type CSVDataItem = Record<string, string | number>;
-type TransformResult = Partial<Brand | Category | Creator | Product | Video | Rating>;
+export type TransformResult = Partial<Brand | Category | Creator | Product | Video | Rating>;
 
 export enum CSVDataOptions {
   brand = 'brand',
