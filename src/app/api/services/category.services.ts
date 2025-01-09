@@ -20,6 +20,7 @@ export async function handleCreateCategory(input: CategoryInputType[]): Promise<
       .onConflictDoUpdate({
         target: [category.id],
         set: {
+          logo: sql`EXCLUDED."logo"`,
           categoryData: sql`EXCLUDED."categoryData"`,
           updatedAt: sql`CURRENT_TIMESTAMP`,
         },
@@ -27,6 +28,21 @@ export async function handleCreateCategory(input: CategoryInputType[]): Promise<
       .returning();
   } catch (error) {
     console.error('Error creating/updating category:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
+export async function getCategoriesForSlider(): Promise<Partial<Category>[]> {
+  try {
+    return await db
+      .select({
+        id: category.id,
+        logo: category.logo,
+        categoryData: category.categoryData,
+      })
+      .from(category);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
     throw new Error((error as Error).message);
   }
 }

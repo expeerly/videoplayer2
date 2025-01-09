@@ -30,9 +30,24 @@ export const POST = async (req: Request) => {
   }
 };
 
-export const GET = async () => {
+export const GET = async (req: Request) => {
   try {
-    const landingPage = await handleGetLandingPage();
+    const { searchParams } = new URL(req.url);
+    const type = searchParams.get('type') as 'Brand' | 'Category' | 'Creator' | undefined;
+
+    if (type && !['Brand', 'Category', 'Creator'].includes(type)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Invalid type parameter. Must be one of: Brand, Category, Creator',
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const landingPage = await handleGetLandingPage(type);
 
     if (!landingPage) {
       return NextResponse.json(

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCategory, handleCreateCategory } from '../services/category.services';
+import { getCategoriesForSlider, handleCreateCategory } from '../services/category.services';
 import { handleError } from '../utils/errorHandler';
 
 export const POST = async (req: Request) => {
@@ -22,7 +22,7 @@ export const POST = async (req: Request) => {
 
 export const GET = async () => {
   try {
-    const category = await getCategory();
+    const category = await getCategoriesForSlider();
     return NextResponse.json(
       {
         success: true,

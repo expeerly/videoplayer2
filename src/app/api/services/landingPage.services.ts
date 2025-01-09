@@ -44,12 +44,21 @@ export async function handleCreateLandingPage(
   }
 }
 
-export async function handleGetLandingPage(): Promise<LandingPage | undefined> {
+export async function handleGetLandingPage(
+  type?: 'Brand' | 'Category' | 'Creator'
+): Promise<Partial<LandingPage> | undefined> {
   try {
-    const data = await db.query.landingPage.findFirst();
-    return data;
+    const result = await db.query.landingPage.findFirst({
+      columns: {
+        id: true,
+        brandsContent: type === 'Brand' || !type,
+        categoriesContent: type === 'Category' || !type,
+        creatorsContent: type === 'Creator' || !type,
+      },
+    });
+    return result;
   } catch (error) {
-    console.error('Error in handleGetLandingPage:', error);
-    throw new Error((error as Error).message);
+    console.error('Error fetching landing page:', error);
+    throw error;
   }
 }
