@@ -10,22 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
-// Admin table
-export const admin = pgTable('admin', {
-  id: integer('id').primaryKey(),
-  email: text('email').notNull(),
-  password: text('password').notNull(),
-  role: text('role'),
-  createdAt: timestamp('createdAt', {
-    precision: 6,
-    withTimezone: true,
-  }).defaultNow(),
-  updatedAt: timestamp('updatedAt', {
-    precision: 6,
-    withTimezone: true,
-  }).defaultNow(),
-});
-
 // Brand table
 export const brand = pgTable('brand', {
   id: text('id').primaryKey(),

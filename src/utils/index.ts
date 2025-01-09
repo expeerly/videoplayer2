@@ -1,4 +1,5 @@
 import { TransformResult } from '../app/api/utils/csvDataTransformToJSON';
+import { ApiResponse } from '../hooks/useApi';
 
 export const handleError = (error: unknown, cb: (message: string) => void) => {
   let errorMessage = 'An unexpected error occurred';
@@ -28,7 +29,7 @@ export const chunkArray = <T>(array: T[], size: number): T[][] => {
 
 export const uploadData = async (
   transformedData: TransformResult[],
-  cb: (data: TransformResult[]) => Promise<{ success: boolean }>,
+  cb: (data: TransformResult[]) => Promise<ApiResponse<unknown> | null>,
   chunkSize = 100
 ) => {
   const dataChunks = chunkArray(transformedData, chunkSize);

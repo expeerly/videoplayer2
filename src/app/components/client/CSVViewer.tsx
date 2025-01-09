@@ -95,9 +95,6 @@ export const CSVViewer: FunctionComponent = () => {
       const { successCount, failedCount } = await uploadData(transformedData, data =>
         post(`${process.env.NEXT_ENDPOINT_URL}${routesMap[selectedOption]}`, {
           data,
-        }).then(response => {
-          if (!response) throw new Error('No response received');
-          return { success: response.success };
         })
       );
 
