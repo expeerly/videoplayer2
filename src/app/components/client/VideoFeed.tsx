@@ -47,6 +47,7 @@ export const VideoFeed: FunctionComponent<Props> = ({ videos }) => {
 
     // Handle back button
     const entryPath = userHistory[userHistory.length - 2];
+    console.log({ entryPath, pathname });
     const handleBack = () => router.push(entryPath || '/');
 
     window.addEventListener('popstate', handleBack);
