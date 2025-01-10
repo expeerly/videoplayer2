@@ -15,8 +15,8 @@
   "cta_button_how_it_works": "En savoir plus",
   "more": "Plus",
   "less": "Moins",
-  "forward_arrow": "",
-  "back_arrow": "",
+  "forward_arrow": "Une page en avant",
+  "back_arrow": "Une page en arrière",
   "pagination": "Aller à la page {pagenumber}",
   "interests": "Intérêt",
   "reviewSummary": "Résumé des commentaires",
@@ -116,11 +116,9 @@
       "aria_label": "Connectez-vous à votre compte Expeerly"
     },
     "menu_open": {
-      "label": "",
       "aria_label": "Ouvrir le menu de droite"
     },
     "menu_close": {
-      "label": "",
       "aria_label": "Fermer le menu de droite"
     }
   },
@@ -142,7 +140,6 @@
     "aria_label": "En savoir plus sur Expeerly en tant que marque ou entreprise"
   },
   "scroll_reviews": {
-    "label": "",
     "aria_label": "Faites défiler jusqu'aux avis"
   },
   "filter_brands": {
@@ -162,7 +159,6 @@
     "aria_label": "Appliquer des filtres"
   },
   "open_filter": {
-    "label": "",
     "aria_label": "Ouvrir le filtre"
   },
   "delete_filter": {

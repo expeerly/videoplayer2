@@ -3,6 +3,7 @@ import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
+import { getDictionary } from '@/src/lib/dictionary';
 import { NextPage } from 'next';
 
 const sampleText = `
@@ -17,7 +18,9 @@ doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
 veritatis et quasi architecto beatae vitae dicta sunt explicabo.
 `.trim();
 
-const Page: NextPage = () => {
+const Page: NextPage = async () => {
+  const { t } = await getDictionary();
+
   return (
     <div className="w-full bg-white">
       <div className="w-full mx-auto md:max-w-[532px] pt-5 md:pt-10">
@@ -38,7 +41,15 @@ const Page: NextPage = () => {
             dataType: 'reviewer',
             description: '',
           }}
-          dataType="reviewer"
+          ctaBlock={{
+            heading: t('CTABlockAllReviewers.experienceShare'),
+            desc: t('CTABlockAllReviewers.becomeReviewer'),
+            button: {
+              label: t('CTABlockAllReviewers.learnMore'),
+              ariaLabel: t('CTABlockAllReviewers.learnMore_arialabel'),
+              href: 'https://www.get.expeerly.com/become-a-creator',
+            },
+          }}
         />
 
         <SEOSection

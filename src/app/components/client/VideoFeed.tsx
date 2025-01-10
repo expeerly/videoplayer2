@@ -1,7 +1,8 @@
 'use client';
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useRef } from 'react';
 import { Video, VideoCard } from '../server/Video/VideoCard';
 import { usePathname, useRouter } from '@/src/i18n/routing';
+import { useSharedState } from '../../context/reducer';
 
 type Props = {
   videos: Video[];
@@ -11,64 +12,58 @@ export const VideoFeed: FunctionComponent<Props> = ({ videos }) => {
   const router = useRouter();
   const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(() => {
-    const pathParts = pathname.split('/');
-    const videoId = pathParts[pathParts.length - 1];
-    const index = videos.findIndex(v => v.playbackId === videoId);
-    return index !== -1 ? index : 0;
-  });
+  const { userHistory } = useSharedState();
+
+  // Set up video scroll detection
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     const observer = new IntersectionObserver(
       entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const videoId = entry.target.getAttribute('data-video-id');
-            if (!videoId) return;
-
-            const index = videos.findIndex(v => v.playbackId === videoId);
-            if (index !== -1 && index !== currentIndex) {
-              setCurrentIndex(index);
-              router.push(`/explore/${videoId}`, { scroll: false });
-            }
+        const visibleVideo = entries.find(entry => entry.isIntersecting);
+        if (visibleVideo?.target) {
+          const videoId = visibleVideo.target.getAttribute('data-video-id');
+          if (videoId) {
+            router.replace(`/explore/${videoId}`, { scroll: false });
           }
-        });
+        }
       },
-      {
-        root: containerRef.current,
-        threshold: 0.7,
-      }
+      { root: container, threshold: 0.7 }
     );
 
-    document.querySelectorAll('.video-container').forEach(el => {
-      observer.observe(el);
-    });
+    // Observe all videos
+    document.querySelectorAll('.video-container').forEach(el => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [videos, currentIndex, router]);
+  }, [router]);
 
+  // Handle initial navigation and back button
   useEffect(() => {
+    // Redirect to first video if on base explore page
     if (pathname === '/explore') {
-      router.push(`/explore/${videos[0].playbackId}`, { scroll: false });
+      router.replace(`/explore/${videos[0].playbackId}`, { scroll: false });
     }
-  }, [pathname, videos, router]);
+
+    // Handle back button
+    const entryPath = userHistory[userHistory.length - 2];
+    const handleBack = () => router.push(entryPath || '/');
+
+    window.addEventListener('popstate', handleBack);
+    return () => window.removeEventListener('popstate', handleBack);
+  }, [pathname, router, videos, userHistory]);
 
   return (
     <div
       ref={containerRef}
       className="h-[91vh] flex-1 mx-auto w-full overflow-y-scroll snap-y snap-mandatory scrollbar-none mb-2.5 relative sm:h-full"
-      style={{
-        overscrollBehavior: 'contain',
-        WebkitOverflowScrolling: 'touch',
-      }}
+      style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
     >
-      {videos.map((video, index) => (
+      {videos.map(video => (
         <div
           key={video.id}
-          className={`video-container h-full snap-start snap-always pb-4 sm:h-[95%] sm:py-6`}
+          className="video-container h-full snap-start snap-always pb-4 sm:h-[95%] sm:py-6"
           data-video-id={video.playbackId}
-          data-index={index}
         >
           <VideoCard video={video} />
         </div>
