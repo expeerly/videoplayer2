@@ -2,6 +2,7 @@ import { db } from '@/src/db';
 import { landingPage } from '@/src/db/schema';
 import { sql } from 'drizzle-orm';
 import { LandingPage, LandingPageInputType } from '@/src/db/types';
+import { SupportedLanguage } from '../utils/requestHelpers';
 
 /**
  * Creates or updates creator data
@@ -44,18 +45,50 @@ export async function handleCreateLandingPage(
   }
 }
 
-export async function handleGetLandingPage(
+export const getLandingPage = async () => {
+  try {
+    const [result] = await db
+      .select({
+        id: landingPage.id,
+      })
+      .from(landingPage)
+      .limit(1);
+
+    return result;
+  } catch (error) {
+    console.error('Error fetching landing page ID:', error);
+    throw error;
+  }
+};
+
+export async function handleGetLandingPageWithLangAndType(
+  lang: SupportedLanguage = 'en',
   type?: 'Brand' | 'Category' | 'Creator'
 ): Promise<Partial<LandingPage> | undefined> {
   try {
-    const result = await db.query.landingPage.findFirst({
-      columns: {
-        id: true,
-        brandsContent: type === 'Brand' || !type,
-        categoriesContent: type === 'Category' || !type,
-        creatorsContent: type === 'Creator' || !type,
-      },
-    });
+    let queryString;
+    switch (type) {
+      case 'Brand':
+        queryString = sql<string>`("brandsContent" -> ${lang})`;
+        break;
+      case 'Category':
+        queryString = sql<string>`("categoriesContent" -> ${lang})`;
+        break;
+      case 'Creator':
+        queryString = sql<string>`("creatorsContent" -> ${lang})`;
+        break;
+      default:
+        throw new Error('Invalid type parameter. Must be one of: Brand, Category, Creator');
+    }
+
+    const [result] = await db
+      .select({
+        id: landingPage.id,
+        content: queryString.as('content'),
+      })
+      .from(landingPage)
+      .limit(1);
+
     return result;
   } catch (error) {
     console.error('Error fetching landing page:', error);

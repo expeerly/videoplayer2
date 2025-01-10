@@ -74,3 +74,40 @@ export async function getBrandsCount(): Promise<{ count: number }> {
     throw new Error((error as Error).message);
   }
 }
+
+interface PaginatedBrands {
+  rows: Partial<Brand>[];
+  total: number;
+}
+
+export async function getBrandsLogosAndNames(
+  page: number = 1,
+  limit: number = 20,
+  random: boolean = false
+): Promise<PaginatedBrands> {
+  try {
+    const offset = (page - 1) * limit;
+    const [data, brandsCount] = await Promise.all([
+      db.query.brand.findMany({
+        columns: {
+          id: true,
+          logo: true,
+          brandName: true,
+          slug: true,
+        },
+        limit,
+        offset,
+        orderBy: random ? sql`RANDOM()` : brand.brandName,
+      }),
+      getBrandsCount(),
+    ]);
+
+    return {
+      rows: data,
+      total: brandsCount.count,
+    };
+  } catch (error) {
+    console.error('Error fetching brands:', error);
+    throw new Error((error as Error).message);
+  }
+}

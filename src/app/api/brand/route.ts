@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { handleCreateBrand, handleGetBrand } from '../services/brand.services';
+import { getBrandsLogosAndNames, handleCreateBrand } from '../services/brand.services';
 import { handleError } from '../utils/errorHandler';
 
 export async function POST(req: Request) {
@@ -21,9 +21,14 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const brands = await handleGetBrand();
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
+    const random = searchParams.get('random') === 'true';
+
+    const brands = await getBrandsLogosAndNames(page, limit, random);
     return NextResponse.json(
       {
         success: true,
