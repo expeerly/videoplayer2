@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { handleCreateCreator } from '../services/creator.services';
+import { handleError } from '../utils/errorHandler';
 
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
-    const creator = await handleCreateCreator(body);
+    const creator = await handleCreateCreator(body.data);
     return NextResponse.json(
       {
         success: true,
@@ -15,7 +16,6 @@ export const POST = async (req: Request) => {
       }
     );
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+    return handleError(error);
   }
 };

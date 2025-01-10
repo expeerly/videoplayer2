@@ -11,4 +11,9 @@ export type SharedActionsProps =
   | { type: 'VIDEO_DETAILS_DRAWER'; payload: boolean }
   | { type: 'USER_HISTORY'; payload: string[] }
   | { type: 'CATEGORIES'; payload: CategoryWithData[] }
-  | { type: 'BRANDS'; payload: BrandWithData[] };
+  | { type: 'BRANDS'; payload: BrandWithData[] }
+  | { type: 'USER_HISTORY'; payload: string[] };
+
+export type CSVData = {
+  [key: string]: string | number;
+}[];

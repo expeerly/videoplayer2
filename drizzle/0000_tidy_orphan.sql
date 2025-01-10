@@ -43,7 +43,16 @@ CREATE TABLE "product" (
 	"categoryId" integer,
 	"globalTradeItemNumber" text,
 	"vendorProductNumber" text,
-	"rating" real DEFAULT 0 NOT NULL,
+	"rating" real DEFAULT 0,
+	"createdAt" timestamp (6) with time zone DEFAULT now(),
+	"updatedAt" timestamp (6) with time zone DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE "rating" (
+	"id" text PRIMARY KEY NOT NULL,
+	"productId" text,
+	"creatorId" text,
+	"rating" real NOT NULL,
 	"createdAt" timestamp (6) with time zone DEFAULT now(),
 	"updatedAt" timestamp (6) with time zone DEFAULT now()
 );
@@ -71,5 +80,7 @@ CREATE TABLE "video" (
 --> statement-breakpoint
 ALTER TABLE "product" ADD CONSTRAINT "product_brandId_brand_id_fk" FOREIGN KEY ("brandId") REFERENCES "public"."brand"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "product" ADD CONSTRAINT "product_categoryId_category_id_fk" FOREIGN KEY ("categoryId") REFERENCES "public"."category"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "rating" ADD CONSTRAINT "rating_productId_product_id_fk" FOREIGN KEY ("productId") REFERENCES "public"."product"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "rating" ADD CONSTRAINT "rating_creatorId_creator_id_fk" FOREIGN KEY ("creatorId") REFERENCES "public"."creator"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "video" ADD CONSTRAINT "video_productId_product_id_fk" FOREIGN KEY ("productId") REFERENCES "public"."product"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "video" ADD CONSTRAINT "video_creatorId_creator_id_fk" FOREIGN KEY ("creatorId") REFERENCES "public"."creator"("id") ON DELETE no action ON UPDATE no action;

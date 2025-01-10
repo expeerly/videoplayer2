@@ -2,29 +2,27 @@ import { useState, useCallback } from 'react';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 
 // Base response type
-interface ApiResponse<T> {
+export type ApiResponse<T> = {
   success: boolean;
   data: T;
   message?: string;
-}
+};
 
 // Request payload types
 type RequestParams = Record<string, string | number | boolean>;
 type RequestPayload = Record<string, unknown>;
 
 // API call result type
-interface ApiCallResult<T> {
-  data: ApiResponse<T> | null;
+type ApiCallResult<T> = {
   loading: boolean;
   error: string | null;
-  get: (url: string, params?: RequestParams) => Promise<void>;
-  post: (url: string, payload: RequestPayload) => Promise<void>;
-  put: (url: string, payload: RequestPayload) => Promise<void>;
-  del: (url: string, params?: RequestParams) => Promise<void>;
-}
+  get: (url: string, params?: RequestParams) => Promise<ApiResponse<T> | null>;
+  post: (url: string, payload: RequestPayload) => Promise<ApiResponse<T> | null>;
+  put: (url: string, payload: RequestPayload) => Promise<ApiResponse<T> | null>;
+  del: (url: string, params?: RequestParams) => Promise<ApiResponse<T> | null>;
+};
 
 export const useApiCall = <T>(): ApiCallResult<T> => {
-  const [data, setData] = useState<ApiResponse<T> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,31 +31,32 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
       method: 'get' | 'post' | 'put' | 'delete',
       url: string,
       payload?: RequestParams | RequestPayload
-    ) => {
+    ): Promise<ApiResponse<T> | null> => {
       setLoading(true);
       setError(null);
 
       try {
         let response: AxiosResponse<ApiResponse<T>>;
-
+        const apiURL = url.startsWith('http') ? url : `${process.env.NEXT_ENDPOINT_URL}${url}`;
         switch (method) {
           case 'post':
-            response = await axios.post<ApiResponse<T>>(url, payload);
+            response = await axios.post<ApiResponse<T>>(apiURL, payload);
             break;
           case 'put':
-            response = await axios.put<ApiResponse<T>>(url, payload);
+            response = await axios.put<ApiResponse<T>>(apiURL, payload);
             break;
           case 'delete':
-            response = await axios.delete<ApiResponse<T>>(url, { data: payload });
+            response = await axios.delete<ApiResponse<T>>(apiURL, { data: payload });
             break;
           default:
-            response = await axios.get<ApiResponse<T>>(url, { params: payload });
+            response = await axios.get<ApiResponse<T>>(apiURL, { params: payload });
         }
 
-        setData(response.data);
+        return response.data;
       } catch (err) {
         const axiosError = err as AxiosError;
         setError(axiosError.message);
+        return null;
       } finally {
         setLoading(false);
       }
@@ -85,5 +84,5 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
     [handleRequest]
   );
 
-  return { data, loading, error, get, post, put, del };
+  return { loading, error, get, post, put, del };
 };

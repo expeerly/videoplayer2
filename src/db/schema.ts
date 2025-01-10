@@ -10,22 +10,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
-// Admin table
-export const admin = pgTable('admin', {
-  id: integer('id').primaryKey(),
-  email: text('email').notNull(),
-  password: text('password').notNull(),
-  role: text('role'),
-  createdAt: timestamp('createdAt', {
-    precision: 6,
-    withTimezone: true,
-  }).defaultNow(),
-  updatedAt: timestamp('updatedAt', {
-    precision: 6,
-    withTimezone: true,
-  }).defaultNow(),
-});
-
 // Brand table
 export const brand = pgTable('brand', {
   id: text('id').primaryKey(),
@@ -33,6 +17,7 @@ export const brand = pgTable('brand', {
   brandData: jsonb('brandData').notNull(),
   slug: text('slug').notNull().unique(),
   logo: text('logo'),
+  websiteURL: text('websiteURL'),
   rating: real('rating').default(0.0).notNull(),
   createdAt: timestamp('createdAt', {
     precision: 6,
@@ -63,6 +48,25 @@ export const category = pgTable('category', {
 export const creator = pgTable('creator', {
   id: text('id').primaryKey(),
   creatorName: text('creatorName').notNull(),
+  bio: text('bio'),
+  profilePictureURL: text('profilePictureURL'),
+  age: integer('age'),
+  location: text('location'),
+  country: text('country'),
+  createdAt: timestamp('createdAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+  updatedAt: timestamp('updatedAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+});
+
+export const creatorInterests = pgTable('creatorInterests', {
+  id: serial('id').primaryKey(),
+  creatorId: text('creatorId').references(() => creator.id),
+  categoryId: integer('categoryId').references(() => category.id),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,
@@ -83,7 +87,7 @@ export const product = pgTable('product', {
   categoryId: integer('categoryId').references(() => category.id),
   globalTradeItemNumber: text('globalTradeItemNumber'),
   vendorProductNumber: text('vendorProductNumber'),
-  rating: real('rating').default(0.0).notNull(),
+  rating: real('rating').default(0.0),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,
@@ -104,14 +108,27 @@ export const video = pgTable('video', {
   creatorId: text('creatorId').references(() => creator.id),
   siteTitle: jsonb('siteTitle').notNull(),
   metaDescription: jsonb('metaDescription').notNull(),
-  subtitle: jsonb('subtitle').notNull(),
   summary: jsonb('summary').notNull(),
   transcript: jsonb('transcript').notNull(),
   faqs: jsonb('faqs').notNull(),
   published: boolean('published'),
   cannonicalTag: boolean('cannonicalTag').default(false).notNull(),
-  showRelated: boolean('showRelated').default(false).notNull(),
   resolution: text('resolution'),
+  createdAt: timestamp('createdAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+  updatedAt: timestamp('updatedAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+});
+
+export const rating = pgTable('rating', {
+  id: text('id').primaryKey(),
+  productId: text('productId').references(() => product.id),
+  creatorId: text('creatorId').references(() => creator.id),
+  rating: real('rating').notNull(),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,
@@ -155,4 +172,33 @@ export const categoryRelations = relations(category, ({ many }) => ({
 
 export const creatorRelations = relations(creator, ({ many }) => ({
   videos: many(video),
+  interests: many(creatorInterests),
 }));
+
+export const headings = pgTable('headings', {
+  id: serial('id').primaryKey(),
+  data: jsonb('data').notNull(),
+  createdAt: timestamp('createdAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+  updatedAt: timestamp('updatedAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+});
+
+export const landingPage = pgTable('landingPage', {
+  id: serial('id').primaryKey(),
+  brandsContent: jsonb('brandsContent').notNull(),
+  categoriesContent: jsonb('categoriesContent').notNull(),
+  creatorsContent: jsonb('creatorsContent').notNull(),
+  createdAt: timestamp('createdAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+  updatedAt: timestamp('updatedAt', {
+    precision: 6,
+    withTimezone: true,
+  }).defaultNow(),
+});

@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { handleCreateBrand, handleGetBrand } from '../services/brand.services';
+import { handleError } from '../utils/errorHandler';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const brand = await handleCreateBrand(body);
+    const brand = await handleCreateBrand(body.data);
     return NextResponse.json(
       {
         success: true,
@@ -33,7 +34,6 @@ export async function GET() {
       }
     );
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+    return handleError(error);
   }
 }

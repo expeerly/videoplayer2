@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getCategory, handleCreateCategory } from '../services/category.services';
+import { getCategoriesForSlider, handleCreateCategory } from '../services/category.services';
+import { handleError } from '../utils/errorHandler';
 
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
-    const category = await handleCreateCategory(body);
+    const category = await handleCreateCategory(body.data);
     return NextResponse.json(
       {
         success: true,
@@ -15,14 +16,13 @@ export const POST = async (req: Request) => {
       }
     );
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+    return handleError(error);
   }
 };
 
 export const GET = async () => {
   try {
-    const category = await getCategory();
+    const category = await getCategoriesForSlider();
     return NextResponse.json(
       {
         success: true,
@@ -33,7 +33,6 @@ export const GET = async () => {
       }
     );
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+    return handleError(error);
   }
 };
