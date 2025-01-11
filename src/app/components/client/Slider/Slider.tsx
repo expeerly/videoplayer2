@@ -9,13 +9,18 @@ import React, {
   FunctionComponent,
   useMemo,
 } from 'react';
+import { useLocale } from 'next-intl';
+
+import { useSharedState } from '@/src/app/context/reducer';
+import { Languages } from '@/src/db/types';
+
 import { SlideProps, SliderCard } from './SliderCard';
 import { SliderNavigationButton } from './SliderNavigationButton';
 import { distributeSlides } from './utils/distributeSlides';
 
-interface SliderProps {
-  slides?: SlideProps[];
+type SliderProps = {
   isBrand?: boolean;
+  maxRows?: number;
   classNameStyle?: {
     leftButtonClassName?: string;
     rightButtonClassName?: string;
@@ -23,41 +28,19 @@ interface SliderProps {
     rowContainerClassName?: string;
     rowClassName?: string;
   };
-}
-
-const DEFAULT_CATEGORIES: SlideProps[] = [
-  { name: 'Travel', icon: '✈️' },
-  { name: 'Automobile', icon: '🚗' },
-  { name: 'Health & Wellness', icon: '❤️' },
-  { name: 'Arts & Crafts', icon: '🎨' },
-  { name: 'Baby & Child Care', icon: '👶' },
-  { name: 'Home & Kitchen', icon: '🏠' },
-  { name: 'Beauty & Personal Care', icon: '💅' },
-  { name: 'Books & Media', icon: '📚' },
-  { name: 'Clothes and Fashion', icon: '👕' },
-  { name: 'Arts & Crafts', icon: '🎨' },
-  { name: 'Baby & Child Care', icon: '👶' },
-  { name: 'Home & Kitchen', icon: '🏠' },
-  { name: 'Beauty & Personal Care', icon: '💅' },
-  { name: 'Travel', icon: '✈️' },
-  { name: 'Automobile', icon: '🚗' },
-  { name: 'Health & Wellness', icon: '❤️' },
-  { name: 'Arts & Crafts', icon: '🎨' },
-  { name: 'Baby & Child Care', icon: '👶' },
-  { name: 'Home & Kitchen', icon: '🏠' },
-  { name: 'Beauty & Personal Care', icon: '💅' },
-];
+};
 
 const SliderComponent: FunctionComponent<SliderProps> = ({
-  slides = DEFAULT_CATEGORIES,
   classNameStyle = {},
   isBrand,
+  maxRows = 3,
 }) => {
   const [position, setPosition] = useState(-50);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
-
+  const { categories, brands } = useSharedState();
+  const lang = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -92,7 +75,18 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
     setIsTransitioning(false);
   };
 
-  const distributedSlides = useMemo(() => distributeSlides(slides), [slides]);
+  const distributedSlides = useMemo(() => {
+    const slides = isBrand
+      ? brands.map(i => ({ slug: i.slug, title: i.brandName, id: i.id, imgURL: i.logo }))
+      : categories.map(i => ({
+          id: i.id,
+          slug: i.categoryData?.[lang as Languages].urlSlug,
+          name: i.categoryData?.[lang as Languages].categoryName,
+          icon: i.logo,
+        }));
+
+    return distributeSlides(slides as SlideProps[], maxRows);
+  }, [categories, brands, isBrand, maxRows, lang]);
 
   return (
     <div ref={containerRef} className="relative overflow-hidden w-full max-w-7xl mx-auto">

@@ -17,8 +17,9 @@ export const FilterCards: FunctionComponent<Props> = ({ items, pendingFilters, o
           name={item.name}
           icon={item.icon}
           logo={item.logo}
-          checked={pendingFilters.includes(item.name)}
+          checked={pendingFilters.includes(item.id)}
           onChange={onToggle}
+          id={item.id}
         />
       ))}
     </div>

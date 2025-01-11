@@ -29,3 +29,36 @@ export type CreatorInterestsInputType = typeof creatorInterests.$inferInsert;
 export type LandingPageInputType = typeof landingPage.$inferInsert;
 export type RatingInputType = typeof rating.$inferInsert;
 export type HeadingsInputType = typeof headings.$inferInsert;
+
+export type Languages = 'de' | 'en' | 'fr' | 'it';
+
+type CategoryLanguageContent = {
+  urlSlug: string;
+  metaDesc: string;
+  siteTitle: string;
+  categoryName: string;
+};
+
+type BrandLanguageContent = {
+  metaDesc: string;
+  siteTitle: string;
+  brandBody: string;
+  brandFooter: string;
+};
+
+type LanguageSet<T> = {
+  [key in Languages]: T;
+};
+
+export type CategoryData = LanguageSet<CategoryLanguageContent>;
+export type BrandData = LanguageSet<BrandLanguageContent> & { websiteLink: string };
+
+export type CategoryWithData = {
+  id: number;
+  logo: string;
+  categoryData: CategoryData;
+};
+
+export type BrandWithData = {
+  brandData: BrandData;
+} & Brand;

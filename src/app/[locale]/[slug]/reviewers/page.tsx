@@ -3,21 +3,48 @@ import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
-import { NextPage } from 'next';
+import { Metadata, NextPage } from 'next';
+import { LandingPageData } from '@/src/types';
+import { Languages } from '@/src/db/types';
 
-const sampleText = `
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis 
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
-eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
-sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut 
-perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore 
-veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-`.trim();
+type PageProps = {
+  params: {
+    locale: Languages;
+    slug: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-const Page: NextPage = () => {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  // Fetch the landing page data
+  const fetchLandingPageData = await fetch(
+    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Creator`
+  );
+  const { data } = (await fetchLandingPageData.json()) as {
+    data: {
+      creatorsContent: LandingPageData;
+    };
+    success: boolean;
+  };
+
+  return {
+    title: data?.creatorsContent?.[locale]?.siteTitle,
+    description: data?.creatorsContent?.[locale]?.bodyText,
+  };
+}
+
+const Page: NextPage<PageProps> = async ({ params }) => {
+  const { locale } = await params;
+
+  const fetchLandingPageData = await fetch(
+    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Creator`
+  );
+  const { data } = (await fetchLandingPageData.json()) as {
+    data: { creatorsContent: LandingPageData };
+  };
+
   return (
     <div className="w-full bg-white">
       <div className="w-full mx-auto md:max-w-[532px] pt-5 md:pt-10">
@@ -27,7 +54,7 @@ const Page: NextPage = () => {
               <PageHeading>Avis Vidéos: Categories de Produit</PageHeading>
               <Filter />
             </div>
-            <LongDescription text={sampleText} />
+            <LongDescription text={data?.creatorsContent?.[locale]?.bodyText} />
           </div>
         </section>
         <PaginationContainer
@@ -43,8 +70,7 @@ const Page: NextPage = () => {
 
         <SEOSection
           heading="SEO text lorem ipsum"
-          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pretium dictum felis, at
-            porttitor nisi accumsan et. Curabitur volutpat risus at nisi finibus, eget suscipit leo."
+          content={data?.creatorsContent?.[locale]?.footerText}
         />
       </div>
     </div>

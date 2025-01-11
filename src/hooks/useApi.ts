@@ -16,10 +16,10 @@ type RequestPayload = Record<string, unknown>;
 type ApiCallResult<T> = {
   loading: boolean;
   error: string | null;
-  get: (url: string, params?: RequestParams) => Promise<ApiResponse<T> | null>;
-  post: (url: string, payload: RequestPayload) => Promise<ApiResponse<T> | null>;
-  put: (url: string, payload: RequestPayload) => Promise<ApiResponse<T> | null>;
-  del: (url: string, params?: RequestParams) => Promise<ApiResponse<T> | null>;
+  get: <R = T>(url: string, params?: RequestParams) => Promise<ApiResponse<R> | null>;
+  post: <R = T>(url: string, payload: RequestPayload) => Promise<ApiResponse<R> | null>;
+  put: <R = T>(url: string, payload: RequestPayload) => Promise<ApiResponse<R> | null>;
+  del: <R = T>(url: string, params?: RequestParams) => Promise<ApiResponse<R> | null>;
 };
 
 export const useApiCall = <T>(): ApiCallResult<T> => {
@@ -27,29 +27,29 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
   const [error, setError] = useState<string | null>(null);
 
   const handleRequest = useCallback(
-    async (
+    async <R>(
       method: 'get' | 'post' | 'put' | 'delete',
       url: string,
       payload?: RequestParams | RequestPayload
-    ): Promise<ApiResponse<T> | null> => {
+    ): Promise<ApiResponse<R> | null> => {
       setLoading(true);
       setError(null);
 
       try {
-        let response: AxiosResponse<ApiResponse<T>>;
+        let response: AxiosResponse<ApiResponse<R>>;
         const apiURL = url.startsWith('http') ? url : `${process.env.NEXT_ENDPOINT_URL}${url}`;
         switch (method) {
           case 'post':
-            response = await axios.post<ApiResponse<T>>(apiURL, payload);
+            response = await axios.post<ApiResponse<R>>(apiURL, payload);
             break;
           case 'put':
-            response = await axios.put<ApiResponse<T>>(apiURL, payload);
+            response = await axios.put<ApiResponse<R>>(apiURL, payload);
             break;
           case 'delete':
-            response = await axios.delete<ApiResponse<T>>(apiURL, { data: payload });
+            response = await axios.delete<ApiResponse<R>>(apiURL, { data: payload });
             break;
           default:
-            response = await axios.get<ApiResponse<T>>(apiURL, { params: payload });
+            response = await axios.get<ApiResponse<R>>(apiURL, { params: payload });
         }
 
         return response.data;
@@ -65,22 +65,22 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
   );
 
   const get = useCallback(
-    (url: string, params?: RequestParams) => handleRequest('get', url, params),
+    <R = T>(url: string, params?: RequestParams) => handleRequest<R>('get', url, params),
     [handleRequest]
   );
 
   const post = useCallback(
-    (url: string, payload: RequestPayload) => handleRequest('post', url, payload),
+    <R = T>(url: string, payload: RequestPayload) => handleRequest<R>('post', url, payload),
     [handleRequest]
   );
 
   const put = useCallback(
-    (url: string, payload: RequestPayload) => handleRequest('put', url, payload),
+    <R = T>(url: string, payload: RequestPayload) => handleRequest<R>('put', url, payload),
     [handleRequest]
   );
 
   const del = useCallback(
-    (url: string, params?: RequestParams) => handleRequest('delete', url, params),
+    <R = T>(url: string, params?: RequestParams) => handleRequest<R>('delete', url, params),
     [handleRequest]
   );
 

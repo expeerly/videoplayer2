@@ -1,6 +1,9 @@
 import { SlideProps } from '../SliderCard';
 
-export const distributeSlides = <T extends SlideProps>(slides: T[]): T[][] =>
-  Array.from({ length: Math.ceil(slides.length / 10) }, (_, i) =>
-    slides.slice(i * 10, (i + 1) * 10)
+export const distributeSlides = <T extends SlideProps>(slides: T[], maxRows: number = 3): T[][] => {
+  const itemsPerRow = 10;
+  const totalRows = Math.min(maxRows, Math.ceil(slides.length / itemsPerRow));
+  return Array.from({ length: totalRows }, (_, i) =>
+    slides.slice(i * itemsPerRow, (i + 1) * itemsPerRow)
   );
+};

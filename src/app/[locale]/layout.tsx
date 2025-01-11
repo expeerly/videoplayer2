@@ -10,6 +10,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/src/i18n/routing';
 import { BottomBar } from '@/src/app/components/client/BottomBar';
 import SharedContextProvider from '../context';
+import { GetBrandsAndCategories } from '../components/client/GetBrandsAndCategories';
 
 export const metadata: Metadata = {
   title: 'Expeerly App',
@@ -43,17 +44,19 @@ export default async function RootLayout({
       <body className={`h-full antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <SharedContextProvider>
-            <div className="flex h-full w-full flex-col font-mulish">
-              <Navbar />
-              <div className="flex w-full flex-col-reverse md:flex-row">
-                <Sidebar />
-                <BottomBar />
-                <main className="flex-1 w-full md:w-[75%] mid-lg:w-[calc(100%-275px)] relative ">
-                  {children}
-                </main>
+            <GetBrandsAndCategories>
+              <div className="flex h-full w-full flex-col font-mulish">
+                <Navbar />
+                <div className="flex w-full flex-col-reverse md:flex-row">
+                  <Sidebar />
+                  <BottomBar />
+                  <main className="flex-1 w-full md:w-[75%] mid-lg:w-[calc(100%-275px)] relative ">
+                    {children}
+                  </main>
+                </div>
+                <Footer />
               </div>
-              <Footer />
-            </div>
+            </GetBrandsAndCategories>
           </SharedContextProvider>
         </NextIntlClientProvider>
       </body>
