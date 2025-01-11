@@ -44,6 +44,7 @@ export async function getCategoriesForSlider(
         categoryName: sql<string>`("categoryData" -> ${lang} ->> 'categoryName')`.as(
           'categoryName'
         ),
+        urlSlug: sql<string>`("categoryData" -> ${lang} ->> 'urlSlug')`.as('urlSlug'),
       })
       .from(category);
   } catch (error) {
