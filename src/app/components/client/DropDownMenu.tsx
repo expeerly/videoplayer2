@@ -8,6 +8,9 @@ import React, {
   useState,
   useMemo,
 } from 'react';
+import { useLocale, useTranslations } from 'use-intl';
+import clsx from 'clsx';
+
 import {
   BinocularsIcon,
   CartIcon,
@@ -24,12 +27,11 @@ import {
   WorldIcon,
 } from '@/src/assets/icons';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
-import { useLocale, useTranslations } from 'use-intl';
-import clsx from 'clsx';
 import { Link, usePathname } from '@/src/i18n/routing';
-import { Button } from './Button';
+import { CategoryWithData, Languages } from '@/src/db/types';
+
 import { useSharedState } from '../../context/reducer';
-import { CategoryWithData } from '@/src/db/types';
+import { Button } from './Button';
 
 export type MenuItem = {
   key: string;
@@ -45,9 +47,7 @@ export type MenuItem = {
   devider?: boolean;
 };
 
-type Lang = 'en' | 'de' | 'fr' | 'it';
-
-const defaultMenuItems = (categroies: CategoryWithData[] = [], lang: Lang): MenuItem[] => {
+const defaultMenuItems = (categroies: CategoryWithData[] = [], lang: Languages): MenuItem[] => {
   return [
     { key: 'explore', label: 'Explore', icon: BinocularsIcon, href: '/explore' },
     {
@@ -67,7 +67,7 @@ const defaultMenuItems = (categroies: CategoryWithData[] = [], lang: Lang): Menu
       label: 'Categories',
       icon: CategoriesIcon,
       items: categroies.map(i => ({
-        label: i.categoryData?.names[lang],
+        label: i.categoryData?.[lang].categoryName,
         href: `/video-reviews/productcategory/${i.id}`,
       })),
       itemsLabel: 'viewAllCategories',
@@ -124,7 +124,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({ className
   const { categories } = useSharedState();
   const local = useLocale();
   const menuItems = useMemo(
-    () => defaultMenuItems(categories, local === '/' ? 'en' : (local as Lang)),
+    () => defaultMenuItems(categories, local === '/' ? 'en' : (local as Languages)),
     [categories, local]
   );
 

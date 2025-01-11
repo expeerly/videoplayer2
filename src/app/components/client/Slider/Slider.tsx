@@ -9,10 +9,14 @@ import React, {
   FunctionComponent,
   useMemo,
 } from 'react';
+import { useLocale } from 'next-intl';
+
+import { useSharedState } from '@/src/app/context/reducer';
+import { Languages } from '@/src/db/types';
+
 import { SlideProps, SliderCard } from './SliderCard';
 import { SliderNavigationButton } from './SliderNavigationButton';
 import { distributeSlides } from './utils/distributeSlides';
-import { useSharedState } from '@/src/app/context/reducer';
 
 type SliderProps = {
   isBrand?: boolean;
@@ -36,7 +40,7 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const { categories, brands } = useSharedState();
-
+  const lang = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -76,13 +80,13 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
       ? brands.map(i => ({ slug: i.slug, title: i.brandName, id: i.id, imgURL: i.logo }))
       : categories.map(i => ({
           id: i.id,
-          slug: i.categoryData.slugs.en,
-          name: i.categoryData.names.en,
+          slug: i.categoryData?.[lang as Languages].urlSlug,
+          name: i.categoryData?.[lang as Languages].categoryName,
           icon: i.logo,
         }));
 
     return distributeSlides(slides as SlideProps[], maxRows);
-  }, [categories, brands, isBrand, maxRows]);
+  }, [categories, brands, isBrand, maxRows, lang]);
 
   return (
     <div ref={containerRef} className="relative overflow-hidden w-full max-w-7xl mx-auto">

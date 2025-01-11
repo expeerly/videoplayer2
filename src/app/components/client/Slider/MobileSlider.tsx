@@ -1,9 +1,13 @@
 'use client';
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef } from 'react';
-import { SlideProps, SliderCard } from './SliderCard';
 import clsx from 'clsx';
-import { distributeSlides } from './utils/distributeSlides';
+import { useLocale } from 'next-intl';
+
 import { useSharedState } from '@/src/app/context/reducer';
+import { Languages } from '@/src/db/types';
+
+import { SlideProps, SliderCard } from './SliderCard';
+import { distributeSlides } from './utils/distributeSlides';
 
 type StyleClassNames = {
   leftShadowClassName?: string;
@@ -27,7 +31,7 @@ export const MobileSlider: FunctionComponent<Props> = ({
   // Refs
   const rowRefs = useRef<(HTMLLIElement | null)[]>([]);
   const { brands, categories } = useSharedState();
-
+  const local = useLocale();
   // Memoized base classes
   const baseClasses = useMemo(
     () => ({
@@ -70,13 +74,13 @@ export const MobileSlider: FunctionComponent<Props> = ({
       ? brands.map(i => ({ slug: i.slug, title: i.brandName, id: i.id, imgURL: i.logo }))
       : categories.map(i => ({
           id: i.id,
-          slug: i.categoryData.slugs.en,
-          name: i.categoryData.names.en,
+          slug: i.categoryData?.[local as Languages].urlSlug,
+          name: i.categoryData?.[local as Languages].categoryName,
           icon: i.logo,
         }));
 
     return isMultiRow ? distributeSlides(slides as SlideProps[]) : [slides as SlideProps[]];
-  }, [categories, brands, isBrand, isMultiRow]);
+  }, [categories, brands, isBrand, isMultiRow, local]);
 
   // Memoized render functions
   const renderSlide = useCallback(

@@ -1,12 +1,13 @@
 'use client';
 import React, { FunctionComponent, PropsWithChildren, useCallback, useEffect } from 'react';
-import { useSharedDispatch } from '../../context/reducer';
-import { useApi } from '@/src/hooks/useApi';
+import { useApiCall } from '@/src/hooks/useApi';
 import { BrandWithData, CategoryWithData } from '@/src/db/types';
+
+import { useSharedDispatch } from '../../context/reducer';
 
 export const GetBrandsAndCategories: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const dispatch = useSharedDispatch();
-  const { get } = useApi();
+  const { get } = useApiCall();
   const getCategories = useCallback(async () => {
     try {
       const response = await get<CategoryWithData[]>('/category');
