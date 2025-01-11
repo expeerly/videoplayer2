@@ -1,19 +1,13 @@
 import { NextResponse } from 'next/server';
-import { handleGetCategoryWithVideoss } from '../../services/category.services';
+import { handleGetBrandsWithVideos } from '../../services/brand.services';
 import { handleError } from '../../utils/errorHandler';
-import {
-  getFilterOptions,
-  getLanguageFromRequest,
-  getPaginationParams,
-} from '../../utils/requestHelpers';
+import { getPaginationParams } from '../../utils/requestHelpers';
 
 export const GET = async (request: Request) => {
   try {
     const params = getPaginationParams(request);
-    const lang = getLanguageFromRequest(request);
-    const filters = getFilterOptions(request);
 
-    const category = await handleGetCategoryWithVideoss(params, lang, filters);
+    const category = await handleGetBrandsWithVideos(params);
 
     return NextResponse.json(
       {

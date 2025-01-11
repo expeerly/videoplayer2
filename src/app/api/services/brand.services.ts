@@ -1,7 +1,8 @@
 import { db } from '@/src/db';
-import { brand } from '@/src/db/schema';
-import { and, isNotNull, sql } from 'drizzle-orm';
+import { brand, product, rating, video } from '@/src/db/schema';
+import { and, eq, exists, isNotNull, sql } from 'drizzle-orm';
 import { Brand, BrandInputType } from '@/src/db/types';
+import { PaginationParams } from '../utils/requestHelpers';
 
 export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[]> {
   if (!input || !Array.isArray(input)) {
@@ -104,6 +105,70 @@ export async function getBrandsLogosAndNames(
 
     return {
       rows: data,
+      total: brandsCount.count,
+    };
+  } catch (error) {
+    console.error('Error fetching brands:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
+export async function handleGetBrandsWithVideos({
+  page,
+  limit,
+  videoCount,
+  random,
+}: PaginationParams) {
+  try {
+    const offset = (page - 1) * limit;
+    const [brands, brandsCount] = await Promise.all([
+      await db
+        .select({
+          id: brand.id,
+          logo: brand.logo,
+          name: brand.brandName,
+          slug: brand.slug,
+          info: {
+            reviewsCount: sql<number>`(
+            SELECT COUNT(*)
+            FROM ${video}
+            JOIN ${product} ON ${video.productId} = ${product.id}
+            WHERE ${product.brandId} = ${brand.id}
+          )`.as('reviewsCount'),
+          },
+          videos: sql<string>`(
+            SELECT json_agg(video_data)
+            FROM (
+              SELECT json_build_object(
+                'id', ${video.id},
+                'playbackId', ${video.playbackId},
+                'videoUrl', ${video.videoUrl},
+                'resolution', ${video.resolution},
+                'productName', ${product.productName},
+                'brandName', ${brand.brandName},
+                'brandLogo', ${brand.logo},
+                'brandSlug', ${brand.slug},
+                'rating', ${rating.rating}
+              ) as video_data
+              FROM ${video}
+              JOIN ${product} ON ${video.productId} = ${product.id}
+              LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
+              WHERE ${product.brandId} = ${brand.id}
+              LIMIT ${videoCount}
+            ) subq
+          )`,
+        })
+        .from(brand)
+        .leftJoin(product, eq(brand.id, product.brandId))
+        .where(exists(db.select().from(video).where(eq(video.productId, product.id))))
+        .groupBy(brand.id, brand.logo)
+        .orderBy(random ? sql`RANDOM()` : brand.brandName)
+        .limit(limit)
+        .offset(offset),
+      getBrandsCount(),
+    ]);
+    return {
+      rows: brands,
       total: brandsCount.count,
     };
   } catch (error) {
