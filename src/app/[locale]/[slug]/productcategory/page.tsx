@@ -10,13 +10,11 @@ import { LandingPageData } from '@/src/types';
 import { Languages } from '@/src/db/types';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     locale: Languages;
     slug: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+  }>;
 };
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
 
