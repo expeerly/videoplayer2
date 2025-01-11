@@ -3,23 +3,53 @@ import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
-import { brands } from '@/src/app/components/server/BrandsSlider';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
+import { LandingPageData } from '@/src/types';
+import { Languages } from '@/src/db/types';
 
-export async function generateMetadata(): Promise<Metadata> {
+type PageProps = {
+  params: {
+    locale: Languages;
+    slug: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
   const { t } = await getDictionary();
 
+  // Fetch the landing page data
+  const fetchallBrandsBodyText = await fetch(
+    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Brand`
+  );
+  const { data } = (await fetchallBrandsBodyText.json()) as {
+    data: {
+      brandContent: LandingPageData;
+    };
+    success: boolean;
+  };
+
   return {
-    title: t('all_brands_site_title'),
-    description: t('all_brands_meta_description'),
+    title: data?.brandContent?.[locale]?.siteTitle || t('all_brands_site_title'),
+    description: data?.brandContent?.[locale]?.bodyText || t('all_brands_meta_description'),
   };
 }
 
-const Page: NextPage = async () => {
+const Page: NextPage<PageProps> = async ({ params }) => {
+  const { locale } = await params;
   const { t } = await getDictionary();
+
+  const fetchallBrandsBodyText = await fetch(
+    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Brand`
+  );
+  const { data } = (await fetchallBrandsBodyText.json()) as {
+    data: { brandContent: LandingPageData };
+  };
+
   return (
     <div className="w-full bg-white">
       <div className=" w-full mx-auto  md:max-w-[532px] pt-5 md:pt-10">
@@ -34,7 +64,6 @@ const Page: NextPage = async () => {
           <div className="mt-8">
             <div className="hidden md:block">
               <Slider
-                slides={brands}
                 classNameStyle={{
                   cardClassName: 'bg-white',
                 }}
@@ -42,7 +71,7 @@ const Page: NextPage = async () => {
               />
             </div>
             <div className="md:hidden">
-              <MobileSlider isMultiRow={false} slides={brands} isBrand />
+              <MobileSlider isMultiRow={false} isBrand />
             </div>
           </div>
         </section>
@@ -59,7 +88,10 @@ const Page: NextPage = async () => {
           }}
         />
 
-        <SEOSection heading="SEO text lorem ipsum" content={t('all_brands_footer_text')} />
+        <SEOSection
+          heading="SEO text lorem ipsum"
+          content={data?.brandContent?.[locale]?.footerText || t('all_brands_footer_text')}
+        />
       </div>
     </div>
   );
