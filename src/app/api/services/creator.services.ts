@@ -1,7 +1,8 @@
 import { db } from '@/src/db';
-import { creator, creatorInterests } from '@/src/db/schema';
-import { sql } from 'drizzle-orm';
+import { brand, creator, creatorInterests, product, rating, video } from '@/src/db/schema';
+import { and, eq, exists, sql } from 'drizzle-orm';
 import { Creator, CreatorInputType, CreatorInterestsInputType } from '@/src/db/types';
+import { PaginationParams } from '../utils/requestHelpers';
 
 /**
  * Creates or updates creator data
@@ -78,7 +79,67 @@ export async function getCreatorsCount(): Promise<{ count: number }> {
     const count = await db.$count(creator);
     return { count };
   } catch (error) {
-    console.error('Error fetching category count:', error);
+    console.error('Error fetching creator count:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
+export async function handleGetCreatorWithVideos(
+  { page, limit, videoCount, random }: PaginationParams
+  // lang: SupportedLanguage,
+  // { categories, brands }: FilterParams
+) {
+  try {
+    const offset = (page - 1) * limit;
+    const [creatorsResult, creatorCount] = await Promise.all([
+      await db
+        .select({
+          id: creator.id,
+          logo: creator.profilePictureURL,
+          name: creator.creatorName,
+          slug: creator.id,
+          info: {
+            age: creator.age,
+            location: creator.location,
+            bio: creator.bio,
+          },
+          videos: sql<string>`(
+            SELECT json_agg(video_data)
+            FROM (
+              SELECT json_build_object(
+                'id', ${video.id},
+                'playbackId', ${video.playbackId},
+                'videoUrl', ${video.videoUrl},
+                'resolution', ${video.resolution},
+                'productName', ${product.productName},
+                'brandId', ${product.brandId},
+                'brandName', ${brand.brandName},
+                'brandLogo', ${brand.logo},
+                'brandSlug', ${brand.slug},
+                'rating', ${rating.rating}
+              ) as video_data
+              FROM ${video}
+              LIMIT ${videoCount}
+            ) subq
+          )`,
+        })
+        .from(creator)
+        .leftJoin(video, eq(video.creatorId, creator.id))
+        .leftJoin(product, eq(product.id, video.productId))
+        .leftJoin(brand, eq(brand.id, product.brandId))
+        .leftJoin(rating, eq(rating.productId, product.id))
+        .where(and(exists(db.select().from(video).where(eq(video.creatorId, creator.id)))))
+        .limit(limit)
+        .offset(offset)
+        .orderBy(random ? sql`RANDOM()` : creator.creatorName),
+      getCreatorsCount(),
+    ]);
+    return {
+      rows: creatorsResult,
+      total: creatorCount.count,
+    };
+  } catch (error) {
+    console.error('Error fetching categories:', error);
     throw new Error((error as Error).message);
   }
 }

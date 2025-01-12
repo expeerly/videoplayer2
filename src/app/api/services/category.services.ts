@@ -97,7 +97,7 @@ export async function getCategoryCount(): Promise<{ count: number }> {
   }
 }
 
-export async function handleGetCategoryWithVideoss(
+export async function handleGetCategoryWithVideos(
   { page, limit, videoCount, random }: PaginationParams,
   lang: SupportedLanguage,
   { categories, brands }: FilterParams
