@@ -3,8 +3,13 @@ import { getDictionary } from '@/src/lib/dictionary';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Button } from '../client/Button';
+import { BrandData } from '@/src/db/types';
 
-export const ConversionSlider: FunctionComponent = async () => {
+type Props = {
+  brands: BrandData;
+};
+
+export const ConversionSlider: FunctionComponent<Props> = async ({ brands }) => {
   const { t } = await getDictionary();
 
   return (
@@ -27,7 +32,13 @@ export const ConversionSlider: FunctionComponent = async () => {
               cardClassName: 'bg-white',
             }}
             isBrand
-            maxRows={1}
+            slides={
+              brands?.rows?.map(brand => ({
+                title: brand.brandName,
+                imgURL: brand.logo,
+                slug: brand.slug,
+              })) ?? []
+            }
           />
         </div>
         <div className=" flex w-full md:hidden">
@@ -36,6 +47,13 @@ export const ConversionSlider: FunctionComponent = async () => {
               cardClassName: 'bg-white',
             }}
             isBrand
+            slides={
+              brands?.rows?.map(brand => ({
+                title: brand.brandName,
+                imgURL: brand.logo,
+                slug: brand.slug,
+              })) ?? []
+            }
           />
         </div>
         <div className="px-5 w-full mt-12 flex justify-center sm:w-max">

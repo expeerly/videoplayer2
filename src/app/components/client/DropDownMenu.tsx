@@ -8,7 +8,7 @@ import React, {
   useState,
   useMemo,
 } from 'react';
-import { useLocale, useTranslations } from 'use-intl';
+import { useTranslations } from 'use-intl';
 import clsx from 'clsx';
 
 import {
@@ -28,9 +28,8 @@ import {
 } from '@/src/assets/icons';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import { Link, usePathname } from '@/src/i18n/routing';
-import { CategoryWithData, Languages } from '@/src/db/types';
+import { CategoryData } from '@/src/db/types';
 
-import { useSharedState } from '../../context/reducer';
 import { Button } from './Button';
 
 export type MenuItem = {
@@ -47,7 +46,7 @@ export type MenuItem = {
   devider?: boolean;
 };
 
-const defaultMenuItems = (categroies: CategoryWithData[] = [], lang: Languages): MenuItem[] => {
+const defaultMenuItems = (categroies: CategoryData[] = []): MenuItem[] => {
   return [
     { key: 'explore', label: 'Explore', icon: BinocularsIcon, href: '/explore' },
     {
@@ -67,8 +66,8 @@ const defaultMenuItems = (categroies: CategoryWithData[] = [], lang: Languages):
       label: 'Categories',
       icon: CategoriesIcon,
       items: categroies.map(i => ({
-        label: i.categoryData?.[lang].categoryName,
-        href: `/video-reviews/productcategory/${i.id}`,
+        label: i.categoryName,
+        href: `/video-reviews/productcategory/${i.urlSlug}`,
       })),
       itemsLabel: 'viewAllCategories',
       href: '/video-reviews/productcategory',
@@ -111,22 +110,20 @@ const defaultMenuItems = (categroies: CategoryWithData[] = [], lang: Languages):
 };
 
 type DropDownMenuProps = {
-  menuItems?: MenuItem[];
   className?: string;
+  categories: CategoryData[];
 };
 
-const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({ className = '' }) => {
+const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
+  className = '',
+  categories,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('menu');
   const pathname = usePathname();
-  const { categories } = useSharedState();
-  const local = useLocale();
-  const menuItems = useMemo(
-    () => defaultMenuItems(categories, local === '/' ? 'en' : (local as Languages)),
-    [categories, local]
-  );
+  const menuItems = useMemo(() => defaultMenuItems(categories), [categories]);
 
   // Event Handlers
   const toggleMenu = useCallback(() => {

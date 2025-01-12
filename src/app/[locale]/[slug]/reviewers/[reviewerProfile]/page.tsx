@@ -1,3 +1,4 @@
+import { getCategories } from '@/src/app/actions/actions';
 import { Button } from '@/src/app/components/client/Button';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
@@ -5,6 +6,7 @@ import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { Avatar } from '@/src/app/components/server/Avatar';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { ShareIcon } from '@/src/assets/icons';
+import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
 import { NextPage } from 'next';
 
@@ -12,8 +14,18 @@ const sampleText = `
 Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
 `.trim();
 
-const Page: NextPage = async () => {
+type PageProps = {
+  params: Promise<{
+    locale: Languages;
+    slug: string;
+  }>;
+};
+
+const Page: NextPage<PageProps> = async ({ params }) => {
+  const { locale } = await params;
   const { t } = await getDictionary();
+
+  const { data: categories } = await getCategories(locale);
 
   return (
     <div className="w-full bg-white">
@@ -59,10 +71,22 @@ const Page: NextPage = async () => {
         <section className="pt-5 md:pt-[50px]">
           <h3 className="text-lg font-extrabold mb-4 text-grey-700 md:hidden">{t('interests')}</h3>
           <div className="hidden md:block">
-            <Slider />
+            <Slider
+              slides={categories.map(i => ({
+                name: i.categoryName,
+                icon: i.logo,
+                slug: i.urlSlug,
+              }))}
+            />
           </div>
           <div className="md:hidden">
-            <MobileSlider />
+            <MobileSlider
+              slides={categories.map(i => ({
+                name: i.categoryName,
+                icon: i.logo,
+                slug: i.urlSlug,
+              }))}
+            />
           </div>
         </section>
 

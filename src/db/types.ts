@@ -32,33 +32,35 @@ export type HeadingsInputType = typeof headings.$inferInsert;
 
 export type Languages = 'de' | 'en' | 'fr' | 'it';
 
-type CategoryLanguageContent = {
-  urlSlug: string;
-  metaDesc: string;
-  siteTitle: string;
+export type CategoryData = {
   categoryName: string;
-};
-
-type BrandLanguageContent = {
-  metaDesc: string;
-  siteTitle: string;
-  brandBody: string;
-  brandFooter: string;
-};
-
-type LanguageSet<T> = {
-  [key in Languages]: T;
-};
-
-export type CategoryData = LanguageSet<CategoryLanguageContent>;
-export type BrandData = LanguageSet<BrandLanguageContent> & { websiteLink: string };
-
-export type CategoryWithData = {
-  id: number;
+  id: string;
   logo: string;
-  categoryData: CategoryData;
+  urlSlug: string;
 };
 
-export type BrandWithData = {
-  brandData: BrandData;
-} & Brand;
+export type AllCategoriesData = {
+  categoryData: { [Key in Languages]: { urlSlug: string; categoryName: string } };
+  id: string;
+  logo: string;
+};
+
+type BrandsData = {
+  brandName: string;
+  id: string;
+  logo: string;
+  slug: string;
+}[];
+
+export type BrandData = {
+  rows: BrandsData;
+};
+
+export type AllBrandssData = BrandsData;
+
+export type LandingPageText = {
+  bodyText?: string;
+  siteTitle?: string;
+  footerText?: string;
+  metaDescription?: string;
+};
