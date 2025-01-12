@@ -5,10 +5,10 @@ import { Category, CategoryInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
 
 /**
- * Creates or updates category data
- * @param input - Category data to be inserted or updated
+ * Creates or updates multiple categories
+ * @param {CategoryInputType[]} input - Array of category data
+ * @returns {Promise<Category[]>} Array of created/updated categories
  */
-
 export async function handleCreateCategory(input: CategoryInputType[]): Promise<Category[]> {
   if (!input || input.length === 0) {
     throw new Error('Input is required and cannot be empty');
@@ -33,6 +33,11 @@ export async function handleCreateCategory(input: CategoryInputType[]): Promise<
   }
 }
 
+/**
+ * Retrieves categories for the slider
+ * @param {SupportedLanguage} lang - Language code for content localization
+ * @returns {Promise<Partial<Category>[]>} Array of categories for the slider
+ */
 export async function getCategoriesForSlider(
   lang: SupportedLanguage
 ): Promise<Partial<Category>[]> {
@@ -54,6 +59,10 @@ export async function getCategoriesForSlider(
   }
 }
 
+/**
+ * Retrieves all categories
+ * @returns {Promise<Partial<Category>[]>} Array of categories
+ */
 export async function getAllCategories(): Promise<Partial<Category>[]> {
   try {
     return await db
@@ -87,6 +96,10 @@ export async function getAllCategories(): Promise<Partial<Category>[]> {
   }
 }
 
+/**
+ * Retrieves the total count of categories
+ * @returns {Promise<{ count: number }>} Object containing the total count
+ */
 export async function getCategoryCount(): Promise<{ count: number }> {
   try {
     const count = await db.$count(category);
@@ -97,24 +110,46 @@ export async function getCategoryCount(): Promise<{ count: number }> {
   }
 }
 
+/**
+ * Retrieves categories with their associated videos based on pagination and filter parameters
+ * @param {PaginationParams} params - Pagination parameters
+ * @param {SupportedLanguage} lang - Language code for content localization
+ * @param {FilterParams} filters - Filter parameters for categories and brands
+ * @returns {Promise<{ rows: Partial<Category>[], total: number }>} Paginated categories with total count
+ */
 export async function handleGetCategoryWithVideos(
   { page, limit, videoCount, random }: PaginationParams,
   lang: SupportedLanguage,
   { categories, brands }: FilterParams
 ) {
   try {
-    console.log({
-      categories,
-      brands,
-      lang,
-      page,
-      limit,
-      videoCount,
-      random,
-    });
     const offset = (page - 1) * limit;
-    const [categoriesResult, categoryCount] = await Promise.all([
-      await db
+
+    // Create filter conditions
+    const categoryFilter = categories?.length ? inArray(category.id, categories) : undefined;
+
+    const brandFilter = brands?.length ? inArray(product.brandId, brands) : undefined;
+
+    // Build where conditions
+    const whereConditions = [
+      exists(
+        db
+          .select()
+          .from(video)
+          .innerJoin(product, eq(video.productId, product.id))
+          .where(
+            and(
+              eq(video.productId, product.id),
+              eq(product.categoryId, category.id),
+              ...(brandFilter ? [brandFilter] : [])
+            )
+          )
+      ),
+      ...(categoryFilter ? [categoryFilter] : []),
+    ];
+
+    const [categoriesResult, totalCount] = await Promise.all([
+      db
         .select({
           id: category.id,
           logo: category.logo,
@@ -122,11 +157,12 @@ export async function handleGetCategoryWithVideos(
           slug: sql<string>`("categoryData" -> ${lang} ->> 'urlSlug')`.as('urlSlug'),
           info: {
             reviewsCount: sql<number>`(
-            SELECT COUNT(*)
-            FROM ${video}
-            JOIN ${product} ON ${video.productId} = ${product.id}
-            WHERE ${product.categoryId} = ${category.id}
-          )`.as('reviewsCount'),
+              SELECT COUNT(*)
+              FROM ${video}
+              JOIN ${product} ON ${video.productId} = ${product.id}
+              WHERE ${product.categoryId} = ${category.id}
+              ${brandFilter ? sql`AND ${brandFilter}` : sql``}
+            )`.as('reviewsCount'),
           },
           videos: sql<string>`(
             SELECT json_agg(video_data)
@@ -148,30 +184,34 @@ export async function handleGetCategoryWithVideos(
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
               LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
               WHERE ${product.categoryId} = ${category.id}
-              ${brands.length > 0 ? sql`AND ${product.brandId} IN (${sql.join(brands)})` : sql``}
+              ${brandFilter ? sql`AND ${brandFilter}` : sql``}
               LIMIT ${videoCount}
             ) subq
           )`,
         })
         .from(category)
         .leftJoin(product, eq(category.id, product.categoryId))
-        .where(
-          and(
-            exists(db.select().from(video).where(eq(video.productId, product.id))),
-            categories.length > 0 ? inArray(category.id, categories) : sql`TRUE`
-          )
-        )
+        .where(and(...whereConditions))
         .groupBy(category.id, category.logo)
         .limit(limit)
         .offset(offset)
         .orderBy(
           random ? sql`RANDOM()` : sql<string>`("categoryData" -> ${lang} ->> 'categoryName')`
         ),
-      getCategoryCount(),
+
+      db
+        .select({
+          count: sql<number>`COUNT(DISTINCT ${category.id})`,
+        })
+        .from(category)
+        .leftJoin(product, eq(category.id, product.categoryId))
+        .where(and(...whereConditions))
+        .then(result => result[0].count),
     ]);
+
     return {
       rows: categoriesResult,
-      total: categoryCount.count,
+      total: totalCount,
     };
   } catch (error) {
     console.error('Error fetching categories:', error);

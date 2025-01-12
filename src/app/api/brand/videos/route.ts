@@ -3,6 +3,7 @@ import { createRouteHandler } from '../../utils/baseRouteHandler';
 
 export const GET = createRouteHandler({
   serviceFunction: async params => {
-    return handleGetBrandsWithVideos(params.pagination);
+    return handleGetBrandsWithVideos(params.pagination, params.filters!);
   },
+  includeFilters: true,
 });

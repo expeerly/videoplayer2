@@ -1,8 +1,8 @@
 import { db } from '@/src/db';
 import { brand, product, rating, video } from '@/src/db/schema';
-import { and, eq, exists, isNotNull, sql } from 'drizzle-orm';
+import { and, eq, exists, inArray, isNotNull, sql } from 'drizzle-orm';
 import { Brand, BrandInputType } from '@/src/db/types';
-import { PaginationParams } from '../utils/requestHelpers';
+import { FilterParams, PaginationParams } from '../utils/requestHelpers';
 
 export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[]> {
   if (!input || !Array.isArray(input)) {
@@ -113,16 +113,35 @@ export async function getBrandsLogosAndNames(
   }
 }
 
-export async function handleGetBrandsWithVideos({
-  page,
-  limit,
-  videoCount,
-  random,
-}: PaginationParams) {
+export async function handleGetBrandsWithVideos(
+  { page, limit, videoCount, random }: PaginationParams,
+  { categories, brands }: FilterParams
+) {
   try {
     const offset = (page - 1) * limit;
-    const [brands, brandsCount] = await Promise.all([
-      await db
+
+    // Create filter conditions
+    const categoryFilter = categories?.length ? inArray(product.categoryId, categories) : undefined;
+
+    const brandFilter = brands?.length ? inArray(brand.id, brands) : undefined;
+
+    // Build where conditions
+    const whereConditions = exists(
+      db
+        .select()
+        .from(video)
+        .innerJoin(product, eq(video.productId, product.id))
+        .where(
+          and(
+            eq(product.brandId, brand.id),
+            ...(categoryFilter ? [categoryFilter] : []),
+            ...(brandFilter ? [brandFilter] : [])
+          )
+        )
+    );
+
+    const [brandsResult, totalCount] = await Promise.all([
+      db
         .select({
           id: brand.id,
           logo: brand.logo,
@@ -130,11 +149,11 @@ export async function handleGetBrandsWithVideos({
           slug: brand.slug,
           info: {
             reviewsCount: sql<number>`(
-            SELECT COUNT(*)
-            FROM ${video}
-            JOIN ${product} ON ${video.productId} = ${product.id}
-            WHERE ${product.brandId} = ${brand.id}
-          )`.as('reviewsCount'),
+              SELECT COUNT(*)
+              FROM ${video}
+              JOIN ${product} ON ${video.productId} = ${product.id}
+              WHERE ${product.brandId} = ${brand.id}
+            )`.as('reviewsCount'),
           },
           videos: sql<string>`(
             SELECT json_agg(video_data)
@@ -145,6 +164,7 @@ export async function handleGetBrandsWithVideos({
                 'videoUrl', ${video.videoUrl},
                 'resolution', ${video.resolution},
                 'productName', ${product.productName},
+                'brandId', ${product.brandId},
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
                 'brandSlug', ${brand.slug},
@@ -152,24 +172,35 @@ export async function handleGetBrandsWithVideos({
               ) as video_data
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
+              JOIN ${brand} ON ${product.brandId} = ${brand.id}
               LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
               WHERE ${product.brandId} = ${brand.id}
+              ${brandFilter ? sql`AND ${brandFilter}` : sql``}
               LIMIT ${videoCount}
             ) subq
           )`,
         })
         .from(brand)
         .leftJoin(product, eq(brand.id, product.brandId))
-        .where(exists(db.select().from(video).where(eq(video.productId, product.id))))
+        .where(whereConditions)
         .groupBy(brand.id, brand.logo)
         .orderBy(random ? sql`RANDOM()` : brand.brandName)
         .limit(limit)
         .offset(offset),
-      getBrandsCount(),
+
+      db
+        .select({
+          count: sql<number>`COUNT(DISTINCT ${brand.id})`,
+        })
+        .from(brand)
+        .leftJoin(product, eq(brand.id, product.brandId))
+        .where(whereConditions)
+        .then(result => result[0].count),
     ]);
+
     return {
-      rows: brands,
-      total: brandsCount.count,
+      rows: brandsResult,
+      total: totalCount,
     };
   } catch (error) {
     console.error('Error fetching brands:', error);
