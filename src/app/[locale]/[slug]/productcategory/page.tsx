@@ -6,8 +6,13 @@ import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { Metadata, NextPage } from 'next';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
-import { LandingPageData } from '@/src/types';
 import { Languages } from '@/src/db/types';
+import {
+  getAllBrands,
+  getAllCategories,
+  getCategories,
+  getLandingPageText,
+} from '@/src/app/actions/actions';
 
 type PageProps = {
   params: Promise<{
@@ -17,33 +22,23 @@ type PageProps = {
 };
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-
-  // Fetch the landing page data
-  const fetchLandingPageData = await fetch(
-    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Category`
-  );
-  const { data } = (await fetchLandingPageData.json()) as {
-    data: {
-      categoriesContent: LandingPageData;
-    };
-    success: boolean;
-  };
+  const { data } = await getLandingPageText(locale, 'Category');
 
   return {
-    title: data?.categoriesContent?.[locale]?.siteTitle,
-    description: data?.categoriesContent?.[locale]?.bodyText,
+    title: data?.content.siteTitle,
+    description: data?.content.metaDescription,
   };
 }
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
-
-  const fetchLandingPageData = await fetch(
-    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Category`
-  );
-  const { data } = (await fetchLandingPageData.json()) as {
-    data: { categoriesContent: LandingPageData };
-  };
+  const [{ data }, { data: categories }, { data: allBrands }, { data: allCategories }] =
+    await Promise.all([
+      getLandingPageText(locale, 'Category'),
+      getCategories(locale),
+      getAllBrands(locale),
+      getAllCategories(locale),
+    ]);
 
   return (
     <div className="w-full bg-white">
@@ -52,9 +47,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           <div className="px-5 md:px-0">
             <div className="flex justify-between">
               <PageHeading>Avis Vidéos: Categories de Produit</PageHeading>
-              <Filter />
+              <Filter categoriesList={allCategories} brandsList={allBrands} />
             </div>
-            <LongDescription text={data?.categoriesContent?.[locale]?.bodyText} />
+            <LongDescription text={data?.content.bodyText ?? ''} />
           </div>
           <div className="mt-8">
             <div className="hidden md:block">
@@ -62,10 +57,22 @@ const Page: NextPage<PageProps> = async ({ params }) => {
                 classNameStyle={{
                   cardClassName: 'bg-white',
                 }}
+                slides={categories.map(i => ({
+                  name: i.categoryName,
+                  icon: i.logo,
+                  slug: i.urlSlug,
+                }))}
               />
             </div>
             <div className="md:hidden">
-              <MobileSlider isMultiRow={false} />
+              <MobileSlider
+                isMultiRow={false}
+                slides={categories.map(i => ({
+                  name: i.categoryName,
+                  icon: i.logo,
+                  slug: i.urlSlug,
+                }))}
+              />
             </div>
           </div>
         </section>
@@ -76,10 +83,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
             subTitle: '1,218 reviews',
           }}
         />
-        <SEOSection
-          heading="SEO text lorem ipsum"
-          content={data?.categoriesContent?.[locale]?.footerText}
-        />
+        <SEOSection heading="SEO text lorem ipsum" content={data?.content.footerText ?? ''} />
       </div>
     </div>
   );

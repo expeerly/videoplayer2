@@ -7,6 +7,15 @@ import { ConversionSlider } from '../components/server/Conversion';
 import { NextPage, Metadata } from 'next';
 import { getDictionary } from '../../lib/dictionary';
 import { ReviewGrid } from '../components/server/ReviewGrid';
+import { getBrands, getCategories } from '../actions/actions';
+import { Languages } from '@/src/db/types';
+
+type PageProps = {
+  params: Promise<{
+    locale: Languages;
+    slug: string;
+  }>;
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
@@ -17,20 +26,27 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const HomePage: NextPage = () => {
+const HomePage: NextPage<PageProps> = async ({ params }) => {
+  const { locale } = await params;
+  const [{ data: brands }, { data: categories }, { data: randomBrand }] = await Promise.all([
+    getBrands(locale),
+    getCategories(locale),
+    getBrands(locale, 10, true),
+  ]);
+
   return (
     <div className="flex flex-col w-full items-center justify-center">
       <HeroSection />
       <ExpolreReviewers />
-      <BrandsSlider />
+      <BrandsSlider brands={brands} />
       <section className="flex justify-center max-w-[900px] mb-5 w-full mx-auto pt-16">
         <ReviewGrid />
       </section>
-      <CategoriesSlider />
+      <CategoriesSlider categories={categories} />
       <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]  ">
         <ReviewGrid />
       </section>
-      <ConversionSlider />
+      <ConversionSlider brands={randomBrand} />
       <HowExpeerlyWorks />
     </div>
   );

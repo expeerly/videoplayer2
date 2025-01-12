@@ -7,8 +7,13 @@ import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
-import { LandingPageData } from '@/src/types';
 import { Languages } from '@/src/db/types';
+import {
+  getAllBrands,
+  getAllCategories,
+  getBrands,
+  getLandingPageText,
+} from '@/src/app/actions/actions';
 
 type PageProps = {
   params: Promise<{
@@ -21,20 +26,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale } = await params;
   const { t } = await getDictionary();
 
-  // Fetch the landing page data
-  const fetchallBrandsBodyText = await fetch(
-    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Brand`
-  );
-  const { data } = (await fetchallBrandsBodyText.json()) as {
-    data: {
-      brandContent: LandingPageData;
-    };
-    success: boolean;
-  };
+  const { data } = await getLandingPageText(locale, 'Brand');
 
   return {
-    title: data?.brandContent?.[locale]?.siteTitle || t('all_brands_site_title'),
-    description: data?.brandContent?.[locale]?.bodyText || t('all_brands_meta_description'),
+    title: data?.content.siteTitle,
+    description: data?.content.bodyText || t('all_brands_meta_description'),
   };
 }
 
@@ -42,12 +38,13 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
   const { t } = await getDictionary();
 
-  const fetchallBrandsBodyText = await fetch(
-    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Brand`
-  );
-  const { data } = (await fetchallBrandsBodyText.json()) as {
-    data: { brandContent: LandingPageData };
-  };
+  const [{ data }, { data: brands }, { data: allBrands }, { data: allCategories }] =
+    await Promise.all([
+      getLandingPageText(locale, 'Brand'),
+      getBrands(locale, 20, true),
+      getAllBrands(locale),
+      getAllCategories(locale),
+    ]);
 
   return (
     <div className="w-full bg-white">
@@ -56,9 +53,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           <div className="px-5 md:px-0">
             <div className="flex justify-between">
               <PageHeading>Video Reviews: All Brands</PageHeading>
-              <Filter />
+              <Filter categoriesList={allCategories} brandsList={allBrands} />
             </div>
-            <LongDescription text={t('all_brands_body_text')} />
+            <LongDescription text={data?.content.bodyText || t('all_brands_body_text')} />
           </div>
           <div className="mt-8">
             <div className="hidden md:block">
@@ -67,10 +64,27 @@ const Page: NextPage<PageProps> = async ({ params }) => {
                   cardClassName: 'bg-white',
                 }}
                 isBrand
+                slides={
+                  brands?.rows?.map(brand => ({
+                    title: brand.brandName,
+                    imgURL: brand.logo,
+                    slug: brand.slug,
+                  })) ?? []
+                }
               />
             </div>
             <div className="md:hidden">
-              <MobileSlider isMultiRow={false} isBrand />
+              <MobileSlider
+                isMultiRow={false}
+                isBrand
+                slides={
+                  brands?.rows?.map(brand => ({
+                    title: brand.brandName,
+                    imgURL: brand.logo,
+                    slug: brand.slug,
+                  })) ?? []
+                }
+              />
             </div>
           </div>
         </section>
@@ -89,7 +103,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
         <SEOSection
           heading="SEO text lorem ipsum"
-          content={data?.brandContent?.[locale]?.footerText || t('all_brands_footer_text')}
+          content={data?.content.bodyText || t('all_brands_footer_text')}
         />
       </div>
     </div>

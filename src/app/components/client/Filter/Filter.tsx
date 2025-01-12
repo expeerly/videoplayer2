@@ -8,19 +8,22 @@ import { usePathname, useRouter } from '@/src/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 import { FilterCards } from './FilterCards';
 import { Button } from '../Button';
-import { useSharedState } from '@/src/app/context/reducer';
-import { Languages } from '@/src/db/types';
+import { AllCategoriesData, Languages, AllBrandssData } from '@/src/db/types';
 
 type TabType = 'brands' | 'categories';
 
-const FilterComponent: FunctionComponent = () => {
+type Props = {
+  categoriesList: AllCategoriesData[];
+  brandsList: AllBrandssData;
+};
+
+const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList }) => {
   const [activeTab, setActiveTab] = useState<TabType>('categories');
   const [isOpen, setIsOpen] = useState(false);
   const [pendingFilters, setPendingFilters] = useState<{ brand: string[]; category: string[] }>({
     brand: [],
     category: [],
   });
-  const { categories: categoryList, brands: brandList } = useSharedState();
 
   const menuRef = useRef<HTMLDivElement>(null);
   const t = useTranslations();
@@ -31,25 +34,36 @@ const FilterComponent: FunctionComponent = () => {
 
   const brands = useMemo(
     () =>
-      brandList.map(i => ({
+      brandsList?.map(i => ({
         name: i.brandName,
         logo: i.logo || undefined,
         id: i.id,
         slug: i.slug,
       })),
-    [brandList]
+    [brandsList]
   );
 
   const categories = useMemo(
     () =>
-      categoryList.map(i => ({
+      categoriesList.map(i => ({
         name: i.categoryData?.[local === '/' ? 'en' : (local as Languages)].categoryName,
         icon: i.logo || undefined,
         id: i.id.toString(),
         slug: i.categoryData?.[local === '/' ? 'en' : (local as Languages)]?.urlSlug,
       })),
-    [categoryList, local]
+    [categoriesList, local]
   );
+
+  // const categories = useMemo(
+  //   () =>
+  //     categoriesList.map(i => ({
+  //       name: i.categoryName,
+  //       icon: i.logo || undefined,
+  //       id: i.id.toString(),
+  //       slug: i.urlSlug,
+  //     })),
+  //   [categoriesList]
+  // );
 
   const activeItems: FilterItemProps[] = useMemo(
     () => (activeTab === 'categories' ? categories : brands),

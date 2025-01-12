@@ -4,8 +4,8 @@ import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { Metadata, NextPage } from 'next';
-import { LandingPageData } from '@/src/types';
 import { Languages } from '@/src/db/types';
+import { getAllBrands, getAllCategories, getLandingPageText } from '@/src/app/actions/actions';
 
 type PageProps = {
   params: Promise<{
@@ -16,33 +16,22 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-
-  // Fetch the landing page data
-  const fetchLandingPageData = await fetch(
-    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Creator`
-  );
-  const { data } = (await fetchLandingPageData.json()) as {
-    data: {
-      creatorsContent: LandingPageData;
-    };
-    success: boolean;
-  };
+  const { data } = await getLandingPageText(locale, 'Creator');
 
   return {
-    title: data?.creatorsContent?.[locale]?.siteTitle,
-    description: data?.creatorsContent?.[locale]?.bodyText,
+    title: data?.content.siteTitle,
+    description: data?.content.metaDescription,
   };
 }
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
 
-  const fetchLandingPageData = await fetch(
-    `${process.env.NEXT_ENDPOINT_URL}/landingPage/?type=Creator`
-  );
-  const { data } = (await fetchLandingPageData.json()) as {
-    data: { creatorsContent: LandingPageData };
-  };
+  const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+    getLandingPageText(locale, 'Creator'),
+    getAllBrands(locale),
+    getAllCategories(locale),
+  ]);
 
   return (
     <div className="w-full bg-white">
@@ -51,9 +40,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           <div className="px-5 md:px-0">
             <div className="flex justify-between">
               <PageHeading>Avis Vidéos: Categories de Produit</PageHeading>
-              <Filter />
+              <Filter categoriesList={allCategories} brandsList={allBrands} />
             </div>
-            <LongDescription text={data?.creatorsContent?.[locale]?.bodyText} />
+            <LongDescription text={data?.content.bodyText ?? ''} />
           </div>
         </section>
         <PaginationContainer
@@ -67,10 +56,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           dataType="reviewer"
         />
 
-        <SEOSection
-          heading="SEO text lorem ipsum"
-          content={data?.creatorsContent?.[locale]?.footerText}
-        />
+        <SEOSection heading="SEO text lorem ipsum" content={data?.content?.footerText ?? ''} />
       </div>
     </div>
   );
