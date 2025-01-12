@@ -27,9 +27,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
 
-  const { data } = await getLandingPageText(locale, 'Creator');
-  const { data: allBrands } = await getAllBrands(locale);
-  const { data: allCategories } = await getAllCategories(locale);
+  const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+    getLandingPageText(locale, 'Creator'),
+    getAllBrands(locale),
+    getAllCategories(locale),
+  ]);
 
   return (
     <div className="w-full bg-white">

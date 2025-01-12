@@ -32,10 +32,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
-  const { data } = await getLandingPageText(locale, 'Category');
-  const { data: categories } = await getCategories(locale);
-  const { data: allBrands } = await getAllBrands(locale);
-  const { data: allCategories } = await getAllCategories(locale);
+  const [{ data }, { data: categories }, { data: allBrands }, { data: allCategories }] =
+    await Promise.all([
+      getLandingPageText(locale, 'Category'),
+      getCategories(locale),
+      getAllBrands(locale),
+      getAllCategories(locale),
+    ]);
 
   return (
     <div className="w-full bg-white">

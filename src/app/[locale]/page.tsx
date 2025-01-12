@@ -28,9 +28,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const HomePage: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
-  const { data: brands } = await getBrands(locale);
-  const { data: categories } = await getCategories(locale);
-  const { data: randomBrand } = await getBrands(locale, 10, true);
+  const [{ data: brands }, { data: categories }, { data: randomBrand }] = await Promise.all([
+    getBrands(locale),
+    getCategories(locale),
+    getBrands(locale, 10, true),
+  ]);
 
   return (
     <div className="flex flex-col w-full items-center justify-center">

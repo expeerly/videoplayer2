@@ -38,10 +38,13 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
   const { t } = await getDictionary();
 
-  const { data } = await getLandingPageText(locale, 'Brand');
-  const { data: brands } = await getBrands(locale, 20, true);
-  const { data: allBrands } = await getAllBrands(locale);
-  const { data: allCategories } = await getAllCategories(locale);
+  const [{ data }, { data: brands }, { data: allBrands }, { data: allCategories }] =
+    await Promise.all([
+      getLandingPageText(locale, 'Brand'),
+      getBrands(locale, 20, true),
+      getAllBrands(locale),
+      getAllCategories(locale),
+    ]);
 
   return (
     <div className="w-full bg-white">
