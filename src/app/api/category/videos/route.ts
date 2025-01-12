@@ -1,28 +1,15 @@
-import { NextResponse } from 'next/server';
 import { handleGetCategoryWithVideos } from '../../services/category.services';
-import { handleError } from '../../utils/errorHandler';
-import {
-  getFilterOptions,
-  getLanguageFromRequest,
-  getPaginationParams,
-} from '../../utils/requestHelpers';
+import { createRouteHandler } from '../../utils/baseRouteHandler';
+import { SupportedLanguage } from '../../utils/requestHelpers';
 
-export const GET = async (request: Request) => {
-  try {
-    const params = getPaginationParams(request);
-    const lang = getLanguageFromRequest(request);
-    const filters = getFilterOptions(request);
-
-    const category = await handleGetCategoryWithVideos(params, lang, filters);
-
-    return NextResponse.json(
-      {
-        success: true,
-        data: category,
-      },
-      { status: 200 }
+export const GET = createRouteHandler({
+  serviceFunction: async params => {
+    return handleGetCategoryWithVideos(
+      params.pagination,
+      params.language as SupportedLanguage,
+      params.filters!
     );
-  } catch (error) {
-    return handleError(error);
-  }
-};
+  },
+  includeLanguage: true,
+  includeFilters: true,
+});

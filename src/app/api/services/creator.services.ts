@@ -84,15 +84,16 @@ export async function getCreatorsCount(): Promise<{ count: number }> {
   }
 }
 
-export async function handleGetCreatorWithVideos(
-  { page, limit, videoCount, random }: PaginationParams
-  // lang: SupportedLanguage,
-  // { categories, brands }: FilterParams
-) {
+export async function handleGetCreatorWithVideos({
+  page,
+  limit,
+  videoCount,
+  random,
+}: PaginationParams) {
   try {
     const offset = (page - 1) * limit;
     const [creatorsResult, creatorCount] = await Promise.all([
-      await db
+      db
         .select({
           id: creator.id,
           logo: creator.profilePictureURL,
