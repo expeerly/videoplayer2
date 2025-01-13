@@ -28,7 +28,6 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
   const uploadHeader = useCallback(
     async (data: CSVData) => {
       const filteredData = data.filter(i => i['ID'] && i['Header']);
-      debugger;
       if (filteredData.length > 0) {
         const data = (await post('/headings', {
           data: filteredData,

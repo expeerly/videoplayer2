@@ -7,7 +7,6 @@ export const POST = async (req: Request) => {
     const body = await req.json();
 
     const existingHeadings = await handleGetHeadings();
-    console.log({ existingHeadings, body });
     const headings = await handleCreateHeadings({
       ...(existingHeadings || {}),
       data: body.data,

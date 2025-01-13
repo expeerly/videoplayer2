@@ -38,7 +38,6 @@ const findIdsRowIndex = (rows: string[][]): number => {
 
 const parseCSVInfo = (rows: string[][]): CSVParseResult => {
   const idsRowIndex = findIdsRowIndex(rows);
-  debugger;
   return {
     ids: idsRowIndex !== -1 ? rows[idsRowIndex] : [],
     headers: idsRowIndex === 0 ? rows[idsRowIndex + 1] : [],
