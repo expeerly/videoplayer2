@@ -60,7 +60,6 @@ const Page: NextPage = async () => {
             description: '',
             dataType: 'category',
           }}
-          isBecomeReviewer={false}
         />
 
         <SEOSection

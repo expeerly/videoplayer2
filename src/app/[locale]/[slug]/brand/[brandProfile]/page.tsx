@@ -63,7 +63,6 @@ const Page: NextPage = () => {
             description: '',
             dataType: 'brand',
           }}
-          isBecomeReviewer={false}
         ></PaginationContainer>
         <SEOSection
           heading=" SEO text lorem ipsum"

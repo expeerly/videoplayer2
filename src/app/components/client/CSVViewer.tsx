@@ -12,6 +12,7 @@ import { LeftChevronIcon } from '@/src/assets/icons';
 import { LogoutButton } from './LogoutButton';
 import { Spinner } from './Spinner';
 import { handleError, uploadData } from '@/src/utils';
+import { useRouter } from '@/src/i18n/routing';
 
 type HeadingsResponse = {
   success: boolean;
@@ -28,7 +29,7 @@ export const CSVViewer: FunctionComponent = () => {
   const [csvData, setCSVData] = useState<CSVData>([]);
   const [csvHeadersData, setCSVHeadersData] = useState<CSVData>([]);
   const { post, get } = useApiCall();
-
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(
     null
@@ -103,6 +104,11 @@ export const CSVViewer: FunctionComponent = () => {
           type: 'success',
           message: `All ${successCount} records saved successfully`,
         });
+
+        setTimeout(() => {
+          router.push('/admin');
+        }, 200);
+
         setCSVData([]);
       } else {
         setMessage({
@@ -115,7 +121,7 @@ export const CSVViewer: FunctionComponent = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedOption, parsedCSVData, post]);
+  }, [selectedOption, parsedCSVData, post, router]);
 
   return (
     <div className="mx-auto px-4 py-8 h-full flex flex-col">

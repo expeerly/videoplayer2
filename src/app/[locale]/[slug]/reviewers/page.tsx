@@ -6,6 +6,7 @@ import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { Metadata, NextPage } from 'next';
 import { Languages } from '@/src/db/types';
 import { getAllBrands, getAllCategories, getLandingPageText } from '@/src/app/actions/actions';
+import { getDictionary } from '@/src/lib/dictionary';
 
 type PageProps = {
   params: Promise<{
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
-
+  const { t } = await getDictionary();
   const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
     getLandingPageText(locale, 'Creator'),
     getAllBrands(locale),
@@ -53,7 +54,15 @@ const Page: NextPage<PageProps> = async ({ params }) => {
             dataType: 'reviewer',
             description: '',
           }}
-          dataType="reviewer"
+          ctaBlock={{
+            heading: t('CTABlockAllReviewers.experienceShare'),
+            desc: t('CTABlockAllReviewers.becomeReviewer'),
+            button: {
+              label: t('CTABlockAllReviewers.learnMore'),
+              ariaLabel: t('CTABlockAllReviewers.learnMore_arialabel'),
+              href: 'https://www.get.expeerly.com/become-a-creator',
+            },
+          }}
         />
 
         <SEOSection heading="SEO text lorem ipsum" content={data?.content?.footerText ?? ''} />

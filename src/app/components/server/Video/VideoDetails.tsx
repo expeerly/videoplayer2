@@ -85,21 +85,21 @@ export const VideoDetails: FunctionComponent = async () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-6">
             <div>
-              <h3 className="text-grey-500">{t('brandName')}</h3>
+              <h3 className="text-grey-700">{t('brandName')}</h3>
               <div className="text-grey-700">{videoDetails.brandName}</div>
             </div>
             <div>
-              <h3 className="text-grey-500">{t('productName')}</h3>
+              <h3 className="text-grey-700">{t('productName')}</h3>
               <div className="text-grey-700">{videoDetails.productName}</div>
             </div>
           </div>
           <div className="space-y-6">
             <div>
-              <h3 className="text-grey-500">{t('gtinEan')}</h3>
+              <h3 className="text-grey-700">{t('gtinEan')}</h3>
               <div className="text-grey-700">{videoDetails.gtin}</div>
             </div>
             <div>
-              <h3 className="text-grey-500">{t('vendorProductNumber')}</h3>
+              <h3 className="text-grey-700">{t('vendorProductNumber')}</h3>
               <div className="text-grey-700">{videoDetails.vendorProductNo}</div>
             </div>
           </div>

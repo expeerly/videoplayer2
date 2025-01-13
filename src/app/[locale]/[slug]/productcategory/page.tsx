@@ -13,6 +13,7 @@ import {
   getCategories,
   getLandingPageText,
 } from '@/src/app/actions/actions';
+import { getDictionary } from '@/src/lib/dictionary';
 
 type PageProps = {
   params: Promise<{
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
+  const { t } = await getDictionary();
   const [{ data }, { data: categories }, { data: allBrands }, { data: allCategories }] =
     await Promise.all([
       getLandingPageText(locale, 'Category'),
@@ -81,6 +83,15 @@ const Page: NextPage<PageProps> = async ({ params }) => {
             profileSlug: '/video-reviews/productcategory/travel',
             title: 'Travel',
             subTitle: '1,218 reviews',
+          }}
+          ctaBlock={{
+            heading: t('cta_block_all_brands_categories.title'),
+            desc: t('cta_block_all_brands_categories.desc'),
+            button: {
+              label: t('learn_more.label'),
+              ariaLabel: t('learn_more.aria_label'),
+              href: 'https://www.get.expeerly.com/for-brands',
+            },
           }}
         />
         <SEOSection heading="SEO text lorem ipsum" content={data?.content.footerText ?? ''} />
