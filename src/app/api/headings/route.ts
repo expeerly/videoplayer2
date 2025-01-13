@@ -6,11 +6,11 @@ export const POST = async (req: Request) => {
   try {
     const body = await req.json();
 
-    const existingHeadings = (await handleGetHeadings()) || {};
-
+    const existingHeadings = await handleGetHeadings();
+    console.log({ existingHeadings, body });
     const headings = await handleCreateHeadings({
-      ...existingHeadings,
-      ...body.data,
+      ...(existingHeadings || {}),
+      data: body.data,
     });
     return NextResponse.json(
       {

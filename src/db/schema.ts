@@ -80,7 +80,7 @@ export const creatorInterests = pgTable('creatorInterests', {
 // Product table
 export const product = pgTable('product', {
   id: text('id').primaryKey(),
-  productName: text('productName').notNull(),
+  productName: jsonb('productName').notNull(),
   productLink: text('productLink').notNull(),
   productSlug: jsonb('productSlug'),
   brandId: text('brandId').references(() => brand.id),
