@@ -185,14 +185,14 @@ export async function handleGetCategoryWithVideos(
               LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
               WHERE ${product.categoryId} = ${category.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              LIMIT ${videoCount}
+              GROUP BY ${rating.rating}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
             ) subq
           )`,
         })
         .from(category)
         .leftJoin(product, eq(category.id, product.categoryId))
         .where(and(...whereConditions))
-        .groupBy(category.id, category.logo)
+        .groupBy(category.id)
         .limit(limit)
         .offset(offset)
         .orderBy(

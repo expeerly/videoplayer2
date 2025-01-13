@@ -161,6 +161,7 @@ export async function handleGetCreatorWithVideos(
               LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
               WHERE ${video.creatorId} = ${creator.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
+              GROUP BY ${rating.rating}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
               LIMIT ${videoCount}
             ) subq
           )`,
