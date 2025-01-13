@@ -171,19 +171,18 @@ export async function handleGetBrandsWithVideos(
                 'rating', ${rating.rating}
               ) as video_data
               FROM ${video}
-              JOIN ${product} ON ${video.productId} = ${product.id}
-              JOIN ${brand} ON ${product.brandId} = ${brand.id}
+              JOIN ${product} ON ${brand.id} = ${product.brandId}
               LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
               WHERE ${product.brandId} = ${brand.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              LIMIT ${videoCount}
+              GROUP BY ${product.brandId}, ${product.productName}, ${rating.rating}, ${video.id} LIMIT ${videoCount}
             ) subq
           )`,
         })
         .from(brand)
         .leftJoin(product, eq(brand.id, product.brandId))
         .where(whereConditions)
-        .groupBy(brand.id, brand.logo)
+        .groupBy(brand.id)
         .orderBy(random ? sql`RANDOM()` : brand.brandName)
         .limit(limit)
         .offset(offset),
@@ -193,7 +192,6 @@ export async function handleGetBrandsWithVideos(
           count: sql<number>`COUNT(DISTINCT ${brand.id})`,
         })
         .from(brand)
-        .leftJoin(product, eq(brand.id, product.brandId))
         .where(whereConditions)
         .then(result => result[0].count),
     ]);
