@@ -133,7 +133,7 @@ export async function handleGetCreatorWithVideos(
             location: creator.location,
             bio: creator.bio,
             reviewsCount: sql<number>`(
-              SELECT COUNT(*)
+              SELECT COUNT(DISTINCT ${video.id})
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
               WHERE ${video.creatorId} = ${creator.id}
@@ -141,7 +141,7 @@ export async function handleGetCreatorWithVideos(
             )`.as('reviewsCount'),
           },
           videos: sql<string>`(
-            SELECT DISTINCT json_agg(video_data)
+            SELECT json_agg( video_data)
             FROM (
               SELECT json_build_object(
                 'id', ${video.id},

@@ -156,7 +156,7 @@ export async function handleGetBrandsWithVideos(
             )`.as('reviewsCount'),
           },
           videos: sql<string>`(
-            SELECT DISTINCT json_agg(video_data)
+            SELECT json_agg(video_data)
             FROM (
               SELECT json_build_object(
                 'id', ${video.id},
