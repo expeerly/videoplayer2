@@ -10,8 +10,8 @@ import { Headings, HeadingsInputType } from '@/src/db/types';
  * @param input - Heading data to be inserted or updated
  * @returns Array of created/updated headings
  */
-export async function handleCreateHeadings(input: HeadingsInputType[]): Promise<Headings[]> {
-  if (!input || input.length === 0) {
+export async function handleCreateHeadings(input: HeadingsInputType): Promise<Headings[]> {
+  if (!input) {
     throw new Error('Input is required and cannot be empty');
   }
 
@@ -40,11 +40,11 @@ export async function handleCreateHeadings(input: HeadingsInputType[]): Promise<
   }
 }
 
-export async function handleGetHeadings(): Promise<Headings> {
+export async function handleGetHeadings(): Promise<Headings | null> {
   try {
     const data = await db.query.headings.findFirst();
     if (!data) {
-      throw new Error('No headings found');
+      return null;
     }
     return data;
   } catch (error) {

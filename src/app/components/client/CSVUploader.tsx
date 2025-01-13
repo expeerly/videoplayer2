@@ -30,9 +30,7 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
       const filteredData = data.filter(i => i['ID'] && i['Header']);
       if (filteredData.length > 0) {
         const data = (await post('/headings', {
-          data: {
-            data: filteredData,
-          },
+          data: filteredData,
         })) as { data: { data: CSVData }[]; success: boolean };
         if (data?.success) {
           setCSVHeadersData(data.data[0].data);

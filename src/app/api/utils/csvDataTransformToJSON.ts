@@ -41,7 +41,7 @@ const createMultiLangObject = <T>(
       Object.fromEntries(
         Object.entries(fields).map(([key, field]) => [
           key,
-          getField(`${field} ${lang.toUpperCase()}`) || null,
+          getField(`${field} ${lang.toUpperCase()}`, lang === 'en') || null,
         ])
       ),
     ])
@@ -81,8 +81,15 @@ const transformers = {
     };
   },
 
-  [CSVDataOptions.creator]: (data: CSVDataItem): Partial<Creator> & { interests: string } => {
+  [CSVDataOptions.creator]: (
+    data: CSVDataItem
+  ): (Partial<Creator> & { interests: string }) | null => {
     const getField = createFieldGetter(data);
+    const requiredFields = ['Unique Bubble ID Reviewer'];
+    const isValid = verifyRequiredFields(requiredFields, data);
+    if (!isValid) {
+      return null;
+    }
     return {
       id: getField('Unique Bubble ID Reviewer'),
       creatorName:
@@ -112,7 +119,7 @@ const transformers = {
       'Unique Bubble ID Product',
       'Unique bubble Id Brand',
       'unique_category_id',
-      'product_name_slug',
+      'product_name_slug EN',
     ];
     const isValid = verifyRequiredFields(requiredFields, data);
     if (!isValid) {
@@ -121,18 +128,23 @@ const transformers = {
 
     return {
       id: getField('Unique Bubble ID Product'),
-      productName: getField('Product name'),
+      productName: createMultiLangObject(getField, { title: 'Product name' }),
       productLink: getField('Call to action link'),
       globalTradeItemNumber: getField('GTIN/EAN') || null,
       vendorProductNumber: getField('Vendor Product Number') || null,
       brandId: getField('Unique bubble Id Brand') || null,
       categoryId: Number(getField('unique_category_id')),
-      productSlug: { en: getField('product_name_slug') || null },
+      productSlug: createMultiLangObject(getField, { title: 'product_name_slug' }),
     };
   },
 
-  [CSVDataOptions.video]: (data: CSVDataItem): Partial<Video> => {
+  [CSVDataOptions.video]: (data: CSVDataItem): Partial<Video> | null => {
     const getField = createFieldGetter(data);
+    const requiredFields = ['Unique expeerly player ID'];
+    const isValid = verifyRequiredFields(requiredFields, data);
+    if (!isValid) {
+      return null;
+    }
     const booleanField = (field: string) => getField(field)?.toLowerCase() === 'yes';
     return {
       id: parseInt(getField('Unique expeerly player ID')),
