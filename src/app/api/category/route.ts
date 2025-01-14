@@ -3,6 +3,8 @@ import { getCategoriesForSlider, handleCreateCategory } from '../services/catego
 import { handleError } from '../utils/errorHandler';
 import { getLanguageFromRequest } from '../utils/requestHelpers';
 
+export const maxDuration = 50;
+
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();

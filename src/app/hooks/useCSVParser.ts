@@ -30,18 +30,11 @@ const parseValue = (value: string): string | number => {
   return isNaN(Number(value)) ? value : Number(value);
 };
 
-const findIdsRowIndex = (rows: string[][]): number => {
-  return rows
-    .slice(0, 3)
-    .findIndex(row => row.every(value => !isNaN(Number(value)) || value.trim() === ''));
-};
-
 const parseCSVInfo = (rows: string[][]): CSVParseResult => {
-  const idsRowIndex = findIdsRowIndex(rows);
   return {
-    ids: idsRowIndex !== -1 ? rows[idsRowIndex] : [],
-    headers: idsRowIndex === 0 ? rows[idsRowIndex + 1] : [],
-    data: rows.slice(idsRowIndex + (idsRowIndex === 0 ? 2 : 1)),
+    headers: rows[0],
+    ids: rows[1],
+    data: rows.slice(2),
   };
 };
 
