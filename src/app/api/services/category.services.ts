@@ -172,7 +172,9 @@ export async function handleGetCategoryWithVideos(
                 'playbackId', ${video.playbackId},
                 'videoUrl', ${video.videoUrl},
                 'resolution', ${video.resolution},
-                'productName', ${product.productName},
+                'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
+                'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
+                'categorySlug', ${category.categoryData}->${lang}->'urlSlug',
                 'brandId', ${product.brandId},
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
@@ -183,9 +185,9 @@ export async function handleGetCategoryWithVideos(
               JOIN ${product} ON ${video.productId} = ${product.id}
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
               LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
-              WHERE ${product.categoryId} = ${category.id}
+              WHERE ${video.productId} = ${product.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${rating.rating}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
+              GROUP BY ${product.productSlug} ${product.productSlug}, ${rating.rating}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
             ) subq
           )`,
         })

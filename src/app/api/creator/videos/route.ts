@@ -1,5 +1,6 @@
 import { handleGetCreatorWithVideos } from '../../services/creator.services';
 import { createRouteHandler } from '../../utils/baseRouteHandler';
+import { SupportedLanguage } from '../../utils/requestHelpers';
 
 /**
  * GET endpoint for retrieving creators with their associated videos
@@ -15,7 +16,12 @@ import { createRouteHandler } from '../../utils/baseRouteHandler';
  */
 export const GET = createRouteHandler({
   serviceFunction: async params => {
-    return handleGetCreatorWithVideos(params.pagination, params.filters!);
+    return handleGetCreatorWithVideos(
+      params.pagination,
+      params.language as SupportedLanguage,
+      params.filters!
+    );
   },
   includeFilters: true,
+  includeLanguage: true,
 });
