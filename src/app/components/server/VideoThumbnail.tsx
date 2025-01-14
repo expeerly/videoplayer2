@@ -27,7 +27,7 @@ export const VideoThumbnail: FunctionComponent<Props> = ({
         width={0}
         height={0}
         sizes="(min-width: 640px) 220px , (max-width:639px):150px"
-        className="h-full w-full object-contain bg-black flex items-center justify-center"
+        className="h-full w-full object-cover bg-black flex items-center justify-center"
       />
       <Image
         unoptimized
@@ -36,7 +36,7 @@ export const VideoThumbnail: FunctionComponent<Props> = ({
         width={0}
         height={0}
         sizes="220px"
-        className="absolute top-0 left-0 w-full h-full object-contain flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        className="absolute top-0 left-0 w-full h-full object-cover flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
       />
     </div>
   );

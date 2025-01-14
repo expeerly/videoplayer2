@@ -7,6 +7,7 @@ import {
   LandingPageText,
   Languages,
   AllBrandssData,
+  Grid,
 } from '@/src/db/types';
 
 export async function getBrands(
@@ -121,6 +122,40 @@ export const getLandingPageText = async (
     return {
       data: { content: {}, id: -1 },
       error: 'Failed to fetch landing page text',
+    };
+  }
+};
+
+export const getGridVideos = async (
+  lang: Languages,
+  gridType: 'category' | 'brand' | 'creator',
+  page: number = 1,
+  limit: number = 4,
+  videoCount: number = 9,
+  random: boolean = false,
+  filter?: {
+    category: string;
+    brand: string;
+  }
+): Promise<{
+  data: Grid;
+  error?: string;
+}> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_ENDPOINT_URL}/${gridType}/videos/?page=${page}&limit=${limit}&videoCount=${videoCount}&random=${random}&category=${filter?.category ?? ''}&brand=${filter?.brand ?? ''}`,
+      {
+        headers: {
+          lang,
+        },
+      }
+    );
+    return response.json();
+  } catch (error) {
+    console.log({ error });
+    return {
+      data: { rows: [], total: 0 },
+      error: 'Failed to fetch categories video',
     };
   }
 };

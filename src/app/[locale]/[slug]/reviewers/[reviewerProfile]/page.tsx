@@ -97,7 +97,6 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               cardClassName:
                 'min-w-[167px] w-[167px] mobileS:min-w-[167px] mobileS:w-[167px] mobileM:min-w-[167px] mobileM:w-[167px] mobileL:min-w-[167px] mobileL:w-[167px] mid-tablet:min-w-[167px] mid-tablet:w-[167px] sm:min-w-[167px] sm:w-[167px] md:min-w-[167px] md:w-[167px] md:max-w-[167px]',
             }}
-            maxReviews={9}
             hasProfileHeader={false}
           />
         </section>

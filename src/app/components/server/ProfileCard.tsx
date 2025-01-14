@@ -7,38 +7,43 @@ import { getDictionary } from '@/src/lib/dictionary';
 
 export type ProfileCardProps = {
   description?: string;
-  title?: string;
-  subTitle?: string;
-  imageUrl?: string;
-  rating?: number;
+  title: string;
   variant?: 'primary' | 'secondary';
   profileSlug?: string;
   dataType?: 'reviewer' | 'brand' | 'category';
-};
 
-const tempData = {
-  title: 'Marisa C.',
-  subTitle: '38, Zurich (CH)',
-  description:
-    'I love cooking and getting people around in our garden, specially when weather is good...',
+  reviewsCount?: string;
+  age?: number;
+  bio?: string;
+  location?: string;
+  rating?: number;
+  imageUrl?: string;
 };
 
 export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
-  description = tempData.description,
-  title = tempData.title,
-  rating,
-  subTitle = tempData.subTitle,
+  title,
   imageUrl,
   variant = 'primary',
   profileSlug,
   dataType,
+  reviewsCount,
+  bio,
+  age,
+  location,
+  rating,
 }) => {
   const { t } = await getDictionary();
 
   return (
     <>
       <Link
-        href={`${profileSlug}`}
+        href={
+          dataType === 'category'
+            ? `/video-reviews/productcategory/${profileSlug}`
+            : dataType === 'brand'
+              ? `/video-reviews/brand/${profileSlug}`
+              : `/video-reviews/reviewer/${profileSlug}`
+        }
         aria-label={
           dataType === 'category'
             ? t('dynamic_texts.home_category_icons.aria_label', { brandname: title })
@@ -63,14 +68,22 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
           </div>
           <div className="flex gap-2">
             {rating && variant === 'secondary' && <StarRating rating={rating} />}
-            <p className="text-sm text-grey-500">{subTitle}</p>
+            <p className="text-sm text-grey-500">
+              {dataType === 'category'
+                ? `${reviewsCount} reviews`
+                : dataType === 'reviewer'
+                  ? `${age}, ${location}`
+                  : dataType === 'brand'
+                    ? `${reviewsCount} reviews`
+                    : `${reviewsCount} reviews`}
+            </p>
           </div>
         </div>
       </Link>
 
-      {!!description && (
+      {!!bio && (
         <div className="flex  sm:w-2/5 items-center mt-2">
-          <p className=" text-grey-700 ml-0 line-clamp-2">{description}</p>
+          <p className=" text-grey-700 ml-0 line-clamp-2">{bio}</p>
         </div>
       )}
     </>

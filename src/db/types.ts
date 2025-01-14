@@ -64,3 +64,37 @@ export type LandingPageText = {
   footerText?: string;
   metaDescription?: string;
 };
+
+export type GridVideo = {
+  id: number;
+  playbackId: string;
+  videoUrl: string;
+  resolution: string;
+  productName: string;
+  brandId: string;
+  brandName: string;
+  brandLogo: string;
+  brandSlug: string;
+  rating: number;
+};
+
+export type Info = {
+  reviewsCount?: string;
+  age?: number;
+  bio?: string;
+  location?: string;
+};
+
+export type GridData = {
+  id: number;
+  logo: string;
+  name: string;
+  slug: string;
+  info: Info;
+  videos: GridVideo[];
+};
+
+export type Grid = {
+  rows: GridData[];
+  total: number;
+};

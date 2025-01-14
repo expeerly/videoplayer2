@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import React, { FunctionComponent, useMemo } from 'react';
+import { Link } from '@/src/i18n/routing';
 
 export type SlideProps = {
   icon?: string;
@@ -75,7 +76,15 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand 
   );
 
   return (
-    <button className={buttonClasses} aria-label={ariaLabel}>
+    <Link
+      href={
+        isBrand
+          ? `/video-reviews/brand/${data.slug}`
+          : `/video-reviews/productcategory/${data.slug}`
+      }
+      className={buttonClasses}
+      aria-label={ariaLabel}
+    >
       {data?.icon && (
         <span className={iconClasses}>
           {<Image src={data.icon} alt={ariaLabel} width={25} height={25} />}
@@ -87,6 +96,6 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand 
       {data.imgURL && (
         <Image className={imageClasses} src={imageUrl} width={100} height={25} alt={ariaLabel} />
       )}
-    </button>
+    </Link>
   );
 };

@@ -54,17 +54,6 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
     [categoriesList, local]
   );
 
-  // const categories = useMemo(
-  //   () =>
-  //     categoriesList.map(i => ({
-  //       name: i.categoryName,
-  //       icon: i.logo || undefined,
-  //       id: i.id.toString(),
-  //       slug: i.urlSlug,
-  //     })),
-  //   [categoriesList]
-  // );
-
   const activeItems: FilterItemProps[] = useMemo(
     () => (activeTab === 'categories' ? categories : brands),
     [activeTab, categories, brands]

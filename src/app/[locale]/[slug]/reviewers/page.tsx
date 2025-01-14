@@ -5,13 +5,20 @@ import { PaginationContainer } from '@/src/app/components/server/PaginationConta
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { Metadata, NextPage } from 'next';
 import { Languages } from '@/src/db/types';
-import { getAllBrands, getAllCategories, getLandingPageText } from '@/src/app/actions/actions';
+import {
+  getAllBrands,
+  getAllCategories,
+  getGridVideos,
+  getLandingPageText,
+} from '@/src/app/actions/actions';
+import { getQueryIds } from '@/src/app/utils/queryHelpers';
 
 type PageProps = {
   params: Promise<{
     locale: Languages;
     slug: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -24,14 +31,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-const Page: NextPage<PageProps> = async ({ params }) => {
+const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { locale } = await params;
+  const page = Number((await searchParams).page) || 1;
+  const brandQuery = (await searchParams).brand ?? '';
+  const categoryQuery = (await searchParams).category ?? '';
 
   const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
     getLandingPageText(locale, 'Creator'),
     getAllBrands(locale),
     getAllCategories(locale),
   ]);
+
+  const { data: gridVideos } = await getGridVideos(
+    locale,
+    'creator',
+    page,
+    4,
+    9,
+    false,
+    getQueryIds(categoryQuery, brandQuery, allCategories, allBrands)
+  );
 
   return (
     <div className="w-full bg-white">
@@ -46,14 +66,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           </div>
         </section>
         <PaginationContainer
-          headerData={{
-            profileSlug: '/video-reviews/reviewers/reviewer-1',
-            title: 'Reviewer 1',
-            subTitle: '18 reviews',
+          header={{
             dataType: 'reviewer',
-            description: '',
           }}
-          dataType="reviewer"
+          data={gridVideos}
         />
 
         <SEOSection heading="SEO text lorem ipsum" content={data?.content?.footerText ?? ''} />

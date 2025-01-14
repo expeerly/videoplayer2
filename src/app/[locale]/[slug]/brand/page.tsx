@@ -12,14 +12,17 @@ import {
   getAllBrands,
   getAllCategories,
   getBrands,
+  getGridVideos,
   getLandingPageText,
 } from '@/src/app/actions/actions';
+import { getQueryIds } from '@/src/app/utils/queryHelpers';
 
 type PageProps = {
   params: Promise<{
     locale: Languages;
     slug: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -34,8 +37,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-const Page: NextPage<PageProps> = async ({ params }) => {
+const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { locale } = await params;
+  const page = Number((await searchParams).page) || 1;
+  const brandQuery = (await searchParams).brand ?? '';
+  const categoryQuery = (await searchParams).category ?? '';
+
   const { t } = await getDictionary();
 
   const [{ data }, { data: brands }, { data: allBrands }, { data: allCategories }] =
@@ -45,6 +52,16 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       getAllBrands(locale),
       getAllCategories(locale),
     ]);
+
+  const { data: gridVideos } = await getGridVideos(
+    locale,
+    'brand',
+    page,
+    4,
+    9,
+    false,
+    getQueryIds(categoryQuery, brandQuery, allCategories, allBrands)
+  );
 
   return (
     <div className="w-full bg-white">
@@ -89,16 +106,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           </div>
         </section>
         <PaginationContainer
-          headerData={{
-            title: 'Dyson',
-            subTitle: '1,218 reviews',
-            rating: 4.5,
-            variant: 'primary',
-            imageUrl: '/brands/logo.svg',
-            profileSlug: '/video-reviews/brand/dyson',
+          header={{
             dataType: 'brand',
-            description: '',
           }}
+          data={gridVideos}
         />
 
         <SEOSection
