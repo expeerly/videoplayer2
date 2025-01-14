@@ -45,7 +45,7 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
 
   const categories = useMemo(
     () =>
-      categoriesList.map(i => ({
+      categoriesList?.map(i => ({
         name: i.categoryData?.[local === '/' ? 'en' : (local as Languages)].categoryName,
         icon: i.logo || undefined,
         id: i.id.toString(),

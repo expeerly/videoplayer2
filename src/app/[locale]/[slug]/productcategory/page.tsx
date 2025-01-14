@@ -15,6 +15,7 @@ import {
   getLandingPageText,
 } from '@/src/app/actions/actions';
 import { getQueryIds } from '@/src/app/utils/queryHelpers';
+import { getDictionary } from '@/src/lib/dictionary';
 
 type PageProps = {
   params: Promise<{
@@ -41,6 +42,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const brandQuery = (await searchParams).brand ?? '';
   const categoryQuery = (await searchParams).category ?? '';
 
+  const { t } = await getDictionary();
   const [{ data }, { data: categories }, { data: allBrands }, { data: allCategories }] =
     await Promise.all([
       getLandingPageText(locale, 'Category'),
@@ -100,6 +102,15 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             dataType: 'category',
           }}
           data={gridVideos ?? []}
+          ctaBlock={{
+            heading: t('cta_block_all_brands_categories.title'),
+            desc: t('cta_block_all_brands_categories.desc'),
+            button: {
+              label: t('learn_more.label'),
+              ariaLabel: t('learn_more.aria_label'),
+              href: 'https://www.get.expeerly.com/for-brands',
+            },
+          }}
         />
         <SEOSection heading="SEO text lorem ipsum" content={data?.content.footerText ?? ''} />
       </div>

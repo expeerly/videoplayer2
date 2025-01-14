@@ -12,6 +12,7 @@ import {
   getLandingPageText,
 } from '@/src/app/actions/actions';
 import { getQueryIds } from '@/src/app/utils/queryHelpers';
+import { getDictionary } from '@/src/lib/dictionary';
 
 type PageProps = {
   params: Promise<{
@@ -37,6 +38,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const brandQuery = (await searchParams).brand ?? '';
   const categoryQuery = (await searchParams).category ?? '';
 
+  const { t } = await getDictionary();
   const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
     getLandingPageText(locale, 'Creator'),
     getAllBrands(locale),
@@ -70,6 +72,15 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             dataType: 'reviewer',
           }}
           data={gridVideos}
+          ctaBlock={{
+            heading: t('CTABlockAllReviewers.experienceShare'),
+            desc: t('CTABlockAllReviewers.becomeReviewer'),
+            button: {
+              label: t('CTABlockAllReviewers.learnMore'),
+              ariaLabel: t('CTABlockAllReviewers.learnMore_arialabel'),
+              href: 'https://www.get.expeerly.com/become-a-creator',
+            },
+          }}
         />
 
         <SEOSection heading="SEO text lorem ipsum" content={data?.content?.footerText ?? ''} />

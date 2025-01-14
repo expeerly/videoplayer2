@@ -33,7 +33,12 @@ export const DataTable: FunctionComponent<DataTableProps> = ({ data }) => {
                   key={`${rowIndex}-${header}`}
                   className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                 >
-                  <div className="min-w-52 max-w-96 w-full text-wrap truncate">{row[header]}</div>
+                  <div
+                    className="min-w-52 max-w-96 w-max truncate overflow-hidden text-nowrap"
+                    title={String(row[header])}
+                  >
+                    {row[header]}
+                  </div>
                 </td>
               ))}
             </tr>

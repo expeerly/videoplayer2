@@ -2,7 +2,7 @@ import { db } from '@/src/db';
 import { brand, creator, creatorInterests, product, rating, video } from '@/src/db/schema';
 import { and, eq, exists, inArray, sql } from 'drizzle-orm';
 import { Creator, CreatorInputType, CreatorInterestsInputType } from '@/src/db/types';
-import { FilterParams, PaginationParams } from '../utils/requestHelpers';
+import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
 
 /**
  * Creates or updates multiple creators with their interests
@@ -94,6 +94,7 @@ export async function getCreatorsCount(): Promise<{ count: number }> {
  */
 export async function handleGetCreatorWithVideos(
   { page, limit, videoCount, random }: PaginationParams,
+  lang: SupportedLanguage,
   { categories, brands }: FilterParams
 ) {
   try {
@@ -132,13 +133,6 @@ export async function handleGetCreatorWithVideos(
             age: creator.age,
             location: creator.location,
             bio: creator.bio,
-            reviewsCount: sql<number>`(
-              SELECT COUNT(DISTINCT ${video.id})
-              FROM ${video}
-              JOIN ${product} ON ${video.productId} = ${product.id}
-              WHERE ${video.creatorId} = ${creator.id}
-              ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-            )`.as('reviewsCount'),
           },
           videos: sql<string>`(
             SELECT json_agg( video_data)
@@ -148,7 +142,8 @@ export async function handleGetCreatorWithVideos(
                 'playbackId', ${video.playbackId},
                 'videoUrl', ${video.videoUrl},
                 'resolution', ${video.resolution},
-                'productName', ${product.productName},
+                'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
+                'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
                 'brandId', ${product.brandId},
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
@@ -161,7 +156,7 @@ export async function handleGetCreatorWithVideos(
               LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
               WHERE ${video.creatorId} = ${creator.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${rating.rating}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
+              GROUP BY ${product.productSlug}, ${rating.rating}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
               LIMIT ${videoCount}
             ) subq
           )`,

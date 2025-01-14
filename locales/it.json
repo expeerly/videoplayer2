@@ -15,8 +15,8 @@
   "cta_button_how_it_works": "Scopri di più",
   "more": "Altro",
   "less": "Menu",
-  "forward_arrow": "",
-  "back_arrow": "",
+  "forward_arrow": "Une page avant",
+  "back_arrow": "Une page zurück",
   "pagination": "Vai alla pagina {pagenumber}",
   "interests": "Interesse",
   "reviewSummary": "Riepilogo della revisione",
@@ -116,11 +116,9 @@
       "aria_label": "Accedi al tuo account Expeerly"
     },
     "menu_open": {
-      "label": "",
       "aria_label": "Apri il menu a destra"
     },
     "menu_close": {
-      "label": "",
       "aria_label": "Chiudi il menu a destra"
     }
   },
@@ -141,7 +139,6 @@
     "aria_label": "Scopri di più su Expeerly come marchio o azienda"
   },
   "scroll_reviews": {
-    "label": "",
     "aria_label": "Scorri fino alle recensioni"
   },
   "filter_brands": {
@@ -161,7 +158,6 @@
     "aria_label": "Applica filtri"
   },
   "open_filter": {
-    "label": "",
     "aria_label": "Applica filtro"
   },
   "delete_filter": {

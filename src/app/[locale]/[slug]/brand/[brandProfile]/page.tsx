@@ -1,6 +1,5 @@
 import { Button } from '@/src/app/components/client/Button';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
-import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { Avatar } from '@/src/app/components/server/Avatar';
 import { StarRating } from '@/src/app/components/server/StarRating';
 import { ShareIcon } from '@/src/assets/icons';
@@ -52,19 +51,7 @@ const Page: NextPage = () => {
             <LongDescription text={sampleText} />
           </div>
         </section>
-        <PaginationContainer
-          headerData={{
-            title: 'Dyson  Headphones',
-            subTitle: '(1,218)',
-            rating: 4.5,
-            variant: 'secondary',
-            imageUrl: '/brands/logo.svg',
-            profileSlug: '/video-reviews/brand/dyson',
-            description: '',
-            dataType: 'brand',
-          }}
-          isBecomeReviewer={false}
-        ></PaginationContainer>
+
         <SEOSection
           heading=" SEO text lorem ipsum"
           content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pretium dictum felis, at

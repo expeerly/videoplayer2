@@ -2,7 +2,7 @@ import { db } from '@/src/db';
 import { brand, product, rating, video } from '@/src/db/schema';
 import { and, eq, exists, inArray, isNotNull, sql } from 'drizzle-orm';
 import { Brand, BrandInputType } from '@/src/db/types';
-import { FilterParams, PaginationParams } from '../utils/requestHelpers';
+import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
 
 export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[]> {
   if (!input || !Array.isArray(input)) {
@@ -115,6 +115,7 @@ export async function getBrandsLogosAndNames(
 
 export async function handleGetBrandsWithVideos(
   { page, limit, videoCount, random }: PaginationParams,
+  lang: SupportedLanguage,
   { categories, brands }: FilterParams
 ) {
   try {
@@ -163,7 +164,8 @@ export async function handleGetBrandsWithVideos(
                 'playbackId', ${video.playbackId},
                 'videoUrl', ${video.videoUrl},
                 'resolution', ${video.resolution},
-                'productName', ${product.productName},
+                'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
+                'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
                 'brandId', ${product.brandId},
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
@@ -173,9 +175,9 @@ export async function handleGetBrandsWithVideos(
               FROM ${video}
               JOIN ${product} ON ${brand.id} = ${product.brandId}
               LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
-              WHERE ${product.brandId} = ${brand.id}
+              WHERE ${video.productId} = ${product.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${product.brandId}, ${product.productName}, ${rating.rating}, ${video.id} LIMIT ${videoCount}
+              GROUP BY ${product.productSlug}, ${product.brandId}, ${product.productName}, ${rating.rating}, ${video.id} LIMIT ${videoCount}
             ) subq
           )`,
         })

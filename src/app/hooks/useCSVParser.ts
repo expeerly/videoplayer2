@@ -40,15 +40,15 @@ const parseCSVInfo = (rows: string[][]): CSVParseResult => {
   const idsRowIndex = findIdsRowIndex(rows);
   return {
     ids: idsRowIndex !== -1 ? rows[idsRowIndex] : [],
-    headers: rows[idsRowIndex + 1],
-    data: rows.slice(idsRowIndex + 2),
+    headers: idsRowIndex === 0 ? rows[idsRowIndex + 1] : [],
+    data: rows.slice(idsRowIndex + (idsRowIndex === 0 ? 2 : 1)),
   };
 };
 
 const parseRegularFile = (csvInfo: CSVParseResult): CSVData => {
   const { ids, headers, data } = csvInfo;
   return data.map(row => {
-    const res = headers.reduce((acc, header, index) => {
+    const res = ids.reduce((acc, header, index) => {
       if (!header) return acc;
       const key = ids[index] || headers[index];
       return {

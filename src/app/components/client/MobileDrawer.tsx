@@ -75,6 +75,12 @@ export const MobileDrawer: FunctionComponent<PropsWithChildren<Props>> = ({
     }
   }, []);
 
+  const handleDragTransitionEnd = useCallback(() => {
+    if (containerRef.current) {
+      containerRef.current.style.overflow = 'auto';
+    }
+  }, []);
+
   const handleDrag = useCallback(
     (_: MouseEvent | TouchEvent | PointerEvent, { offset }: PanInfo) => {
       if (offset.y < 0) {
@@ -82,7 +88,7 @@ export const MobileDrawer: FunctionComponent<PropsWithChildren<Props>> = ({
       }
       handleDragTransitionEnd();
     },
-    [y]
+    [y, handleDragTransitionEnd]
   );
 
   const handleOverlayClick = useCallback(
@@ -93,12 +99,6 @@ export const MobileDrawer: FunctionComponent<PropsWithChildren<Props>> = ({
     },
     [onClose]
   );
-
-  const handleDragTransitionEnd = useCallback(() => {
-    if (containerRef.current) {
-      containerRef.current.style.overflow = 'auto';
-    }
-  }, []);
 
   return (
     <AnimatePresence>

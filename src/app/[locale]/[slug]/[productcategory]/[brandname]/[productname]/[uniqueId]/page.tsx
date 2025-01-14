@@ -53,14 +53,6 @@ const Page: NextPage = async () => {
             classNames={{
               gridClassName: '!gap-[15px] md:justify-center',
             }}
-            maxReviews={3}
-            headerData={{
-              title: 'Dyson Airwrap Styler',
-              rating: 4.5,
-              subTitle: '38',
-              variant: 'secondary',
-              description: '',
-            }}
           />
         </div>
       </div>

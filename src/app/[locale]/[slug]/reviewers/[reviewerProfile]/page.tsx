@@ -34,9 +34,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           <div className="flex gap-4">
             <Avatar className="flex h-[50px] w-[50px] md:h-28 md:w-28 md:m-0" alt="Dyson" />
             <div className="flex flex-1 flex-col gap-1">
-              <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 sm:w-[calc(100%-70px)] md:w-[90%]">
-                Maria C.
-              </h1>
+              <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 ">Maria C.</h1>
               <div className="mb-3">
                 <p className="text-grey-500">38, Zurich (CH)</p>
               </div>
