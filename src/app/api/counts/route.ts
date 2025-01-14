@@ -6,6 +6,8 @@ import { getCreatorsCount } from '../services/creator.services';
 import { getVideosCount } from '../services/video.services';
 import { handleError } from '../utils/errorHandler';
 
+export const maxDuration = 50;
+
 export const GET = async () => {
   try {
     const [categories, brands, products, creators, videos] = await Promise.all([
