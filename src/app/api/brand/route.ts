@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { handleCreateBrand, handleGetBrand } from '../services/brand.services';
 import { handleError } from '../utils/errorHandler';
 
+export const maxDuration = 50;
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
