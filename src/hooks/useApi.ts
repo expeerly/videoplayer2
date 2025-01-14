@@ -37,7 +37,9 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
 
       try {
         let response: AxiosResponse<ApiResponse<R>>;
-        const apiURL = url.startsWith('http') ? url : `${process.env.NEXT_ENDPOINT_URL}${url}`;
+        const baseUrl =
+          typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_ENDPOINT_URL;
+        const apiURL = url.startsWith('http') ? url : `${baseUrl}/api${url}`;
         switch (method) {
           case 'post':
             response = await axios.post<ApiResponse<R>>(apiURL, payload);
