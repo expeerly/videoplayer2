@@ -33,14 +33,13 @@ export const uploadData = async (
   chunkSize = 100
 ) => {
   const dataChunks = chunkArray(transformedData, chunkSize);
-
   let successCount = 0;
   let failedCount = 0;
 
-  const promises = dataChunks.map(async chunk => {
+  // Process chunks sequentially
+  for (const chunk of dataChunks) {
     try {
       const res = await cb(chunk);
-
       if (res?.success) {
         successCount += chunk.length;
       } else {
@@ -50,11 +49,7 @@ export const uploadData = async (
       console.log(chunkError);
       failedCount += chunk.length;
     }
-
-    return true;
-  });
-
-  await Promise.all(promises);
+  }
 
   return {
     successCount,
