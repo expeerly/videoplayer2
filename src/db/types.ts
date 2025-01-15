@@ -4,7 +4,6 @@ import {
   product,
   video,
   creator,
-  rating,
   creatorInterests,
   landingPage,
   headings,
@@ -15,7 +14,6 @@ export type Category = typeof category.$inferSelect;
 export type Product = typeof product.$inferSelect;
 export type Video = typeof video.$inferSelect;
 export type Creator = typeof creator.$inferSelect;
-export type Rating = typeof rating.$inferSelect;
 export type CreatorInterests = typeof creatorInterests.$inferSelect;
 export type LandingPage = typeof landingPage.$inferSelect;
 export type Headings = typeof headings.$inferSelect;
@@ -27,5 +25,4 @@ export type VideoInputType = typeof video.$inferInsert;
 export type CreatorInputType = typeof creator.$inferInsert;
 export type CreatorInterestsInputType = typeof creatorInterests.$inferInsert;
 export type LandingPageInputType = typeof landingPage.$inferInsert;
-export type RatingInputType = typeof rating.$inferInsert;
 export type HeadingsInputType = typeof headings.$inferInsert;
