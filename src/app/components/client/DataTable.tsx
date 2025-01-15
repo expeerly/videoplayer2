@@ -3,12 +3,13 @@ import { CSVData } from '../../context/types';
 
 interface DataTableProps {
   data: CSVData;
+  headers: string[];
 }
 
-export const DataTable: FunctionComponent<DataTableProps> = ({ data }) => {
+export const DataTable: FunctionComponent<DataTableProps> = ({ data, headers: headersProp }) => {
   if (!data.length) return null;
 
-  const headers = Object.keys(data[0]);
+  const headers = headersProp || Object.keys(data[0]);
 
   return (
     <div className="mt-8 overflow-auto w-full h-[450px] border rounded-lg">

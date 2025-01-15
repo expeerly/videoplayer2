@@ -14,11 +14,6 @@ export const createProducts = async (input: ProductInputType[]) => {
 
   // Ensure proper date handling and validate categoryId
   const processedInput = input.map(item => {
-    // Skip items with invalid categoryId (0 or undefined)
-    if (!item.categoryId || item.categoryId === 0) {
-      throw new Error(`Invalid category ID for product: ${item.productName}`);
-    }
-
     return {
       ...item,
       createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),

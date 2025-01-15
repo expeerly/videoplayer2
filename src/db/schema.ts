@@ -114,21 +114,7 @@ export const video = pgTable('video', {
   published: boolean('published'),
   cannonicalTag: boolean('cannonicalTag').default(false).notNull(),
   resolution: text('resolution'),
-  createdAt: timestamp('createdAt', {
-    precision: 6,
-    withTimezone: true,
-  }).defaultNow(),
-  updatedAt: timestamp('updatedAt', {
-    precision: 6,
-    withTimezone: true,
-  }).defaultNow(),
-});
-
-export const rating = pgTable('rating', {
-  id: text('id').primaryKey(),
-  productId: text('productId').references(() => product.id),
-  creatorId: text('creatorId').references(() => creator.id),
-  rating: real('rating').notNull(),
+  starRating: real('starRating'),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,

@@ -5,7 +5,7 @@ import { CSVData } from '../../context/types';
 import { useApiCall } from '@/src/hooks/useApi';
 
 interface CSVUploaderProps {
-  setParsedData: (data: CSVData) => void;
+  setParsedData: ({ headers, data }: { headers: string[]; data: CSVData }) => void;
   csvHeadersData: CSVData;
   setCSVHeadersData: (data: CSVData) => void;
   setLoading: (value: boolean) => void;
@@ -56,14 +56,14 @@ export const CSVUploader: FunctionComponent<CSVUploaderProps> = ({
         return;
       }
 
-      const parsedData = await parseCSVFile(file);
+      const parsedData = await parseCSVFile(file, isHeaderFile);
       if (isHeaderFile) {
-        if (!parsedData[0]?.ID || !parsedData[0]?.Header) {
+        if (!parsedData.data[0]?.ID || !parsedData.data[0]?.Header) {
           setError('Header File Must have ID and Header Columns');
           setLoading(false);
           return;
         }
-        await uploadHeader(parsedData);
+        await uploadHeader(parsedData.data);
         setLoading(false);
         setError(undefined);
         return;

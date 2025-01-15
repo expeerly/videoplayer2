@@ -26,7 +26,10 @@ type HeadingsResponse = {
 
 export const CSVViewer: FunctionComponent = () => {
   const [selectedOption, setSelectedOption] = useState<CSVDataOptions>(CSVDataOptions.brand);
-  const [csvData, setCSVData] = useState<CSVData>([]);
+  const [csvData, setCSVData] = useState<{ headers: string[]; data: CSVData }>({
+    headers: [],
+    data: [],
+  });
   const [csvHeadersData, setCSVHeadersData] = useState<CSVData>([]);
   const { post, get } = useApiCall();
   const router = useRouter();
@@ -58,8 +61,8 @@ export const CSVViewer: FunctionComponent = () => {
     fetchHeadings();
   }, [get]);
 
-  const parsedCSVData = useMemo(() => {
-    return csvData.map(row => {
+  const [parsedCSVData, parsedHeaders] = useMemo(() => {
+    const parsedData = csvData.data.map(row => {
       const parsedRow: { [key: string]: string | number } = {};
       Object.keys(row).forEach(key => {
         const header = csvHeadersData.find(h => Number(h.ID) === Number(key));
@@ -71,6 +74,13 @@ export const CSVViewer: FunctionComponent = () => {
         ...parsedRow,
       };
     });
+    const headings = csvData.headers
+      .map(key => {
+        const parsedHeader = csvHeadersData.find(h => Number(h.ID) === Number(key));
+        return parsedHeader?.Header || null;
+      })
+      .filter(Boolean) as string[];
+    return [parsedData, headings];
   }, [csvData, csvHeadersData]);
 
   const handleSave = useCallback(async () => {
@@ -82,7 +92,6 @@ export const CSVViewer: FunctionComponent = () => {
       [CSVDataOptions.creator]: API_ROUTES.CREATORS,
       [CSVDataOptions.product]: API_ROUTES.PRODUCTS,
       [CSVDataOptions.video]: API_ROUTES.VIDEOS,
-      [CSVDataOptions.rating]: API_ROUTES.RATINGS,
       [CSVDataOptions.landingPage]: API_ROUTES.LANDING_PAGE,
     };
 
@@ -109,7 +118,7 @@ export const CSVViewer: FunctionComponent = () => {
           router.push('/admin');
         }, 200);
 
-        setCSVData([]);
+        setCSVData({ headers: [], data: [] });
       } else {
         setMessage({
           type: 'error',
@@ -118,6 +127,9 @@ export const CSVViewer: FunctionComponent = () => {
       }
     } catch (error) {
       handleError(error, message => setMessage({ type: 'error', message }));
+      setTimeout(() => {
+        router.push('/admin');
+      }, 200);
     } finally {
       setLoading(false);
     }
@@ -136,7 +148,7 @@ export const CSVViewer: FunctionComponent = () => {
 
       <div className="my-auto">
         <CSVUploader
-          setParsedData={setCSVData}
+          setParsedData={({ headers, data }) => setCSVData({ headers, data })}
           csvHeadersData={csvHeadersData}
           setCSVHeadersData={setCSVHeadersData}
           setLoading={setLoading}
@@ -163,7 +175,9 @@ export const CSVViewer: FunctionComponent = () => {
       {parsedCSVData.length > 0 && (
         <div className="mt-8 w-full flex-1 flex flex-col">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold mb-4">Displaying {csvData.length} rows of data</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Displaying {csvData.data.length} rows of data
+            </h2>
             <div className="flex gap-5">
               <StyledSelect
                 options={[
@@ -172,7 +186,6 @@ export const CSVViewer: FunctionComponent = () => {
                   { value: CSVDataOptions.creator, label: 'Creators' },
                   { value: CSVDataOptions.product, label: 'Products' },
                   { value: CSVDataOptions.video, label: 'Videos' },
-                  { value: CSVDataOptions.rating, label: 'Ratings' },
                   { value: CSVDataOptions.landingPage, label: 'Landing Page' },
                 ]}
                 onChange={value => setSelectedOption(value as CSVDataOptions)}
@@ -181,7 +194,7 @@ export const CSVViewer: FunctionComponent = () => {
               <Button onClick={handleSave}>{loading ? 'Saving...' : 'Save'}</Button>
             </div>
           </div>
-          <DataTable data={parsedCSVData} />
+          <DataTable data={parsedCSVData} headers={parsedHeaders} />
         </div>
       )}
     </div>

@@ -38,6 +38,11 @@ export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
       video => creatorIdSet.has(video.creatorId!) && productIdSet.has(video.productId!)
     );
 
+    const invalidVideos = input.filter(
+      video => !creatorIdSet.has(video.creatorId!) || !productIdSet.has(video.productId!)
+    );
+    console.log({ invalidVideos: invalidVideos });
+
     if (!validVideos.length) return [];
 
     return (
@@ -60,6 +65,7 @@ export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
             published: sql`EXCLUDED."published"`,
             cannonicalTag: sql`EXCLUDED."cannonicalTag"`,
             resolution: sql`EXCLUDED."resolution"`,
+            starRating: sql`EXCLUDED."starRating"`,
             updatedAt: sql`CURRENT_TIMESTAMP`,
           },
         })

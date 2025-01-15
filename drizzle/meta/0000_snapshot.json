@@ -1,5 +1,5 @@
 {
-  "id": "461c2ec0-d7b3-4f49-acd4-0c0f7118432b",
+  "id": "0bc5a24d-3219-4a7a-8400-ff1a7d293915",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -449,76 +449,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.rating": {
-      "name": "rating",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "productId": {
-          "name": "productId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "creatorId": {
-          "name": "creatorId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "rating": {
-          "name": "rating",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp (6) with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "rating_productId_product_id_fk": {
-          "name": "rating_productId_product_id_fk",
-          "tableFrom": "rating",
-          "tableTo": "product",
-          "columnsFrom": ["productId"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "rating_creatorId_creator_id_fk": {
-          "name": "rating_creatorId_creator_id_fk",
-          "tableFrom": "rating",
-          "tableTo": "creator",
-          "columnsFrom": ["creatorId"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.video": {
       "name": "video",
       "schema": "",
@@ -605,6 +535,12 @@
         "resolution": {
           "name": "resolution",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "starRating": {
+          "name": "starRating",
+          "type": "real",
           "primaryKey": false,
           "notNull": false
         },

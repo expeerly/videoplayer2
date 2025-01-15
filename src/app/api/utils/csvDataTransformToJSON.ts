@@ -10,7 +10,6 @@ export enum CSVDataOptions {
   creator = 'creator',
   product = 'product',
   video = 'video',
-  rating = 'rating',
   landingPage = 'landingPage',
 }
 
@@ -23,10 +22,21 @@ const createFieldGetter =
     return data[field] ? `${data[field]}` : '';
   };
 
-export const verifyRequiredFields = (requiredFields: string[], data: CSVDataItem): boolean => {
-  const missingFields = requiredFields.filter(
-    field => !data.hasOwnProperty(field.trim()) || data[field.trim()] === ''
-  );
+export const verifyRequiredFields = (
+  requiredFields: (string | string[])[],
+  data: CSVDataItem
+): boolean => {
+  const missingFields = requiredFields.filter(field => {
+    if (typeof field === 'string') {
+      return !data.hasOwnProperty(field.trim()) || data[field.trim()] === '';
+    } else {
+      const [key1, key2] = field;
+      return (
+        (!data.hasOwnProperty(key1.trim()) || data[key1.trim()] === '') &&
+        (!data.hasOwnProperty(key2.trim()) || data[key2.trim()] === '')
+      );
+    }
+  });
   return missingFields.length === 0;
 };
 
@@ -103,23 +113,11 @@ const transformers = {
     };
   },
 
-  [CSVDataOptions.rating]: (data: CSVDataItem): Partial<Rating> => {
-    const getField = createFieldGetter(data);
-    return {
-      id: getField('Unique Bubble ID Rating'),
-      productId: getField('Unique Bubble ID Product'),
-      creatorId: getField('Unique Bubble ID Reviewer'),
-      rating: Number(getField('Star rating')),
-    };
-  },
-
   [CSVDataOptions.product]: (data: CSVDataItem): Partial<Product> | null => {
     const getField = createFieldGetter(data);
     const requiredFields = [
       'Unique Bubble ID Product',
-      'Unique bubble Id Brand',
-      'unique_category_id',
-      'product_name_slug EN',
+      ['product_name_slug', 'product_name_slug EN'],
     ];
     const isValid = verifyRequiredFields(requiredFields, data);
     if (!isValid) {
@@ -133,7 +131,7 @@ const transformers = {
       globalTradeItemNumber: getField('GTIN/EAN') || null,
       vendorProductNumber: getField('Vendor Product Number') || null,
       brandId: getField('Unique bubble Id Brand') || null,
-      categoryId: Number(getField('unique_category_id')),
+      categoryId: getField('unique_category_id') ? Number(getField('unique_category_id')) : null,
       productSlug: createMultiLangObject(getField, { title: 'product_name_slug' }),
     };
   },
@@ -156,6 +154,7 @@ const transformers = {
       resolution: getField('video format')?.replace(/\s/g, '') || null,
       videoTitle: createMultiLangObject(getField, { title: 'Detailed page title' }),
       summary: createMultiLangObject(getField, { text: 'Summary' }),
+      starRating: getField('Star rating', false) ? Number(getField('Star rating', false)) : null,
       faqs: Array.from({ length: 5 }, (_, i) => i + 1).reduce(
         (acc, num) => ({
           ...acc,

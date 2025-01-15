@@ -53,3 +53,13 @@ export async function handleGetLandingPage(): Promise<LandingPage | undefined> {
     throw new Error((error as Error).message);
   }
 }
+
+export async function getLandingPageCount(): Promise<{ count: number }> {
+  try {
+    const count = await db.$count(landingPage);
+    return { count };
+  } catch (error) {
+    console.error('Error fetching landing page count:', error);
+    throw new Error((error as Error).message);
+  }
+}
