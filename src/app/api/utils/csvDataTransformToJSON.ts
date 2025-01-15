@@ -1,8 +1,8 @@
-import { Brand, Category, Creator, LandingPage, Product, Rating, Video } from '@/src/db/types';
+import { Brand, Category, Creator, LandingPage, Product, Video } from '@/src/db/types';
 import { CSVData } from '../../context/types';
 
 type CSVDataItem = Record<string, string | number>;
-export type TransformResult = Partial<Brand | Category | Creator | Product | Video | Rating>;
+export type TransformResult = Partial<Brand | Category | Creator | Product | Video>;
 
 export enum CSVDataOptions {
   brand = 'brand',
