@@ -71,10 +71,12 @@ export type GridVideo = {
   videoUrl: string;
   resolution: string;
   productName: string;
+  productSlug: string;
   brandId: string;
   brandName: string;
   brandLogo: string;
   brandSlug: string;
+  categorySlug: string;
   rating: number;
 };
 
