@@ -1,5 +1,5 @@
 import { db } from '@/src/db';
-import { brand, product, rating, video } from '@/src/db/schema';
+import { brand, product, video } from '@/src/db/schema';
 import { and, eq, exists, inArray, isNotNull, sql } from 'drizzle-orm';
 import { Brand, BrandInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
@@ -170,14 +170,13 @@ export async function handleGetBrandsWithVideos(
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
                 'brandSlug', ${brand.slug},
-                'rating', ${rating.rating}
+                'rating', ${video.starRating}
               ) as video_data
               FROM ${video}
               JOIN ${product} ON ${brand.id} = ${product.brandId}
-              LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
               WHERE ${video.productId} = ${product.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${product.productSlug}, ${product.brandId}, ${product.productName}, ${rating.rating}, ${video.id} LIMIT ${videoCount}
+              GROUP BY ${product.productSlug}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
             ) subq
           )`,
         })

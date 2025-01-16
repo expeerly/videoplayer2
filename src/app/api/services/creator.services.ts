@@ -1,5 +1,5 @@
 import { db } from '@/src/db';
-import { brand, creator, creatorInterests, product, rating, video } from '@/src/db/schema';
+import { brand, creator, creatorInterests, product, video } from '@/src/db/schema';
 import { and, eq, exists, inArray, sql } from 'drizzle-orm';
 import { Creator, CreatorInputType, CreatorInterestsInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
@@ -148,15 +148,14 @@ export async function handleGetCreatorWithVideos(
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
                 'brandSlug', ${brand.slug},
-                'rating', ${rating.rating}
+                'rating', ${video.starRating}
               ) as video_data
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
-              LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
               WHERE ${video.creatorId} = ${creator.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${product.productSlug}, ${rating.rating}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
+              GROUP BY ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
               LIMIT ${videoCount}
             ) subq
           )`,

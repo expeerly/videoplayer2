@@ -1,5 +1,5 @@
 import { db } from '@/src/db';
-import { brand, category, product, video, rating } from '@/src/db/schema';
+import { brand, category, product, video } from '@/src/db/schema';
 import { eq, exists, sql, and, inArray } from 'drizzle-orm';
 import { Category, CategoryInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
@@ -180,15 +180,14 @@ export async function handleGetCategoryWithVideos(
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
                 'brandSlug', ${brand.slug},
-                'rating', ${rating.rating}
+                'rating', ${video.starRating},
               ) as video_data
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
-              LEFT JOIN ${rating} ON ${video.productId} = ${rating.productId} AND ${video.creatorId} = ${rating.creatorId}
               WHERE ${video.productId} = ${product.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${product.productSlug}, ${rating.rating}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
+              GROUP BY ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
             ) subq
           )`,
         })
