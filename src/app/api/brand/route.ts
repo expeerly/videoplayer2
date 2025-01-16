@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { handleCreateBrand, handleGetBrand } from '../services/brand.services';
+import { getBrandsLogosAndNames, handleCreateBrand } from '../services/brand.services';
 import { handleError } from '../utils/errorHandler';
+import { getPaginationParams } from '../utils/requestHelpers';
 
 export const maxDuration = 50;
 
@@ -23,9 +24,10 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const brands = await handleGetBrand();
+    const { page, limit, random } = getPaginationParams(request);
+    const brands = await getBrandsLogosAndNames(page, limit, random);
     return NextResponse.json(
       {
         success: true,

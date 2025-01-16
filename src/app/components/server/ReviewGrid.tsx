@@ -1,10 +1,15 @@
 import React, { FunctionComponent } from 'react';
 import { ReviewCard } from '../server/ReviewCard';
-import { ProfileCard, ProfileCardProps } from './ProfileCard';
+import { ProfileCard } from './ProfileCard';
 import clsx from 'clsx';
+import { GridData } from '@/src/db/types';
 
 type ReviewGridProps = {
-  headerData?: ProfileCardProps;
+  header?: {
+    dataType?: 'reviewer' | 'brand' | 'category';
+    variant?: 'primary' | 'secondary';
+  };
+
   classNames?: {
     containerClassName?: string;
     cardClassName?: string;
@@ -12,63 +17,26 @@ type ReviewGridProps = {
     headerContainerClassName?: string;
     headerProfileClassName?: string;
   };
-  maxReviews?: number;
   hasProfileHeader?: boolean;
+  data?: GridData;
 };
-const tempreviews = [
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 4.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 4.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 4.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 4.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 3.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-];
-
 export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
-  headerData,
+  header,
   classNames,
-  maxReviews,
   hasProfileHeader = true,
+  data,
 }) => {
   return (
     <div className={clsx('w-full flex flex-col gap-5', classNames?.containerClassName)}>
       {hasProfileHeader && (
         <div className={clsx('pl-5 mid-lg:pl-0', classNames?.headerContainerClassName)}>
-          <ProfileCard {...headerData} />
+          <ProfileCard
+            {...data?.info}
+            imageUrl={data?.logo}
+            title={data?.name ?? ''}
+            profileSlug={data?.slug}
+            {...header}
+          />
         </div>
       )}
 
@@ -78,7 +46,7 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
           classNames?.gridClassName
         )}
       >
-        {[...tempreviews, ...tempreviews].slice(0, maxReviews).map((review, i) => (
+        {data?.videos?.map((review, i) => (
           <ReviewCard
             key={`${review.id}-i-${i}`}
             review={review}

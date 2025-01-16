@@ -2,8 +2,13 @@ import React, { FunctionComponent } from 'react';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Button } from '../client/Button';
+import { Grid } from '@/src/db/types';
 
-export const ExpolreReviewers: FunctionComponent = async () => {
+type Props = {
+  data: Grid;
+};
+
+export const ExpolreReviewers: FunctionComponent<Props> = async ({ data }) => {
   const { t } = await getDictionary();
   return (
     <section className="flex flex-col gap-8 w-full py-12  md:pt-14 md:pb-[70px] md:max-w-[900px]">
@@ -11,8 +16,16 @@ export const ExpolreReviewers: FunctionComponent = async () => {
         {t('home_h2')}
       </h2>
 
-      <ReviewGrid />
-      <ReviewGrid />
+      {data?.rows?.map(i => (
+        <ReviewGrid
+          key={i.id}
+          data={i}
+          header={{
+            dataType: 'reviewer',
+          }}
+        />
+      ))}
+
       <div className="w-full sm:max-w-[300px] px-5 mid-lg:px-0">
         <Button
           title={t('explore_all_reviewers.label')}

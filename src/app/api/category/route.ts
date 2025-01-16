@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getCategory, handleCreateCategory } from '../services/category.services';
+import { getCategoriesForSlider, handleCreateCategory } from '../services/category.services';
 import { handleError } from '../utils/errorHandler';
+import { getLanguageFromRequest } from '../utils/requestHelpers';
 
 export const maxDuration = 50;
 
@@ -22,17 +23,17 @@ export const POST = async (req: Request) => {
   }
 };
 
-export const GET = async () => {
+export const GET = async (request: Request) => {
   try {
-    const category = await getCategory();
+    const lang = getLanguageFromRequest(request);
+    const category = await getCategoriesForSlider(lang);
+
     return NextResponse.json(
       {
         success: true,
         data: category,
       },
-      {
-        status: 200,
-      }
+      { status: 200 }
     );
   } catch (error) {
     return handleError(error);

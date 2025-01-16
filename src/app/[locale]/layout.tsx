@@ -1,15 +1,19 @@
+import { PropsWithChildren } from 'react';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
+import { notFound } from 'next/navigation';
 import { getMessages } from 'next-intl/server';
-import './globals.css';
+
 import { Footer } from '@/src/app/components/server/Footer';
 import { Sidebar } from '@/src/app/components/server/Sidebar/Sidebar';
 import { Navbar } from '@/src/app/components/client/Navbar';
-import { PropsWithChildren } from 'react';
-import { notFound } from 'next/navigation';
 import { routing } from '@/src/i18n/routing';
 import { BottomBar } from '@/src/app/components/client/BottomBar';
-import SharedContextProvider from '../context';
+import { Languages } from '@/src/db/types';
+
+import { SharedContextProvider } from '../context';
+import { getCategories } from '../actions/actions';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Expeerly App',
@@ -30,13 +34,14 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
   params,
-}: Readonly<PropsWithChildren<{ params: { locale: string } }>>) {
+}: Readonly<PropsWithChildren<{ params: { locale: Languages } }>>) {
   const { locale } = await params;
 
   if (!routing.locales.includes(locale as never)) {
     notFound();
   }
   const messages = await getMessages();
+  const { data: categories } = await getCategories(locale);
 
   return (
     <html lang={locale}>
@@ -44,7 +49,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <SharedContextProvider>
             <div className="flex h-full w-full flex-col font-mulish">
-              <Navbar />
+              <Navbar categories={categories} />
               <div className="flex w-full flex-col-reverse md:flex-row">
                 <Sidebar />
                 <BottomBar />

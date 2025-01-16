@@ -3,14 +3,16 @@
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import React, { FunctionComponent, ReactElement, useMemo } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
+import { Link } from '@/src/i18n/routing';
 
 export type SlideProps = {
-  icon?: ReactElement | string;
+  icon?: string;
   name?: string;
   imgURL?: string;
   id?: number | string;
   title?: string;
+  slug: string;
 };
 
 type Props = {
@@ -60,7 +62,7 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand 
   );
 
   // Memoized image classes
-  const imageClasses = useMemo(() => clsx('w-full', 'h-max', 'min-w-max'), []);
+  const imageClasses = useMemo(() => clsx('w-full object-cover', 'h-10', 'w-full'), []);
 
   // Memoized text classes
   const textClasses = useMemo(() => clsx('text-base', 'text-grey-700'), []);
@@ -68,15 +70,32 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand 
   // Memoized icon classes
   const iconClasses = useMemo(() => clsx('text-lg'), []);
 
+  const imageUrl = useMemo(
+    () => (data.imgURL?.startsWith('http') ? data.imgURL : `https:${data.imgURL}`),
+    [data.imgURL]
+  );
+
   return (
-    <button className={buttonClasses} aria-label={ariaLabel}>
-      {data?.icon && <span className={iconClasses}>{data.icon}</span>}
+    <Link
+      href={
+        isBrand
+          ? `/video-reviews/brand/${data.slug}`
+          : `/video-reviews/productcategory/${data.slug}`
+      }
+      className={buttonClasses}
+      aria-label={ariaLabel}
+    >
+      {data?.icon && (
+        <span className={iconClasses}>
+          {<Image src={data.icon} alt={ariaLabel} width={25} height={25} />}
+        </span>
+      )}
 
       {data?.name && <span className={textClasses}>{data.name}</span>}
 
       {data.imgURL && (
-        <Image className={imageClasses} src={data.imgURL} width={100} height={25} alt={ariaLabel} />
+        <Image className={imageClasses} src={imageUrl} width={100} height={25} alt={ariaLabel} />
       )}
-    </button>
+    </Link>
   );
 };

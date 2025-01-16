@@ -1,6 +1,6 @@
 'use client';
 import { FunctionComponent, memo, useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { useTranslations } from 'use-intl';
+import { useLocale, useTranslations } from 'use-intl';
 import { CloseIcon, FilterIcon } from '@/src/assets/icons';
 import { FilterItemProps } from './FilterCard';
 import clsx from 'clsx';
@@ -8,68 +8,76 @@ import { usePathname, useRouter } from '@/src/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 import { FilterCards } from './FilterCards';
 import { Button } from '../Button';
+import { AllCategoriesData, Languages, AllBrandssData } from '@/src/db/types';
 
 type TabType = 'brands' | 'categories';
 
-const categories: FilterItemProps[] = [
-  { name: 'Travel', icon: '✈️' },
-  { name: 'Automobile', icon: '🚗' },
-  { name: 'Health & Wellness', icon: '❤️' },
-  { name: 'Arts & Crafts', icon: '🎨' },
-  { name: 'Baby & Child Care', icon: '👶' },
-  { name: 'Home & Kitchen', icon: '🏠' },
-  { name: 'Beauty & Personal Care', icon: '💅' },
-  { name: 'Books & Media', icon: '📚' },
-  { name: 'Clothes and Fashion', icon: '👕' },
-  { name: 'Electronics & Gadgets', icon: '📱' },
-  { name: 'Food & Beverages', icon: '🍔' },
-  { name: 'Furniture & Decor', icon: '🛋️' },
-  { name: 'Gardening & Outdoor Living', icon: '🌻' },
-  { name: 'Jewelry and Watches', icon: '💎' },
-  { name: 'Music & Instruments', icon: '🎸' },
-  { name: 'Office Supplies', icon: '📎' },
-  { name: 'Pet Supplies', icon: '🐾' },
-  { name: 'Sports & Outdoors', icon: '🏀' },
-  { name: 'Toys & Games', icon: '🧸' },
-  { name: 'Tools & Home Improvement', icon: '🔧' },
-];
+type Props = {
+  categoriesList: AllCategoriesData[];
+  brandsList: AllBrandssData;
+};
 
-const brands: FilterItemProps[] = [
-  { name: 'Dyson', logo: '/brands/logo.svg' },
-  { name: 'Philips', logo: '/brands/logo1.svg' },
-  { name: 'Sony', logo: '/brands/logo13.svg' },
-  { name: 'Tefal', logo: '/brands/logo11.svg' },
-  { name: 'Zalando', logo: '/brands/logo14.svg' },
-  { name: 'Get Your Guide', logo: '/brands/logo11.svg' },
-  { name: 'Koenig', logo: '/brands/logo5.svg' },
-  { name: 'Bauknecht', logo: '/brands/logo12.svg' },
-  { name: 'Dyson_1', logo: '/brands/logo.svg' },
-  { name: 'Philips_2', logo: '/brands/logo1.svg' },
-  { name: 'Sony_3', logo: '/brands/logo13.svg' },
-  { name: 'Tefal_4', logo: '/brands/logo11.svg' },
-  { name: 'Zalando_5', logo: '/brands/logo14.svg' },
-  { name: 'Get Your Guide_6', logo: '/brands/logo11.svg' },
-  { name: 'Koenig_7', logo: '/brands/logo5.svg' },
-  { name: 'Bauknecht_8', logo: '/brands/logo12.svg' },
-];
-
-const FilterComponent: FunctionComponent = () => {
+const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList }) => {
+  const [activeTab, setActiveTab] = useState<TabType>('categories');
   const [isOpen, setIsOpen] = useState(false);
+  const [pendingFilters, setPendingFilters] = useState<{ brand: string[]; category: string[] }>({
+    brand: [],
+    category: [],
+  });
+
   const menuRef = useRef<HTMLDivElement>(null);
   const t = useTranslations();
+  const local = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<TabType>('categories');
 
-  const appliedFilters = useMemo(
-    () => ({
-      brand: searchParams.getAll('brand'),
-      category: searchParams.getAll('category'),
-    }),
-    [searchParams]
+  const brands = useMemo(
+    () =>
+      brandsList?.map(i => ({
+        name: i.brandName,
+        logo: i.logo || undefined,
+        id: i.id,
+        slug: i.slug,
+      })),
+    [brandsList]
   );
-  const [pendingFilters, setPendingFilters] = useState(appliedFilters);
+
+  const categories = useMemo(
+    () =>
+      categoriesList?.map(i => ({
+        name: i.categoryData?.[local === '/' ? 'en' : (local as Languages)].categoryName,
+        icon: i.logo || undefined,
+        id: i.id.toString(),
+        slug: i.categoryData?.[local === '/' ? 'en' : (local as Languages)]?.urlSlug,
+      })),
+    [categoriesList, local]
+  );
+
+  const activeItems: FilterItemProps[] = useMemo(
+    () => (activeTab === 'categories' ? categories : brands),
+    [activeTab, categories, brands]
+  );
+
+  const appliedFilters = useMemo(() => {
+    const brandSlugs = searchParams.getAll('brand');
+    const categorySlugs = searchParams.getAll('category');
+
+    return {
+      brand: brandSlugs
+        .map(slug => {
+          const brand = brands.find(b => b.slug === slug);
+          return brand?.id.toString() || '';
+        })
+        .filter(Boolean),
+      category: categorySlugs
+        .map(slug => {
+          const category = categories.find(c => c.slug === slug);
+          return category?.id.toString() || '';
+        })
+        .filter(Boolean),
+    };
+  }, [searchParams, brands, categories]);
 
   const totalSelectedCount = useMemo(
     () => pendingFilters.brand.length + pendingFilters.category.length,
@@ -82,10 +90,7 @@ const FilterComponent: FunctionComponent = () => {
   );
 
   const hasFilterChanges = useMemo(() => {
-    const currentAppliedFilters = {
-      brand: searchParams.getAll('brand'),
-      category: searchParams.getAll('category'),
-    };
+    const currentAppliedFilters = appliedFilters;
 
     if (pendingFilters.brand.length === 0 && pendingFilters.category.length === 0) {
       return currentAppliedFilters.brand.length > 0 || currentAppliedFilters.category.length > 0;
@@ -100,40 +105,51 @@ const FilterComponent: FunctionComponent = () => {
       pendingFilters.category.some(c => !currentAppliedFilters.category.includes(c));
 
     return brandsDiff || categoriesDiff;
-  }, [pendingFilters, searchParams]);
-
-  const updatePendingFilters = useCallback((type: 'brand' | 'category', name: string) => {
-    setPendingFilters(prev => {
-      const currentArray = prev[type];
-      if (currentArray.includes(name)) {
-        return {
-          ...prev,
-          [type]: currentArray.filter(item => item !== name),
-        };
-      }
-      if (currentArray.length >= 5) return prev;
-      return {
-        ...prev,
-        [type]: [...currentArray, name],
-      };
-    });
-  }, []);
+  }, [pendingFilters, appliedFilters]);
 
   const handleItemToggle = useCallback(
-    (name: string) => {
-      const type = activeTab === 'categories' ? 'category' : 'brand';
-      updatePendingFilters(type, name);
+    (id: string) => {
+      setPendingFilters(prev => {
+        const type = activeTab === 'categories' ? 'category' : 'brand';
+        const currentArray = prev[type];
+
+        if (currentArray.includes(id)) {
+          return {
+            ...prev,
+            [type]: currentArray.filter(item => item !== id),
+          };
+        }
+
+        if (currentArray.length >= 5) return prev;
+
+        return {
+          ...prev,
+          [type]: [...currentArray, id],
+        };
+      });
     },
-    [activeTab, updatePendingFilters]
+    [activeTab, setPendingFilters]
   );
 
   const handleApplyFilters = useCallback(() => {
     const params = new URLSearchParams();
-    pendingFilters.brand.forEach(brand => params.append('brand', brand));
-    pendingFilters.category.forEach(category => params.append('category', category));
+
+    pendingFilters.brand.forEach(brandId => {
+      const brand = brands.find(b => b.id.toString() === brandId.toString());
+      if (brand?.slug) {
+        params.append('brand', brand.slug);
+      }
+    });
+
+    pendingFilters.category.forEach(categoryId => {
+      const category = categories.find(c => c.id.toString() === categoryId.toString());
+      if (category?.slug) {
+        params.append('category', category.slug);
+      }
+    });
 
     router.push(`${pathname}?${params.toString()}`);
-  }, [pendingFilters, pathname, router]);
+  }, [pendingFilters, pathname, router, brands, categories]);
 
   const handleClearFilters = useCallback(() => {
     setPendingFilters({ brand: [], category: [] });
@@ -187,6 +203,54 @@ const FilterComponent: FunctionComponent = () => {
     if (pathname) setIsOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    setPendingFilters(appliedFilters);
+  }, [appliedFilters]);
+
+  const activePendingFilters = useMemo(
+    () => (activeTab === 'categories' ? pendingFilters.category : pendingFilters.brand),
+    [activeTab, pendingFilters]
+  );
+
+  const selectedItemNames = useMemo(
+    () =>
+      activePendingFilters
+        .map(id =>
+          activeTab === 'categories'
+            ? categories.find(c => c.id.toString() === id)?.name
+            : brands.find(b => b.id.toString() === id)?.name
+        )
+        .filter(Boolean),
+    [activePendingFilters, activeTab, categories, brands]
+  );
+
+  const filterCardsProps = useMemo(
+    () => ({
+      items: activeItems,
+      pendingFilters: activePendingFilters,
+      onToggle: handleItemToggle,
+    }),
+    [activeItems, activePendingFilters, handleItemToggle]
+  );
+
+  const containerClassName = useMemo(
+    () =>
+      clsx(' inset-0', {
+        'z-50 md:z-10 fixed h-100% bg-grey-100 md:bg-transparent md:static': isOpen,
+        'w-10 overflow-hidden z-10': !isOpen,
+      }),
+    [isOpen]
+  );
+
+  const buttonContainerClassName = useMemo(
+    () =>
+      clsx('', {
+        'absolute right-5 top-[15px] md:top-10 md:right-8 mid-lg:right-12': isOpen,
+        'h-max w-max static md:absolute md:m-0 md:top-10 md:right-8 mid-lg:right-12': !isOpen,
+      }),
+    [isOpen]
+  );
+
   const buttonState = useMemo(() => {
     if (totalAppliedCount > 0 && !hasFilterChanges) {
       return {
@@ -226,43 +290,6 @@ const FilterComponent: FunctionComponent = () => {
     handleClearFilters,
     handleApplyFilters,
   ]);
-
-  const activeItems = useMemo(
-    () => (activeTab === 'categories' ? categories : brands),
-    [activeTab]
-  );
-
-  const activePendingFilters = useMemo(
-    () => (activeTab === 'categories' ? pendingFilters.category : pendingFilters.brand),
-    [activeTab, pendingFilters]
-  );
-
-  const filterCardsProps = useMemo(
-    () => ({
-      items: activeItems,
-      pendingFilters: activePendingFilters,
-      onToggle: handleItemToggle,
-    }),
-    [activeItems, activePendingFilters, handleItemToggle]
-  );
-
-  const containerClassName = useMemo(
-    () =>
-      clsx(' inset-0', {
-        'z-50 md:z-10 fixed h-100% bg-grey-100 md:bg-transparent md:static': isOpen,
-        'w-10 overflow-hidden z-10': !isOpen,
-      }),
-    [isOpen]
-  );
-
-  const buttonContainerClassName = useMemo(
-    () =>
-      clsx('', {
-        'absolute right-5 top-[15px] md:top-10 md:right-8 mid-lg:right-12': isOpen,
-        'h-max w-max static md:absolute md:m-0 md:top-10 md:right-8 mid-lg:right-12': !isOpen,
-      }),
-    [isOpen]
-  );
 
   return (
     <div className={containerClassName}>
@@ -317,12 +344,12 @@ const FilterComponent: FunctionComponent = () => {
           </div>
 
           {activePendingFilters.length > 0 && (
-            <div className="w-full px-5 mb-3 flex gap-1 flex-wrap text-grey-700 text-base font-normal">
+            <div className="flex flex-wrap gap-2 items-center px-5">
               <span>{t('selected')}:</span>
-              {activePendingFilters.map((item, i) => (
-                <span key={item}>
-                  {item}
-                  {i < activePendingFilters.length - 1 && ','}
+              {selectedItemNames.map((name, i) => (
+                <span key={name}>
+                  {name}
+                  {i < selectedItemNames.length - 1 && ','}
                 </span>
               ))}
             </div>

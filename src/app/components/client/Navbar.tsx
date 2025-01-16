@@ -7,8 +7,13 @@ import { Link, usePathname } from '@/src/i18n/routing';
 import Image from 'next/image';
 import { BackButton } from './BackButton';
 import { useSharedDispatch, useSharedState } from '../../context/reducer';
+import { CategoryData } from '@/src/db/types';
 
-const NavbarComponent: FunctionComponent = () => {
+type Props = {
+  categories: CategoryData[];
+};
+
+const NavbarComponent: FunctionComponent<Props> = ({ categories }) => {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const dispatch = useSharedDispatch();
@@ -67,6 +72,7 @@ const NavbarComponent: FunctionComponent = () => {
       return;
     }
     dispatch({ type: 'USER_HISTORY', payload: [...userHistory, pathname] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, pathname]);
 
   return (
@@ -85,7 +91,7 @@ const NavbarComponent: FunctionComponent = () => {
         </Link>
       </div>
       <div className="flex">
-        <DropDownMenu />
+        <DropDownMenu categories={categories} />
       </div>
     </header>
   );
