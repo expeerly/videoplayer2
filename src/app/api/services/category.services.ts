@@ -174,6 +174,7 @@ export async function handleGetCategoryWithVideos(
                 'resolution', ${video.resolution},
                 'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
                 'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
+                'categorySlug', COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug'),
                 'brandId', ${product.brandId},
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},

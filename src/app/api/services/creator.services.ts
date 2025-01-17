@@ -1,5 +1,5 @@
 import { db } from '@/src/db';
-import { brand, creator, creatorInterests, product, video } from '@/src/db/schema';
+import { brand, category, creator, creatorInterests, product, video } from '@/src/db/schema';
 import { and, eq, exists, inArray, sql } from 'drizzle-orm';
 import { Creator, CreatorInputType, CreatorInterestsInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
@@ -144,6 +144,7 @@ export async function handleGetCreatorWithVideos(
                 'resolution', ${video.resolution},
                 'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
                 'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
+                'categorySlug', COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug'),
                 'brandId', ${product.brandId},
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
@@ -153,6 +154,7 @@ export async function handleGetCreatorWithVideos(
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
+              JOIN ${category} ON ${product.categoryId} = ${category.id}
               WHERE ${video.creatorId} = ${creator.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
               GROUP BY ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}

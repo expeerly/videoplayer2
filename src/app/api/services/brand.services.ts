@@ -1,5 +1,5 @@
 import { db } from '@/src/db';
-import { brand, product, video } from '@/src/db/schema';
+import { brand, category, product, video } from '@/src/db/schema';
 import { and, eq, exists, inArray, isNotNull, sql } from 'drizzle-orm';
 import { Brand, BrandInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
@@ -166,6 +166,7 @@ export async function handleGetBrandsWithVideos(
                 'resolution', ${video.resolution},
                 'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
                 'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
+                'categorySlug', COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug'),
                 'brandId', ${product.brandId},
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
@@ -174,9 +175,10 @@ export async function handleGetBrandsWithVideos(
               ) as video_data
               FROM ${video}
               JOIN ${product} ON ${brand.id} = ${product.brandId}
+              JOIN ${category} ON ${product.categoryId} = ${category.id}
               WHERE ${video.productId} = ${product.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${product.productSlug}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
+              GROUP BY ${category.categoryData}, ${product.productSlug}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
             ) subq
           )`,
         })
@@ -203,6 +205,55 @@ export async function handleGetBrandsWithVideos(
     };
   } catch (error) {
     console.error('Error fetching brands:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
+export async function getBrandProductsWithVideos(brandId: string, lang: SupportedLanguage) {
+  try {
+    const [result] = await db
+      .select({
+        id: product.id,
+        productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+        productSlug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
+
+        info: {
+          reviewsCount: sql<number>`COUNT(${video.id})`,
+        },
+
+        // videos: sql<string>`(
+        //   SELECT json_agg(video_data)
+        //   FROM (
+        //     SELECT json_build_object(
+        //       'id', ${video.id},
+        //       'playbackId', ${video.playbackId},
+        //       'videoUrl', ${video.videoUrl},
+        //       'resolution', ${video.resolution},
+        //       'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
+        //       'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
+        //       'categorySlug', COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug'),
+        //       'brandId', ${product.brandId},
+        //       'brandName', ${brand.brandName},
+        //       'brandLogo', ${brand.logo},
+        //       'brandSlug', ${brand.slug},
+        //       'rating', ${video.starRating}
+        //     ) as video_data
+        //     FROM ${video}
+        //     JOIN ${product} ON ${brand.id} = ${product.brandId}
+        //     JOIN ${category} ON ${product.categoryId} = ${category.id}
+        //     WHERE ${video.productId} = ${product.id}
+        //     GROUP BY ${category.categoryData}, ${product.productSlug}, ${product.brandId}, ${product.productName}, ${video.id}
+        //   ) subq
+        // )`,
+      })
+      .from(product)
+      .leftJoin(video, eq(video.productId, product.id))
+      .where(eq(product.brandId, brandId))
+      .groupBy(product.id);
+
+    return result;
+  } catch (error) {
+    console.error('Error fetching brand products:', error);
     throw new Error((error as Error).message);
   }
 }
