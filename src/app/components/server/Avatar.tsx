@@ -41,7 +41,6 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
       </span>
     ),
   };
-
   return (
     <div
       className={clsx(

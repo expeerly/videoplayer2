@@ -123,7 +123,6 @@ export async function handleGetCategoryWithVideos(
   { categories, brands }: FilterParams
 ) {
   try {
-    console.log({ page, limit, videoCount, random, lang, categories, brands });
     const offset = (page - 1) * limit;
 
     // Create filter conditions
@@ -175,19 +174,19 @@ export async function handleGetCategoryWithVideos(
                 'resolution', ${video.resolution},
                 'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
                 'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
-                'categorySlug', ${category.categoryData}->${lang}->'urlSlug',
                 'brandId', ${product.brandId},
                 'brandName', ${brand.brandName},
                 'brandLogo', ${brand.logo},
                 'brandSlug', ${brand.slug},
-                'rating', ${video.starRating},
+                'rating', ${video.starRating}
               ) as video_data
               FROM ${video}
-              JOIN ${product} ON ${video.productId} = ${product.id}
+              JOIN ${product} ON ${category.id} = ${product.categoryId}
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
-              WHERE ${video.productId} = ${product.id}
+              WHERE ${video.productId} = ${product.id} AND ${product.categoryId} = ${category.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
+              GROUP BY ${brand.slug}, ${brand.logo}, ${product.brandId}, ${product.productSlug}, ${product.productName}, ${brand.brandName}, ${video.id}
+              LIMIT ${videoCount}
             ) subq
           )`,
         })
