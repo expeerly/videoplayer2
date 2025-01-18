@@ -188,3 +188,30 @@ export async function handleGetCreatorWithVideos(
     throw new Error((error as Error).message);
   }
 }
+
+// export async function getCreatorByIdWithVideos(creatorId: string, lang: SupportedLanguage) {
+//   try {
+//     const [creatorInfo, creatorVideos] = await db
+//       .select({
+//         id: creator.id,
+//         name: creator.creatorName,
+//         logo: creator.profilePictureURL,
+//         bio: creator.bio,
+//         age: creator.age,
+//         location: creator.location,
+//         country: creator.country,
+//       })
+//       .from(creator)
+//       .where(eq(creator.id, creatorId))
+//       .groupBy(creator.id)
+//       .orderBy(creator.creatorName);
+
+//     return {
+//       info: creatorInfo,
+//       rows: creatorVideos,
+//     };
+//   } catch (error) {
+//     console.error('Error fetching brands by category:', error);
+//     throw new Error((error as Error).message);
+//   }
+// }

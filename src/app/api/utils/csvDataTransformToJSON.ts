@@ -71,7 +71,7 @@ const transformers = {
         siteTitle: 'Sitetitle',
         metaDesc: 'Meta description',
         brandBody: 'Teaser Brand body text',
-        brandFooter: 'Teaser Brand body text',
+        brandFooter: 'Footer Brand SEO text',
       }),
     };
   },
@@ -86,6 +86,8 @@ const transformers = {
         urlSlug: 'URL slug',
         siteTitle: 'Sitetitle',
         metaDesc: 'Meta description',
+        bodyText: 'Teaser body text',
+        footerText: 'Footer SEO text',
       }),
     };
   },

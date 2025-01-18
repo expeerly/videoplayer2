@@ -73,7 +73,7 @@ export const VideoDetails: FunctionComponent = async () => {
     <div className="w-full flex flex-col md:max-w-[497px]">
       <section className="mb-5">
         <SectionHeading className="mb-2 ">
-          {t('reviewSummary')} {`{{productname}}`}
+          {t('reviewSummary')} {`{{productame}}`}
         </SectionHeading>
         <p className="text-grey-700 font-normal text-base">{videoDetails?.summary}</p>
       </section>

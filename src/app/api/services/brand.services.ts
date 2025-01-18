@@ -209,29 +209,40 @@ export async function handleGetBrandsWithVideos(
   }
 }
 
+export async function getBrandInfoWithSlug(brandSlug: string, lang: SupportedLanguage) {
+  try {
+    const [data] = await db
+      .select({
+        id: brand.id,
+        logo: brand.logo,
+        name: brand.brandName,
+        slug: brand.slug,
+        metaDesc: sql<string>`COALESCE(${brand.brandData}->${lang}->>'metaDesc', ${brand.brandData}->'en'->>'metaDesc')`,
+        bodyText: sql<string>`COALESCE(${brand.brandData}->${lang}->>'brandBody', ${brand.brandData}->'en'->>'brandBody')`,
+        siteTitle: sql<string>`COALESCE(${brand.brandData}->${lang}->>'siteTitle', ${brand.brandData}->'en'->>'siteTitle')`,
+        footerText: sql<string>`COALESCE(${brand.brandData}->${lang}->>'brandFooter', ${brand.brandData}->'en'->>'brandFooter')`,
+      })
+      .from(brand)
+      .where(eq(brand.slug, brandSlug))
+      .limit(1);
+
+    if (!data) {
+      throw new Error('Brand not found');
+    }
+    return data;
+  } catch (error) {
+    console.error('Error fetching brand info:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
 export async function getBrandProductsWithVideos(
   brandId: string,
   lang: SupportedLanguage,
   { page, limit }: PaginationParams
 ) {
   try {
-    const [[brandInfo], totalProducts, products] = await Promise.all([
-      db
-        .select({
-          id: brand.id,
-          logo: brand.logo,
-          name: brand.brandName,
-          slug: brand.slug,
-          websiteURL: brand.websiteURL,
-          meta: {
-            metaDesc: sql<string>`COALESCE(${brand.brandData}->${lang}->>'metaDesc', ${brand.brandData}->'en'->>'metaDesc')`,
-            brandBody: sql<string>`COALESCE(${brand.brandData}->${lang}->>'brandBody', ${brand.brandData}->'en'->>'brandBody')`,
-            siteTitle: sql<string>`COALESCE(${brand.brandData}->${lang}->>'siteTitle', ${brand.brandData}->'en'->>'siteTitle')`,
-            brandFooter: sql<string>`COALESCE(${brand.brandData}->${lang}->>'brandFooter', ${brand.brandData}->'en'->>'brandFooter')`,
-          },
-        })
-        .from(brand)
-        .where(eq(brand.id, brandId)),
+    const [totalProducts, products] = await Promise.all([
       db
         .select({
           count: sql<number>`COUNT(DISTINCT ${product.id})`,
@@ -292,7 +303,6 @@ export async function getBrandProductsWithVideos(
     ]);
 
     return {
-      pageInfo: brandInfo,
       total: totalProducts,
       rows: products,
     };

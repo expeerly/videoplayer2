@@ -46,10 +46,14 @@ export async function getCategoriesForSlider(
       .select({
         id: category.id,
         logo: category.logo,
-        categoryName: sql<string>`("categoryData" -> ${lang} ->> 'categoryName')`.as(
-          'categoryName'
-        ),
-        urlSlug: sql<string>`("categoryData" -> ${lang} ->> 'urlSlug')`.as('urlSlug'),
+        categoryName:
+          sql<string>`COALESCE("categoryData" -> ${lang} ->> 'categoryName', "categoryData" -> 'en' ->> 'categoryName')`.as(
+            'categoryName'
+          ),
+        urlSlug:
+          sql<string>`COALESCE("categoryData" -> ${lang} ->> 'urlSlug', "categoryData" -> 'en' ->> 'urlSlug')`.as(
+            'urlSlug'
+          ),
       })
       .from(category)
       .limit(20);
@@ -71,25 +75,27 @@ export async function getAllCategories(): Promise<Partial<Category>[]> {
         logo: category.logo,
         categoryData: sql<string>`jsonb_build_object(
           'de', jsonb_build_object(
-            'urlSlug', "categoryData"->'de'->>'urlSlug',
-            'categoryName', "categoryData"->'de'->>'categoryName'
+            'urlSlug', COALESCE("categoryData"->'de'->>'urlSlug', "categoryData"->'en'->>'urlSlug'),
+            'categoryName', COALESCE("categoryData"->'de'->>'categoryName', "categoryData"->'en'->>'categoryName')
           ),
           'en', jsonb_build_object(
-            'urlSlug', "categoryData"->'en'->>'urlSlug',
-            'categoryName', "categoryData"->'en'->>'categoryName'
+            'urlSlug', COALESCE("categoryData"->'en'->>'urlSlug', "categoryData"->'en'->>'urlSlug'),
+            'categoryName', COALESCE("categoryData"->'en'->>'categoryName', "categoryData"->'en'->>'categoryName')
           ),
           'fr', jsonb_build_object(
-            'urlSlug', "categoryData"->'fr'->>'urlSlug',
-            'categoryName', "categoryData"->'fr'->>'categoryName'
+            'urlSlug', COALESCE("categoryData"->'fr'->>'urlSlug', "categoryData"->'en'->>'urlSlug'),
+            'categoryName', COALESCE("categoryData"->'fr'->>'categoryName', "categoryData"->'en'->>'categoryName')
           ),
           'it', jsonb_build_object(
-            'urlSlug', "categoryData"->'it'->>'urlSlug',
-            'categoryName', "categoryData"->'it'->>'categoryName'
+            'urlSlug', COALESCE("categoryData"->'it'->>'urlSlug', "categoryData"->'en'->>'urlSlug'),
+            'categoryName', COALESCE("categoryData"->'it'->>'categoryName', "categoryData"->'en'->>'categoryName')
           )
         )`,
       })
       .from(category)
-      .orderBy(sql<string>`("categoryData" -> 'en' ->> 'categoryName')`);
+      .orderBy(
+        sql<string>`COALESCE("categoryData" -> 'en' ->> 'categoryName', "categoryData" -> 'en' ->> 'categoryName')`
+      );
   } catch (error) {
     console.error('Error fetching categories:', error);
     throw new Error((error as Error).message);
@@ -118,7 +124,7 @@ export async function getCategoryCount(): Promise<{ count: number }> {
  * @returns {Promise<{ rows: Partial<Category>[], total: number }>} Paginated categories with total count
  */
 export async function handleGetCategoryWithVideos(
-  { page, limit, videoCount, random }: PaginationParams,
+  { page, limit }: PaginationParams,
   lang: SupportedLanguage,
   { categories, brands }: FilterParams
 ) {
@@ -147,14 +153,13 @@ export async function handleGetCategoryWithVideos(
       ),
       ...(categoryFilter ? [categoryFilter] : []),
     ];
-
     const [categoriesResult, totalCount] = await Promise.all([
       db
         .select({
           id: category.id,
           logo: category.logo,
-          name: sql<string>`("categoryData" -> ${lang} ->> 'categoryName')`.as('categoryName'),
-          slug: sql<string>`("categoryData" -> ${lang} ->> 'urlSlug')`.as('urlSlug'),
+          name: sql<string>`COALESCE("categoryData" -> ${lang} ->> 'categoryName', "categoryData" -> 'en' ->> 'categoryName')`,
+          slug: sql<string>`COALESCE("categoryData" -> ${lang} ->> 'urlSlug', "categoryData" -> 'en' ->> 'urlSlug')`,
           info: {
             reviewsCount: sql<number>`(
               SELECT COUNT(*)
@@ -186,8 +191,7 @@ export async function handleGetCategoryWithVideos(
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
               WHERE ${video.productId} = ${product.id} AND ${product.categoryId} = ${category.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${brand.slug}, ${brand.logo}, ${product.brandId}, ${product.productSlug}, ${product.productName}, ${brand.brandName}, ${video.id}
-              LIMIT ${videoCount}
+              GROUP BY ${video.id}
             ) subq
           )`,
         })
@@ -198,7 +202,7 @@ export async function handleGetCategoryWithVideos(
         .limit(limit)
         .offset(offset)
         .orderBy(
-          random ? sql`RANDOM()` : sql<string>`("categoryData" -> ${lang} ->> 'categoryName')`
+          sql<string>`COALESCE("categoryData" -> ${lang} ->> 'categoryName', "categoryData" -> 'en' ->> 'categoryName')`
         ),
 
       db
@@ -217,6 +221,117 @@ export async function handleGetCategoryWithVideos(
     };
   } catch (error) {
     console.error('Error fetching categories:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
+export async function getCategoryInfoWithSlug(categorySlug: string, lang: SupportedLanguage) {
+  try {
+    const [data] = await db
+      .select({
+        id: category.id,
+        logo: category.logo,
+        name: sql<string>`COALESCE("categoryData" -> ${lang} ->> 'categoryName', "categoryData" -> 'en' ->> 'categoryName')`.as(
+          'categoryName'
+        ),
+        slug: sql<string>`COALESCE("categoryData" -> ${lang} ->> 'urlSlug', "categoryData" -> 'en' ->> 'urlSlug')`.as(
+          'urlSlug'
+        ),
+        siteTitle:
+          sql<string>`COALESCE("categoryData" -> ${lang} ->> 'siteTitle', "categoryData" -> 'en' ->> 'siteTitle')`.as(
+            'siteTitle'
+          ),
+        metaDesc:
+          sql<string>`COALESCE("categoryData" -> ${lang} ->> 'metaDesc', "categoryData" -> 'en' ->> 'metaDesc')`.as(
+            'metaDesc'
+          ),
+        bodyText:
+          sql<string>`COALESCE("categoryData" -> ${lang} ->> 'bodyText', "categoryData" -> 'en' ->> 'bodyText')`.as(
+            'bodyText'
+          ),
+        footerText:
+          sql<string>`COALESCE("categoryData" -> ${lang} ->> 'footerText', "categoryData" -> 'en' ->> 'footerText')`.as(
+            'footerText'
+          ),
+      })
+      .from(category)
+      .where(
+        sql`COALESCE("categoryData" -> ${lang} ->> 'urlSlug', "categoryData" -> 'en' ->> 'urlSlug') = ${categorySlug}`
+      )
+      .limit(1);
+
+    if (!data) {
+      throw new Error('Category not found');
+    }
+    return data;
+  } catch (error) {
+    console.error('Error fetching category info:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
+export async function getBrandsByCategoryIdWithVideos(
+  categoryId: string,
+  lang: SupportedLanguage,
+  { page, limit }: PaginationParams
+) {
+  try {
+    const [totalBrands, brands] = await Promise.all([
+      db
+        .select({
+          count: sql<number>`COUNT(DISTINCT ${brand.id})`,
+        })
+        .from(brand)
+        .innerJoin(product, eq(product.brandId, brand.id))
+        .where(eq(product.categoryId, Number(categoryId)))
+        .then(result => result[0].count),
+      db
+        .select({
+          id: brand.id,
+          name: brand.brandName,
+          logo: brand.logo,
+          slug: brand.slug,
+          info: {
+            reviewsCount: sql<number>`COUNT(DISTINCT ${video.id})`,
+            rating: sql<number>`ROUND(AVG(${video.starRating})::numeric, 1)`,
+          },
+          videos: sql<string>`(
+            SELECT json_agg(
+              json_build_object(
+                'id', ${video.id},
+                'playbackId', ${video.playbackId},
+                'videoUrl', ${video.videoUrl},
+                'resolution', ${video.resolution},
+                'rating', ${video.starRating},
+                'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
+              'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
+              'categorySlug', COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug')
+              )
+            )
+            FROM ${video}
+            JOIN ${product} ON ${video.productId} = ${product.id}
+            JOIN ${category} ON ${product.categoryId} = ${category.id}
+            WHERE ${product.brandId} = ${brand.id}
+            AND ${product.categoryId} = ${Number(categoryId)}
+          )`,
+        })
+        .from(brand)
+        .innerJoin(product, eq(product.brandId, brand.id))
+        .innerJoin(video, eq(video.productId, product.id))
+        .innerJoin(category, eq(category.id, product.categoryId))
+        .where(eq(product.categoryId, Number(categoryId)))
+        .groupBy(brand.id)
+        .orderBy(brand.brandName)
+        .limit(limit)
+        .offset((page - 1) * limit),
+    ]);
+
+    return {
+      total: totalBrands,
+      rows: brands,
+    };
+  } catch (error) {
+    console.error('Error fetching brands by category:', error);
     throw new Error((error as Error).message);
   }
 }
