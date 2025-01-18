@@ -73,7 +73,6 @@ const transformers = {
         brandBody: 'Teaser Brand body text',
         brandFooter: 'Teaser Brand body text',
       }),
-      rating: Number(getField('Rating', false)),
     };
   },
 

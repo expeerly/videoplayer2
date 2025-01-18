@@ -18,7 +18,6 @@ export const brand = pgTable('brand', {
   slug: text('slug').notNull().unique(),
   logo: text('logo'),
   websiteURL: text('websiteURL'),
-  rating: real('rating').default(0.0).notNull(),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,
@@ -87,7 +86,6 @@ export const product = pgTable('product', {
   categoryId: integer('categoryId').references(() => category.id),
   globalTradeItemNumber: text('globalTradeItemNumber'),
   vendorProductNumber: text('vendorProductNumber'),
-  rating: real('rating').default(0.0),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,

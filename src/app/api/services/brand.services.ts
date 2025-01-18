@@ -209,49 +209,93 @@ export async function handleGetBrandsWithVideos(
   }
 }
 
-export async function getBrandProductsWithVideos(brandId: string, lang: SupportedLanguage) {
+export async function getBrandProductsWithVideos(
+  brandId: string,
+  lang: SupportedLanguage,
+  { page, limit }: PaginationParams
+) {
   try {
-    const [result] = await db
-      .select({
-        id: product.id,
-        productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
-        productSlug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
+    const [[brandInfo], totalProducts, products] = await Promise.all([
+      db
+        .select({
+          id: brand.id,
+          logo: brand.logo,
+          name: brand.brandName,
+          slug: brand.slug,
+          websiteURL: brand.websiteURL,
+          meta: {
+            metaDesc: sql<string>`COALESCE(${brand.brandData}->${lang}->>'metaDesc', ${brand.brandData}->'en'->>'metaDesc')`,
+            brandBody: sql<string>`COALESCE(${brand.brandData}->${lang}->>'brandBody', ${brand.brandData}->'en'->>'brandBody')`,
+            siteTitle: sql<string>`COALESCE(${brand.brandData}->${lang}->>'siteTitle', ${brand.brandData}->'en'->>'siteTitle')`,
+            brandFooter: sql<string>`COALESCE(${brand.brandData}->${lang}->>'brandFooter', ${brand.brandData}->'en'->>'brandFooter')`,
+          },
+        })
+        .from(brand)
+        .where(eq(brand.id, brandId)),
+      db
+        .select({
+          count: sql<number>`COUNT(DISTINCT ${product.id})`,
+        })
+        .from(product)
+        .innerJoin(video, eq(video.productId, product.id))
+        .where(
+          and(
+            eq(product.brandId, brandId),
+            sql`EXISTS (SELECT 1 FROM ${video} WHERE ${video.productId} = ${product.id})`
+          )
+        )
+        .then(result => result[0].count),
+      db
+        .select({
+          id: product.id,
+          productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          info: {
+            reviewsCount: sql<number>`COUNT(${video.id})`,
+            rating: sql<number>`ROUND(AVG(${video.starRating})::numeric, 1)`,
+          },
+          videos: sql<string>`(
+          SELECT json_agg(video_data)
+          FROM (
+            SELECT json_build_object(
+              'id', ${video.id},
+              'playbackId', ${video.playbackId},
+              'videoUrl', ${video.videoUrl},
+              'resolution', ${video.resolution},
+              'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
+              'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
+              'categorySlug', COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug'),
+              'brandId', ${product.brandId},
+              'brandName', ${brand.brandName},
+              'brandLogo', ${brand.logo},
+              'brandSlug', ${brand.slug},
+              'rating', ${video.starRating}
+            ) as video_data
+            FROM ${video}
+            JOIN ${brand} ON ${product.brandId} = ${brand.id}
+            JOIN ${category} ON ${product.categoryId} = ${category.id}
+            WHERE ${video.productId} = ${product.id} AND ${product.brandId} = ${brandId}
+            GROUP BY ${brand.brandName}, ${product.productName}, ${product.productSlug}, ${category.categoryData}, ${product.brandId}, ${brand.logo}, ${brand.slug}, ${video.id}
+          ) subq
+        )`,
+        })
+        .from(product)
+        .innerJoin(video, eq(video.productId, product.id))
+        .where(
+          and(
+            eq(product.brandId, brandId),
+            sql`EXISTS (SELECT 1 FROM ${video} WHERE ${video.productId} = ${product.id})`
+          )
+        )
+        .limit(limit)
+        .offset((page - 1) * limit)
+        .groupBy(product.id),
+    ]);
 
-        info: {
-          reviewsCount: sql<number>`COUNT(${video.id})`,
-        },
-
-        // videos: sql<string>`(
-        //   SELECT json_agg(video_data)
-        //   FROM (
-        //     SELECT json_build_object(
-        //       'id', ${video.id},
-        //       'playbackId', ${video.playbackId},
-        //       'videoUrl', ${video.videoUrl},
-        //       'resolution', ${video.resolution},
-        //       'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
-        //       'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
-        //       'categorySlug', COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug'),
-        //       'brandId', ${product.brandId},
-        //       'brandName', ${brand.brandName},
-        //       'brandLogo', ${brand.logo},
-        //       'brandSlug', ${brand.slug},
-        //       'rating', ${video.starRating}
-        //     ) as video_data
-        //     FROM ${video}
-        //     JOIN ${product} ON ${brand.id} = ${product.brandId}
-        //     JOIN ${category} ON ${product.categoryId} = ${category.id}
-        //     WHERE ${video.productId} = ${product.id}
-        //     GROUP BY ${category.categoryData}, ${product.productSlug}, ${product.brandId}, ${product.productName}, ${video.id}
-        //   ) subq
-        // )`,
-      })
-      .from(product)
-      .leftJoin(video, eq(video.productId, product.id))
-      .where(eq(product.brandId, brandId))
-      .groupBy(product.id);
-
-    return result;
+    return {
+      pageInfo: brandInfo,
+      total: totalProducts,
+      rows: products,
+    };
   } catch (error) {
     console.error('Error fetching brand products:', error);
     throw new Error((error as Error).message);
