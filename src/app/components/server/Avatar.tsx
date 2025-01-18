@@ -35,6 +35,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
       <span className="text-grey-700 font-medium">
         {alt
           .split(' ')
+          .slice(0, 2)
           .map(word => word[0])
           .join('')
           .toUpperCase()}

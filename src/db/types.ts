@@ -97,3 +97,19 @@ export type Grid = {
   rows: GridData[];
   total: number;
 };
+
+export type PageInfo = {
+  id: string;
+  logo: string;
+  meta: {
+    brandBody: string;
+    brandFooter: string;
+    metaDesc: string;
+    siteTitle: string;
+  };
+  name: string;
+  slug: string;
+  websiteURL: string;
+};
+
+export type ProfileResponse = Grid & { pageInfo: PageInfo };

@@ -34,6 +34,8 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
 }) => {
   const { t } = await getDictionary();
 
+  console.log({ title });
+
   return (
     <>
       <Link

@@ -8,6 +8,7 @@ import {
   Languages,
   AllBrandssData,
   Grid,
+  ProfileResponse,
 } from '@/src/db/types';
 
 import { headers } from 'next/headers';
@@ -130,6 +131,25 @@ export async function getGridVideos(
       random,
       ...(filter?.category && { category: filter.category }),
       ...(filter?.brand && { brand: filter.brand }),
+    },
+  });
+}
+
+export async function getProfile(
+  lang: Languages,
+  gridType: 'category' | 'brand' | 'creator',
+  id: number | string,
+  page: number = 1,
+  limit: number = 4
+): Promise<{
+  data: ProfileResponse;
+  error?: string;
+}> {
+  return apiRequest<ProfileResponse>(`/${gridType}/${id}`, {
+    lang,
+    queryParams: {
+      page,
+      limit,
     },
   });
 }

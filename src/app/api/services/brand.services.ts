@@ -248,7 +248,7 @@ export async function getBrandProductsWithVideos(
       db
         .select({
           id: product.id,
-          productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
           info: {
             reviewsCount: sql<number>`COUNT(${video.id})`,
             rating: sql<number>`ROUND(AVG(${video.starRating})::numeric, 1)`,
