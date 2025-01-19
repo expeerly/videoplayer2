@@ -2,27 +2,57 @@ import { Button } from '@/src/app/components/client/Button';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { Avatar } from '@/src/app/components/server/Avatar';
 import { ShareIcon } from '@/src/assets/icons';
-import { NextPage } from 'next';
+import { Metadata, NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { getDictionary } from '@/src/lib/dictionary';
+import { Languages } from '@/src/db/types';
+import { getPageInfo, getProfile } from '@/src/app/actions/actions';
+import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 
-const sampleText = `
-Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
-`.trim();
+type PageProps = {
+  params: Promise<{
+    locale: Languages;
+    slug: string;
+    categoryProfile: string;
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
-const Page: NextPage = async () => {
-  const t = await getDictionary();
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, categoryProfile } = await params;
+  const { data } = await getPageInfo(locale, 'category', categoryProfile);
+
+  return {
+    title: data?.siteTitle,
+    description: data?.metaDesc,
+  };
+}
+
+const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
+  const { t } = await getDictionary();
+
+  const { locale, categoryProfile } = await params;
+  const page = Number((await searchParams).page) || 1;
+
+  const { data } = await getPageInfo(locale, 'category', categoryProfile);
+
+  const { data: categoryVideos } = await getProfile(locale, 'category', data.id!, page);
+
   return (
     <div className="w-full bg-white">
       <div className=" w-full mx-auto  md:max-w-[532px] pt-5 md:pt-10">
         <section>
           <div className="px-5 md:px-0">
             <div className="flex gap-4 mb-6">
-              <Avatar className="my-auto flex h-10 w-10 md:h-14 md:w-14 md:m-0" alt="Dyson" />
-              <div className="flex flex-1 flex-col gap-0.5 md:gap-3">
-                <PageHeading>Beauty & Personal Care Video Reviews</PageHeading>
-                <p className="text-gray-500">{'1,218 reviews'}</p>
+              <Avatar
+                className="my-auto flex h-10 w-10 md:h-14 md:w-14 md:m-0"
+                alt={data.name}
+                src={data.logo}
+              />
+              <div className="flex flex-1 flex-col gap-0.5 md:gap-0">
+                <PageHeading>{data.name}</PageHeading>
+                <p className="text-gray-500">{`${categoryVideos.total} reviews`}</p>
               </div>
               <div
                 className={
@@ -40,20 +70,31 @@ const Page: NextPage = async () => {
                 >
                   <ShareIcon />
                 </Button>
-                <p className="text-grey-700 text-xs font-bold">
-                  {t.messages.dynamic_texts.share.label}
-                </p>
+                <p className="text-grey-700 text-xs font-bold">Share</p>
               </div>
             </div>
-            <LongDescription text={sampleText} />
+            <LongDescription text={data.bodyText} />
           </div>
         </section>
 
-        <SEOSection
-          heading="SEO text lorem ipsum"
-          content=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pretium dictum felis, at
-            porttitor nisi accumsan et. Curabitur volutpat risus at nisi finibus, eget suscipit leo."
+        <PaginationContainer
+          data={categoryVideos}
+          header={{
+            dataType: 'brand',
+            variant: 'secondary',
+          }}
+          ctaBlock={{
+            heading: t('cta_block_all_brands_categories.title'),
+            desc: t('cta_block_all_brands_categories.desc'),
+            button: {
+              label: t('learn_more.label'),
+              ariaLabel: t('learn_more.aria_label'),
+              href: 'https://www.get.expeerly.com/for-brands',
+            },
+          }}
         />
+
+        <SEOSection heading="SEO text lorem ipsum" content={data.footerText} />
       </div>
     </div>
   );

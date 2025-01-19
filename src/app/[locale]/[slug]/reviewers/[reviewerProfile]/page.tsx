@@ -1,4 +1,4 @@
-import { getCategories } from '@/src/app/actions/actions';
+import { getCategories, getProfile } from '@/src/app/actions/actions';
 import { Button } from '@/src/app/components/client/Button';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
@@ -18,28 +18,46 @@ type PageProps = {
   params: Promise<{
     locale: Languages;
     slug: string;
+    reviewerProfile: string;
   }>;
 };
 
 const Page: NextPage<PageProps> = async ({ params }) => {
-  const { locale } = await params;
+  const { locale, reviewerProfile } = await params;
   const { t } = await getDictionary();
 
   const { data: categories } = await getCategories(locale);
+  const { data } = await getProfile(locale, 'creator', reviewerProfile);
+
+  const slides = categories
+    .filter(category =>
+      data.interests.some(interest => interest.categoryId === Number(category.id))
+    )
+    .map(i => ({
+      name: i.categoryName,
+      icon: i.logo,
+      slug: i.urlSlug,
+    }));
 
   return (
     <div className="w-full bg-white">
       <div className="px-5 w-full mx-auto md:max-w-[716px] pt-5 md:pt-10 lg:px-0">
         <section>
           <div className="flex gap-4">
-            <Avatar className="flex h-[50px] w-[50px] md:h-28 md:w-28 md:m-0" alt="Dyson" />
+            <Avatar
+              className="flex h-[50px] w-[50px] md:h-28 md:w-28 md:m-0"
+              alt={data.name}
+              src={data.logo}
+            />
             <div className="flex flex-1 flex-col gap-1">
-              <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 ">Maria C.</h1>
+              <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 ">{data.name}</h1>
               <div className="mb-3">
-                <p className="text-grey-500">38, Zurich (CH)</p>
+                <p className="text-grey-500">
+                  {data.age} {data.location}
+                </p>
               </div>
               <div className="hidden md:block">
-                <LongDescription text={sampleText} />
+                <LongDescription text={data.bio!} />
               </div>
             </div>
             <div
@@ -69,22 +87,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         <section className="pt-5 md:pt-[50px]">
           <h3 className="text-lg font-extrabold mb-4 text-grey-700 md:hidden">{t('interests')}</h3>
           <div className="hidden md:block">
-            <Slider
-              slides={categories.map(i => ({
-                name: i.categoryName,
-                icon: i.logo,
-                slug: i.urlSlug,
-              }))}
-            />
+            <Slider slides={slides} />
           </div>
           <div className="md:hidden">
-            <MobileSlider
-              slides={categories.map(i => ({
-                name: i.categoryName,
-                icon: i.logo,
-                slug: i.urlSlug,
-              }))}
-            />
+            <MobileSlider slides={slides} />
           </div>
         </section>
 
@@ -95,6 +101,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               cardClassName:
                 'min-w-[167px] w-[167px] mobileS:min-w-[167px] mobileS:w-[167px] mobileM:min-w-[167px] mobileM:w-[167px] mobileL:min-w-[167px] mobileL:w-[167px] mid-tablet:min-w-[167px] mid-tablet:w-[167px] sm:min-w-[167px] sm:w-[167px] md:min-w-[167px] md:w-[167px] md:max-w-[167px]',
             }}
+            data={data}
             hasProfileHeader={false}
           />
         </section>

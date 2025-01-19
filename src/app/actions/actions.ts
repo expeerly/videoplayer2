@@ -9,6 +9,7 @@ import {
   AllBrandssData,
   Grid,
   ProfileResponse,
+  PageInfo,
 } from '@/src/db/types';
 
 import { headers } from 'next/headers';
@@ -19,6 +20,7 @@ async function createApiUrl(path: string, queryParams?: Record<string, string | 
   const protocol = headersList.get('x-forwarded-proto') || 'http';
 
   const url = new URL(`${protocol}://${host}/api${path}`);
+  // const url = new URL(`http://192.168.100.54:3000/api${path}`);
 
   if (queryParams) {
     Object.entries(queryParams).forEach(([key, value]) => {
@@ -135,17 +137,33 @@ export async function getGridVideos(
   });
 }
 
-export async function getProfile(
+export async function getPageInfo(
   lang: Languages,
-  gridType: 'category' | 'brand' | 'creator',
+  pageType: 'category' | 'brand',
+  slug: string
+): Promise<{
+  data: PageInfo;
+  error?: string;
+}> {
+  return apiRequest<PageInfo>(`/${pageType}/pageInfo`, {
+    lang,
+    queryParams: {
+      slug,
+    },
+  });
+}
+
+export async function getProfile<T extends 'category' | 'brand' | 'creator'>(
+  lang: Languages,
+  gridType: T,
   id: number | string,
   page: number = 1,
   limit: number = 4
 ): Promise<{
-  data: ProfileResponse;
+  data: T extends 'creator' ? ProfileResponse : Grid;
   error?: string;
 }> {
-  return apiRequest<ProfileResponse>(`/${gridType}/${id}`, {
+  return apiRequest<T extends 'creator' ? ProfileResponse : Grid>(`/${gridType}/${id}`, {
     lang,
     queryParams: {
       page,

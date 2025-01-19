@@ -7,9 +7,10 @@ import { NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { Languages } from '@/src/db/types';
-import { getAllBrands, getProfile } from '@/src/app/actions/actions';
+import { getPageInfo, getProfile } from '@/src/app/actions/actions';
 import { Metadata } from 'next';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
+import { getDictionary } from '@/src/lib/dictionary';
 
 type PageProps = {
   params: Promise<{
@@ -22,26 +23,23 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, brandProfile } = await params;
-  const { data: allBrands } = await getAllBrands(locale);
-  const brandId = allBrands.find(brand => brand.slug === brandProfile)?.id;
-  const { data: brand } = await getProfile(locale, 'brand', brandId!, 1);
+  const { data } = await getPageInfo(locale, 'brand', brandProfile);
 
   return {
-    title: brand.pageInfo.name,
-    description: brand.pageInfo.meta.brandBody,
+    title: data?.siteTitle,
+    description: data?.metaDesc,
   };
 }
 
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
+  const { t } = await getDictionary();
+
   const { locale, brandProfile } = await params;
   const page = Number((await searchParams).page) || 1;
-  const { data: allBrands } = await getAllBrands(locale);
 
-  const brandId = allBrands.find(brand => brand.slug === brandProfile)?.id;
+  const { data } = await getPageInfo(locale, 'brand', brandProfile);
 
-  const { data: brand } = await getProfile(locale, 'brand', brandId!, page);
-
-  console.log({ brand });
+  const { data: brand } = await getProfile(locale, 'brand', data.id!, page);
 
   return (
     <div className="w-full bg-white">
@@ -51,11 +49,11 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             <div className="flex gap-4 mb-6">
               <Avatar
                 className="flex h-10 w-10 min-w-10 md:h-14 md:w-14 md:min-w-14 my-auto md:m-0"
-                alt={brand.pageInfo.name}
-                src={brand.pageInfo.logo}
+                alt={data.name}
+                src={data.logo}
               />
               <div className="flex flex-1 flex-col ">
-                <PageHeading>{brand.pageInfo.name}</PageHeading>
+                <PageHeading>{data.name}</PageHeading>
                 <div className="flex gap-1">
                   <StarRating rating={4.5} />
                   <p className="text-grey-500">{'(1,218)'}</p>
@@ -80,28 +78,28 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
                 <p className="text-grey-700 text-xs font-bold">Share</p>
               </div>
             </div>
-            <LongDescription text={brand.pageInfo.meta.brandBody} />
+            <LongDescription text={data?.bodyText} />
           </div>
         </section>
 
         <PaginationContainer
-          data={{ rows: brand.rows, total: brand.total }}
+          data={{ rows: brand?.rows, total: brand?.total }}
           header={{
             dataType: 'brand',
             variant: 'secondary',
           }}
           ctaBlock={{
-            heading: '',
-            desc: '',
+            heading: t('cta_block_all_brands_categories.title'),
+            desc: t('cta_block_all_brands_categories.desc'),
             button: {
-              label: '',
-              ariaLabel: '',
-              href: undefined,
+              label: t('learn_more.label'),
+              ariaLabel: t('learn_more.aria_label'),
+              href: 'https://www.get.expeerly.com/for-brands',
             },
           }}
         />
 
-        <SEOSection heading=" SEO text lorem ipsum" content={brand.pageInfo.meta.brandFooter} />
+        <SEOSection heading=" SEO text lorem ipsum" content={data?.footerText} />
       </div>
     </div>
   );

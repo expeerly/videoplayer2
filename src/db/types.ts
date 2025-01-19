@@ -101,15 +101,22 @@ export type Grid = {
 export type PageInfo = {
   id: string;
   logo: string;
-  meta: {
-    brandBody: string;
-    brandFooter: string;
-    metaDesc: string;
-    siteTitle: string;
-  };
+  bodyText: string;
+  footerText: string;
+  metaDesc: string;
+  siteTitle: string;
   name: string;
   slug: string;
   websiteURL: string;
 };
 
-export type ProfileResponse = Grid & { pageInfo: PageInfo };
+export type InterestsCategory = {
+  categoryId: number;
+  categoryName: string | null;
+  categorySlug: string;
+};
+
+export type ProfileResponse = GridData &
+  Info & {
+    interests: InterestsCategory[];
+  };

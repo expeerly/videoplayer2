@@ -34,8 +34,6 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
 }) => {
   const { t } = await getDictionary();
 
-  console.log({ title });
-
   return (
     <>
       <Link
@@ -44,7 +42,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
             ? `/video-reviews/productcategory/${profileSlug}`
             : dataType === 'brand'
               ? `/video-reviews/brand/${profileSlug}`
-              : `/video-reviews/reviewer/${profileSlug}`
+              : `/video-reviews/reviewers/${profileSlug}`
         }
         aria-label={
           dataType === 'category'
