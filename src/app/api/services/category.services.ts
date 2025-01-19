@@ -191,7 +191,7 @@ export async function handleGetCategoryWithVideos(
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
               WHERE ${video.productId} = ${product.id} AND ${product.categoryId} = ${category.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${video.id}
+              GROUP BY ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productSlug}, ${product.productName}, ${video.id}
             ) subq
           )`,
         })

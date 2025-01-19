@@ -157,13 +157,15 @@ export async function handleGetCreatorWithVideos(
               JOIN ${category} ON ${product.categoryId} = ${category.id}
               WHERE ${video.creatorId} = ${creator.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
-              GROUP BY ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
+              GROUP BY ${category.categoryData}, ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
               LIMIT ${videoCount}
             ) subq
           )`,
         })
         .from(creator)
         .leftJoin(video, eq(video.creatorId, creator.id))
+        .leftJoin(creatorInterests, eq(creatorInterests.creatorId, creator.id))
+        .leftJoin(category, eq(category.id, creatorInterests.categoryId))
         .where(and(...whereConditions))
         .groupBy(creator.id)
         .limit(limit)
@@ -189,29 +191,66 @@ export async function handleGetCreatorWithVideos(
   }
 }
 
-// export async function getCreatorByIdWithVideos(creatorId: string, lang: SupportedLanguage) {
-//   try {
-//     const [creatorInfo, creatorVideos] = await db
-//       .select({
-//         id: creator.id,
-//         name: creator.creatorName,
-//         logo: creator.profilePictureURL,
-//         bio: creator.bio,
-//         age: creator.age,
-//         location: creator.location,
-//         country: creator.country,
-//       })
-//       .from(creator)
-//       .where(eq(creator.id, creatorId))
-//       .groupBy(creator.id)
-//       .orderBy(creator.creatorName);
+export async function getCreatorByIdWithVideos(creatorId: string, lang: SupportedLanguage) {
+  try {
+    const [creatorInfo] = await db
+      .select({
+        id: creator.id,
+        logo: creator.profilePictureURL,
+        name: creator.creatorName,
+        slug: creator.id,
+        age: creator.age,
+        location: creator.location,
+        bio: creator.bio,
+        interests: sql<string>`(
+            SELECT json_agg(interest_data)
+            FROM (
+              SELECT json_build_object(
+                'categoryId', ${category.id},
+                'categoryName', ${category.categoryData}->${lang}->>'title',
+                'categorySlug', ${category.categoryData}->${lang}->>'urlSlug'
+              ) as interest_data
+              FROM ${category}
+              JOIN ${creatorInterests} ON ${category.id} = ${creatorInterests.categoryId}
+              WHERE ${creatorInterests.creatorId} = ${creator.id}
+              GROUP BY ${category.id}, ${category.categoryData}
+            ) subq
+          )`,
+        videos: sql<string>`(
+            SELECT json_agg( video_data)
+            FROM (
+              SELECT json_build_object(
+                'id', ${video.id},
+                'playbackId', ${video.playbackId},
+                'videoUrl', ${video.videoUrl},
+                'resolution', ${video.resolution},
+                'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
+                'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
+                'categorySlug', COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug'),
+                'brandId', ${product.brandId},
+                'brandName', ${brand.brandName},
+                'brandLogo', ${brand.logo},
+                'brandSlug', ${brand.slug},
+                'rating', ${video.starRating}
+              ) as video_data
+              FROM ${video}
+              JOIN ${product} ON ${video.productId} = ${product.id}
+              JOIN ${brand} ON ${product.brandId} = ${brand.id}
+              JOIN ${category} ON ${product.categoryId} = ${category.id}
+              WHERE ${video.creatorId} = ${creator.id}
+              GROUP BY ${category.categoryData}, ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
+            ) subq
+          )`,
+      })
+      .from(creator)
+      .leftJoin(video, eq(video.creatorId, creator.id))
+      .where(eq(creator.id, creatorId))
+      .groupBy(creator.id)
+      .orderBy(creator.creatorName);
 
-//     return {
-//       info: creatorInfo,
-//       rows: creatorVideos,
-//     };
-//   } catch (error) {
-//     console.error('Error fetching brands by category:', error);
-//     throw new Error((error as Error).message);
-//   }
-// }
+    return creatorInfo;
+  } catch (error) {
+    console.error('Error fetching brands by category:', error);
+    throw new Error((error as Error).message);
+  }
+}
