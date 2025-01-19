@@ -3,7 +3,10 @@ import { getBrandProductsWithVideos } from '../../services/brand.services';
 import { handleError } from '../../utils/errorHandler';
 import { getLanguageFromRequest, getPaginationParams } from '../../utils/requestHelpers';
 
-export async function GET(request: NextRequest, { params }: { params: { brandId: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ brandId: string }> }
+) {
   const { brandId } = await params;
   const lang = getLanguageFromRequest(request);
   const pagination = getPaginationParams(request);

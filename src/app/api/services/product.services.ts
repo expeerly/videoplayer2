@@ -35,7 +35,6 @@ export const createProducts = async (input: ProductInputType[]) => {
           categoryId: sql`EXCLUDED."categoryId"`,
           globalTradeItemNumber: sql`EXCLUDED."globalTradeItemNumber"`,
           vendorProductNumber: sql`EXCLUDED."vendorProductNumber"`,
-          rating: sql`EXCLUDED."rating"`,
           updatedAt: sql`CURRENT_TIMESTAMP`,
         },
       })
