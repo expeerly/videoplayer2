@@ -65,7 +65,7 @@ const defaultMenuItems = (categroies: CategoryData[] = []): MenuItem[] => {
       key: 'categories',
       label: 'Categories',
       icon: CategoriesIcon,
-      items: categroies.map(i => ({
+      items: categroies?.map(i => ({
         label: i.categoryName,
         href: `/video-reviews/productcategory/${i.urlSlug}`,
       })),
