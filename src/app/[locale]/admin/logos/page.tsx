@@ -1,11 +1,13 @@
+import { getLogos } from '@/src/app/actions/actions';
 import { Button } from '@/src/app/components/client/Button';
 import { LogoutButton } from '@/src/app/components/client/LogoutButton';
 import { LogoGrid } from '@/src/app/components/server/LogoGrid';
 import { LeftChevronIcon } from '@/src/assets/icons';
 
 export default async function LogosPage() {
-  const brandsLogo = await fetch(`${process.env.NEXT_ENDPOINT_URL}/brand/logos`);
-  const { data } = await brandsLogo.json();
+  const { data } = await getLogos();
+
+  console.log({ logos: data });
 
   return (
     <div className="container mx-auto px-4 py-8 h-full">

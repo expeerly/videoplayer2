@@ -10,6 +10,7 @@ import {
   Grid,
   ProfileResponse,
   PageInfo,
+  Brand,
 } from '@/src/db/types';
 
 import { headers } from 'next/headers';
@@ -172,4 +173,18 @@ export async function getProfile<T extends 'category' | 'brand' | 'creator'>(
       limit,
     },
   });
+}
+
+export async function getCounts(): Promise<{
+  data: { [key: string]: number };
+  error?: string;
+}> {
+  return apiRequest<{ [key: string]: number }>(`/counts`, { lang: 'en' });
+}
+
+export async function getLogos(): Promise<{
+  data: Partial<Brand>[];
+  error?: string;
+}> {
+  return apiRequest<Partial<Brand>[]>(`/brand/logos`, { lang: 'en' });
 }

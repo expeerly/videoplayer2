@@ -40,7 +40,7 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
         const baseUrl =
           typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_ENDPOINT_URL;
         const apiURL = url.startsWith('http') ? url : `${baseUrl}/api${url}`;
-        console.log({ baseUrl });
+
         switch (method) {
           case 'post':
             response = await axios.post<ApiResponse<R>>(apiURL, payload);
