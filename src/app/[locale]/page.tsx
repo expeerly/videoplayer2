@@ -54,7 +54,7 @@ const HomePage: NextPage<PageProps> = async ({ params }) => {
           header={{
             dataType: 'brand',
           }}
-          data={brandVideos?.rows[0]}
+          data={brandVideos?.rows?.[0]}
         />
       </section>
       <CategoriesSlider categories={categories} />
@@ -63,7 +63,7 @@ const HomePage: NextPage<PageProps> = async ({ params }) => {
           header={{
             dataType: 'category',
           }}
-          data={categoriesVideo?.rows[0]}
+          data={categoriesVideo?.rows?.[0]}
         />
       </section>
       <ConversionSlider brands={randomBrand} />

@@ -18,7 +18,7 @@ export const CategoriesSlider: FunctionComponent<Props> = async ({ categories })
       <div className=" hidden w-full  md:flex">
         <Slider
           classNameStyle={{ rowContainerClassName: '!space-y-4' }}
-          slides={categories.map(i => ({ name: i.categoryName, icon: i.logo, slug: i.urlSlug }))}
+          slides={categories?.map(i => ({ name: i.categoryName, icon: i.logo, slug: i.urlSlug }))}
         />
       </div>
       <div className=" flex w-full md:hidden">
