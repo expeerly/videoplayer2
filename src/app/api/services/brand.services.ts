@@ -51,6 +51,7 @@ export async function handleGetBrand(selectedColumns: string[] = []): Promise<Br
       ...(selectedColumns.length > 0 && {
         columns,
         where: and(isNotNull(brand.brandName), isNotNull(brand.logo)),
+        orderBy: brand.brandName,
       }),
     });
 
