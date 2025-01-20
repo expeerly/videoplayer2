@@ -18,11 +18,9 @@ async function createApiUrl(path: string, queryParams?: Record<string, string | 
   // const host = headersList.get('host');
   // const protocol = headersList.get('x-forwarded-proto') || 'http';
 
-  const url = new URL(`${process.env.NEXT_ENDPOINT_URL}/${path}`);
+  const url = new URL(`${process.env.NEXT_ENDPOINT_URL}${path}`);
   // const url = new URL(`${protocol}://${host}/api${path}`);
   // const url = new URL(`http://192.168.100.54:3000/api${path}`);
-
-  console.log({ url });
 
   if (queryParams) {
     Object.entries(queryParams).forEach(([key, value]) => {
