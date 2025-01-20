@@ -155,7 +155,13 @@ export async function handleGetBrandsWithVideos(
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
               WHERE ${product.brandId} = ${brand.id}
-            )`.as('reviewsCount'),
+            )`,
+            rating: sql<number>`(
+              SELECT ROUND(COALESCE(AVG(${video.starRating}), 0)::numeric, 2)
+              FROM ${video}
+              JOIN ${product} ON ${video.productId} = ${product.id}
+              WHERE ${product.brandId} = ${brand.id}
+            )`,
           },
           videos: sql<string>`(
             SELECT json_agg(video_data)
@@ -222,8 +228,22 @@ export async function getBrandInfoWithSlug(brandSlug: string, lang: SupportedLan
         bodyText: sql<string>`COALESCE(${brand.brandData}->${lang}->>'brandBody', ${brand.brandData}->'en'->>'brandBody')`,
         siteTitle: sql<string>`COALESCE(${brand.brandData}->${lang}->>'siteTitle', ${brand.brandData}->'en'->>'siteTitle')`,
         footerText: sql<string>`COALESCE(${brand.brandData}->${lang}->>'brandFooter', ${brand.brandData}->'en'->>'brandFooter')`,
+        rating: sql<number>`(
+          SELECT ROUND(COALESCE(AVG(${video.starRating}), 0)::numeric, 2)
+          FROM ${video}
+          LEFT JOIN ${product} ON ${video.productId} = ${product.id}
+          LEFT JOIN ${brand} ON ${brand.id} = ${product.brandId}
+          WHERE ${brand.slug} = ${brandSlug}
+        )`,
+        reviewsCount: sql<number>`(
+              SELECT COUNT(*)
+              FROM ${video}
+              JOIN ${product} ON ${video.productId} = ${product.id}
+              WHERE ${product.brandId} = ${brand.id}
+            )`,
       })
       .from(brand)
+      .leftJoin(product, eq(brand.id, product.brandId))
       .where(eq(brand.slug, brandSlug))
       .limit(1);
 
@@ -263,7 +283,11 @@ export async function getBrandProductsWithVideos(
           name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
           info: {
             reviewsCount: sql<number>`COUNT(${video.id})`,
-            rating: sql<number>`ROUND(AVG(${video.starRating})::numeric, 1)`,
+            rating: sql<number>`(
+              SELECT ROUND(COALESCE(AVG(${video.starRating}), 0)::numeric, 2)
+              FROM ${video}
+              WHERE ${video.productId} = ${product.id}
+            )`,
           },
           videos: sql<string>`(
           SELECT json_agg(video_data)

@@ -56,7 +56,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
                 <PageHeading>{data.name}</PageHeading>
                 <div className="flex gap-1">
                   <StarRating rating={4.5} />
-                  <p className="text-grey-500">{'(1,218)'}</p>
+                  <p className="text-grey-500">{`(${data.reviewsCount})`}</p>
                 </div>
               </div>
               <div

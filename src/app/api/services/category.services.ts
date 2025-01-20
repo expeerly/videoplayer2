@@ -124,7 +124,7 @@ export async function getCategoryCount(): Promise<{ count: number }> {
  * @returns {Promise<{ rows: Partial<Category>[], total: number }>} Paginated categories with total count
  */
 export async function handleGetCategoryWithVideos(
-  { page, limit }: PaginationParams,
+  { page, limit, videoCount }: PaginationParams,
   lang: SupportedLanguage,
   { categories, brands }: FilterParams
 ) {
@@ -192,6 +192,7 @@ export async function handleGetCategoryWithVideos(
               WHERE ${video.productId} = ${product.id} AND ${product.categoryId} = ${category.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
               GROUP BY ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productSlug}, ${product.productName}, ${video.id}
+              LIMIT ${videoCount}
             ) subq
           )`,
         })
@@ -253,8 +254,15 @@ export async function getCategoryInfoWithSlug(categorySlug: string, lang: Suppor
           sql<string>`COALESCE("categoryData" -> ${lang} ->> 'footerText', "categoryData" -> 'en' ->> 'footerText')`.as(
             'footerText'
           ),
+        reviewsCount: sql<number>`(
+          SELECT COUNT(*)
+          FROM ${video}
+          JOIN ${product} ON ${video.productId} = ${product.id}
+          WHERE ${product.categoryId} = ${category.id}
+        )`,
       })
       .from(category)
+      .leftJoin(product, eq(category.id, product.categoryId))
       .where(
         sql`COALESCE("categoryData" -> ${lang} ->> 'urlSlug', "categoryData" -> 'en' ->> 'urlSlug') = ${categorySlug}`
       )
@@ -292,8 +300,18 @@ export async function getBrandsByCategoryIdWithVideos(
           logo: brand.logo,
           slug: brand.slug,
           info: {
-            reviewsCount: sql<number>`COUNT(DISTINCT ${video.id})`,
-            rating: sql<number>`ROUND(AVG(${video.starRating})::numeric, 1)`,
+            reviewsCount: sql<number>`(
+              SELECT COUNT(*)
+              FROM ${video}
+              JOIN ${product} ON ${video.productId} = ${product.id}
+              WHERE ${product.brandId} = ${brand.id}
+            )`,
+            rating: sql<number>`(
+              SELECT ROUND(COALESCE(AVG(${video.starRating}), 0)::numeric, 2)
+              FROM ${video}
+              JOIN ${product} ON ${video.productId} = ${product.id}
+              WHERE ${product.brandId} = ${brand.id}
+            )`,
           },
           videos: sql<string>`(
             SELECT json_agg(
@@ -303,6 +321,9 @@ export async function getBrandsByCategoryIdWithVideos(
                 'videoUrl', ${video.videoUrl},
                 'resolution', ${video.resolution},
                 'rating', ${video.starRating},
+                'brandId', ${brand.id},
+                'brandName', ${brand.brandName},
+                'brandLogo', ${brand.logo},
                 'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
               'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
               'categorySlug', COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug')
