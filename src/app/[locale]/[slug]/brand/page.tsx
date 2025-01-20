@@ -32,8 +32,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { data } = await getLandingPageText(locale, 'Brand');
 
   return {
-    title: data?.content.siteTitle,
-    description: data?.content.bodyText || t('all_brands_meta_description'),
+    title: data?.content?.siteTitle,
+    description: data?.content?.bodyText || t('all_brands_meta_description'),
   };
 }
 
@@ -72,7 +72,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
               <PageHeading>Video Reviews: All Brands</PageHeading>
               <Filter categoriesList={allCategories} brandsList={allBrands} />
             </div>
-            <LongDescription text={data?.content.bodyText || t('all_brands_body_text')} />
+            <LongDescription text={data?.content?.bodyText || t('all_brands_body_text')} />
           </div>
           <div className="mt-8">
             <div className="hidden md:block">
@@ -123,7 +123,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
 
         <SEOSection
           heading="SEO text lorem ipsum"
-          content={data?.content.bodyText || t('all_brands_footer_text')}
+          content={data?.content?.bodyText || t('all_brands_footer_text')}
         />
       </div>
     </div>
