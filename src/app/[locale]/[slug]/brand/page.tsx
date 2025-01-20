@@ -43,7 +43,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const brandQuery = (await searchParams).brand ?? '';
   const categoryQuery = (await searchParams).category ?? '';
 
-  // const { t } = await getDictionary();
+  const { t } = await getDictionary();
 
   const [{ data }, { data: brands }, { data: allBrands }, { data: allCategories }] =
     await Promise.all([
