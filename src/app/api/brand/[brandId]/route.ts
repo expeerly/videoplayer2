@@ -12,7 +12,6 @@ export async function GET(
   const pagination = getPaginationParams(request);
 
   try {
-    console.log({ brandId });
     const brandProducts = await getBrandProductsWithVideos(brandId, lang, pagination);
 
     return NextResponse.json(

@@ -32,29 +32,27 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const brands =
-    useMemo(
-      () =>
-        brandsList?.map(i => ({
-          name: i.brandName,
-          logo: i.logo || undefined,
-          id: i.id,
-          slug: i.slug,
-        })),
-      [brandsList]
-    ) ?? [];
+  const brands = useMemo(
+    () =>
+      brandsList?.map(i => ({
+        name: i.brandName,
+        logo: i.logo || undefined,
+        id: i.id,
+        slug: i.slug,
+      })),
+    [brandsList]
+  );
 
-  const categories =
-    useMemo(
-      () =>
-        categoriesList?.map(i => ({
-          name: i.categoryData?.[local === '/' ? 'en' : (local as Languages)].categoryName,
-          icon: i.logo || undefined,
-          id: i.id.toString(),
-          slug: i.categoryData?.[local === '/' ? 'en' : (local as Languages)]?.urlSlug,
-        })),
-      [categoriesList, local]
-    ) ?? [];
+  const categories = useMemo(
+    () =>
+      categoriesList?.map(i => ({
+        name: i.categoryData?.[local === '/' ? 'en' : (local as Languages)].categoryName,
+        icon: i.logo || undefined,
+        id: i.id.toString(),
+        slug: i.categoryData?.[local === '/' ? 'en' : (local as Languages)]?.urlSlug,
+      })),
+    [categoriesList, local]
+  );
 
   const activeItems: FilterItemProps[] = useMemo(
     () => (activeTab === 'categories' ? categories : brands),

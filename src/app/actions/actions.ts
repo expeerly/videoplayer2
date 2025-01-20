@@ -42,7 +42,7 @@ async function apiRequest<T>(
 ): Promise<{ data: T; error?: string }> {
   try {
     const url = await createApiUrl(path, options.queryParams);
-    console.log('Fetching:', url);
+    console.info('Fetching:', url);
 
     const response = await fetch(url, {
       headers: {

@@ -37,8 +37,6 @@ const HomePage: NextPage<PageProps> = async ({ params }) => {
   const { data: brandVideos } = await getGridVideos(locale, 'brand', 1, 1, 5, true);
   const { data: creatorVideos } = await getGridVideos(locale, 'creator', 1, 2, 5, true);
 
-  console.log({ brands, categories, randomBrand, categoriesVideo, brandVideos, creatorVideos });
-
   return (
     <div className="flex flex-col w-full items-center justify-center">
       <HeroSection />

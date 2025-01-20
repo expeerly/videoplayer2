@@ -7,8 +7,6 @@ import { getCounts } from '../../actions/actions';
 const Page: NextPage = async () => {
   const { data } = await getCounts();
 
-  console.log({ counts: data });
-
   return (
     <div className="flex flex-col justify-center py-8 gap-10">
       <div className="flex justify-center">
