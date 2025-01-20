@@ -28,21 +28,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const HomePage: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
-  const [
-    { data: brands },
-    { data: categories },
-    { data: randomBrand },
-    { data: categoriesVideo },
-    { data: brandVideos },
-    { data: creatorVideos },
-  ] = await Promise.all([
-    getBrands(locale),
-    getCategories(locale),
-    getBrands(locale, 10, true),
-    getGridVideos(locale, 'category', 1, 1, 5, true),
-    getGridVideos(locale, 'brand', 1, 1, 5, true),
-    getGridVideos(locale, 'creator', 1, 2, 5, true),
-  ]);
+
+  // Fetch data separately
+  const { data: brands } = await getBrands(locale);
+  const { data: categories } = await getCategories(locale);
+  const { data: randomBrand } = await getBrands(locale, 10, true);
+  const { data: categoriesVideo } = await getGridVideos(locale, 'category', 1, 1, 5, true);
+  const { data: brandVideos } = await getGridVideos(locale, 'brand', 1, 1, 5, true);
+  const { data: creatorVideos } = await getGridVideos(locale, 'creator', 1, 2, 5, true);
 
   console.log({ brands, categories, randomBrand, categoriesVideo, brandVideos, creatorVideos });
 
