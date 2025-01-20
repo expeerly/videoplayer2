@@ -7,8 +7,6 @@ import { LeftChevronIcon } from '@/src/assets/icons';
 export default async function LogosPage() {
   const { data } = await getLogos();
 
-  console.log({ logos: data });
-
   return (
     <div className="container mx-auto px-4 py-8 h-full">
       <div className="flex justify-between">
@@ -19,7 +17,7 @@ export default async function LogosPage() {
         <LogoutButton />
       </div>
 
-      <LogoGrid data={data.length > 0 ? data : []} />
+      <LogoGrid data={data?.length > 0 ? data : []} />
     </div>
   );
 }

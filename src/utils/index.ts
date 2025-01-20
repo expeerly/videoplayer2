@@ -21,7 +21,7 @@ export const handleError = (error: unknown, cb: (message: string) => void) => {
 
 export const chunkArray = <T>(array: T[], size: number): T[][] => {
   const chunks: T[][] = [];
-  for (let i = 0; i < array.length; i += size) {
+  for (let i = 0; i < array?.length; i += size) {
     chunks.push(array.slice(i, i + size));
   }
   return chunks;
@@ -41,13 +41,13 @@ export const uploadData = async (
     try {
       const res = await cb(chunk);
       if (res?.success) {
-        successCount += chunk.length;
+        successCount += chunk?.length;
       } else {
-        failedCount += chunk.length;
+        failedCount += chunk?.length;
       }
     } catch (chunkError) {
       console.log(chunkError);
-      failedCount += chunk.length;
+      failedCount += chunk?.length;
     }
   }
 
