@@ -1,8 +1,6 @@
 import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
-import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
-import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
@@ -11,11 +9,11 @@ import { Languages } from '@/src/db/types';
 import {
   getAllBrands,
   getAllCategories,
-  getBrands,
   getGridVideos,
   getLandingPageText,
 } from '@/src/app/actions/actions';
 import { getQueryIds } from '@/src/app/utils/queryHelpers';
+import { AllBrandsSlider } from '@/src/app/components/server/AllBrandsSlider';
 
 type PageProps = {
   params: Promise<{
@@ -45,23 +43,22 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
 
   const { t } = await getDictionary();
 
-  const [{ data }, { data: brands }, { data: allBrands }, { data: allCategories }] =
-    await Promise.all([
-      getLandingPageText(locale, 'Brand'),
-      getBrands(locale, 20, true),
-      getAllBrands(locale),
-      getAllCategories(locale),
-    ]);
+  const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+    getLandingPageText(locale, 'Brand'),
 
-  const { data: gridVideos } = await getGridVideos(
-    locale,
-    'brand',
+    getAllBrands(locale),
+    getAllCategories(locale),
+  ]);
+
+  const { data: gridVideos } = await getGridVideos({
+    lang: locale,
+    gridType: 'brand',
     page,
-    4,
-    9,
-    false,
-    getQueryIds(categoryQuery, brandQuery, allCategories, allBrands)
-  );
+    limit: 4,
+    videoCount: 9,
+    random: false,
+    filter: getQueryIds(categoryQuery, brandQuery, allCategories, allBrands),
+  });
 
   return (
     <div className="w-full bg-white">
@@ -74,36 +71,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             </div>
             <LongDescription text={data?.content?.bodyText || t('all_brands_body_text')} />
           </div>
-          <div className="mt-8">
-            <div className="hidden md:block">
-              <Slider
-                classNameStyle={{
-                  cardClassName: 'bg-white',
-                }}
-                isBrand
-                slides={
-                  brands?.rows?.map(brand => ({
-                    title: brand.brandName,
-                    imgURL: brand.logo,
-                    slug: brand.slug,
-                  })) ?? []
-                }
-              />
-            </div>
-            <div className="md:hidden">
-              <MobileSlider
-                isMultiRow={false}
-                isBrand
-                slides={
-                  brands?.rows?.map(brand => ({
-                    title: brand.brandName,
-                    imgURL: brand.logo,
-                    slug: brand.slug,
-                  })) ?? []
-                }
-              />
-            </div>
-          </div>
+          <AllBrandsSlider locale={locale} />
         </section>
         <PaginationContainer
           header={{

@@ -109,28 +109,39 @@ export async function getLandingPageText(
   });
 }
 
-export async function getGridVideos(
-  lang: Languages,
-  gridType: 'category' | 'brand' | 'creator',
-  page: number = 1,
-  limit: number = 4,
-  videoCount: number = 9,
-  random: boolean = false,
+export async function getGridVideos({
+  lang,
+  gridType,
+  page = 1,
+  limit = 4,
+  videoCount = 9,
+  random = false,
+  filter = {
+    category: '',
+    brand: '',
+  },
+}: {
+  lang: Languages;
+  gridType: 'category' | 'brand' | 'creator';
+  page?: number;
+  limit?: number;
+  videoCount?: number;
+  random?: boolean;
   filter?: {
     category: string;
     brand: string;
-  }
-): Promise<{
+  };
+}): Promise<{
   data: Grid;
   error?: string;
 }> {
   return apiRequest<Grid>(`/${gridType}/videos`, {
-    lang,
+    lang: lang,
     queryParams: {
-      page,
-      limit,
-      videoCount,
-      random,
+      page: page,
+      limit: limit,
+      videoCount: videoCount,
+      random: random,
       ...(filter?.category && { category: filter.category }),
       ...(filter?.brand && { brand: filter.brand }),
     },

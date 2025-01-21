@@ -51,15 +51,15 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
       getAllCategories(locale),
     ]);
 
-  const { data: gridVideos } = await getGridVideos(
-    locale,
-    'category',
+  const { data: gridVideos } = await getGridVideos({
+    lang: locale,
+    gridType: 'category',
     page,
-    4,
-    9,
-    false,
-    getQueryIds(categoryQuery, brandQuery, allCategories, allBrands)
-  );
+    limit: 4,
+    videoCount: 9,
+    random: false,
+    filter: getQueryIds(categoryQuery, brandQuery, allCategories, allBrands),
+  });
 
   return (
     <div className="w-full bg-white">
