@@ -27,7 +27,11 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const { t } = await getDictionary();
 
   const { data: categories } = await getCategories(locale);
-  const { data } = await getProfile(locale, 'creator', reviewerProfile);
+  const { data } = await getProfile({
+    lang: locale,
+    gridType: 'creator',
+    id: reviewerProfile,
+  });
 
   const slides = categories
     .filter(category =>
