@@ -3,8 +3,6 @@ import { getBrandsLogosAndNames, handleCreateBrand } from '../services/brand.ser
 import { handleError } from '../utils/errorHandler';
 import { getPaginationParams } from '../utils/requestHelpers';
 
-export const maxDuration = 50;
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
