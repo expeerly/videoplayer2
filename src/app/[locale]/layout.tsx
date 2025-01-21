@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { getMessages } from 'next-intl/server';
+import { Analytics } from '@vercel/analytics/next';
 
 import { Footer } from '@/src/app/components/server/Footer';
 import { Sidebar } from '@/src/app/components/server/Sidebar/Sidebar';
@@ -55,6 +56,7 @@ export default async function RootLayout({
                 <BottomBar />
                 <main className="flex-1 w-full md:w-[75%] mid-lg:w-[calc(100%-275px)] relative ">
                   {children}
+                  <Analytics />
                 </main>
               </div>
               <Footer />
