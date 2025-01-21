@@ -1,19 +1,13 @@
 import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
-import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { Metadata, NextPage } from 'next';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { Languages } from '@/src/db/types';
-import {
-  getAllBrands,
-  getAllCategories,
-  getGridVideos,
-  getLandingPageText,
-} from '@/src/app/actions/actions';
-import { getQueryIds } from '@/src/app/utils/queryHelpers';
+import { getAllBrands, getAllCategories, getLandingPageText } from '@/src/app/actions/actions';
 import { getDictionary } from '@/src/lib/dictionary';
 import { AllCategoriesSlider } from '@/src/app/components/server/AllCategoriesSlider';
+import { LandingPageGrid } from '@/src/app/components/server/LandingPageGrid';
 
 type PageProps = {
   params: Promise<{
@@ -39,22 +33,12 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const brandQuery = (await searchParams).brand ?? '';
   const categoryQuery = (await searchParams).category ?? '';
 
-  const { t } = await getDictionary();
-  const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+  const [{ t }, { data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+    getDictionary(),
     getLandingPageText(locale, 'Category'),
     getAllBrands(locale),
     getAllCategories(locale),
   ]);
-
-  const { data: gridVideos } = await getGridVideos({
-    lang: locale,
-    gridType: 'category',
-    page,
-    limit: 4,
-    videoCount: 9,
-    random: false,
-    filter: getQueryIds(categoryQuery, brandQuery, allCategories, allBrands),
-  });
 
   return (
     <div className="w-full bg-white">
@@ -69,11 +53,15 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           </div>
           <AllCategoriesSlider locale={locale} />
         </section>
-        <PaginationContainer
-          header={{
-            dataType: 'category',
-          }}
-          data={gridVideos ?? []}
+
+        <LandingPageGrid
+          type={'category'}
+          locale={locale}
+          page={page}
+          categoryQuery={categoryQuery}
+          brandQuery={brandQuery}
+          allCategories={allCategories}
+          allBrands={allBrands}
           ctaBlock={{
             heading: t('cta_block_all_brands_categories.title'),
             desc: t('cta_block_all_brands_categories.desc'),
@@ -84,6 +72,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             },
           }}
         />
+
         <SEOSection heading="SEO text lorem ipsum" content={data?.content.footerText ?? ''} />
       </div>
     </div>

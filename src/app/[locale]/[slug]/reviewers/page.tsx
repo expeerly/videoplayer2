@@ -1,18 +1,12 @@
 import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
-import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { Metadata, NextPage } from 'next';
 import { Languages } from '@/src/db/types';
-import {
-  getAllBrands,
-  getAllCategories,
-  getGridVideos,
-  getLandingPageText,
-} from '@/src/app/actions/actions';
-import { getQueryIds } from '@/src/app/utils/queryHelpers';
+import { getAllBrands, getAllCategories, getLandingPageText } from '@/src/app/actions/actions';
 import { getDictionary } from '@/src/lib/dictionary';
+import { LandingPageGrid } from '@/src/app/components/server/LandingPageGrid';
 
 type PageProps = {
   params: Promise<{
@@ -38,22 +32,12 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const brandQuery = (await searchParams).brand ?? '';
   const categoryQuery = (await searchParams).category ?? '';
 
-  const { t } = await getDictionary();
-  const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+  const [{ t }, { data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+    getDictionary(),
     getLandingPageText(locale, 'Creator'),
     getAllBrands(locale),
     getAllCategories(locale),
   ]);
-
-  const { data: gridVideos } = await getGridVideos({
-    lang: locale,
-    gridType: 'creator',
-    page,
-    limit: 4,
-    videoCount: 9,
-    random: false,
-    filter: getQueryIds(categoryQuery, brandQuery, allCategories, allBrands),
-  });
 
   return (
     <div className="w-full bg-white">
@@ -67,11 +51,15 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             <LongDescription text={data?.content.bodyText ?? ''} />
           </div>
         </section>
-        <PaginationContainer
-          header={{
-            dataType: 'reviewer',
-          }}
-          data={gridVideos}
+
+        <LandingPageGrid
+          type={'creator'}
+          locale={locale}
+          page={page}
+          categoryQuery={categoryQuery}
+          brandQuery={brandQuery}
+          allCategories={allCategories}
+          allBrands={allBrands}
           ctaBlock={{
             heading: t('CTABlockAllReviewers.experienceShare'),
             desc: t('CTABlockAllReviewers.becomeReviewer'),

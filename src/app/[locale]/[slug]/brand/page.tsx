@@ -1,19 +1,13 @@
 import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
-import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { Languages } from '@/src/db/types';
-import {
-  getAllBrands,
-  getAllCategories,
-  getGridVideos,
-  getLandingPageText,
-} from '@/src/app/actions/actions';
-import { getQueryIds } from '@/src/app/utils/queryHelpers';
+import { getAllBrands, getAllCategories, getLandingPageText } from '@/src/app/actions/actions';
 import { AllBrandsSlider } from '@/src/app/components/server/AllBrandsSlider';
+import { LandingPageGrid } from '@/src/app/components/server/LandingPageGrid';
 
 type PageProps = {
   params: Promise<{
@@ -41,24 +35,12 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const brandQuery = (await searchParams).brand ?? '';
   const categoryQuery = (await searchParams).category ?? '';
 
-  const { t } = await getDictionary();
-
-  const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+  const [{ t }, { data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+    getDictionary(),
     getLandingPageText(locale, 'Brand'),
-
     getAllBrands(locale),
     getAllCategories(locale),
   ]);
-
-  const { data: gridVideos } = await getGridVideos({
-    lang: locale,
-    gridType: 'brand',
-    page,
-    limit: 4,
-    videoCount: 9,
-    random: false,
-    filter: getQueryIds(categoryQuery, brandQuery, allCategories, allBrands),
-  });
 
   return (
     <div className="w-full bg-white">
@@ -73,11 +55,15 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           </div>
           <AllBrandsSlider locale={locale} />
         </section>
-        <PaginationContainer
-          header={{
-            dataType: 'brand',
-          }}
-          data={gridVideos}
+
+        <LandingPageGrid
+          type={'brand'}
+          locale={locale}
+          page={page}
+          categoryQuery={categoryQuery}
+          brandQuery={brandQuery}
+          allCategories={allCategories}
+          allBrands={allBrands}
           ctaBlock={{
             heading: t('cta_block_all_brands_categories.title'),
             desc: t('cta_block_all_brands_categories.desc'),
