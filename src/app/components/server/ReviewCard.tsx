@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { VideoThumbnail } from './VideoThumbnail';
 import { StarRating } from './StarRating';
-import { PlayIcon } from '@/src/assets/icons/PlayIcon';
 import { Avatar } from './Avatar';
 import clsx from 'clsx';
 import { GridVideo } from '@/src/db/types';
@@ -38,10 +37,6 @@ export const ReviewCard: FunctionComponent<Props> = ({ review, className }) => {
             <div className="flex items-center gap-1 justify-center ml-1 text-sm">
               {review.rating}
               <StarRating rating={review?.rating} size="sm" showRating={false} />
-            </div>
-            <div className="flex items-center mt-1 text-sm font-bold gap-1">
-              <PlayIcon />
-              {/* {review.view} */}
             </div>
           </div>
 
