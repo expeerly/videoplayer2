@@ -10,7 +10,14 @@ export const ExploreReviewers: React.FunctionComponent<{ locale: Languages }> = 
 }) => {
   const [{ t }, { data }] = await Promise.all([
     getDictionary(),
-    getGridVideos(locale, 'creator', 1, 2, 5, true),
+    getGridVideos({
+      lang: locale,
+      gridType: 'creator',
+      page: 1,
+      limit: 2,
+      videoCount: 5,
+      random: true,
+    }),
   ]);
 
   return (
