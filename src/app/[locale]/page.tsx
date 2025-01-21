@@ -6,9 +6,9 @@ import { CategoriesSlider } from '../components/server/CategoriesSlider';
 import { ConversionSlider } from '../components/server/Conversion';
 import { NextPage, Metadata } from 'next';
 import { getDictionary } from '../../lib/dictionary';
-import { ReviewGrid } from '../components/server/ReviewGrid';
 import { getGridVideos } from '../actions/actions';
 import { Languages } from '@/src/db/types';
+import { ReviewGridSection } from '../components/server/ReviewGridSection';
 
 type PageProps = {
   params: Promise<{
@@ -28,48 +28,38 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const HomePage: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
-
-  // Fetch data separately
-
-  const [{ data: categoriesVideo }, { data: brandVideos }] = await Promise.all([
-    getGridVideos({
-      lang: locale,
-      gridType: 'category',
-      page: 1,
-      limit: 1,
-      videoCount: 5,
-      random: true,
-    }),
-    getGridVideos({
-      lang: locale,
-      gridType: 'brand',
-      page: 1,
-      limit: 1,
-      videoCount: 5,
-      random: true,
-    }),
-  ]);
-
   return (
     <div className="flex flex-col w-full items-center justify-center">
       <HeroSection />
       <ExploreReviewers locale={locale} />
       <BrandsSlider locale={locale} />
       <section className="flex justify-center max-w-[900px] mb-5 w-full mx-auto pt-16">
-        <ReviewGrid
-          header={{
-            dataType: 'brand',
-          }}
-          data={brandVideos?.rows?.[0]}
+        <ReviewGridSection
+          getGridVideos={() =>
+            getGridVideos({
+              lang: locale,
+              gridType: 'brand',
+              page: 1,
+              limit: 1,
+              videoCount: 5,
+              random: true,
+            })
+          }
         />
       </section>
       <CategoriesSlider locale={locale} />
       <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]  ">
-        <ReviewGrid
-          header={{
-            dataType: 'category',
-          }}
-          data={categoriesVideo?.rows?.[0]}
+        <ReviewGridSection
+          getGridVideos={() =>
+            getGridVideos({
+              lang: locale,
+              gridType: 'category',
+              page: 1,
+              limit: 1,
+              videoCount: 5,
+              random: true,
+            })
+          }
         />
       </section>
       <ConversionSlider locale={locale} />
