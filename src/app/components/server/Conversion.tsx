@@ -3,14 +3,14 @@ import { getDictionary } from '@/src/lib/dictionary';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Button } from '../client/Button';
-import { BrandData } from '@/src/db/types';
+import { LocaleProps } from '@/src/db/types';
+import { getBrands } from '../../actions/actions';
 
-type Props = {
-  brands: BrandData;
-};
-
-export const ConversionSlider: FunctionComponent<Props> = async ({ brands }) => {
-  const { t } = await getDictionary();
+export const ConversionSlider: FunctionComponent<LocaleProps> = async ({ locale }) => {
+  const [{ t }, { data: brands }] = await Promise.all([
+    getDictionary(),
+    getBrands(locale, 10, true),
+  ]);
 
   return (
     <section

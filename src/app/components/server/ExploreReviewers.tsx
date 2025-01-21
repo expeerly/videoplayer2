@@ -1,15 +1,18 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Button } from '../client/Button';
-import { Grid } from '@/src/db/types';
+import { getGridVideos } from '../../actions/actions';
+import { Languages } from '@/src/db/types';
 
-type Props = {
-  data: Grid;
-};
+export const ExploreReviewers: React.FunctionComponent<{ locale: Languages }> = async ({
+  locale,
+}) => {
+  const [{ t }, { data }] = await Promise.all([
+    getDictionary(),
+    getGridVideos(locale, 'creator', 1, 2, 5, true),
+  ]);
 
-export const ExpolreReviewers: FunctionComponent<Props> = async ({ data }) => {
-  const { t } = await getDictionary();
   return (
     <section className="flex flex-col gap-8 w-full py-12  md:pt-14 md:pb-[70px] md:max-w-[900px]">
       <h2 className="px-5 font-extrabold text-2xl text-center text-grey-700 sm:w-1/2 md:w-2/3 lg:w-2/4 sm:text-start mid-lg:px-0">
