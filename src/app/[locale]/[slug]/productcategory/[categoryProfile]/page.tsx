@@ -5,10 +5,9 @@ import { ShareIcon } from '@/src/assets/icons';
 import { Metadata, NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
-import { getDictionary } from '@/src/lib/dictionary';
 import { Languages } from '@/src/db/types';
-import { getPageInfo, getProfile } from '@/src/app/actions/actions';
-import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
+import { getPageInfo } from '@/src/app/actions/actions';
+import { CategoryVideos } from './CategoryVideos';
 
 type PageProps = {
   params: Promise<{
@@ -30,14 +29,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
-  const { t } = await getDictionary();
-
   const { locale, categoryProfile } = await params;
   const page = Number((await searchParams).page) || 1;
 
   const { data } = await getPageInfo(locale, 'category', categoryProfile);
-
-  const { data: categoryVideos } = await getProfile(locale, 'category', data.id!, page);
 
   return (
     <div className="w-full bg-white">
@@ -77,22 +72,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           </div>
         </section>
 
-        <PaginationContainer
-          data={categoryVideos}
-          header={{
-            dataType: 'brand',
-            variant: 'secondary',
-          }}
-          ctaBlock={{
-            heading: t('cta_block_all_brands_categories.title'),
-            desc: t('cta_block_all_brands_categories.desc'),
-            button: {
-              label: t('learn_more.label'),
-              ariaLabel: t('learn_more.aria_label'),
-              href: 'https://www.get.expeerly.com/for-brands',
-            },
-          }}
-        />
+        <CategoryVideos id={data.id} locale={locale} page={page} />
 
         <SEOSection heading="SEO text lorem ipsum" content={data.footerText} />
       </div>

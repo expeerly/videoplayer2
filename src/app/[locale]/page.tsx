@@ -30,22 +30,25 @@ const HomePage: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
 
   // Fetch data separately
-  const { data: categoriesVideo } = await getGridVideos({
-    lang: locale,
-    gridType: 'category',
-    page: 1,
-    limit: 1,
-    videoCount: 5,
-    random: true,
-  });
-  const { data: brandVideos } = await getGridVideos({
-    lang: locale,
-    gridType: 'brand',
-    page: 1,
-    limit: 1,
-    videoCount: 5,
-    random: true,
-  });
+
+  const [{ data: categoriesVideo }, { data: brandVideos }] = await Promise.all([
+    getGridVideos({
+      lang: locale,
+      gridType: 'category',
+      page: 1,
+      limit: 1,
+      videoCount: 5,
+      random: true,
+    }),
+    getGridVideos({
+      lang: locale,
+      gridType: 'brand',
+      page: 1,
+      limit: 1,
+      videoCount: 5,
+      random: true,
+    }),
+  ]);
 
   return (
     <div className="flex flex-col w-full items-center justify-center">
