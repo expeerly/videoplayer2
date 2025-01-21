@@ -37,6 +37,7 @@ export type MenuItem = {
   label: string;
   icon: FunctionComponent<SVGProps<SVGSVGElement>>;
   href?: string;
+  target?: string;
   items?: {
     label: string;
     href: string;
@@ -80,6 +81,7 @@ const defaultMenuItems = (categroies: CategoryData[] = []): MenuItem[] => {
       label: 'Learn more',
       icon: InfoIcon,
       href: 'https://www.get.expeerly.com/about-us',
+      target: '_blank',
     },
     { key: 'submit_video_review', label: 'Submit a video review', icon: VideoIcon },
     {
@@ -87,12 +89,14 @@ const defaultMenuItems = (categroies: CategoryData[] = []): MenuItem[] => {
       label: 'For brands & businesses',
       icon: TagIcon,
       href: 'https://www.get.expeerly.com/for-brands',
+      target: '_blank',
     },
     {
       key: 'for_marketplaces',
       label: 'For marketplaces',
       icon: CartIcon,
       href: 'https://www.get.expeerly.com/for-marketplaces',
+      target: '_blank',
     },
     {
       devider: true,
@@ -377,6 +381,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                       href={`${item.href}`}
                       title={t(`${item.key}.label`)}
                       aria-label={t(`${item.key}.aria_label`)}
+                      target={item.target}
                     >
                       <item.icon />
                       <span className="text-grey-700">{t(`${item.key}.label`)}</span>
