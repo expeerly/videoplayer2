@@ -7,7 +7,7 @@ import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { Languages } from '@/src/db/types';
 import { getPageInfo } from '@/src/app/actions/actions';
-import { CategoryVideos } from './CategoryVideos';
+import { ProfileGrid } from '../../../../components/server/ProfileGrid';
 
 type PageProps = {
   params: Promise<{
@@ -72,7 +72,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           </div>
         </section>
 
-        <CategoryVideos id={data.id} locale={locale} page={page} />
+        <ProfileGrid id={data.id} locale={locale} page={page} type={'category'} />
 
         <SEOSection heading="SEO text lorem ipsum" content={data.footerText} />
       </div>

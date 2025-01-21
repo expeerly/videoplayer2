@@ -38,11 +38,13 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
     <>
       <Link
         href={
-          dataType === 'category'
-            ? `/video-reviews/productcategory/${profileSlug}`
-            : dataType === 'brand'
-              ? `/video-reviews/brand/${profileSlug}`
-              : `/video-reviews/reviewers/${profileSlug}`
+          profileSlug
+            ? dataType === 'category'
+              ? `/video-reviews/productcategory/${profileSlug}`
+              : dataType === 'brand'
+                ? `/video-reviews/brand/${profileSlug}`
+                : `/video-reviews/reviewers/${profileSlug}`
+            : ''
         }
         aria-label={
           dataType === 'category'

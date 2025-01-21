@@ -56,7 +56,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
         <Image
           src={src?.startsWith('//') ? `https:${src}` : src}
           alt={alt}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-cover"
           height={20}
           width={20}
         />

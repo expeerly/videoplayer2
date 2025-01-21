@@ -1,8 +1,6 @@
 import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
-import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
-import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { Metadata, NextPage } from 'next';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
@@ -10,12 +8,12 @@ import { Languages } from '@/src/db/types';
 import {
   getAllBrands,
   getAllCategories,
-  getCategories,
   getGridVideos,
   getLandingPageText,
 } from '@/src/app/actions/actions';
 import { getQueryIds } from '@/src/app/utils/queryHelpers';
 import { getDictionary } from '@/src/lib/dictionary';
+import { AllCategoriesSlider } from '@/src/app/components/server/AllCategoriesSlider';
 
 type PageProps = {
   params: Promise<{
@@ -37,19 +35,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { locale } = await params;
-
   const page = Number((await searchParams).page) || 1;
   const brandQuery = (await searchParams).brand ?? '';
   const categoryQuery = (await searchParams).category ?? '';
 
   const { t } = await getDictionary();
-  const [{ data }, { data: categories }, { data: allBrands }, { data: allCategories }] =
-    await Promise.all([
-      getLandingPageText(locale, 'Category'),
-      getCategories(locale),
-      getAllBrands(locale),
-      getAllCategories(locale),
-    ]);
+  const [{ data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+    getLandingPageText(locale, 'Category'),
+    getAllBrands(locale),
+    getAllCategories(locale),
+  ]);
 
   const { data: gridVideos } = await getGridVideos({
     lang: locale,
@@ -72,30 +67,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             </div>
             <LongDescription text={data?.content.bodyText ?? ''} />
           </div>
-          <div className="mt-8">
-            <div className="hidden md:block">
-              <Slider
-                classNameStyle={{
-                  cardClassName: 'bg-white',
-                }}
-                slides={categories.map(i => ({
-                  name: i.categoryName,
-                  icon: i.logo,
-                  slug: i.urlSlug,
-                }))}
-              />
-            </div>
-            <div className="md:hidden">
-              <MobileSlider
-                isMultiRow={false}
-                slides={categories.map(i => ({
-                  name: i.categoryName,
-                  icon: i.logo,
-                  slug: i.urlSlug,
-                }))}
-              />
-            </div>
-          </div>
+          <AllCategoriesSlider locale={locale} />
         </section>
         <PaginationContainer
           header={{

@@ -3,22 +3,29 @@ import { PaginationContainer } from '@/src/app/components/server/PaginationConta
 import { LocaleProps } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
 import { FunctionComponent, Suspense } from 'react';
+import { ReviewGridSkeleton } from './ReviewGrid';
 
 type Props = {
   id: string;
   page: number;
+  type: 'brand' | 'category';
 } & LocaleProps;
 
-export const CategoryVideos: FunctionComponent<Props> = async ({ id, locale, page }) => {
+export const ProfileGrid: FunctionComponent<Props> = async ({ id, locale, page, type }) => {
   const { t } = await getDictionary();
-  const { data: categoryVideos } = await getProfile(locale, 'category', id, page);
+  const { data } = await getProfile({
+    lang: locale,
+    gridType: type,
+    id,
+    page,
+  });
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<ReviewGridSkeleton count={9} />}>
       <PaginationContainer
-        data={categoryVideos}
+        data={data}
         header={{
-          dataType: 'brand',
+          dataType: type,
           variant: 'secondary',
         }}
         ctaBlock={{

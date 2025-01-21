@@ -7,10 +7,9 @@ import { NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { Languages } from '@/src/db/types';
-import { getPageInfo, getProfile } from '@/src/app/actions/actions';
+import { getPageInfo } from '@/src/app/actions/actions';
 import { Metadata } from 'next';
-import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
-import { getDictionary } from '@/src/lib/dictionary';
+import { ProfileGrid } from '@/src/app/components/server/ProfileGrid';
 
 type PageProps = {
   params: Promise<{
@@ -35,14 +34,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { locale, brandProfile } = await params;
   const page = Number((await searchParams).page) || 1;
 
-  // Parallelize data fetching
-  const [{ t }, { data }] = await Promise.all([
-    getDictionary(),
-    getPageInfo(locale, 'brand', brandProfile),
-  ]);
-
-  // Fetch brand data after we have the brand ID
-  const { data: brand } = await getProfile(locale, 'brand', data.id!, page);
+  const { data } = await getPageInfo(locale, 'brand', brandProfile);
 
   return (
     <div className="w-full bg-white">
@@ -52,14 +44,14 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             <div className="flex gap-4 mb-6">
               <Avatar
                 className="flex h-10 w-10 min-w-10 md:h-14 md:w-14 md:min-w-14 my-auto md:m-0"
-                alt={data.name}
-                src={data.logo}
+                alt={data?.name}
+                src={data?.logo}
               />
               <div className="flex flex-1 flex-col ">
-                <PageHeading>{data.name}</PageHeading>
+                <PageHeading>{data?.name}</PageHeading>
                 <div className="flex gap-1">
                   <StarRating rating={4.5} />
-                  <p className="text-grey-500">{`(${data.reviewsCount})`}</p>
+                  <p className="text-grey-500">{`(${data?.reviewsCount})`}</p>
                 </div>
               </div>
               <div
@@ -85,7 +77,9 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           </div>
         </section>
 
-        <PaginationContainer
+        <ProfileGrid id={data?.id} locale={locale} page={page} type={'brand'} />
+
+        {/* <PaginationContainer
           data={{ rows: brand?.rows, total: brand?.total }}
           header={{
             dataType: 'brand',
@@ -100,7 +94,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
               href: 'https://www.get.expeerly.com/for-brands',
             },
           }}
-        />
+        /> */}
 
         <SEOSection heading=" SEO text lorem ipsum" content={data?.footerText} />
       </div>

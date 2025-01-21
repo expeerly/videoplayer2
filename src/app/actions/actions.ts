@@ -164,13 +164,19 @@ export async function getPageInfo(
   });
 }
 
-export async function getProfile<T extends 'category' | 'brand' | 'creator'>(
-  lang: Languages,
-  gridType: T,
-  id: number | string,
-  page: number = 1,
-  limit: number = 4
-): Promise<{
+export async function getProfile<T extends 'category' | 'brand' | 'creator'>({
+  lang,
+  gridType,
+  id,
+  page = 1,
+  limit = 4,
+}: {
+  lang: Languages;
+  gridType: T;
+  id: number | string;
+  page?: number;
+  limit?: number;
+}): Promise<{
   data: T extends 'creator' ? ProfileResponse : Grid;
   error?: string;
 }> {
