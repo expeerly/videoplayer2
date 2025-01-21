@@ -52,7 +52,7 @@ export async function getProductsCount(): Promise<{ count: number }> {
     const count = await db.$count(product);
     return { count };
   } catch (error) {
-    console.error('Error fetching category count:', error);
+    console.error('Error fetching product count:', error);
     throw new Error((error as Error).message);
   }
 }
