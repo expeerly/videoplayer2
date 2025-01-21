@@ -85,3 +85,24 @@ export async function getVideosCount(): Promise<{ count: number }> {
     throw new Error((error as Error).message);
   }
 }
+
+export async function getVideoById(id: string): Promise<Video | null> {
+  if (!id) {
+    throw new Error('Video ID is required');
+  }
+
+  try {
+    const result = await db.query.video.findFirst({
+      where: (video, { eq }) => eq(video.id, parseInt(id)),
+      with: {
+        creator: true,
+        product: true,
+      },
+    });
+
+    return result ?? null;
+  } catch (error) {
+    console.error('Error fetching video by ID:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch video details');
+  }
+}
