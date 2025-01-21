@@ -32,13 +32,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
-  const { t } = await getDictionary();
-
   const { locale, brandProfile } = await params;
   const page = Number((await searchParams).page) || 1;
 
-  const { data } = await getPageInfo(locale, 'brand', brandProfile);
+  // Parallelize data fetching
+  const [{ t }, { data }] = await Promise.all([
+    getDictionary(),
+    getPageInfo(locale, 'brand', brandProfile),
+  ]);
 
+  // Fetch brand data after we have the brand ID
   const { data: brand } = await getProfile(locale, 'brand', data.id!, page);
 
   return (

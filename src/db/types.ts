@@ -121,3 +121,7 @@ export type ProfileResponse = GridData &
   Info & {
     interests: InterestsCategory[];
   };
+
+export type LocaleProps = {
+  locale: Languages;
+};

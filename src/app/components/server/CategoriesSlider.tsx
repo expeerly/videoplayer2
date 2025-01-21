@@ -2,14 +2,11 @@ import React, { FunctionComponent } from 'react';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
-import { CategoryData } from '@/src/db/types';
+import { LocaleProps } from '@/src/db/types';
+import { getCategories } from '../../actions/actions';
 
-type Props = {
-  categories: CategoryData[];
-};
-
-export const CategoriesSlider: FunctionComponent<Props> = async ({ categories }) => {
-  const { t } = await getDictionary();
+export const CategoriesSlider: FunctionComponent<LocaleProps> = async ({ locale }) => {
+  const [{ t }, { data: categories }] = await Promise.all([getDictionary(), getCategories(locale)]);
 
   return (
     <section className="w-full sm:max-w-[1170px] flex flex-col justify-center items-center gap-4 py-10 ">
