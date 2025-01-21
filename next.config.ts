@@ -5,19 +5,12 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   images: {
-    dangerouslyAllowSVG: true,
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'image.mux.com',
+        hostname: '*',
         port: '',
-        pathname: '/*/*.*',
-      },
-      {
-        protocol: 'https',
-        hostname: 'abwvxbcxzrszhtjnhchr.supabase.co',
-        port: '',
-        pathname: '**',
+        pathname: '/**',
       },
     ],
   },
