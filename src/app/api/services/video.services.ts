@@ -2,6 +2,7 @@ import { db } from '@/src/db';
 import { video } from '@/src/db/schema';
 import { sql } from 'drizzle-orm';
 import { Video } from '@/src/db/types';
+import { SupportedLanguage } from '../utils/requestHelpers';
 
 export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
   if (!input?.length) {
@@ -86,11 +87,11 @@ export async function getVideosCount(): Promise<{ count: number }> {
   }
 }
 
-export async function getVideoById(id: string): Promise<Video | null> {
+export async function getVideoById(id: string, lang: SupportedLanguage): Promise<Video | null> {
   if (!id) {
     throw new Error('Video ID is required');
   }
-
+  console.log({ id, lang });
   try {
     const result = await db.query.video.findFirst({
       where: (video, { eq }) => eq(video.id, parseInt(id)),

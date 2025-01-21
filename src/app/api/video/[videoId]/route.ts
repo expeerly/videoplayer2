@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import { getVideoById } from '../../services/video.services';
 import { handleError } from '../../utils/errorHandler';
+import { getLanguageFromRequest } from '../../utils/requestHelpers';
 
-export const GET = async (req: Request, { params }: { params: { videoId: string } }) => {
+export const GET = async (req: Request, { params }: { params: Promise<{ videoId: string }> }) => {
   try {
-    const { videoId } = params;
-    console.log({ videoId });
+    const { videoId } = await params;
+
+    const lang = getLanguageFromRequest(req);
+
     if (!videoId) {
       return NextResponse.json(
         { success: false, message: 'Video ID is required' },
@@ -13,7 +16,7 @@ export const GET = async (req: Request, { params }: { params: { videoId: string 
       );
     }
 
-    const video = await getVideoById(videoId);
+    const video = await getVideoById(videoId, lang);
 
     if (!video) {
       return NextResponse.json({ success: false, message: 'Video not found' }, { status: 404 });
