@@ -64,7 +64,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
             <Avatar
               src={imageUrl}
               alt={title}
-              className={dataType === 'reviewer' ? '[&>img]:object-cover' : ''}
+              className={dataType === 'reviewer' ? '[&>img]:object-cover [&>img]:object-top' : ''}
             />
           </div>
         </div>
@@ -87,12 +87,12 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
             {rating && variant === 'secondary' && <StarRating rating={rating} />}
             <p className="text-sm text-grey-500">
               {dataType === 'category'
-                ? `${reviewsCount} reviews`
+                ? `${reviewsCount} ${reviewsCount && reviewsCount?.length > 1 ? t('reviews') : t('singleReview')}`
                 : dataType === 'reviewer'
-                  ? `${age}, ${location} ${country ?? ''}`
+                  ? `${age}, ${location}, ${country ?? ''}`
                   : dataType === 'brand'
-                    ? `${reviewsCount} reviews`
-                    : `${reviewsCount} reviews`}
+                    ? `${reviewsCount} ${reviewsCount && reviewsCount?.length > 1 ? t('reviews') : t('singleReview')}`
+                    : `${reviewsCount} ${reviewsCount && reviewsCount?.length > 1 ? t('reviews') : t('singleReview')}`}
             </p>
           </div>
         </div>

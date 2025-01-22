@@ -30,6 +30,12 @@
   "moreVideosOn": "Mehr Videos zu",
   "loading": "Laden",
   "shop": "Kaufen",
+  "allBrands": "Video Bewertungen: Alle Marken",
+  "allCategories": "Video Bewertungen: Alle Kategorien",
+  "allReviewers": "Video Bewertungen: Alle Tester",
+  "videoReviews": "Video Bewertungen",
+  "singleReview": "Bewertung",
+  "reviews": "Bewertungen",
   "buyNow": {
     "label": "Jetzt kaufen",
     "ariaLabel": "Zum im Video gezeigten Produkt gehen"

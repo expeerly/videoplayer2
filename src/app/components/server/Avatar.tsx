@@ -45,7 +45,7 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
   return (
     <div
       className={clsx(
-        'flex items-center justify-center bg-grey-200 overflow-hidden rounded-full',
+        'flex items-center justify-center bg-grey-100 border border-grey-300 overflow-hidden rounded-full p-0.5',
         sizeClasses[size],
         className
       )}
@@ -56,9 +56,10 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
         <Image
           src={src?.startsWith('//') ? `https:${src}` : src}
           alt={alt}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain rounded-full flex"
           height={20}
           width={20}
+          sizes="100% 100%"
         />
       ) : (
         fallbackOptions[fallback]

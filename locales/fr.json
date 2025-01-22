@@ -30,6 +30,12 @@
   "moreVideosOn": "Plus de vidéos sur",
   "loading": "Charger",
   "shop": "Acheter",
+  "allBrands": "Avis vidéos: toutes les marques",
+  "allCategories": "Avis vidéos: toutes les catégories",
+  "allReviewers": "Avis vidéos: tous les testeurs",
+  "videoReviews": "Avis vidéos",
+  "singleReview": "Avis",
+  "reviews": "Avis",
   "buyNow": {
     "label": "Profiter maintenant",
     "ariaLabel": "Accédez au produit présenté dans la vidéo"

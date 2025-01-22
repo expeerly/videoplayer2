@@ -42,9 +42,7 @@ export const ReviewCard: FunctionComponent<Props> = ({ review, className }) => {
 
           <div className="absolute bottom-0 left-0 right-0 p-3 w-full">
             <div className="flex items-center gap-2 w-full">
-              <div className="bg-white p-1 rounded-full">
-                <Avatar size="sm" src={review.brandLogo} alt={review.brandName} />
-              </div>
+              <Avatar size="sm" src={review.brandLogo} alt={review.brandName} />
               <div className="text-white w-20">
                 <p className="text-sm font-medium leading-tight w-full truncate">
                   {review.brandName}

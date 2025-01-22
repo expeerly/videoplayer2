@@ -45,7 +45,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
         <section>
           <div className="px-5 md:px-0">
             <div className="flex justify-between">
-              <PageHeading>Avis Vidéos: Categories de Produit</PageHeading>
+              <PageHeading>{t('allReviewers')}</PageHeading>
               <Filter categoriesList={allCategories} brandsList={allBrands} />
             </div>
             <LongDescription text={data?.content.bodyText ?? ''} />
@@ -71,7 +71,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           }}
         />
 
-        <SEOSection heading="SEO text lorem ipsum" content={data?.content?.footerText ?? ''} />
+        <SEOSection content={data?.content?.footerText ?? ''} />
       </div>
     </div>
   );

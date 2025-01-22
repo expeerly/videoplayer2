@@ -1,11 +1,10 @@
 import { getCategories, getProfile } from '@/src/app/actions/actions';
-import { Button } from '@/src/app/components/client/Button';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
+import { ShareButton } from '@/src/app/components/client/ShareButton';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { Avatar } from '@/src/app/components/server/Avatar';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
-import { ShareIcon } from '@/src/assets/icons';
 import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
 import { NextPage } from 'next';
@@ -49,7 +48,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         <section>
           <div className="flex gap-4">
             <Avatar
-              className="flex h-[50px] w-[50px] md:h-28 md:w-28 md:m-0"
+              className="flex h-[50px] w-[50px] md:h-28 md:w-28 md:m-0 [&>img]:object-cover [&>img]:object-top "
               alt={data.name}
               src={data.logo}
             />
@@ -57,7 +56,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 ">{data.name}</h1>
               <div className="mb-3">
                 <p className="text-grey-500">
-                  {data.age} {data.location} {data.country}
+                  {data.age} {data.location}, {data.country}
                 </p>
               </div>
               <div className="hidden md:block">
@@ -69,17 +68,8 @@ const Page: NextPage<PageProps> = async ({ params }) => {
                 'flex flex-col gap-0.5 md:absolute md:m-0 md:top-10 md:right-8 mid-lg:right-12'
               }
             >
-              <Button
-                isOnlyIcon
-                variant="secondary"
-                type="button"
-                aria-haspopup="true"
-                title="Show/Hide Menu"
-                id="menu-button"
-                className=" !p-0.5 z-30 max-h-10 max-w-10 ml-auto md:h-12 md:w-12 flex justify-center items-center"
-              >
-                <ShareIcon />
-              </Button>
+              <ShareButton title={data?.name} text={''} />
+
               <p className="text-grey-700 text-xs font-bold">Share</p>
             </div>
           </div>

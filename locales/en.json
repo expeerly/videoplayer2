@@ -29,6 +29,12 @@
   "moreVideosOn": "More videos on",
   "loading": "Loading",
   "shop": "Shop",
+  "allBrands": "Video Reviews: All Brands",
+  "allCategories": "Video Reviews: All Categories",
+  "allReviewers": "Video Reviews: All Reviewers",
+  "videoReviews": "Video Reviews",
+  "singleReview": "Review",
+  "reviews": "Reviews",
   "buyNow": {
     "label": "Buy now",
     "ariaLabel": "Go to the product shown in the video"

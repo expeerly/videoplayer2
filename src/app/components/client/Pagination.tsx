@@ -99,18 +99,19 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
         <LeftChevronIcon className="[&>path]:stroke-grey-500" />
       </button>
 
-      {pageNumbers.map((page, idx) => (
-        <button
-          key={`${page}-${idx}`}
-          onClick={() => typeof page === 'number' && handlePageChange(page)}
-          disabled={page === '...'}
-          className={pageButtonClassName(page)}
-          aria-current={currentPage === page ? 'page' : undefined}
-          aria-label={t('pagination', { pagenumber: page })}
-        >
-          {page}
-        </button>
-      ))}
+      {pageNumbers.length > 2 &&
+        pageNumbers.map((page, idx) => (
+          <button
+            key={`${page}-${idx}`}
+            onClick={() => typeof page === 'number' && handlePageChange(page)}
+            disabled={page === '...'}
+            className={pageButtonClassName(page)}
+            aria-current={currentPage === page ? 'page' : undefined}
+            aria-label={t('pagination', { pagenumber: page })}
+          >
+            {page}
+          </button>
+        ))}
 
       <button
         onClick={() => handlePageChange(currentPage + 1)}
