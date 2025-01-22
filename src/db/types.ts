@@ -126,3 +126,8 @@ export type ProfileResponse = GridData &
 export type LocaleProps = {
   locale: Languages;
 };
+
+export type QAPair = {
+  question: string;
+  answer: string;
+};

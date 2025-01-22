@@ -1,7 +1,7 @@
 import { db } from '@/src/db';
 import { brand, creator, product, video } from '@/src/db/schema';
 import { eq, sql } from 'drizzle-orm';
-import { Video } from '@/src/db/types';
+import { QAPair, Video } from '@/src/db/types';
 import { SupportedLanguage } from '../utils/requestHelpers';
 
 export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
@@ -109,26 +109,16 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
         summary: sql<string>`COALESCE(${video.summary}->${lang}->>'text', ${video.summary}->'en'->>'text')`,
         transcript: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
         faqs: {
-          1: {
-            question: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqTitle'`,
-            answer: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqAnswer'`,
-          },
-          2: {
-            question: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqTitle'`,
-            answer: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqAnswer'`,
-          },
-          3: {
-            question: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqTitle'`,
-            answer: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqAnswer'`,
-          },
-          4: {
-            question: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqTitle'`,
-            answer: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqAnswer'`,
-          },
-          5: {
-            question: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqTitle'`,
-            answer: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqAnswer'`,
-          },
+          question_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqTitle'`,
+          answer_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqAnswer'`,
+          question_2: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqTitle'`,
+          answer_2: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqAnswer'`,
+          question_3: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqTitle'`,
+          answer_3: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqAnswer'`,
+          question_4: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqTitle'`,
+          answer_4: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqAnswer'`,
+          question_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqTitle'`,
+          answer_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqAnswer'`,
         },
         creator: {
           id: creator.id,
@@ -157,7 +147,27 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
       .where(eq(video.id, Number(id)))
       .limit(1);
 
-    return videoData;
+    if (!videoData) {
+      throw new Error('Video not found');
+    }
+
+    return {
+      ...videoData,
+      faqs: Object.entries(videoData.faqs).reduce((acc: QAPair[], [key, value]) => {
+        if (key.startsWith('question')) {
+          const index = key.split('_')[1];
+          const answerKey = `answer_${index}` as keyof typeof videoData.faqs;
+          const answer = videoData.faqs[answerKey];
+          if (!!value && !!answer) {
+            acc.push({
+              question: value,
+              answer: answer,
+            });
+          }
+        }
+        return acc;
+      }, [] as QAPair[]),
+    };
   } catch (error) {
     console.error('Error fetching video by ID:', error);
     throw error instanceof Error ? error : new Error('Failed to fetch video details');
