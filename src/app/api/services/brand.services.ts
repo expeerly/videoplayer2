@@ -1,9 +1,9 @@
 import { db } from '@/src/db';
 import { brand, category, product, video } from '@/src/db/schema';
-import { and, eq, exists, inArray, SQL, sql } from 'drizzle-orm';
+import { and, eq, exists, SQL, sql } from 'drizzle-orm';
 import { Brand, BrandInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
-import { isValidBrand } from './queries';
+import { getFilters, isValidBrand } from './queries';
 
 export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[]> {
   if (!input || !Array.isArray(input)) {
@@ -113,15 +113,12 @@ export async function getBrandsLogosAndNames(
 export async function handleGetBrandsWithVideos(
   { page, limit, videoCount, random }: PaginationParams,
   lang: SupportedLanguage,
-  { categories, brands }: FilterParams
+  filters: FilterParams
 ) {
   try {
     const offset = (page - 1) * limit;
 
-    // Create filter conditions
-    const categoryFilter = categories?.length ? inArray(product.categoryId, categories) : undefined;
-
-    const brandFilter = brands?.length ? inArray(brand.id, brands) : undefined;
+    const { categoryFilter, brandFilter } = getFilters(filters);
 
     // Build where conditions
     const whereConditions = exists(
@@ -131,6 +128,7 @@ export async function handleGetBrandsWithVideos(
         .innerJoin(product, eq(video.productId, product.id))
         .where(
           and(
+            isValidBrand,
             eq(product.brandId, brand.id),
             ...(categoryFilter ? [categoryFilter] : []),
             ...(brandFilter ? [brandFilter] : [])
