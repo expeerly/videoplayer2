@@ -1,5 +1,5 @@
 import { db } from '@/src/db';
-import { brand, creator, product, video } from '@/src/db/schema';
+import { brand, category, creator, product, video } from '@/src/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { QAPair, Video } from '@/src/db/types';
 import { SupportedLanguage } from '../utils/requestHelpers';
@@ -139,11 +139,17 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
           brandSlug: brand.slug,
           websiteURL: brand.websiteURL,
         },
+        category: {
+          id: category.id,
+          name: category.logo,
+          slug: sql<string>`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug')`,
+        },
       })
       .from(video)
       .leftJoin(creator, eq(video.creatorId, creator.id))
       .leftJoin(product, eq(video.productId, product.id))
       .leftJoin(brand, eq(product.brandId, brand.id))
+      .leftJoin(category, eq(product.categoryId, category.id))
       .where(eq(video.id, Number(id)))
       .limit(1);
 

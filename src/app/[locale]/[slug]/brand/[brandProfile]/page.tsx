@@ -50,7 +50,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
               <div className="flex flex-1 flex-col ">
                 <PageHeading>{data?.name}</PageHeading>
                 <div className="flex gap-1">
-                  <StarRating rating={4.5} />
+                  <StarRating rating={data.rating} />
                   <p className="text-grey-500">{`(${data?.reviewsCount})`}</p>
                 </div>
               </div>

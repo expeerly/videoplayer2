@@ -110,6 +110,7 @@ export type PageInfo = {
   slug: string;
   websiteURL: string;
   reviewsCount?: string;
+  rating?: number;
 };
 
 export type InterestsCategory = {
