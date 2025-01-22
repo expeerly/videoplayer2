@@ -1,8 +1,9 @@
 import { db } from '@/src/db';
 import { brand, category, product, video } from '@/src/db/schema';
-import { eq, exists, sql, and, inArray } from 'drizzle-orm';
+import { eq, exists, sql, and, SQL } from 'drizzle-orm';
 import { Category, CategoryInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
+import { getFilters, hasCategoryVideos } from './queries';
 
 /**
  * Creates or updates multiple categories
@@ -56,6 +57,7 @@ export async function getCategoriesForSlider(
           ),
       })
       .from(category)
+      .where(hasCategoryVideos)
       .limit(20);
   } catch (error) {
     console.error('Error fetching categories:', error);
@@ -93,6 +95,7 @@ export async function getAllCategories(): Promise<Partial<Category>[]> {
         )`,
       })
       .from(category)
+      .where(hasCategoryVideos)
       .orderBy(
         sql<string>`COALESCE("categoryData" -> 'en' ->> 'categoryName', "categoryData" -> 'en' ->> 'categoryName')`
       );
@@ -106,9 +109,9 @@ export async function getAllCategories(): Promise<Partial<Category>[]> {
  * Retrieves the total count of categories
  * @returns {Promise<{ count: number }>} Object containing the total count
  */
-export async function getCategoryCount(): Promise<{ count: number }> {
+export async function getCategoryCount(condition?: SQL): Promise<{ count: number }> {
   try {
-    const count = await db.$count(category);
+    const count = await db.$count(category, condition);
     return { count };
   } catch (error) {
     console.error('Error fetching category count:', error);
@@ -126,15 +129,13 @@ export async function getCategoryCount(): Promise<{ count: number }> {
 export async function handleGetCategoryWithVideos(
   { page, limit, videoCount }: PaginationParams,
   lang: SupportedLanguage,
-  { categories, brands }: FilterParams
+  filters: FilterParams
 ) {
   try {
     const offset = (page - 1) * limit;
 
     // Create filter conditions
-    const categoryFilter = categories?.length ? inArray(category.id, categories) : undefined;
-
-    const brandFilter = brands?.length ? inArray(product.brandId, brands) : undefined;
+    const { categoryFilter, brandFilter } = getFilters(filters);
 
     // Build where conditions
     const whereConditions = [
