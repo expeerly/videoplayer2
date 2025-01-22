@@ -82,6 +82,7 @@ export type Info = {
   age?: number;
   bio?: string;
   location?: string;
+  country?: string;
 };
 
 export type GridData = {

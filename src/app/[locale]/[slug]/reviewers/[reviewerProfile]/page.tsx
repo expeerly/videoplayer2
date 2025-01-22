@@ -57,7 +57,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 ">{data.name}</h1>
               <div className="mb-3">
                 <p className="text-grey-500">
-                  {data.age} {data.location}
+                  {data.age} {data.location} {data.country}
                 </p>
               </div>
               <div className="hidden md:block">

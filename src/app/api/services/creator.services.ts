@@ -132,6 +132,7 @@ export async function handleGetCreatorWithVideos(
           info: {
             age: creator.age,
             location: creator.location,
+            country: creator.country,
             bio: creator.bio,
           },
           videos: sql<string>`(
@@ -201,6 +202,7 @@ export async function getCreatorByIdWithVideos(creatorId: string, lang: Supporte
         slug: creator.id,
         age: creator.age,
         location: creator.location,
+        country: creator.country,
         bio: creator.bio,
         interests: sql<string>`(
             SELECT json_agg(interest_data)

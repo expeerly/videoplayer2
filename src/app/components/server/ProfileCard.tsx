@@ -16,6 +16,7 @@ export type ProfileCardProps = {
   age?: number;
   bio?: string;
   location?: string;
+  country?: string;
   rating?: number;
   imageUrl?: string;
 };
@@ -30,6 +31,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
   bio,
   age,
   location,
+  country,
   rating,
 }) => {
   const { t } = await getDictionary();
@@ -83,7 +85,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
               {dataType === 'category'
                 ? `${reviewsCount} reviews`
                 : dataType === 'reviewer'
-                  ? `${age}, ${location}`
+                  ? `${age}, ${location} ${country ?? ''}`
                   : dataType === 'brand'
                     ? `${reviewsCount} reviews`
                     : `${reviewsCount} reviews`}
