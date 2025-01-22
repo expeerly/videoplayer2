@@ -182,11 +182,8 @@ export async function getPageInfo(
   data: PageInfo;
   error?: string;
 }> {
-  return apiRequest<PageInfo>(`/${pageType}/pageInfo`, {
+  return apiRequest<PageInfo>(`/${pageType}/pageInfo/?slug=${encodeURIComponent(slug)}`, {
     lang,
-    queryParams: {
-      slug,
-    },
   });
 }
 
@@ -219,14 +216,14 @@ export async function getCounts(): Promise<{
   data: { [key: string]: number };
   error?: string;
 }> {
-  return apiRequest<{ [key: string]: number }>(`/counts`, { lang: 'en' });
+  return apiRequest<{ [key: string]: number }>(`/counts`, { lang: 'en', revalidate: undefined });
 }
 
 export async function getLogos(): Promise<{
   data: Partial<Brand>[];
   error?: string;
 }> {
-  return apiRequest<Partial<Brand>[]>(`/brand/logos`, { lang: 'en' });
+  return apiRequest<Partial<Brand>[]>(`/brand/logos`, { lang: 'en', revalidate: undefined });
 }
 
 export async function getVideoDetils({
