@@ -42,8 +42,8 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
 
   return (
     <div className="w-full bg-white">
-      <div className="w-full mx-auto md:max-w-[532px] pt-5 md:pt-10">
-        <section>
+      <div className="w-full pt-5 md:pt-10">
+        <section className="w-full mx-auto md:max-w-[532px]">
           <div className="px-5 md:px-0">
             <div className="flex justify-between">
               <PageHeading>{t('allCategories')}</PageHeading>
@@ -51,29 +51,38 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             </div>
             <LongDescription text={data?.content.bodyText ?? ''} />
           </div>
-          <AllCategoriesSlider locale={locale} />
         </section>
 
-        <LandingPageGrid
-          type={'category'}
+        <AllCategoriesSlider
           locale={locale}
-          page={page}
           categoryQuery={categoryQuery}
           brandQuery={brandQuery}
           allCategories={allCategories}
           allBrands={allBrands}
-          ctaBlock={{
-            heading: t('cta_block_all_brands_categories.title'),
-            desc: t('cta_block_all_brands_categories.desc'),
-            button: {
-              label: t('learn_more.label'),
-              ariaLabel: t('learn_more.aria_label'),
-              href: 'https://www.get.expeerly.com/for-brands',
-            },
-          }}
         />
 
-        <SEOSection content={data?.content.footerText ?? ''} />
+        <div className="w-full mx-auto md:max-w-[532px]">
+          <LandingPageGrid
+            type={'category'}
+            locale={locale}
+            page={page}
+            categoryQuery={categoryQuery}
+            brandQuery={brandQuery}
+            allCategories={allCategories}
+            allBrands={allBrands}
+            ctaBlock={{
+              heading: t('cta_block_all_brands_categories.title'),
+              desc: t('cta_block_all_brands_categories.desc'),
+              button: {
+                label: t('learn_more.label'),
+                ariaLabel: t('learn_more.aria_label'),
+                href: 'https://www.get.expeerly.com/for-brands',
+              },
+            }}
+          />
+
+          <SEOSection content={data?.content.footerText ?? ''} />
+        </div>
       </div>
     </div>
   );

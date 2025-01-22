@@ -67,23 +67,44 @@ async function apiRequest<T>(
 export async function getBrands(
   lang: Languages,
   limit: number = 20,
-  random: boolean = false
+  random: boolean = false,
+  filter?: {
+    category?: string;
+    brand?: string;
+  }
 ): Promise<{
   data: BrandData;
   error?: string;
 }> {
   return apiRequest<BrandData>('/brand', {
     lang,
-    queryParams: { limit, random },
+    queryParams: {
+      limit,
+      random,
+      ...(filter?.category && { category: filter.category }),
+      ...(filter?.brand && { brand: filter.brand }),
+    },
     revalidate: random ? 0 : 300,
   });
 }
 
-export async function getCategories(lang: Languages): Promise<{
+export async function getCategories(
+  lang: Languages,
+  filter?: {
+    category?: string;
+    brand?: string;
+  }
+): Promise<{
   data: CategoryData[];
   error?: string;
 }> {
-  return apiRequest<CategoryData[]>('/category', { lang });
+  return apiRequest<CategoryData[]>('/category', {
+    lang,
+    queryParams: {
+      ...(filter?.category && { category: filter.category }),
+      ...(filter?.brand && { brand: filter.brand }),
+    },
+  });
 }
 
 export async function getAllBrands(lang: Languages): Promise<{
