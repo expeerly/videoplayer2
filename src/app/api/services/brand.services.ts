@@ -47,11 +47,17 @@ export async function getBrandsCount(condition?: SQL<unknown>): Promise<{ count:
   }
 }
 
-export const getBrandsInfo = async (columns = {}, { page = 1, limit = 0, random = false } = {}) => {
+export const getBrandsInfo = async (
+  columns = {},
+  { page = 1, limit = 0, random = false } = {},
+  condition?: SQL<unknown>
+) => {
   const baseQuery = db
     .select(columns)
     .from(brand)
-    .where(isValidBrand)
+    .innerJoin(product, eq(brand.id, product.brandId))
+    .where(and(isValidBrand, condition))
+    .groupBy(brand.id)
     .orderBy(random ? sql`RANDOM()` : brand.brandName);
 
   if (limit) {
@@ -87,15 +93,16 @@ interface PaginatedBrands {
 }
 
 export async function getBrandsLogosAndNames(
-  page: number = 1,
-  limit: number = 20,
-  random: boolean = false
+  { page, limit, random }: PaginationParams,
+  filters: FilterParams
 ): Promise<PaginatedBrands> {
   try {
+    const { categoryFilter, brandFilter } = getFilters(filters);
     const [data, brandsCount] = await Promise.all([
       getBrandsInfo(
         { logo: brand.logo, brandName: brand.brandName, slug: brand.slug },
-        { page, limit, random }
+        { page, limit, random },
+        and(categoryFilter, brandFilter)
       ),
       getBrandsCount(isValidBrand),
     ]);

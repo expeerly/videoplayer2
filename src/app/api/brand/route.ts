@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getBrandsLogosAndNames, handleCreateBrand } from '../services/brand.services';
-import { handleError } from '../utils/errorHandler';
-import { getPaginationParams } from '../utils/requestHelpers';
+import { createRouteHandler } from '../utils/baseRouteHandler';
 
 export async function POST(req: Request) {
   try {
@@ -22,20 +21,9 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(request: Request) {
-  try {
-    const { random } = getPaginationParams(request);
-    const brands = await getBrandsLogosAndNames(1, 20, random);
-    return NextResponse.json(
-      {
-        success: true,
-        data: brands,
-      },
-      {
-        status: 200,
-      }
-    );
-  } catch (error) {
-    return handleError(error);
-  }
-}
+export const GET = createRouteHandler({
+  serviceFunction: async params => {
+    return getBrandsLogosAndNames(params.pagination, params.filters!);
+  },
+  includeFilters: true,
+});

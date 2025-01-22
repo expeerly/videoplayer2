@@ -40,11 +40,13 @@ export async function handleCreateCategory(input: CategoryInputType[]): Promise<
  * @returns {Promise<Partial<Category>[]>} Array of categories for the slider
  */
 export async function getCategoriesForSlider(
-  lang: SupportedLanguage
+  lang: SupportedLanguage,
+  filters: FilterParams
 ): Promise<Partial<Category>[]> {
   try {
+    const { brandFilter, categoryFilter } = getFilters(filters);
     return await db
-      .select({
+      .selectDistinct({
         id: category.id,
         logo: category.logo,
         categoryName:
@@ -57,7 +59,8 @@ export async function getCategoriesForSlider(
           ),
       })
       .from(category)
-      .where(hasCategoryVideos)
+      .innerJoin(product, eq(product.categoryId, category.id))
+      .where(and(brandFilter, categoryFilter, hasCategoryVideos))
       .limit(20);
   } catch (error) {
     console.error('Error fetching categories:', error);
