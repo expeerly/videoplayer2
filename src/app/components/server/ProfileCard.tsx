@@ -61,7 +61,11 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
       >
         <div className="relative">
           <div className="w-10 h-10 rounded-full overflow-hidden">
-            <Avatar src={imageUrl} alt={title} />
+            <Avatar
+              src={imageUrl}
+              alt={title}
+              className={dataType === 'reviewer' ? '[&>img]:object-cover' : ''}
+            />
           </div>
         </div>
         <div className="flex flex-col">
