@@ -209,8 +209,7 @@ export async function getCreatorByIdWithVideos(creatorId: string, lang: Supporte
             SELECT json_agg(interest_data)
             FROM (
               SELECT json_build_object(
-                'categoryId', ${category.id},
-                'categoryName', ${category.categoryData}->${lang}->>'categoryName',
+                'logo', ${category.logo},
                 'categorySlug', ${category.categoryData}->${lang}->>'urlSlug'
               ) as interest_data
               FROM ${category}
