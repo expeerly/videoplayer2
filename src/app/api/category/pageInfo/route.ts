@@ -7,7 +7,7 @@ export const GET = async (request: Request) => {
   try {
     const lang = getLanguageFromRequest(request);
     const params = new URL(request.url).searchParams;
-    const categorySlug = params.get('slug');
+    const categorySlug = decodeURIComponent(params.get('slug') || '');
 
     if (!categorySlug) {
       return NextResponse.json(
