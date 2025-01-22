@@ -1,6 +1,6 @@
 import { db } from '@/src/db';
 import { video } from '@/src/db/schema';
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { Video } from '@/src/db/types';
 import { SupportedLanguage } from '../utils/requestHelpers';
 
@@ -87,21 +87,55 @@ export async function getVideosCount(): Promise<{ count: number }> {
   }
 }
 
-export async function getVideoById(id: string, lang: SupportedLanguage): Promise<Video | null> {
+export async function getVideoById(id: string, lang: SupportedLanguage) {
   if (!id) {
     throw new Error('Video ID is required');
   }
-  console.log({ id, lang });
   try {
-    const result = await db.query.video.findFirst({
-      where: (video, { eq }) => eq(video.id, parseInt(id)),
-      with: {
-        creator: true,
-        product: true,
-      },
-    });
+    const [videoData] = await db
+      .select({
+        id: video.id,
+        videoTitle: sql<string>`COALESCE(${video.videoTitle}->${lang}->>'title', ${video.videoTitle}->'en'->>'title')`,
+        videoUrl: video.videoUrl,
+        playbackId: video.playbackId,
+        productId: video.productId,
+        creatorId: video.creatorId,
+        published: video.published,
+        cannonicalTag: video.cannonicalTag,
+        resolution: video.resolution,
+        starRating: video.starRating,
+        siteTitle: sql<string>`COALESCE(${video.siteTitle}->${lang}->>'title', ${video.siteTitle}->'en'->>'title')`,
+        metaDescription: sql<string>`COALESCE(${video.metaDescription}->${lang}->>'desc', ${video.metaDescription}->'en'->>'desc')`,
+        summary: sql<string>`COALESCE(${video.summary}->${lang}->>'text', ${video.summary}->'en'->>'text')`,
+        transcript: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
+        faqs: {
+          1: {
+            question: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqTitle'`,
+            answer: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqAnswer'`,
+          },
+          2: {
+            question: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqTitle'`,
+            answer: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqAnswer'`,
+          },
+          3: {
+            question: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqTitle'`,
+            answer: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqAnswer'`,
+          },
+          4: {
+            question: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqTitle'`,
+            answer: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqAnswer'`,
+          },
+          5: {
+            question: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqTitle'`,
+            answer: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqAnswer'`,
+          },
+        },
+      })
+      .from(video)
+      .where(eq(video.id, Number(id)))
+      .limit(1);
 
-    return result ?? null;
+    return videoData;
   } catch (error) {
     console.error('Error fetching video by ID:', error);
     throw error instanceof Error ? error : new Error('Failed to fetch video details');
