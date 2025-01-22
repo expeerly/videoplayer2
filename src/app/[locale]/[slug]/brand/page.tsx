@@ -64,6 +64,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           brandQuery={brandQuery}
           allCategories={allCategories}
           allBrands={allBrands}
+          headerVariant={'secondary'}
           ctaBlock={{
             heading: t('cta_block_all_brands_categories.title'),
             desc: t('cta_block_all_brands_categories.desc'),

@@ -61,11 +61,12 @@ export const BrandsSlider: FunctionComponent<LocaleProps> = async ({ locale }) =
           <Button
             size="lg"
             variant="secondary"
-            href="/for-brands"
+            href="https://www.get.expeerly.com/for-brands"
             fullWidth
             className=" bg-white mt-10 text-center"
             title={t('get_video_reviewed.label')}
             aria-label={t('get_video_reviewed.aria_label')}
+            target={'_blank'}
           >
             {t('get_video_reviewed.label')}
           </Button>

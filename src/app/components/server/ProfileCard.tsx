@@ -68,9 +68,9 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
             />
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           <div className="flex items-center gap-2">
-            <h3 className=" font-bold text-grey-700">
+            <h3 className=" font-bold text-grey-700 max-w-60 w-full truncate">
               {dataType === 'reviewer'
                 ? title
                     .split(' ')

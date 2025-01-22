@@ -40,7 +40,7 @@ export const ExploreReviewers: React.FunctionComponent<{ locale: Languages }> = 
         <Button
           title={t('explore_all_reviewers.label')}
           aria-label={t('explore_all_reviewers.aria_label')}
-          href="/video-reviews/reviewer"
+          href="/video-reviews/reviewers"
           size="lg"
           variant="primary"
           fullWidth

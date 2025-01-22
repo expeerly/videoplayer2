@@ -15,6 +15,7 @@ type Props = {
   allCategories: AllCategoriesData[];
   allBrands: AllBrandssData;
   ctaBlock: CTABlockProps;
+  headerVariant?: 'primary' | 'secondary';
 };
 
 export const LandingPageGrid: FunctionComponent<Props> = async ({
@@ -26,6 +27,7 @@ export const LandingPageGrid: FunctionComponent<Props> = async ({
   allCategories,
   allBrands,
   ctaBlock,
+  headerVariant,
 }) => {
   const { data: gridVideos } = await getGridVideos({
     lang: locale,
@@ -42,6 +44,7 @@ export const LandingPageGrid: FunctionComponent<Props> = async ({
       <PaginationContainer
         header={{
           dataType: type === 'creator' ? 'reviewer' : type,
+          variant: headerVariant,
         }}
         data={gridVideos}
         ctaBlock={ctaBlock}
