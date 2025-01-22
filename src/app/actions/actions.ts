@@ -39,6 +39,7 @@ async function apiRequest<T>(
   options: {
     lang: Languages;
     queryParams?: Record<string, string | number | boolean>;
+    revalidate?: number;
   }
 ): Promise<{ data: T; error?: string }> {
   try {
@@ -49,6 +50,7 @@ async function apiRequest<T>(
       headers: {
         lang: options.lang,
       },
+      next: { revalidate: options.revalidate ?? 600 },
     });
 
     const data = await response.json();
@@ -73,6 +75,7 @@ export async function getBrands(
   return apiRequest<BrandData>('/brand', {
     lang,
     queryParams: { limit, random },
+    revalidate: random ? 0 : 300,
   });
 }
 
@@ -146,6 +149,7 @@ export async function getGridVideos({
       ...(filter?.category && { category: filter.category }),
       ...(filter?.brand && { brand: filter.brand }),
     },
+    revalidate: random ? 0 : 300,
   });
 }
 
