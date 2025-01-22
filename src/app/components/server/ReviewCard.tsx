@@ -28,7 +28,7 @@ export const ReviewCard: FunctionComponent<Props> = ({ review, className }) => {
       )}
     >
       <Link
-        href={`/video-reviews/${review.categorySlug}/${review.brandSlug}/${review.productSlug}/${review.playbackId}`}
+        href={`/video-reviews/${review.categorySlug}/${review.brandSlug}/${review.productSlug}/${review.id}`}
       >
         <div className={`h-[273px] relative group cursor-pointer w-full`}>
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40" />

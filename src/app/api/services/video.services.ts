@@ -131,7 +131,6 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
           productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
           productSlug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
           productLink: product.productLink,
-          vendorProductNumber: product.vendorProductNumber,
         },
         brand: {
           id: brand.id,
@@ -142,7 +141,7 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
         },
         category: {
           id: category.id,
-          name: category.logo,
+          name: sql<string>`COALESCE(${category.categoryData}->${lang}->>'categoryName', ${category.categoryData}->'en'->>'categoryName')`,
           slug: sql<string>`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug')`,
         },
       })

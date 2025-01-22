@@ -11,6 +11,7 @@ import {
   ProfileResponse,
   PageInfo,
   Brand,
+  VideoResponse,
 } from '@/src/db/types';
 
 async function createApiUrl(path: string, queryParams?: Record<string, string | number | boolean>) {
@@ -201,4 +202,17 @@ export async function getLogos(): Promise<{
   error?: string;
 }> {
   return apiRequest<Partial<Brand>[]>(`/brand/logos`, { lang: 'en' });
+}
+
+export async function getVideoDetils({
+  videoId,
+  lang,
+}: {
+  videoId: string;
+  lang: Languages;
+}): Promise<{
+  data: VideoResponse;
+  error?: string;
+}> {
+  return apiRequest<VideoResponse>(`/video/${videoId}`, { lang });
 }

@@ -132,3 +132,54 @@ export type QAPair = {
   question: string;
   answer: string;
 };
+
+export type VideoCategory = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+export type VideoBrand = {
+  id: string;
+  name: string;
+  logo: string;
+  brandSlug: string;
+  websiteURL: string;
+};
+
+export type VideoCreator = {
+  id: string;
+  name: string;
+  logo: string;
+};
+
+export type VideoProduct = {
+  id: string;
+  globalTradeItemNumber: string | null;
+  productLink: string;
+  productName: string;
+  productSlug: string;
+  vendorProductNumber: string;
+};
+
+export type VideoResponse = {
+  id: number;
+  videoTitle: string;
+  videoUrl: string;
+  playbackId: string;
+  productId: string;
+  creatorId: string;
+  published: boolean;
+  cannonicalTag: boolean;
+  resolution: string;
+  starRating: number;
+  siteTitle: string;
+  metaDescription: string;
+  summary: string | null;
+  transcript: string;
+  faqs: QAPair[];
+  creator: VideoCreator;
+  product: VideoProduct;
+  brand: VideoBrand;
+  category: VideoCategory;
+};

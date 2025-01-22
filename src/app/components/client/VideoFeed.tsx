@@ -41,7 +41,7 @@ export const VideoFeed: FunctionComponent<Props> = ({ videos }) => {
   // Handle initial navigation and back button
   useEffect(() => {
     // Redirect to first video if on base explore page
-    if (pathname === '/explore') {
+    if (pathname === '/explore' || pathname === 'video-reviews') {
       router.replace(`/explore/${videos[0].playbackId}`, { scroll: false });
     }
 

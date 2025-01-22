@@ -43,10 +43,10 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     if (isMobile() && navigator.share) {
       try {
         await navigator.share({
-          title: video.productName,
+          title: video.product.productName,
           text: t('dynamic_texts.share_action.aria_label', {
-            productName: video.productName,
-            brandName: video.brandName,
+            productName: video.product.productName,
+            brandName: video.brand.name,
           }),
           url: window.location.href,
         });
@@ -56,7 +56,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     } else {
       setIsOpen(true);
     }
-  }, [t, video.brandName, video.productName]);
+  }, [t, video]);
 
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">

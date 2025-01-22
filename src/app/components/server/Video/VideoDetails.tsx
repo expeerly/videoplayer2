@@ -4,78 +4,22 @@ import { Button } from '../../client/Button';
 import { getDictionary } from '@/src/lib/dictionary';
 import { SectionHeading } from './SectionHeading';
 import { Divider } from './Divider';
+import { VideoResponse } from '@/src/db/types';
 
-const faqs = [
-  {
-    question: 'How is the Dyson Airwrap Multi-Styler packaged?',
-    answer:
-      'The Dyson Airwrap Multi-Styler comes carefully and elegantly packaged in a high-quality box, ensuring that all contents are well-protected during transit and storage.',
-  },
-  {
-    question: 'How is the Dyson Airwrap Multi-Styler packaged?',
-    answer:
-      'The Dyson Airwrap Multi-Styler comes carefully and elegantly packaged in a high-quality box, ensuring that all contents are well-protected during transit and storage.',
-  },
-  {
-    question: 'How is the Dyson Airwrap Multi-Styler packaged?',
-    answer:
-      'The Dyson Airwrap Multi-Styler comes carefully and elegantly packaged in a high-quality box, ensuring that all contents are well-protected during transit and storage.',
-  },
-  {
-    question: 'How is the Dyson Airwrap Multi-Styler packaged?',
-    answer:
-      'The Dyson Airwrap Multi-Styler comes carefully and elegantly packaged in a high-quality box, ensuring that all contents are well-protected during transit and storage.',
-  },
-  {
-    question: 'How is the Dyson Airwrap Multi-Styler packaged?',
-    answer:
-      'The Dyson Airwrap Multi-Styler comes carefully and elegantly packaged in a high-quality box, ensuring that all contents are well-protected during transit and storage.',
-  },
-];
-
-const videoDetails = {
-  videoTitle: `Discover Mary's Dyson Airwrap Multi-Styler Review: Effortless Hair
-          Styling Made Stunningly Simple!`,
-  summary: ` The Dyson Airwrap Multi-Styler impresses with its elegant packaging,
-            versatile attachments, user-friendly operation, and quick hair
-            styling capabilities. Tester Patty highlights its ability to create
-            various hairstyles, control curl sizes, and expedite morning
-            routines. It's an ideal choice for individuals who enjoy
-            experimenting with different hairstyles without compromising hair
-            health or spending excessive time styling.`,
-  brandName: `Dyson`,
-  productName: `Airwrap Multi-Styler`,
-  gtin: '5025155071458',
-  vendorProductNo: 'H505',
-  rating: 4.5,
-  reviwerName: 'Marisa C.',
-  whatReviewerThinks: ` Hello, I'm Marisa, and I had the opportunity to test for expeerly
-            the Dyson Airwrap Multi-Styler for long hair The first thing I
-            noticed is how carefully and elegantly everything is packaged
-            Everything comes in a high-quality box that protects the contents
-            really well It comes with various attachments that you can use to
-            style your hair I especially like that it has two different-sized
-            curlers which allow you to determine the size of the curls You can
-            directly set the direction in which the hair is wrapped by turning a
-            small wheel The usage is really easy and it's super quick to achieve
-            beautiful curls With the brush attachment that is also included you
-            can blow-dry your hair straight and it's dry within minutes It makes
-            the morning preparation really fast, especially after showering I
-            would recommend this hairdryer to anyone who likes to try out
-            different hairstyles but doesn't want to damage their hair with heat
-            or spend too much time on it.`,
+type Props = {
+  data: VideoResponse;
 };
 
-export const VideoDetails: FunctionComponent = async () => {
+export const VideoDetails: FunctionComponent<Props> = async ({ data }) => {
   const { t } = await getDictionary();
 
   return (
     <div className="w-full flex flex-col md:max-w-[497px]">
       <section className="mb-5">
         <SectionHeading className="mb-2 ">
-          {t('reviewSummary')} {`{{productame}}`}
+          {t('reviewSummary')} {data.product.productName}
         </SectionHeading>
-        <p className="text-grey-700 font-normal text-base">{videoDetails?.summary}</p>
+        <p className="text-grey-700 font-normal text-base">{data.summary}</p>
       </section>
 
       <Divider />
@@ -86,21 +30,21 @@ export const VideoDetails: FunctionComponent = async () => {
           <div className="space-y-6">
             <div>
               <h3 className="text-grey-700">{t('brandName')}</h3>
-              <div className="text-grey-700">{videoDetails.brandName}</div>
+              <div className="text-grey-700">{data.brand.name}</div>
             </div>
             <div>
               <h3 className="text-grey-700">{t('productName')}</h3>
-              <div className="text-grey-700">{videoDetails.productName}</div>
+              <div className="text-grey-700">{data.product.productName}</div>
             </div>
           </div>
           <div className="space-y-6">
             <div>
               <h3 className="text-grey-700">{t('gtinEan')}</h3>
-              <div className="text-grey-700">{videoDetails.gtin}</div>
+              <div className="text-grey-700">{data.product.globalTradeItemNumber ?? '-'}</div>
             </div>
             <div>
               <h3 className="text-grey-700">{t('vendorProductNumber')}</h3>
-              <div className="text-grey-700">{videoDetails.vendorProductNo}</div>
+              <div className="text-grey-700">{data.product.vendorProductNumber ?? '-'}</div>
             </div>
           </div>
         </div>
@@ -110,9 +54,9 @@ export const VideoDetails: FunctionComponent = async () => {
       <section>
         <SectionHeading className="mb-1.5">{t('productHighlights')}</SectionHeading>
         <div className="flex items-center gap-1 mb-4">
-          <span className="font-medium text-grey-700">{videoDetails.rating}</span>
+          <span className="font-medium text-grey-700">{data.starRating}</span>
           <div className="flex gap-0.5">
-            <StarRating rating={videoDetails.rating} showRating={false} />
+            <StarRating rating={data.starRating} showRating={false} />
           </div>
         </div>
       </section>
@@ -121,8 +65,17 @@ export const VideoDetails: FunctionComponent = async () => {
 
       <section className="relative">
         <div className="absolute top-0 md:-top-20" id="whatReviewerThinks" />
-        <SectionHeading>What {videoDetails.reviwerName} thinks</SectionHeading>
-        <p className=" mt-1.5 text-grey-700">{videoDetails.whatReviewerThinks}</p>
+        <SectionHeading>
+          What{' '}
+          {data.creator.name
+            .split(' ')
+            .map((part, index, arr) =>
+              index === arr.length - 1 ? part.charAt(0) + '.' : part + ' '
+            )
+            .join('')}{' '}
+          thinks
+        </SectionHeading>
+        <p className=" mt-1.5 text-grey-700">{data.transcript}</p>
       </section>
 
       <Divider className="my-5 md:my-8" />
@@ -131,7 +84,7 @@ export const VideoDetails: FunctionComponent = async () => {
         <div className="absolute top-0 md:-top-20" id="faqs" />
         <SectionHeading className="mb-3">{t('frequentlyAskedQuestions')}</SectionHeading>
         <div className="space-y-4">
-          {faqs.map((faq, index) => (
+          {data.faqs.map((faq, index) => (
             <div key={index} className="space-y-2">
               <div className="flex items-start gap-2">
                 <h3 className="text-base font-bold text-grey-700">{faq.question}</h3>
@@ -144,7 +97,19 @@ export const VideoDetails: FunctionComponent = async () => {
         </div>
       </section>
 
-      <Button size="lg" className=" mt-5 mb-6 md:mt-8" aria-label={t('buyNow.ariaLabel')}>
+      <Button
+        size="lg"
+        className=" mt-5 mb-6 md:mt-8"
+        aria-label={t('buyNow.ariaLabel')}
+        href={
+          data.product.productLink
+            ? data.product.productLink.startsWith('http')
+              ? data.product.productLink
+              : `https://${data.product.productLink}`
+            : ''
+        }
+        target={'_blank'}
+      >
         {t('buyNow.label')}
       </Button>
     </div>

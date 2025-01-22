@@ -1,3 +1,4 @@
+'use client';
 import React, {
   FunctionComponent,
   memo,
@@ -28,6 +29,7 @@ import {
 } from '@/src/assets/icons';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
 import { Link, usePathname } from '@/src/i18n/routing';
+import { useSearchParams } from 'next/navigation';
 import { CategoryData } from '@/src/db/types';
 
 import { Button } from './Button';
@@ -127,6 +129,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('menu');
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const menuItems = useMemo(() => defaultMenuItems(categories), [categories]);
 
   // Event Handlers
@@ -362,7 +365,11 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                                 <Link
                                   locale={item.key === 'language' ? subItem.href : undefined}
                                   role="menuitem"
-                                  href={item.key === 'language' ? pathname : subItem.href}
+                                  href={
+                                    item.key === 'language'
+                                      ? `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ''}`
+                                      : subItem.href
+                                  }
                                   title={subItem.label}
                                   className="flex items-center gap-2 w-full text-left pl-2 pr-14 py-2 rounded-lg text-ray-700 hover:bg-grey-100"
                                 >

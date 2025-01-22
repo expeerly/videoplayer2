@@ -32,6 +32,8 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  console.log({ local });
+
   const brands = useMemo(
     () =>
       brandsList?.map(i => ({
@@ -66,13 +68,13 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
     return {
       brand: brandSlugs
         .map(slug => {
-          const brand = brands.find(b => b.slug === slug);
+          const brand = brands?.find(b => b.slug === slug);
           return brand?.id.toString() || '';
         })
         .filter(Boolean),
       category: categorySlugs
         .map(slug => {
-          const category = categories.find(c => c.slug === slug);
+          const category = categories?.find(c => c.slug === slug);
           return category?.id.toString() || '';
         })
         .filter(Boolean),

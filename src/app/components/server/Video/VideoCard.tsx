@@ -2,17 +2,16 @@ import { FunctionComponent, ReactNode } from 'react';
 import { VideoActions } from '../../client/VideoActions';
 import { VideoInfo } from './VideoInfo';
 import { VideoPlayer } from '../../client/VideoPlayer';
+import { VideoBrand, VideoCategory, VideoCreator, VideoProduct } from '@/src/db/types';
 
 export interface Video {
-  id: string;
+  id: number;
   playbackId: string;
-  caption: string;
-  username: string;
-  userAvatar: string;
-  category: string;
-  brandName: string;
-  productName: string;
-  rating: number;
+  starRating: number;
+  brand: VideoBrand;
+  product: VideoProduct;
+  creator: VideoCreator;
+  category: VideoCategory;
 }
 
 interface VideoCardProps {
