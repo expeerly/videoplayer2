@@ -24,8 +24,8 @@ export async function POST(req: Request) {
 
 export async function GET(request: Request) {
   try {
-    const { page, limit, random } = getPaginationParams(request);
-    const brands = await getBrandsLogosAndNames(page, limit, random);
+    const { random } = getPaginationParams(request);
+    const brands = await getBrandsLogosAndNames(1, 20, random);
     return NextResponse.json(
       {
         success: true,

@@ -1,8 +1,9 @@
 import { db } from '@/src/db';
 import { brand, category, product, video } from '@/src/db/schema';
-import { and, eq, exists, inArray, isNotNull, sql } from 'drizzle-orm';
+import { and, eq, exists, inArray, SQL, sql } from 'drizzle-orm';
 import { Brand, BrandInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
+import { isValidBrand } from './queries';
 
 export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[]> {
   if (!input || !Array.isArray(input)) {
@@ -36,31 +37,37 @@ export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[
   }
 }
 
+export async function getBrandsCount(condition?: SQL<unknown>): Promise<{ count: number }> {
+  try {
+    const count = await db.$count(brand, condition);
+    return { count };
+  } catch (error) {
+    console.error('Error fetching brand count:', error);
+    throw new Error((error as Error).message);
+  }
+}
+
+export const getBrandsInfo = async (columns = {}, { page = 1, limit = 0, random = false } = {}) => {
+  const baseQuery = db
+    .select(columns)
+    .from(brand)
+    .where(isValidBrand)
+    .orderBy(random ? sql`RANDOM()` : brand.brandName);
+
+  if (limit) {
+    const offset = (page - 1) * limit;
+    return await baseQuery.offset(offset).limit(limit);
+  }
+
+  return await baseQuery;
+};
+
 /**
  * Gets all brands
  */
 export async function handleGetBrand(selectedColumns = {}) {
   try {
-    const data = await db
-      .select({
-        ...selectedColumns,
-      })
-      .from(brand)
-      .where(
-        and(
-          isNotNull(brand.brandName),
-          isNotNull(brand.logo),
-          exists(
-            db
-              .select({ one: sql`1` })
-              .from(video)
-              .where(
-                sql`${video.productId} IN (SELECT id FROM ${product} WHERE ${product.brandId} = ${brand.id})`
-              )
-          )
-        )
-      )
-      .orderBy(brand.brandName);
+    const data = await getBrandsInfo(selectedColumns);
 
     if (!data || data.length === 0) {
       console.warn('No brands found');
@@ -71,16 +78,6 @@ export async function handleGetBrand(selectedColumns = {}) {
   } catch (error) {
     console.error('Error fetching brands:', error);
     throw new Error('Failed to fetch brands');
-  }
-}
-
-export async function getBrandsCount(): Promise<{ count: number }> {
-  try {
-    const count = await db.$count(brand);
-    return { count };
-  } catch (error) {
-    console.error('Error fetching category count:', error);
-    throw new Error((error as Error).message);
   }
 }
 
@@ -95,20 +92,12 @@ export async function getBrandsLogosAndNames(
   random: boolean = false
 ): Promise<PaginatedBrands> {
   try {
-    const offset = (page - 1) * limit;
     const [data, brandsCount] = await Promise.all([
-      db.query.brand.findMany({
-        columns: {
-          id: true,
-          logo: true,
-          brandName: true,
-          slug: true,
-        },
-        limit,
-        offset,
-        orderBy: random ? sql`RANDOM()` : brand.brandName,
-      }),
-      getBrandsCount(),
+      getBrandsInfo(
+        { logo: brand.logo, brandName: brand.brandName, slug: brand.slug },
+        { page, limit, random }
+      ),
+      getBrandsCount(isValidBrand),
     ]);
 
     return {
