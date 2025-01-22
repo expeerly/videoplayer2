@@ -46,7 +46,8 @@ export const category = pgTable('category', {
 // Creator table
 export const creator = pgTable('creator', {
   id: text('id').primaryKey(),
-  creatorName: text('creatorName').notNull(),
+  firstName: text('firstName').notNull(),
+  lastName: text('lastName'),
   bio: text('bio'),
   profilePictureURL: text('profilePictureURL'),
   age: integer('age'),

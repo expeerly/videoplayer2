@@ -122,7 +122,7 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
         },
         creator: {
           id: creator.id,
-          name: creator.creatorName,
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
           logo: creator.profilePictureURL,
         },
         product: {

@@ -11,7 +11,7 @@ export async function GET(
   const lang = getLanguageFromRequest(request);
 
   try {
-    const creator = await getCreatorByIdWithVideos(creatorId, lang);
+    const creator = await getCreatorByIdWithVideos(creatorId.split('-')[1], lang);
 
     return NextResponse.json(
       {

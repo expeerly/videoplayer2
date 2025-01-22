@@ -103,8 +103,8 @@ const transformers = {
     }
     return {
       id: getField('Unique Bubble ID Reviewer'),
-      creatorName:
-        `${getField('Creator first name', false)} ${getField('Creator Last Name', false)}`.trim(),
+      firstName: getField('Creator first name', false),
+      lastName: getField('Creator Last Name', false),
       bio: getField('Bio', false),
       profilePictureURL: getField('Profile Picture URL', false),
       age: Number(getField('Age', false)),

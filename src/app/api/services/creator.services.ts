@@ -44,7 +44,8 @@ export async function handleCreateCreator(
       .onConflictDoUpdate({
         target: [creator.id],
         set: {
-          creatorName: sql`EXCLUDED."creatorName"`,
+          firstName: sql`EXCLUDED."firstName"`,
+          lastName: sql`EXCLUDED."lastName"`,
           updatedAt: sql`CURRENT_TIMESTAMP`,
         },
       })
@@ -127,8 +128,8 @@ export async function handleGetCreatorWithVideos(
         .select({
           id: creator.id,
           logo: creator.profilePictureURL,
-          name: creator.creatorName,
-          slug: creator.id,
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
+          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
           info: {
             age: creator.age,
             location: creator.location,
@@ -171,7 +172,7 @@ export async function handleGetCreatorWithVideos(
         .groupBy(creator.id)
         .limit(limit)
         .offset(offset)
-        .orderBy(random ? sql`RANDOM()` : creator.creatorName),
+        .orderBy(random ? sql`RANDOM()` : creator.firstName),
 
       db
         .select({
@@ -198,8 +199,8 @@ export async function getCreatorByIdWithVideos(creatorId: string, lang: Supporte
       .select({
         id: creator.id,
         logo: creator.profilePictureURL,
-        name: creator.creatorName,
-        slug: creator.id,
+        name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
+        slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
         age: creator.age,
         location: creator.location,
         country: creator.country,
@@ -209,7 +210,7 @@ export async function getCreatorByIdWithVideos(creatorId: string, lang: Supporte
             FROM (
               SELECT json_build_object(
                 'categoryId', ${category.id},
-                'categoryName', ${category.categoryData}->${lang}->>'title',
+                'categoryName', ${category.categoryData}->${lang}->>'categoryName',
                 'categorySlug', ${category.categoryData}->${lang}->>'urlSlug'
               ) as interest_data
               FROM ${category}
@@ -248,7 +249,7 @@ export async function getCreatorByIdWithVideos(creatorId: string, lang: Supporte
       .leftJoin(video, eq(video.creatorId, creator.id))
       .where(eq(creator.id, creatorId))
       .groupBy(creator.id)
-      .orderBy(creator.creatorName);
+      .orderBy(creator.firstName);
 
     return creatorInfo;
   } catch (error) {
