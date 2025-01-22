@@ -65,6 +65,7 @@ export const ConversionSlider: FunctionComponent<LocaleProps> = async ({ locale 
             className=" bg-white text-center"
             aria-label={t('integrate_video.aria_label')}
             title={t('integrate_video.label')}
+            target={'_blank'}
           >
             {t('integrate_video.label')}
           </Button>
