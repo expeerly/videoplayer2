@@ -1,5 +1,5 @@
 import { db } from '@/src/db';
-import { video } from '@/src/db/schema';
+import { brand, creator, product, video } from '@/src/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { Video } from '@/src/db/types';
 import { SupportedLanguage } from '../utils/requestHelpers';
@@ -130,8 +130,30 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
             answer: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqAnswer'`,
           },
         },
+        creator: {
+          id: creator.id,
+          name: creator.creatorName,
+          logo: creator.profilePictureURL,
+        },
+        product: {
+          id: product.id,
+          globalTradeItemNumber: product.globalTradeItemNumber,
+          productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          productSlug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
+          productLink: product.productLink,
+        },
+        brand: {
+          id: brand.id,
+          name: brand.brandName,
+          logo: brand.logo,
+          brandSlug: brand.slug,
+          websiteURL: brand.websiteURL,
+        },
       })
       .from(video)
+      .leftJoin(creator, eq(video.creatorId, creator.id))
+      .leftJoin(product, eq(video.productId, product.id))
+      .leftJoin(brand, eq(product.brandId, brand.id))
       .where(eq(video.id, Number(id)))
       .limit(1);
 
