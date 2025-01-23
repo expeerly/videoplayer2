@@ -84,7 +84,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             }}
           />
 
-          <SEOSection content={data?.content?.bodyText || t('all_brands_footer_text')} />
+          <SEOSection content={data?.content?.footerText || t('all_brands_footer_text')} />
         </div>
       </div>
     </div>
