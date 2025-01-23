@@ -10,6 +10,7 @@ import { Metadata } from 'next';
 import { ProfileGrid } from '@/src/app/components/server/ProfileGrid';
 import { getDictionary } from '@/src/lib/dictionary';
 import { ShareButton } from '@/src/app/components/client/ShareButton';
+import Link from 'next/link';
 
 type PageProps = {
   params: Promise<{
@@ -43,11 +44,13 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
         <section>
           <div className="px-5 md:px-0">
             <div className="flex gap-4 mb-6">
-              <Avatar
-                className="flex h-10 w-10 min-w-10 md:h-14 md:w-14 md:min-w-14 my-auto md:m-0"
-                alt={data?.name}
-                src={data?.logo}
-              />
+              <Link href={data?.websiteURL} target="_blank">
+                <Avatar
+                  className="flex h-10 w-10 min-w-10 md:h-14 md:w-14 md:min-w-14 my-auto md:m-0"
+                  alt={data?.name}
+                  src={data?.logo}
+                />
+              </Link>
               <div className="flex flex-1 flex-col ">
                 <PageHeading>
                   {data?.name} {t('videoReviews')}
