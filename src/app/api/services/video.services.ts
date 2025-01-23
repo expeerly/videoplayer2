@@ -1,6 +1,6 @@
 import { db } from '@/src/db';
 import { brand, category, creator, product, video } from '@/src/db/schema';
-import { eq, sql, not, and } from 'drizzle-orm';
+import { eq, sql, not, and, notInArray } from 'drizzle-orm';
 import { QAPair, Video } from '@/src/db/types';
 import { SupportedLanguage } from '../utils/requestHelpers';
 
@@ -87,7 +87,7 @@ export async function getVideosCount(): Promise<{ count: number }> {
   }
 }
 
-export async function getVideoById(id: string, lang: SupportedLanguage) {
+export async function getVideoById(id: string | number, lang: SupportedLanguage) {
   if (!id) {
     throw new Error('Video ID is required');
   }
@@ -106,24 +106,11 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
         starRating: video.starRating,
         siteTitle: sql<string>`COALESCE(${video.siteTitle}->${lang}->>'title', ${video.siteTitle}->'en'->>'title')`,
         metaDescription: sql<string>`COALESCE(${video.metaDescription}->${lang}->>'desc', ${video.metaDescription}->'en'->>'desc')`,
-        summary: sql<string>`COALESCE(${video.summary}->${lang}->>'text', ${video.summary}->'en'->>'text')`,
-        transcript: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
-        faqs: {
-          question_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqTitle'`,
-          answer_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqAnswer'`,
-          question_2: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqTitle'`,
-          answer_2: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqAnswer'`,
-          question_3: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqTitle'`,
-          answer_3: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqAnswer'`,
-          question_4: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqTitle'`,
-          answer_4: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqAnswer'`,
-          question_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqTitle'`,
-          answer_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqAnswer'`,
-        },
         creator: {
           id: creator.id,
           name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
           logo: creator.profilePictureURL,
+          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
         },
         product: {
           id: product.id,
@@ -151,6 +138,44 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
       .leftJoin(product, eq(video.productId, product.id))
       .leftJoin(brand, eq(product.brandId, brand.id))
       .leftJoin(category, eq(product.categoryId, category.id))
+      .where(eq(video.id, Number(id)))
+      .limit(1);
+
+    if (!videoData) {
+      throw new Error('Video not found');
+    }
+
+    return videoData;
+  } catch (error) {
+    console.error('Error fetching video by ID:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch video details');
+  }
+}
+
+export async function getVideoDetailById(id: string | number, lang: SupportedLanguage) {
+  if (!id) {
+    throw new Error('Video ID is required');
+  }
+  try {
+    const [videoData] = await db
+      .select({
+        id: video.id,
+        summary: sql<string>`COALESCE(${video.summary}->${lang}->>'text', ${video.summary}->'en'->>'text')`,
+        transcript: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
+        faqs: {
+          question_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqTitle'`,
+          answer_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqAnswer'`,
+          question_2: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqTitle'`,
+          answer_2: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqAnswer'`,
+          question_3: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqTitle'`,
+          answer_3: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqAnswer'`,
+          question_4: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqTitle'`,
+          answer_4: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqAnswer'`,
+          question_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqTitle'`,
+          answer_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqAnswer'`,
+        },
+      })
+      .from(video)
       .where(eq(video.id, Number(id)))
       .limit(1);
 
@@ -240,6 +265,26 @@ export async function getProductWithRelatedVideos(videoId: string, lang: Support
       ...productInfo,
       videos: productVideos,
     };
+  } catch (error) {
+    console.error('Error fetching related videos:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch related videos');
+  }
+}
+
+export async function getExploreVideos(videoIds: number[], lang: SupportedLanguage) {
+  try {
+    const randomVideoIds = (
+      await db.query.video.findMany({
+        columns: { id: true },
+        where: notInArray(video.id, videoIds),
+        orderBy: sql`RANDOM()`,
+        limit: 2,
+      })
+    ).map(({ id }) => id);
+
+    const videoResults = await Promise.all(randomVideoIds.map(id => getVideoById(id, lang)));
+
+    return videoResults;
   } catch (error) {
     console.error('Error fetching related videos:', error);
     throw error instanceof Error ? error : new Error('Failed to fetch related videos');
