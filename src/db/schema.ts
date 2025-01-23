@@ -83,6 +83,7 @@ export const product = pgTable('product', {
   productName: jsonb('productName').notNull(),
   productLink: text('productLink').notNull(),
   productSlug: jsonb('productSlug'),
+  productPicture: text('productPicture'),
   brandId: text('brandId').references(() => brand.id),
   categoryId: integer('categoryId').references(() => category.id),
   globalTradeItemNumber: text('globalTradeItemNumber'),

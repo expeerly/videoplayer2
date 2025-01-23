@@ -69,6 +69,7 @@ export type GridVideo = {
   resolution: string;
   productName: string;
   productSlug: string;
+  productPicture: string;
   brandId: string;
   brandName: string;
   brandLogo: string;
@@ -159,6 +160,7 @@ export type VideoProduct = {
   productLink: string;
   productName: string;
   productSlug: string;
+  productPicture: string;
   vendorProductNumber: string;
 };
 

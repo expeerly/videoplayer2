@@ -31,6 +31,7 @@ export const createProducts = async (input: ProductInputType[]) => {
           productName: sql`EXCLUDED."productName"`,
           productLink: sql`EXCLUDED."productLink"`,
           productSlug: sql`EXCLUDED."productSlug"`,
+          productPicture: sql`EXCLUDED."productPicture"`,
           brandId: sql`EXCLUDED."brandId"`,
           categoryId: sql`EXCLUDED."categoryId"`,
           globalTradeItemNumber: sql`EXCLUDED."globalTradeItemNumber"`,

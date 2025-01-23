@@ -130,6 +130,7 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
           globalTradeItemNumber: product.globalTradeItemNumber,
           productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
           productSlug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
+          productPicture: product.productPicture,
           productLink: product.productLink,
         },
         brand: {

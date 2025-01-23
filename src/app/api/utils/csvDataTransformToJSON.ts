@@ -129,6 +129,7 @@ const transformers = {
       id: getField('Unique Bubble ID Product'),
       productName: createMultiLangObject(getField, { title: 'Product name' }),
       productLink: getField('Call to action link'),
+      productPicture: getField('Product picture URL', false),
       globalTradeItemNumber: getField('GTIN/EAN') || null,
       vendorProductNumber: getField('Vendor Product Number') || null,
       brandId: getField('Unique bubble Id Brand') || null,
