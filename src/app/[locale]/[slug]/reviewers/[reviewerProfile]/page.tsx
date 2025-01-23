@@ -1,13 +1,12 @@
-import { getCategories, getProfile } from '@/src/app/actions/actions';
+import { getProfile } from '@/src/app/actions/actions';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { ShareButton } from '@/src/app/components/client/ShareButton';
-import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
-import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { Avatar } from '@/src/app/components/server/Avatar';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
 import { NextPage } from 'next';
+import Image from 'next/image';
 
 const sampleText = `
 Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
@@ -25,22 +24,13 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const { locale, reviewerProfile } = await params;
   const { t } = await getDictionary();
 
-  const { data: categories } = await getCategories(locale);
   const { data } = await getProfile({
     lang: locale,
     gridType: 'creator',
     id: reviewerProfile,
   });
 
-  const slides = categories
-    .filter(category =>
-      data.interests.some(interest => interest.categoryId === Number(category.id))
-    )
-    .map(i => ({
-      name: i.categoryName,
-      icon: i.logo,
-      slug: i.urlSlug,
-    }));
+  console.log({ data });
 
   return (
     <div className="w-full bg-white">
@@ -80,11 +70,15 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
         <section className="pt-5 md:pt-[50px]">
           <h3 className="text-lg font-extrabold mb-4 text-grey-700 md:hidden">{t('interests')}</h3>
-          <div className="hidden md:block">
-            <Slider slides={slides} />
-          </div>
-          <div className="md:hidden">
-            <MobileSlider slides={slides} />
+          <div className="flex gap-2">
+            {data?.interests?.map(i => (
+              <div
+                key={i.categorySlug}
+                className="border border-grey-700 rounded-full h-[50px] w-20 flex justify-center items-center"
+              >
+                <Image alt={i.categorySlug} src={i.logo} width={40} height={40} sizes="100%" />
+              </div>
+            ))}
           </div>
         </section>
 

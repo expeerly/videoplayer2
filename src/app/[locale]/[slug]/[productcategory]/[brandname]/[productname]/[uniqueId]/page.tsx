@@ -20,10 +20,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const { t } = await getDictionary();
 
   const { locale, uniqueId } = await params;
-
   const { data } = await getVideoDetils({ videoId: uniqueId, lang: locale });
-
-  console.log({ data });
 
   return (
     <div className="w-full items-center flex flex-col md:w-max md:mx-auto overflow-auto h-full z-50">

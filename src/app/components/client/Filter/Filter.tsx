@@ -18,12 +18,16 @@ type Props = {
 };
 
 const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList }) => {
-  const [activeTab, setActiveTab] = useState<TabType>('categories');
-  const [isOpen, setIsOpen] = useState(false);
-  const [pendingFilters, setPendingFilters] = useState<{ brand: string[]; category: string[] }>({
-    brand: [],
-    category: [],
+  const [filterState, setFilterState] = useState({
+    isOpen: false,
+    activeTab: 'categories' as TabType,
+    pendingFilters: {
+      brand: [] as string[],
+      category: [] as string[],
+    },
   });
+
+  const { isOpen, activeTab, pendingFilters } = filterState;
 
   const menuRef = useRef<HTMLDivElement>(null);
   const t = useTranslations();
@@ -32,32 +36,42 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  console.log({ local });
-
   const brands = useMemo(
     () =>
-      brandsList?.map(i => ({
-        name: i.brandName,
-        logo: i.logo || undefined,
-        id: i.id,
-        slug: i.slug,
-      })),
+      brandsList?.reduce(
+        (acc, i) => {
+          acc[i.id] = {
+            name: i.brandName,
+            logo: i.logo || undefined,
+            id: i.id,
+            slug: i.slug,
+          };
+          return acc;
+        },
+        {} as Record<string, FilterItemProps>
+      ),
     [brandsList]
   );
 
   const categories = useMemo(
     () =>
-      categoriesList?.map(i => ({
-        name: i.categoryData?.[local === '/' ? 'en' : (local as Languages)].categoryName,
-        icon: i.logo || undefined,
-        id: i.id.toString(),
-        slug: i.categoryData?.[local === '/' ? 'en' : (local as Languages)]?.urlSlug,
-      })),
+      categoriesList?.reduce(
+        (acc, i) => {
+          acc[i.id] = {
+            name: i.categoryData?.[local === '/' ? 'en' : (local as Languages)].categoryName,
+            icon: i.logo || undefined,
+            id: i.id.toString(),
+            slug: i.categoryData?.[local === '/' ? 'en' : (local as Languages)]?.urlSlug,
+          };
+          return acc;
+        },
+        {} as Record<string, FilterItemProps>
+      ),
     [categoriesList, local]
   );
 
-  const activeItems: FilterItemProps[] = useMemo(
-    () => (activeTab === 'categories' ? categories : brands),
+  const activeItems = useMemo(
+    () => Object.values(activeTab === 'categories' ? categories : brands),
     [activeTab, categories, brands]
   );
 
@@ -68,14 +82,14 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
     return {
       brand: brandSlugs
         .map(slug => {
-          const brand = brands?.find(b => b.slug === slug);
-          return brand?.id.toString() || '';
+          const brand = Object.values(brands).find(b => b.slug === slug);
+          return brand?.id || '';
         })
         .filter(Boolean),
       category: categorySlugs
         .map(slug => {
-          const category = categories?.find(c => c.slug === slug);
-          return category?.id.toString() || '';
+          const category = Object.values(categories).find(c => c.slug === slug);
+          return category?.id || '';
         })
         .filter(Boolean),
     };
@@ -109,42 +123,59 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
     return brandsDiff || categoriesDiff;
   }, [pendingFilters, appliedFilters]);
 
-  const handleItemToggle = useCallback(
-    (id: string) => {
-      setPendingFilters(prev => {
-        const type = activeTab === 'categories' ? 'category' : 'brand';
-        const currentArray = prev[type];
+  const toggleMenu = useCallback(() => {
+    setFilterState(prev => ({
+      ...prev,
+      isOpen: !prev.isOpen,
+    }));
+  }, []);
 
-        if (currentArray.includes(id)) {
-          return {
-            ...prev,
-            [type]: currentArray.filter(item => item !== id),
-          };
-        }
+  const handleItemToggle = useCallback((id: string) => {
+    setFilterState(prev => {
+      const type = prev.activeTab === 'categories' ? 'category' : 'brand';
+      const currentArray = prev.pendingFilters[type];
 
-        if (currentArray.length >= 5) return prev;
-
+      if (currentArray.includes(id)) {
         return {
           ...prev,
-          [type]: [...currentArray, id],
+          pendingFilters: {
+            ...prev.pendingFilters,
+            [type]: currentArray.filter(item => item !== id),
+          },
         };
-      });
-    },
-    [activeTab, setPendingFilters]
-  );
+      }
+
+      if (currentArray.length >= 5) return prev;
+
+      return {
+        ...prev,
+        pendingFilters: {
+          ...prev.pendingFilters,
+          [type]: [...currentArray, id],
+        },
+      };
+    });
+  }, []);
+
+  const setActiveTab = useCallback((tab: TabType) => {
+    setFilterState(prev => ({
+      ...prev,
+      activeTab: tab,
+    }));
+  }, []);
 
   const handleApplyFilters = useCallback(() => {
     const params = new URLSearchParams();
 
     pendingFilters.brand.forEach(brandId => {
-      const brand = brands.find(b => b.id.toString() === brandId.toString());
+      const brand = brands[brandId];
       if (brand?.slug) {
         params.append('brand', brand.slug);
       }
     });
 
     pendingFilters.category.forEach(categoryId => {
-      const category = categories.find(c => c.id.toString() === categoryId.toString());
+      const category = categories[categoryId];
       if (category?.slug) {
         params.append('category', category.slug);
       }
@@ -154,13 +185,12 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
   }, [pendingFilters, pathname, router, brands, categories]);
 
   const handleClearFilters = useCallback(() => {
-    setPendingFilters({ brand: [], category: [] });
+    setFilterState(prev => ({
+      ...prev,
+      pendingFilters: { brand: [], category: [] },
+    }));
     router.push(pathname);
   }, [pathname, router]);
-
-  const toggleMenu = useCallback(() => {
-    setIsOpen(!isOpen);
-  }, [isOpen]);
 
   const handleBodyScroll = useCallback((isMenuOpen: boolean) => {
     if (window.innerWidth < 768) {
@@ -193,7 +223,10 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
         menuRef.current &&
         !menuRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
+        setFilterState(prev => ({
+          ...prev,
+          isOpen: false,
+        }));
       }
     };
 
@@ -202,11 +235,19 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
   }, []);
 
   useEffect(() => {
-    if (pathname) setIsOpen(false);
+    if (pathname) {
+      setFilterState(prev => ({
+        ...prev,
+        isOpen: false,
+      }));
+    }
   }, [pathname]);
 
   useEffect(() => {
-    setPendingFilters(appliedFilters);
+    setFilterState(prev => ({
+      ...prev,
+      pendingFilters: appliedFilters,
+    }));
   }, [appliedFilters]);
 
   const activePendingFilters = useMemo(
@@ -214,17 +255,10 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
     [activeTab, pendingFilters]
   );
 
-  const selectedItemNames = useMemo(
-    () =>
-      activePendingFilters
-        .map(id =>
-          activeTab === 'categories'
-            ? categories.find(c => c.id.toString() === id)?.name
-            : brands.find(b => b.id.toString() === id)?.name
-        )
-        .filter(Boolean),
-    [activePendingFilters, activeTab, categories, brands]
-  );
+  const selectedItemNames = useMemo(() => {
+    const items = activeTab === 'categories' ? categories : brands;
+    return activePendingFilters.map(id => items[id]?.name).filter(Boolean);
+  }, [activePendingFilters, activeTab, categories, brands]);
 
   const filterCardsProps = useMemo(
     () => ({

@@ -1,18 +1,29 @@
 import { getProfile } from '@/src/app/actions/actions';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { LocaleProps } from '@/src/db/types';
-import { getDictionary } from '@/src/lib/dictionary';
 import { FunctionComponent, Suspense } from 'react';
 import { ReviewGridSkeleton } from './ReviewGrid';
+import { CTABlockProps } from './CTABlock';
 
 type Props = {
   id: string;
   page: number;
   type: 'brand' | 'category';
+  ctaBlock: CTABlockProps;
+  header?: {
+    type?: 'brand' | 'category' | 'reviewer';
+    variant?: 'primary' | 'secondary';
+  };
 } & LocaleProps;
 
-export const ProfileGrid: FunctionComponent<Props> = async ({ id, locale, page, type }) => {
-  const { t } = await getDictionary();
+export const ProfileGrid: FunctionComponent<Props> = async ({
+  id,
+  locale,
+  page,
+  type,
+  ctaBlock,
+  header,
+}) => {
   const { data } = await getProfile({
     lang: locale,
     gridType: type,
@@ -25,18 +36,10 @@ export const ProfileGrid: FunctionComponent<Props> = async ({ id, locale, page, 
       <PaginationContainer
         data={data}
         header={{
-          dataType: type,
-          variant: 'secondary',
+          dataType: header?.type,
+          variant: header?.variant,
         }}
-        ctaBlock={{
-          heading: t('cta_block_all_brands_categories.title'),
-          desc: t('cta_block_all_brands_categories.desc'),
-          button: {
-            label: t('learn_more.label'),
-            ariaLabel: t('learn_more.aria_label'),
-            href: 'https://www.get.expeerly.com/for-brands',
-          },
-        }}
+        ctaBlock={ctaBlock}
       />
     </Suspense>
   );

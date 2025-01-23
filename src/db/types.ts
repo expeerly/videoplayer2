@@ -115,9 +115,8 @@ export type PageInfo = {
 };
 
 export type InterestsCategory = {
-  categoryId: number;
-  categoryName: string | null;
   categorySlug: string;
+  logo: string;
 };
 
 export type ProfileResponse = GridData &

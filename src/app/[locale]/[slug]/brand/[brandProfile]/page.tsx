@@ -73,14 +73,11 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           </div>
         </section>
 
-        <ProfileGrid id={data?.id} locale={locale} page={page} type={'brand'} />
-
-        {/* <PaginationContainer
-          data={{ rows: brand?.rows, total: brand?.total }}
-          header={{
-            dataType: 'brand',
-            variant: 'secondary',
-          }}
+        <ProfileGrid
+          id={data?.id}
+          locale={locale}
+          page={page}
+          type={'brand'}
           ctaBlock={{
             heading: t('cta_block_all_brands_categories.title'),
             desc: t('cta_block_all_brands_categories.desc'),
@@ -90,7 +87,10 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
               href: 'https://www.get.expeerly.com/for-brands',
             },
           }}
-        /> */}
+          header={{
+            variant: 'secondary',
+          }}
+        />
 
         <SEOSection content={data?.footerText} />
       </div>
