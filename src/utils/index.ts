@@ -45,8 +45,7 @@ export const uploadData = async (
       } else {
         failedCount += chunk?.length;
       }
-    } catch (chunkError) {
-      console.log(chunkError);
+    } catch {
       failedCount += chunk?.length;
     }
   }
