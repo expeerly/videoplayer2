@@ -151,6 +151,7 @@ export type VideoCreator = {
   id: string;
   name: string;
   logo: string;
+  slug: string;
 };
 
 export type VideoProduct = {
@@ -171,16 +172,25 @@ export type VideoResponse = {
   productId: string;
   creatorId: string;
   published: boolean;
-  cannonicalTag: boolean;
   resolution: string;
   starRating: number;
   siteTitle: string;
   metaDescription: string;
-  summary: string | null;
-  transcript: string;
-  faqs: QAPair[];
   creator: VideoCreator;
   product: VideoProduct;
   brand: VideoBrand;
   category: VideoCategory;
+};
+
+export type VideoDetail = {
+  id: string;
+  starRating: number;
+  summary: string | null;
+  transcript: string;
+  faqs: QAPair[];
+  brand: VideoBrand;
+  product: VideoProduct;
+  creator: {
+    name: string;
+  };
 };

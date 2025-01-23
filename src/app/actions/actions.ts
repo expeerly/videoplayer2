@@ -12,6 +12,8 @@ import {
   PageInfo,
   Brand,
   VideoResponse,
+  VideoDetail,
+  GridData,
 } from '@/src/db/types';
 
 async function createApiUrl(path: string, queryParams?: Record<string, string | number | boolean>) {
@@ -226,15 +228,33 @@ export async function getLogos(): Promise<{
   return apiRequest<Partial<Brand>[]>(`/brand/logos`, { lang: 'en', revalidate: undefined });
 }
 
-export async function getVideoDetils({
+export async function getVideo<T extends boolean = false>({
+  videoId,
+  lang,
+  metaInfo = false as T,
+}: {
+  videoId: string;
+  lang: Languages;
+  metaInfo?: T;
+}): Promise<{
+  data: T extends true ? VideoDetail : VideoResponse;
+  error?: string;
+}> {
+  return apiRequest<T extends true ? VideoDetail : VideoResponse>(
+    `/video/${videoId}?metaInfo=${metaInfo}`,
+    { lang }
+  );
+}
+
+export async function getRelatedVideos({
   videoId,
   lang,
 }: {
   videoId: string;
   lang: Languages;
 }): Promise<{
-  data: VideoResponse;
+  data: GridData;
   error?: string;
 }> {
-  return apiRequest<VideoResponse>(`/video/${videoId}`, { lang });
+  return apiRequest<GridData>(`/video/${videoId}/related`, { lang });
 }

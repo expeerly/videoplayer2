@@ -31,6 +31,8 @@ export const ProfileGrid: FunctionComponent<Props> = async ({
     page,
   });
 
+  console.log({ data });
+
   return (
     <Suspense fallback={<ReviewGridSkeleton count={9} />}>
       <PaginationContainer

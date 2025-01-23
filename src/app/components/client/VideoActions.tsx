@@ -7,6 +7,7 @@ import isMobile from 'is-mobile';
 import { useTranslations } from 'next-intl';
 import { useSharedDispatch, useSharedState } from '../../context/reducer';
 import { Button } from './Button';
+import Link from 'next/link';
 type VideoActionsProps = {
   video: Video;
   isVideoDetails?: boolean;
@@ -92,14 +93,18 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
           <p>{t('more')}</p>
         </button>
 
-        <button onClick={() => {}} className={`flex flex-col items-center text-sm font-semibold`}>
+        <Link
+          target={'_blank'}
+          href={video.product.productLink}
+          className={`flex flex-col items-center text-sm font-semibold`}
+        >
           <div
             className={` w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center !bg-opacity-50 md:!bg-opacity-100`}
           >
             <BagIcon />
           </div>
           <p>{t('shop')}</p>
-        </button>
+        </Link>
       </div>
 
       <ShareDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />

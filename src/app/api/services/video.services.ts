@@ -157,6 +157,7 @@ export async function getVideoDetailById(id: string | number, lang: SupportedLan
         id: video.id,
         summary: sql<string>`COALESCE(${video.summary}->${lang}->>'text', ${video.summary}->'en'->>'text')`,
         transcript: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
+        starRating: video.starRating,
         faqs: {
           question_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqTitle'`,
           answer_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqAnswer'`,
@@ -169,8 +170,24 @@ export async function getVideoDetailById(id: string | number, lang: SupportedLan
           question_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqTitle'`,
           answer_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqAnswer'`,
         },
+        product: {
+          globalTradeItemNumber: product.globalTradeItemNumber,
+          productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          productLink: product.productLink,
+        },
+        brand: {
+          name: brand.brandName,
+          logo: brand.logo,
+          brandSlug: brand.slug,
+        },
+        creator: {
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
+        },
       })
       .from(video)
+      .leftJoin(creator, eq(video.creatorId, creator.id))
+      .leftJoin(product, eq(video.productId, product.id))
+      .leftJoin(brand, eq(product.brandId, brand.id))
       .where(eq(video.id, Number(id)))
       .limit(1);
 

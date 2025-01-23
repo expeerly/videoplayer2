@@ -87,12 +87,12 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
             {rating && variant === 'secondary' && <StarRating rating={rating} />}
             <p className="text-sm text-grey-500">
               {dataType === 'category'
-                ? `${reviewsCount} ${reviewsCount && reviewsCount?.length > 1 ? t('reviews') : t('singleReview')}`
+                ? `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`
                 : dataType === 'reviewer'
                   ? `${age}, ${location}, ${country ?? ''}`
                   : dataType === 'brand'
-                    ? `${reviewsCount} ${reviewsCount && reviewsCount?.length > 1 ? t('reviews') : t('singleReview')}`
-                    : `${reviewsCount} ${reviewsCount && reviewsCount?.length > 1 ? t('reviews') : t('singleReview')}`}
+                    ? `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`
+                    : `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`}
             </p>
           </div>
         </div>

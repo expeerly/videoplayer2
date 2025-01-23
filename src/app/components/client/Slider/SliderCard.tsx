@@ -62,7 +62,7 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand 
   );
 
   // Memoized image classes
-  const imageClasses = useMemo(() => clsx('w-full object-cover', 'h-8', 'w-full'), []);
+  const imageClasses = useMemo(() => clsx('object-contain', 'h-8', 'max-w-32'), []);
 
   // Memoized text classes
   const textClasses = useMemo(() => clsx('text-base', 'text-grey-700'), []);

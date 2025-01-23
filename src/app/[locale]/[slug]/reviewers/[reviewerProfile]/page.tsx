@@ -30,8 +30,6 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     id: reviewerProfile,
   });
 
-  console.log({ data });
-
   return (
     <div className="w-full bg-white">
       <div className="px-5 w-full mx-auto md:max-w-[716px] pt-5 md:pt-10 lg:px-0">
@@ -39,18 +37,18 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           <div className="flex gap-4">
             <Avatar
               className="flex h-[50px] w-[50px] md:h-28 md:w-28 md:m-0 [&>img]:object-cover [&>img]:object-top "
-              alt={data.name}
-              src={data.logo}
+              alt={data?.name}
+              src={data?.logo}
             />
             <div className="flex flex-1 flex-col gap-1">
-              <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 ">{data.name}</h1>
+              <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 ">{data?.name}</h1>
               <div className="mb-3">
                 <p className="text-grey-500">
-                  {data.age} {data.location}, {data.country}
+                  {data?.age} {data?.location}, {data?.country}
                 </p>
               </div>
               <div className="hidden md:block">
-                <LongDescription text={data.bio!} />
+                <LongDescription text={data?.bio || ''} />
               </div>
             </div>
             <div
