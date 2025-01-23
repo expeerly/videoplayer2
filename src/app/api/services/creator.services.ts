@@ -46,6 +46,11 @@ export async function handleCreateCreator(
         set: {
           firstName: sql`EXCLUDED."firstName"`,
           lastName: sql`EXCLUDED."lastName"`,
+          location: sql`EXCLUDED."location"`,
+          age: sql`EXCLUDED."age"`,
+          country: sql`EXCLUDED."country"`,
+          bio: sql`EXCLUDED."bio"`,
+          profilePictureURL: sql`EXCLUDED."profilePictureURL"`,
           updatedAt: sql`CURRENT_TIMESTAMP`,
         },
       })
