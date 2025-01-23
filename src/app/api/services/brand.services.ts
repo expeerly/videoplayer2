@@ -225,6 +225,7 @@ export async function getBrandInfoWithSlug(brandSlug: string, lang: SupportedLan
         logo: brand.logo,
         name: brand.brandName,
         slug: brand.slug,
+        websiteURL: brand.websiteURL,
         metaDesc: sql<string>`COALESCE(${brand.brandData}->${lang}->>'metaDesc', ${brand.brandData}->'en'->>'metaDesc')`,
         bodyText: sql<string>`COALESCE(${brand.brandData}->${lang}->>'brandBody', ${brand.brandData}->'en'->>'brandBody')`,
         siteTitle: sql<string>`COALESCE(${brand.brandData}->${lang}->>'siteTitle', ${brand.brandData}->'en'->>'siteTitle')`,
