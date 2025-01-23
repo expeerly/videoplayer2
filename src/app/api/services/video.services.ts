@@ -1,6 +1,6 @@
 import { db } from '@/src/db';
 import { brand, category, creator, product, video } from '@/src/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, not, and } from 'drizzle-orm';
 import { QAPair, Video } from '@/src/db/types';
 import { SupportedLanguage } from '../utils/requestHelpers';
 
@@ -178,5 +178,70 @@ export async function getVideoById(id: string, lang: SupportedLanguage) {
   } catch (error) {
     console.error('Error fetching video by ID:', error);
     throw error instanceof Error ? error : new Error('Failed to fetch video details');
+  }
+}
+
+export async function getProductWithRelatedVideos(videoId: string, lang: SupportedLanguage) {
+  try {
+    const existingVideo = await db.query.video.findFirst({
+      where: eq(video.id, Number(videoId)),
+    });
+
+    if (!existingVideo) {
+      throw new Error('Video not found');
+    }
+
+    const [[productInfo], productVideos] = await Promise.all([
+      db
+        .select({
+          id: product.id,
+          name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          logo: product.productPicture,
+          info: {
+            reviewsCount: sql<number>`COUNT(${video.id})`,
+            rating: sql<number>`(
+              SELECT ROUND(COALESCE(AVG(${video.starRating}), 0)::numeric, 2)
+              FROM ${video}
+              WHERE ${video.productId} = ${product.id}
+            )`,
+          },
+        })
+        .from(product)
+        .innerJoin(video, eq(video.productId, product.id))
+        .groupBy(product.id)
+        .where(eq(video.id, Number(videoId)))
+        .limit(1),
+      db
+        .select({
+          id: video.id,
+          playbackId: video.playbackId,
+          videoUrl: video.videoUrl,
+          resolution: video.resolution,
+          productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          productSlug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
+          categorySlug: sql<string>`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug')`,
+          brandId: product.brandId,
+          brandName: brand.brandName,
+          brandLogo: brand.logo,
+          brandSlug: brand.slug,
+          rating: video.starRating,
+        })
+        .from(video)
+        .innerJoin(product, eq(video.productId, product.id))
+        .innerJoin(brand, eq(product.brandId, brand.id))
+        .innerJoin(category, eq(product.categoryId, category.id))
+        .where(
+          and(eq(product.id, existingVideo.productId as string), not(eq(video.id, Number(videoId))))
+        )
+        .limit(3),
+    ]);
+
+    return {
+      ...productInfo,
+      videos: productVideos,
+    };
+  } catch (error) {
+    console.error('Error fetching related videos:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch related videos');
   }
 }
