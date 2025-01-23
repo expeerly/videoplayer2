@@ -202,13 +202,12 @@ export async function handleGetCategoryWithVideos(
         })
         .from(category)
         .leftJoin(product, eq(category.id, product.categoryId))
+        .leftJoin(video, eq(product.id, video.productId))
         .where(and(...whereConditions))
         .groupBy(category.id)
         .limit(limit)
         .offset(offset)
-        .orderBy(
-          sql<string>`COALESCE("categoryData" -> ${lang} ->> 'categoryName', "categoryData" -> 'en' ->> 'categoryName')`
-        ),
+        .orderBy(sql`COUNT(DISTINCT ${video.id}) DESC`),
 
       db
         .select({

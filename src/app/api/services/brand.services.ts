@@ -192,9 +192,10 @@ export async function handleGetBrandsWithVideos(
         })
         .from(brand)
         .leftJoin(product, eq(brand.id, product.brandId))
+        .leftJoin(video, eq(product.id, video.productId))
         .where(whereConditions)
         .groupBy(brand.id)
-        .orderBy(random ? sql`RANDOM()` : brand.brandName)
+        .orderBy(random ? sql`RANDOM()` : sql`COUNT(DISTINCT ${video.id}) DESC`)
         .limit(limit)
         .offset(offset),
 

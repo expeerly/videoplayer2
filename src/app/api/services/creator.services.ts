@@ -177,7 +177,7 @@ export async function handleGetCreatorWithVideos(
         .groupBy(creator.id)
         .limit(limit)
         .offset(offset)
-        .orderBy(random ? sql`RANDOM()` : creator.firstName),
+        .orderBy(random ? sql`RANDOM()` : sql`COUNT(DISTINCT ${video.id}) DESC`),
 
       db
         .select({
