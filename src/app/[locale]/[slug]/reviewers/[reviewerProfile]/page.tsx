@@ -1,4 +1,5 @@
 import { getProfile } from '@/src/app/actions/actions';
+import { InterestsCategories } from '@/src/app/components/client/InterestsCategories';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { ShareButton } from '@/src/app/components/client/ShareButton';
 import { Avatar } from '@/src/app/components/server/Avatar';
@@ -6,7 +7,6 @@ import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
 import { NextPage } from 'next';
-import Image from 'next/image';
 
 const sampleText = `
 Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
@@ -18,16 +18,19 @@ type PageProps = {
     slug: string;
     reviewerProfile: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-const Page: NextPage<PageProps> = async ({ params }) => {
+const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { locale, reviewerProfile } = await params;
+  const { interest } = (await searchParams) ?? '';
   const { t } = await getDictionary();
 
   const { data } = await getProfile({
     lang: locale,
     gridType: 'creator',
     id: reviewerProfile,
+    category: interest as string,
   });
 
   return (
@@ -68,16 +71,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
         <section className="pt-5 md:pt-[50px]">
           <h3 className="text-lg font-extrabold mb-4 text-grey-700 md:hidden">{t('interests')}</h3>
-          <div className="flex gap-2">
-            {data?.interests?.map(i => (
-              <div
-                key={i.categorySlug}
-                className="border border-grey-700 rounded-full h-[50px] w-20 flex justify-center items-center"
-              >
-                <Image alt={i.categorySlug} src={i.logo} width={40} height={40} sizes="100%" />
-              </div>
-            ))}
-          </div>
+          <InterestsCategories interests={data?.interests} />
         </section>
 
         <section className=" py-7 md:py-[50px]">

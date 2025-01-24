@@ -342,11 +342,6 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
           id="menu-button"
           className="p-2 z-30 max-h-10 max-w-10 md:p-3 md:h-12 md:w-12 relative"
         >
-          {totalAppliedCount > 0 && (
-            <span className="absolute top-0 right-0 w-4 h-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">
-              {totalAppliedCount}
-            </span>
-          )}
           {!isOpen ? <FilterIcon /> : <CloseIcon />}
         </Button>
       </div>
@@ -361,8 +356,13 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
         ref={menuRef}
       >
         <div className="w-full h-full flex justify-between flex-col md:h-auto md:bg-white rounded-lg md:shadow-md">
-          <div className="flex items-center h-[70px] px-5 pt-5 md:pt-3 md:h-[42px]">
+          <div className="flex items-center h-[70px] px-5 pt-5 md:pt-3 md:h-[42px] gap-2">
             <h3 className="text-base font-normal capitalize text-left">{t('filter')}</h3>
+            {totalAppliedCount > 0 && (
+              <span className=" size-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">
+                {totalAppliedCount}
+              </span>
+            )}
           </div>
 
           <div className="flex gap-4 px-5 py-5">

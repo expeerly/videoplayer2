@@ -117,6 +117,7 @@ export type PageInfo = {
 export type InterestsCategory = {
   categorySlug: string;
   logo: string;
+  id: number;
 };
 
 export type ProfileResponse = GridData &

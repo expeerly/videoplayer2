@@ -195,23 +195,28 @@ export async function getProfile<T extends 'category' | 'brand' | 'creator'>({
   id,
   page = 1,
   limit = 4,
+  category,
 }: {
   lang: Languages;
   gridType: T;
   id: number | string;
   page?: number;
   limit?: number;
+  category?: string;
 }): Promise<{
   data: T extends 'creator' ? ProfileResponse : Grid;
   error?: string;
 }> {
-  return apiRequest<T extends 'creator' ? ProfileResponse : Grid>(`/${gridType}/${id}`, {
-    lang,
-    queryParams: {
-      page,
-      limit,
-    },
-  });
+  return apiRequest<T extends 'creator' ? ProfileResponse : Grid>(
+    `/${gridType}/${id}${category ? '/?category=' + category : ''}`,
+    {
+      lang,
+      queryParams: {
+        page,
+        limit,
+      },
+    }
+  );
 }
 
 export async function getCounts(): Promise<{
