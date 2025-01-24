@@ -198,8 +198,14 @@ export async function handleGetCreatorWithVideos(
   }
 }
 
-export async function getCreatorByIdWithVideos(creatorId: string, lang: SupportedLanguage) {
+export async function getCreatorByIdWithVideos(
+  creatorId: string,
+  interests: number[] = [],
+  lang: SupportedLanguage
+) {
   try {
+    const filter = interests?.length ? inArray(category.id, interests) : undefined;
+
     const [creatorInfo] = await db
       .select({
         id: creator.id,
@@ -214,6 +220,7 @@ export async function getCreatorByIdWithVideos(creatorId: string, lang: Supporte
             SELECT json_agg(interest_data)
             FROM (
               SELECT json_build_object(
+                'id', ${category.id},
                 'logo', ${category.logo},
                 'categorySlug', ${category.categoryData}->${lang}->>'urlSlug'
               ) as interest_data
@@ -244,7 +251,8 @@ export async function getCreatorByIdWithVideos(creatorId: string, lang: Supporte
               JOIN ${product} ON ${video.productId} = ${product.id}
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
               JOIN ${category} ON ${product.categoryId} = ${category.id}
-              WHERE ${video.creatorId} = ${creator.id}
+              WHERE ${video.creatorId} = ${creator.id} 
+              ${filter ? sql`AND ${filter}` : sql``}
               GROUP BY ${category.categoryData}, ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
             ) subq
           )`,

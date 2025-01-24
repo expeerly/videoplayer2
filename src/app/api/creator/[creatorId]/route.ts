@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCreatorByIdWithVideos } from '../../services/creator.services';
 import { handleError } from '../../utils/errorHandler';
-import { getLanguageFromRequest } from '../../utils/requestHelpers';
+import { getFilterOptions, getLanguageFromRequest } from '../../utils/requestHelpers';
 
 export async function GET(
   request: NextRequest,
@@ -9,9 +9,10 @@ export async function GET(
 ) {
   const { creatorId } = await params;
   const lang = getLanguageFromRequest(request);
+  const { categories } = getFilterOptions(request);
 
   try {
-    const creator = await getCreatorByIdWithVideos(creatorId.split('-')[1], lang);
+    const creator = await getCreatorByIdWithVideos(creatorId.split('-')[1], categories, lang);
 
     return NextResponse.json(
       {
