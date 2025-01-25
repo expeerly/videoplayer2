@@ -302,3 +302,53 @@ export async function getExploreVideos(videoIds: number[], lang: SupportedLangua
     throw error instanceof Error ? error : new Error('Failed to fetch related videos');
   }
 }
+
+export async function getAllVideos(lang: SupportedLanguage) {
+  try {
+    const videos = await db
+      .select({
+        id: video.id,
+        videoTitle: sql<string>`COALESCE(${video.videoTitle}->${lang}->>'title', ${video.videoTitle}->'en'->>'title')`,
+        videoUrl: video.videoUrl,
+        playbackId: video.playbackId,
+        metaDescription: sql<string>`COALESCE(${video.metaDescription}->${lang}->>'desc', ${video.metaDescription}->'en'->>'desc')`,
+        rating: video.starRating,
+        creator: {
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
+          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+        },
+        product: {
+          id: product.id,
+          productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          productSlug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
+        },
+        brand: {
+          id: brand.id,
+          name: brand.brandName,
+          brandSlug: brand.slug,
+        },
+        category: {
+          id: category.id,
+          name: sql<string>`COALESCE(${category.categoryData}->${lang}->>'categoryName', ${category.categoryData}->'en'->>'categoryName')`,
+          slug: sql<string>`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug')`,
+        },
+        createdAt: video.createdAt,
+        updatedAt: video.updatedAt,
+      })
+      .from(video)
+      .leftJoin(creator, eq(video.creatorId, creator.id))
+      .leftJoin(product, eq(video.productId, product.id))
+      .leftJoin(brand, eq(product.brandId, brand.id))
+      .leftJoin(category, eq(product.categoryId, category.id));
+
+    if (!videos.length) {
+      console.warn('No videos found.');
+      return [];
+    }
+
+    return videos;
+  } catch (error) {
+    console.error('Error fetching videos:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch videos');
+  }
+}
