@@ -36,7 +36,7 @@ export async function GET() {
       const brandSlug = data.brand?.brandSlug;
       const productSlug = data.product?.productSlug;
 
-      DetailPageLinks = `${process.env.SITEBASEURL}video-reviews/${
+      DetailPageLinks = `${process.env.SITEBASEURL}/video-reviews/${
         categorySlug
       }/${brandSlug}/${productSlug}/${videoId}`;
 
