@@ -95,17 +95,11 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand 
       }
       className={buttonClasses}
       aria-label={ariaLabel}
-      title={displayName} // Add title for hover tooltip
+      title={displayName}
     >
       {data?.icon && (
         <span className={iconClasses}>
-          <Image
-            src={data.icon}
-            alt={displayName}
-            width={25}
-            height={25}
-            className="max-h-[25px] w-auto"
-          />
+          <Image src={data.icon} alt={displayName} width={25} height={25} />
         </span>
       )}
 
