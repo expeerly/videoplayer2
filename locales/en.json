@@ -24,7 +24,6 @@
   "productName": "Product name",
   "gtinEan": "GTIN/EAN",
   "vendorProductNumber": "Vendor product number",
-  "productHighlights": "Product highlights",
   "frequentlyAskedQuestions": "Frequently asked questions",
   "moreVideosOn": "More videos on",
   "loading": "Loading",
@@ -35,6 +34,11 @@
   "videoReviews": "Video Reviews",
   "singleReview": "Review",
   "reviews": "Reviews",
+  "rating": "Rating",
+  "reviewerProfile": {
+    "siteTitle": "Video Reviews by {creatorFirstname}",
+    "metaDescription": "Watch video reviews by {creatorFirstname} and get the best insights on products and services."
+  },
   "buyNow": {
     "label": "Buy now",
     "ariaLabel": "Go to the product shown in the video"

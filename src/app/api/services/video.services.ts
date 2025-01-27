@@ -105,7 +105,7 @@ export async function getVideoById(id: string | number, lang: SupportedLanguage)
           id: creator.id,
           name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
           logo: creator.profilePictureURL,
-          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+          slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', ''), '-', ${creator.id}))`,
         },
         product: {
           id: product.id,

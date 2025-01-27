@@ -85,7 +85,13 @@ const defaultMenuItems = (categroies: CategoryData[] = []): MenuItem[] => {
       href: 'https://www.get.expeerly.com/about-us',
       target: '_blank',
     },
-    { key: 'submit_video_review', label: 'Submit a video review', icon: VideoIcon },
+    {
+      key: 'submit_video_review',
+      label: 'Submit a video review',
+      icon: VideoIcon,
+      href: 'https://www.get.expeerly.com/become-a-creator',
+      target: '_blank',
+    },
     {
       key: 'for_brands',
       label: 'For brands & businesses',

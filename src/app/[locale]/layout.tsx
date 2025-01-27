@@ -14,6 +14,8 @@ import { Languages } from '@/src/db/types';
 
 import { SharedContextProvider } from '../context';
 import { getCategories } from '../actions/actions';
+import { mulish } from '../fonts';
+
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -45,7 +47,7 @@ export default async function RootLayout({
   const { data: categories } = await getCategories(locale);
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={mulish.variable}>
       <body className={`h-full antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <SharedContextProvider>

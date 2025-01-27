@@ -46,7 +46,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({ video, isVideoDet
           </Link>
           <div className="flex flex-col flex-1">
             <Link href={`/explore/productcategory/${video?.category?.slug}`}>
-              <span className="text-sm">{video?.category?.name}</span>
+              <span className="text-sm">{video?.product.productName}</span>
             </Link>
             <div className="flex gap-2 items-center -mt-0.5">
               <span>{video?.starRating}</span>

@@ -33,7 +33,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       </div>
       <div className="w-full px-5 flex flex-col md:max-w-[497px] mx-auto pt-7 md:pt-2 md:px-0 relative">
         <div id="details" className="absolute  top-0  md:-top-20" />
-        <ScrollToSection>
+        <ScrollToSection hasFAQ={videoDetails.faqs.length > 0}>
           <PageHeading>{video.videoTitle}</PageHeading>
         </ScrollToSection>
         <div className="pt-7">

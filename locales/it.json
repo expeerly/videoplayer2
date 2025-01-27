@@ -25,7 +25,6 @@
   "productName": "Nome del prodotto",
   "gtinEan": "GTIN/EAN",
   "vendorProductNumber": "Numero del prodotto del venditore",
-  "productHighlights": "Vantaggi del prodotto",
   "frequentlyAskedQuestions": "Domande frequenti",
   "moreVideosOn": "Altri video su",
   "loading": "Caricamento",
@@ -36,6 +35,11 @@
   "videoReviews": "Recensioni video",
   "singleReview": "Recensione",
   "reviews": "Recensioni",
+  "rating": "Punteggio",
+  "reviewerProfile": {
+    "siteTitle": "Recensioni video {creatorFirstname}",
+    "metaDescription": "Guarda le recensioni video di {creatorFirstname} e ottieni le migliori informazioni su prodotti e servizi."
+  },
   "buyNow": {
     "label": "Acquista ora",
     "ariaLabel": "Vai al prodotto mostrato nel video"

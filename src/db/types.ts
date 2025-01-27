@@ -120,8 +120,7 @@ export type InterestsCategory = {
   id: number;
 };
 
-export type ProfileResponse = GridData &
-  Info & {
+export type ProfileResponse = GridData & { firstName: string } & Info & {
     interests: InterestsCategory[];
   };
 

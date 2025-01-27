@@ -134,7 +134,7 @@ export async function handleGetCreatorWithVideos(
           id: creator.id,
           logo: creator.profilePictureURL,
           name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
-          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+          slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', ''), '-', ${creator.id}))`,
           info: {
             age: creator.age,
             location: creator.location,
@@ -211,7 +211,8 @@ export async function getCreatorByIdWithVideos(
         id: creator.id,
         logo: creator.profilePictureURL,
         name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
-        slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+        firstName: creator.firstName,
+        slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', ''), '-', ${creator.id}))`,
         age: creator.age,
         location: creator.location,
         country: creator.country,

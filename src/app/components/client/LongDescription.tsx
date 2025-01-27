@@ -32,8 +32,13 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
       setShouldShowButton(hasOverflow);
     };
 
-    // Check on mount
+    // Check on mount and window resize
     checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+
+    return () => {
+      window.removeEventListener('resize', checkOverflow);
+    };
   }, [maxLines, text]);
 
   const toggleExpansion = () => {
@@ -47,11 +52,11 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
     <div className={`w-full max-w-2xl ${className}`}>
       <p
         ref={contentRef}
-        onClick={shouldShowButton ? toggleExpansion : undefined}
+        onClick={toggleExpansion}
         className={clsx(
           'text-sm md:text-base text-gray-500',
-          shouldShowButton && 'cursor-pointer',
-          !isExpanded && shouldShowButton && 'line-clamp-3'
+          'cursor-pointer',
+          !isExpanded && 'line-clamp-3'
         )}
       >
         {text}
