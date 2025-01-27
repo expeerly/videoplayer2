@@ -1,12 +1,29 @@
 // middleware.ts
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
 
 const defaultLocale = 'en';
 const locales = ['en', 'fr', 'it', 'de'];
 
+let requestCount = 0;
+const MAX_REQUESTS = 5; // Maximum requests allowed
+const TIME_WINDOW = 60000; // Time window in milliseconds (1 minute)
+
+setInterval(() => {
+  requestCount = 0; // Reset the count every minute
+}, TIME_WINDOW);
+
 async function authMiddleware(request: NextRequest) {
+  if (requestCount >= MAX_REQUESTS) {
+    return NextResponse.json(
+      { error: 'Too many requests, please try again later.' },
+      { status: 429 }
+    );
+  }
+
+  requestCount++;
+
   const response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -18,21 +35,19 @@ async function authMiddleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          response.cookies.set({
+        getAll() {
+          return [...request.cookies.getAll()].map(({ name, value }) => ({
             name,
             value,
-            ...options,
-          });
+          }));
         },
-        remove(name: string, options: CookieOptions) {
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
+        setAll(cookies) {
+          cookies.forEach(cookie => {
+            response.cookies.set({
+              name: cookie.name,
+              value: cookie.value,
+              ...cookie.options,
+            });
           });
         },
       },

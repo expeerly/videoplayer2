@@ -263,3 +263,20 @@ export async function getRelatedVideos({
 }> {
   return apiRequest<GridData>(`/video/${videoId}/related`, { lang });
 }
+
+export async function getAllVideos(lang: Languages): Promise<{
+  data: VideoResponse[];
+  error?: string;
+}> {
+  return apiRequest<VideoResponse[]>(`/video/all`, { lang });
+}
+
+export async function getAllCreatorsSlug(): Promise<{
+  data: {
+    id: string;
+    slug: string;
+  }[];
+  error?: string;
+}> {
+  return apiRequest<{ id: string; slug: string }[]>(`/creator/all`, { lang: 'en' });
+}
