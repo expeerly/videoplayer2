@@ -270,3 +270,21 @@ export async function getCreatorByIdWithVideos(
     throw new Error((error as Error).message);
   }
 }
+
+export async function getAllCreators() {
+  try {
+    const creatorInfo = await db
+      .select({
+        id: creator.id,
+        slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+      })
+      .from(creator)
+      .groupBy(creator.id)
+      .orderBy(creator.firstName);
+
+    return creatorInfo;
+  } catch (error) {
+    console.error('Error fetching brands by category:', error);
+    throw new Error((error as Error).message);
+  }
+}
