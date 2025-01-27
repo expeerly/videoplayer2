@@ -9,6 +9,8 @@ export type FilterItemProps = {
   icon?: string;
   logo?: string;
   title?: string;
+  id: string;
+  slug?: string;
 };
 
 export type FilterCardProps = {
@@ -25,20 +27,21 @@ export const FilterCard: FunctionComponent<FilterCardProps> = ({
   checked = false,
   onChange,
   isBrand = false,
+  id,
 }) => {
   const t = useTranslations('dynamic_texts');
   // Event Handlers
   const handleChange = useCallback(() => {
-    onChange?.(name);
-  }, [onChange, name]);
+    onChange?.(id);
+  }, [onChange, id]);
 
   const handleContainerClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (!(e.target as HTMLElement).closest('input')) {
-        onChange?.(name);
+        onChange?.(id);
       }
     },
-    [onChange, name]
+    [onChange, id]
   );
 
   // Memoized Classes
@@ -127,11 +130,18 @@ export const FilterCard: FunctionComponent<FilterCardProps> = ({
       </div>
 
       <div className="flex items-center gap-2">
-        {icon && icon}
+        {icon && (
+          <Image
+            src={icon.startsWith('http') ? icon : `https:${icon}`}
+            height={30}
+            width={30}
+            alt={`${name} icon`}
+          />
+        )}
         <span className="text-base text-grey-700">{name}</span>
         {logo && (
           <Image
-            src={logo}
+            src={logo.startsWith('http') ? logo : `https:${logo}`}
             alt={`${name} Logo`}
             className={logoImageClasses}
             height={20}

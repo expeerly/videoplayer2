@@ -71,9 +71,8 @@ const transformers = {
         siteTitle: 'Sitetitle',
         metaDesc: 'Meta description',
         brandBody: 'Teaser Brand body text',
-        brandFooter: 'Teaser Brand body text',
+        brandFooter: 'Footer Brand SEO text',
       }),
-      rating: Number(getField('Rating', false)),
     };
   },
 
@@ -87,6 +86,8 @@ const transformers = {
         urlSlug: 'URL slug',
         siteTitle: 'Sitetitle',
         metaDesc: 'Meta description',
+        bodyText: 'Teaser body text',
+        footerText: 'Footer SEO text',
       }),
     };
   },
@@ -102,8 +103,8 @@ const transformers = {
     }
     return {
       id: getField('Unique Bubble ID Reviewer'),
-      creatorName:
-        `${getField('Creator First Name', false)} ${getField('Creator Last Name', false)}`.trim(),
+      firstName: getField('Creator first name', false),
+      lastName: getField('Creator Last Name', false),
       bio: getField('Bio', false),
       profilePictureURL: getField('Profile Picture URL', false),
       age: Number(getField('Age', false)),
@@ -128,6 +129,7 @@ const transformers = {
       id: getField('Unique Bubble ID Product'),
       productName: createMultiLangObject(getField, { title: 'Product name' }),
       productLink: getField('Call to action link'),
+      productPicture: getField('Product picture URL', false),
       globalTradeItemNumber: getField('GTIN/EAN') || null,
       vendorProductNumber: getField('Vendor Product Number') || null,
       brandId: getField('Unique bubble Id Brand') || null,

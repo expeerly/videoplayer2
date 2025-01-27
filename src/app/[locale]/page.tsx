@@ -1,12 +1,21 @@
 import { HeroSection } from '../components/server/HeroSection';
-import { ExpolreReviewers } from '../components/server/ExploreReviewers';
+import { ExploreReviewers } from '../components/server/ExploreReviewers';
 import { HowExpeerlyWorks } from '../components/server/HowExpeerlyWork';
 import { BrandsSlider } from '../components/server/BrandsSlider';
 import { CategoriesSlider } from '../components/server/CategoriesSlider';
 import { ConversionSlider } from '../components/server/Conversion';
 import { NextPage, Metadata } from 'next';
 import { getDictionary } from '../../lib/dictionary';
-import { ReviewGrid } from '../components/server/ReviewGrid';
+import { getGridVideos } from '../actions/actions';
+import { Languages } from '@/src/db/types';
+import { ReviewGridSection } from '../components/server/ReviewGridSection';
+
+type PageProps = {
+  params: Promise<{
+    locale: Languages;
+    slug: string;
+  }>;
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getDictionary();
@@ -17,20 +26,43 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const HomePage: NextPage = () => {
+const HomePage: NextPage<PageProps> = async ({ params }) => {
+  const { locale } = await params;
   return (
     <div className="flex flex-col w-full items-center justify-center">
       <HeroSection />
-      <ExpolreReviewers />
-      <BrandsSlider />
+      <ExploreReviewers locale={locale} />
+      <BrandsSlider locale={locale} />
       <section className="flex justify-center max-w-[900px] mb-5 w-full mx-auto pt-16">
-        <ReviewGrid />
+        <ReviewGridSection
+          getGridVideos={() =>
+            getGridVideos({
+              lang: locale,
+              gridType: 'brand',
+              page: 1,
+              limit: 1,
+              videoCount: 5,
+              random: true,
+            })
+          }
+        />
       </section>
-      <CategoriesSlider />
+      <CategoriesSlider locale={locale} />
       <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]  ">
-        <ReviewGrid />
+        <ReviewGridSection
+          getGridVideos={() =>
+            getGridVideos({
+              lang: locale,
+              gridType: 'category',
+              page: 1,
+              limit: 1,
+              videoCount: 5,
+              random: true,
+            })
+          }
+        />
       </section>
-      <ConversionSlider />
+      <ConversionSlider locale={locale} />
       <HowExpeerlyWorks />
     </div>
   );

@@ -3,14 +3,16 @@
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import React, { FunctionComponent, ReactElement, useMemo } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
+import { Link } from '@/src/i18n/routing';
 
 export type SlideProps = {
-  icon?: ReactElement | string;
+  icon?: string;
   name?: string;
   imgURL?: string;
   id?: number | string;
   title?: string;
+  slug: string;
 };
 
 type Props = {
@@ -22,15 +24,16 @@ type Props = {
 export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand = false }) => {
   const t = useTranslations('dynamic_texts');
 
+  // Get display name for aria label and alt text
+  const displayName = useMemo(() => data?.name ?? data?.title ?? '', [data?.name, data?.title]);
+
   // Memoized aria label
   const ariaLabel = useMemo(
     () =>
       isBrand
-        ? t('home_brand_icons.aria_label', {
-            brandname: data?.name ?? data?.title,
-          })
-        : t('home_category_icons.aria_label', { brandname: data?.name ?? data?.title }),
-    [data, isBrand, t]
+        ? t('home_brand_icons.aria_label', { brandname: displayName })
+        : t('home_category_icons.aria_label', { brandname: displayName }),
+    [displayName, isBrand, t]
   );
 
   // Memoized class combinations
@@ -43,6 +46,7 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand 
         'rounded-full',
         'border border-black',
         'whitespace-nowrap flex-shrink-0',
+        'overflow-hidden', // Prevent content overflow
 
         // Focus states
         'focus:outline-none focus:ring-0',
@@ -59,24 +63,57 @@ export const SliderCard: FunctionComponent<Props> = ({ data, className, isBrand 
     [data.imgURL, className]
   );
 
-  // Memoized image classes
-  const imageClasses = useMemo(() => clsx('w-full', 'h-max', 'min-w-max'), []);
+  // Memoized image classes with max dimensions
+  const imageClasses = useMemo(
+    () =>
+      clsx(
+        'object-contain',
+        'h-8',
+        'max-w-32',
+        'max-h-[32px]' // Ensure image doesn't exceed container height
+      ),
+    []
+  );
 
   // Memoized text classes
   const textClasses = useMemo(() => clsx('text-base', 'text-grey-700'), []);
 
   // Memoized icon classes
-  const iconClasses = useMemo(() => clsx('text-lg'), []);
+  const iconClasses = useMemo(() => clsx('text-lg', 'flex-shrink-0'), []);
+
+  const imageUrl = useMemo(
+    () => (data.imgURL?.startsWith('http') ? data.imgURL : `https:${data.imgURL}`),
+    [data.imgURL]
+  );
 
   return (
-    <button className={buttonClasses} aria-label={ariaLabel}>
-      {data?.icon && <span className={iconClasses}>{data.icon}</span>}
+    <Link
+      href={
+        isBrand
+          ? `/video-reviews/brand/${data.slug}`
+          : `/video-reviews/productcategory/${data.slug}`
+      }
+      className={buttonClasses}
+      aria-label={ariaLabel}
+      title={displayName} // Add title for hover tooltip
+    >
+      {data?.icon && (
+        <span className={iconClasses}>
+          <Image
+            src={data.icon}
+            alt={displayName}
+            width={25}
+            height={25}
+            className="max-h-[25px] w-auto"
+          />
+        </span>
+      )}
 
       {data?.name && <span className={textClasses}>{data.name}</span>}
 
       {data.imgURL && (
-        <Image className={imageClasses} src={data.imgURL} width={100} height={25} alt={ariaLabel} />
+        <Image className={imageClasses} src={imageUrl} width={100} height={20} alt={displayName} />
       )}
-    </button>
+    </Link>
   );
 };

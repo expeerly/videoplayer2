@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
-import { handleCreateLandingPage, handleGetLandingPage } from '../services/landingPage.services';
+import {
+  getLandingPage,
+  handleCreateLandingPage,
+  handleGetLandingPageWithLangAndType,
+} from '../services/landingPage.services';
 import { handleError } from '../utils/errorHandler';
-
-export const maxDuration = 50;
+import { getLanguageFromRequest } from '../utils/requestHelpers';
 
 export const POST = async (req: Request) => {
   try {
@@ -12,7 +15,7 @@ export const POST = async (req: Request) => {
       throw new Error('Input is required and cannot be empty');
     }
 
-    const existingLandingPage = (await handleGetLandingPage()) || {};
+    const existingLandingPage = (await getLandingPage()) || {};
 
     const landingPage = await handleCreateLandingPage({
       ...existingLandingPage,
@@ -32,9 +35,25 @@ export const POST = async (req: Request) => {
   }
 };
 
-export const GET = async () => {
+export const GET = async (request: Request) => {
   try {
-    const landingPage = await handleGetLandingPage();
+    const lang = getLanguageFromRequest(request);
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type') as 'Brand' | 'Category' | 'Creator' | undefined;
+
+    if (type && !['Brand', 'Category', 'Creator'].includes(type)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Invalid type parameter. Must be one of: Brand, Category, Creator',
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const landingPage = await handleGetLandingPageWithLangAndType(lang, type);
 
     if (!landingPage) {
       return NextResponse.json(

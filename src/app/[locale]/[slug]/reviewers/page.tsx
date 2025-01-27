@@ -1,25 +1,43 @@
 import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
-import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
+import { Metadata, NextPage } from 'next';
+import { Languages } from '@/src/db/types';
+import { getAllBrands, getAllCategories, getLandingPageText } from '@/src/app/actions/actions';
 import { getDictionary } from '@/src/lib/dictionary';
-import { NextPage } from 'next';
+import { LandingPageGrid } from '@/src/app/components/server/LandingPageGrid';
 
-const sampleText = `
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis 
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
-eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
-sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut 
-perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore 
-veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-`.trim();
+type PageProps = {
+  params: Promise<{
+    locale: Languages;
+    slug: string;
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
-const Page: NextPage = async () => {
-  const { t } = await getDictionary();
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const { data } = await getLandingPageText(locale, 'Creator');
+
+  return {
+    title: data?.content.siteTitle,
+    description: data?.content.metaDescription,
+  };
+}
+
+const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
+  const { locale } = await params;
+  const page = Number((await searchParams).page) || 1;
+  const brandQuery = (await searchParams).brand ?? '';
+  const categoryQuery = (await searchParams).category ?? '';
+
+  const [{ t }, { data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+    getDictionary(),
+    getLandingPageText(locale, 'Creator'),
+    getAllBrands(locale),
+    getAllCategories(locale),
+  ]);
 
   return (
     <div className="w-full bg-white">
@@ -27,20 +45,21 @@ const Page: NextPage = async () => {
         <section>
           <div className="px-5 md:px-0">
             <div className="flex justify-between">
-              <PageHeading>Avis Vidéos: Categories de Produit</PageHeading>
-              <Filter />
+              <PageHeading>{t('allReviewers')}</PageHeading>
+              <Filter categoriesList={allCategories} brandsList={allBrands} />
             </div>
-            <LongDescription text={sampleText} />
+            <LongDescription text={data?.content.bodyText ?? ''} />
           </div>
         </section>
-        <PaginationContainer
-          headerData={{
-            profileSlug: '/video-reviews/reviewers/reviewer-1',
-            title: 'Reviewer 1',
-            subTitle: '18 reviews',
-            dataType: 'reviewer',
-            description: '',
-          }}
+
+        <LandingPageGrid
+          type={'creator'}
+          locale={locale}
+          page={page}
+          categoryQuery={categoryQuery}
+          brandQuery={brandQuery}
+          allCategories={allCategories}
+          allBrands={allBrands}
           ctaBlock={{
             heading: t('CTABlockAllReviewers.experienceShare'),
             desc: t('CTABlockAllReviewers.becomeReviewer'),
@@ -52,11 +71,7 @@ const Page: NextPage = async () => {
           }}
         />
 
-        <SEOSection
-          heading="SEO text lorem ipsum"
-          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pretium dictum felis, at
-            porttitor nisi accumsan et. Curabitur volutpat risus at nisi finibus, eget suscipit leo."
-        />
+        <SEOSection content={data?.content?.footerText ?? ''} />
       </div>
     </div>
   );

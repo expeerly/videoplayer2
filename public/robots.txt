@@ -1,3 +1,12 @@
+# *
 User-agent: *
 Allow: 
 Disallow: /
+
+# Host
+Host: https://www.expeerly.com
+
+# Sitemaps
+Sitemap: https://www.expeerly.com/sitemap_index.xml
+Sitemap: https://www.expeerly.com/sitemap-video.xml
+Sitemap: https://www.expeerly.com/sitemap.xml

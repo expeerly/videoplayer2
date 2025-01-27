@@ -35,17 +35,17 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
       <span className="text-grey-700 font-medium">
         {alt
           .split(' ')
+          .slice(0, 2)
           .map(word => word[0])
           .join('')
           .toUpperCase()}
       </span>
     ),
   };
-
   return (
     <div
       className={clsx(
-        'flex items-center justify-center bg-grey-200 overflow-hidden rounded-full',
+        'flex items-center justify-center bg-grey-100 border border-grey-300 overflow-hidden rounded-full p-0.5',
         sizeClasses[size],
         className
       )}
@@ -54,11 +54,12 @@ export const Avatar: FunctionComponent<AvatarProps> = ({
     >
       {src ? (
         <Image
-          src={src}
+          src={src?.startsWith('//') ? `https:${src}` : src}
           alt={alt}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain rounded-full flex"
           height={20}
           width={20}
+          sizes="100% 100%"
         />
       ) : (
         fallbackOptions[fallback]

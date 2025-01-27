@@ -2,17 +2,16 @@ import { FunctionComponent, ReactNode } from 'react';
 import { VideoActions } from '../../client/VideoActions';
 import { VideoInfo } from './VideoInfo';
 import { VideoPlayer } from '../../client/VideoPlayer';
+import { VideoBrand, VideoCategory, VideoCreator, VideoProduct } from '@/src/db/types';
 
 export interface Video {
-  id: string;
+  id: number;
   playbackId: string;
-  caption: string;
-  username: string;
-  userAvatar: string;
-  category: string;
-  brandName: string;
-  productName: string;
-  rating: number;
+  starRating: number;
+  brand: VideoBrand;
+  product: VideoProduct;
+  creator: VideoCreator;
+  category: VideoCategory;
 }
 
 interface VideoCardProps {
@@ -29,7 +28,7 @@ export const VideoCard: FunctionComponent<VideoCardProps> = ({ video, isVideoDet
         <div className="flex gap-4 w-max mx-auto h-full items-end">
           <div className="relative h-full flex">
             <div className="w-screen h-full sm:max-w-[441px] relative">
-              <VideoPlayer playbackId={video.playbackId} />
+              <VideoPlayer id={video.id} playbackId={video.playbackId} />
             </div>
             <VideoInfo video={video} isVideoDetails={isVideoDetails} />
           </div>

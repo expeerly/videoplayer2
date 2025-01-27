@@ -3,33 +3,12 @@ import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Button } from '../client/Button';
-import { SlideProps } from '../client/Slider/SliderCard';
+import { LocaleProps } from '@/src/db/types';
+import { getBrands } from '../../actions/actions';
 
-export const brands: SlideProps[] = [
-  { imgURL: '/brands/logo.svg', id: 1, title: 'Dyson' },
-  { imgURL: '/brands/logo1.svg', id: 2, title: 'Philips' },
-  { imgURL: '/brands/logo2.svg', id: 3, title: 'Sony' },
-  { imgURL: '/brands/logo3.svg', id: 4, title: 'Tefal' },
-  { imgURL: '/brands/logo4.svg', id: 5, title: 'Zalando' },
-  { imgURL: '/brands/logo5.svg', id: 6, title: 'Get Your Guide' },
-  { imgURL: '/brands/logo6.svg', id: 7, title: 'Koenig' },
-  { imgURL: '/brands/logo7.svg', id: 8, title: 'Bauknecht' },
-  { imgURL: '/brands/logo8.svg', id: 9, title: 'Dyson_1' },
-  { imgURL: '/brands/logo.svg', id: 10 },
-  { imgURL: '/brands/logo8.svg', id: 11 },
-  { imgURL: '/brands/logo1.svg', id: 12 },
-  { imgURL: '/brands/logo2.svg', id: 13 },
-  { imgURL: '/brands/logo3.svg', id: 14 },
-  { imgURL: '/brands/logo4.svg', id: 15 },
-  { imgURL: '/brands/logo5.svg', id: 16 },
-  { imgURL: '/brands/logo6.svg', id: 17 },
-  { imgURL: '/brands/logo7.svg', id: 18 },
-  { imgURL: '/brands/logo8.svg', id: 19 },
-  { imgURL: '/brands/logo.svg', id: 20 },
-];
+export const BrandsSlider: FunctionComponent<LocaleProps> = async ({ locale }) => {
+  const [{ t }, { data: brands }] = await Promise.all([getDictionary(), getBrands(locale)]);
 
-export const BrandsSlider: FunctionComponent = async () => {
-  const { t } = await getDictionary();
   return (
     <section
       className="relative bg-blue-500 w-full flex justify-center bg-no-repeat bg-top md:bg-bottom md:bg-cover md:bg-transparent"
@@ -48,33 +27,46 @@ export const BrandsSlider: FunctionComponent = async () => {
         </div>
         <div className=" hidden w-full md:flex">
           <Slider
-            slides={brands}
             classNameStyle={{
               leftButtonClassName: '!bg-blue-left-gradient',
               rightButtonClassName: '!bg-blue-right-gradient',
               cardClassName: 'bg-white',
             }}
             isBrand
+            slides={
+              brands?.rows?.map(brand => ({
+                title: brand.brandName,
+                imgURL: brand.logo,
+                slug: brand.slug,
+              })) ?? []
+            }
           />
         </div>
         <div className=" flex w-full  md:hidden">
           <MobileSlider
-            slides={brands}
             styleClassNames={{
               cardClassName: 'bg-white',
             }}
             isBrand
+            slides={
+              brands?.rows?.map(brand => ({
+                title: brand.brandName,
+                imgURL: brand.logo,
+                slug: brand.slug,
+              })) ?? []
+            }
           />
         </div>
         <div className="px-5 w-full flex justify-center sm:w-[340px]">
           <Button
             size="lg"
             variant="secondary"
-            href="/for-brands"
+            href="https://www.get.expeerly.com/for-brands"
             fullWidth
             className=" bg-white mt-10 text-center"
             title={t('get_video_reviewed.label')}
             aria-label={t('get_video_reviewed.aria_label')}
+            target={'_blank'}
           >
             {t('get_video_reviewed.label')}
           </Button>

@@ -1,71 +1,88 @@
 import { Filter } from '@/src/app/components/client/Filter/Filter';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
-import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
-import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
-import { Slider } from '@/src/app/components/client/Slider/Slider';
-import { NextPage } from 'next';
+import { Metadata, NextPage } from 'next';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
+import { Languages } from '@/src/db/types';
+import { getAllBrands, getAllCategories, getLandingPageText } from '@/src/app/actions/actions';
 import { getDictionary } from '@/src/lib/dictionary';
+import { AllCategoriesSlider } from '@/src/app/components/server/AllCategoriesSlider';
+import { LandingPageGrid } from '@/src/app/components/server/LandingPageGrid';
 
-const sampleText = `
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis 
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
-eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
-sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut 
-perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore 
-veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-`.trim();
+type PageProps = {
+  params: Promise<{
+    locale: Languages;
+    slug: string;
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
-const Page: NextPage = async () => {
-  const { t } = await getDictionary();
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const { data } = await getLandingPageText(locale, 'Category');
+
+  return {
+    title: data?.content.siteTitle,
+    description: data?.content.metaDescription,
+  };
+}
+
+const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
+  const { locale } = await params;
+  const page = Number((await searchParams).page) || 1;
+  const brandQuery = (await searchParams).brand ?? '';
+  const categoryQuery = (await searchParams).category ?? '';
+
+  const [{ t }, { data }, { data: allBrands }, { data: allCategories }] = await Promise.all([
+    getDictionary(),
+    getLandingPageText(locale, 'Category'),
+    getAllBrands(locale),
+    getAllCategories(locale),
+  ]);
 
   return (
     <div className="w-full bg-white">
-      <div className="w-full mx-auto md:max-w-[532px] pt-5 md:pt-10">
-        <section>
+      <div className="w-full pt-5 md:pt-10">
+        <section className="w-full mx-auto md:max-w-[532px]">
           <div className="px-5 md:px-0">
             <div className="flex justify-between">
-              <PageHeading>Avis Vidéos: Categories de Produit</PageHeading>
-              <Filter />
+              <PageHeading>{t('allCategories')}</PageHeading>
+              <Filter categoriesList={allCategories} brandsList={allBrands} />
             </div>
-            <LongDescription text={sampleText} />
-          </div>
-          <div className="mt-8">
-            <div className="hidden md:block">
-              <Slider
-                classNameStyle={{
-                  cardClassName: 'bg-white',
-                }}
-              />
-            </div>
-            <div className="md:hidden">
-              <MobileSlider isMultiRow={false} />
-            </div>
+            <LongDescription text={data?.content.bodyText ?? ''} />
           </div>
         </section>
-        <PaginationContainer
-          headerData={{
-            profileSlug: '/video-reviews/productcategory/travel',
-            title: 'Travel',
-            subTitle: '1,218 reviews',
-            dataType: 'category',
-            description: '',
-          }}
-          ctaBlock={{
-            heading: t('cta_block_all_brands_categories.title'),
-            desc: t('cta_block_all_brands_categories.desc'),
-            button: {
-              label: t('learn_more.label'),
-              ariaLabel: t('learn_more.aria_label'),
-              href: 'https://www.get.expeerly.com/for-brands',
-            },
-          }}
+
+        <AllCategoriesSlider
+          locale={locale}
+          categoryQuery={categoryQuery}
+          brandQuery={brandQuery}
+          allCategories={allCategories}
+          allBrands={allBrands}
         />
-        <SEOSection heading="SEO text lorem ipsum" content={sampleText} />
+
+        <div className="w-full mx-auto md:max-w-[532px]">
+          <LandingPageGrid
+            type={'category'}
+            locale={locale}
+            page={page}
+            categoryQuery={categoryQuery}
+            brandQuery={brandQuery}
+            allCategories={allCategories}
+            allBrands={allBrands}
+            ctaBlock={{
+              heading: t('cta_block_all_brands_categories.title'),
+              desc: t('cta_block_all_brands_categories.desc'),
+              button: {
+                label: t('learn_more.label'),
+                ariaLabel: t('learn_more.aria_label'),
+                href: 'https://www.get.expeerly.com/for-brands',
+              },
+            }}
+          />
+
+          <SEOSection content={data?.content.footerText ?? ''} />
+        </div>
       </div>
     </div>
   );

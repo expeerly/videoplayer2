@@ -1,13 +1,7 @@
 import { NextPage } from 'next';
-import { VideoFeed } from '../../components/client/VideoFeed';
-import { sampleVideos } from '../explore/layout';
 
 const Page: NextPage = () => {
-  return (
-    <div className="h-max">
-      <VideoFeed videos={sampleVideos} />
-    </div>
-  );
+  return <div className="h-max"></div>;
 };
 
 export default Page;

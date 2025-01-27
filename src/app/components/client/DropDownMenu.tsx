@@ -1,3 +1,4 @@
+'use client';
 import React, {
   FunctionComponent,
   memo,
@@ -8,6 +9,9 @@ import React, {
   useState,
   useMemo,
 } from 'react';
+import { useTranslations } from 'use-intl';
+import clsx from 'clsx';
+
 import {
   BinocularsIcon,
   CartIcon,
@@ -24,9 +28,10 @@ import {
   WorldIcon,
 } from '@/src/assets/icons';
 import { ArrowRightIcon } from '@/src/assets/icons/ArrowRightIcon';
-import { useTranslations } from 'use-intl';
-import clsx from 'clsx';
 import { Link, usePathname } from '@/src/i18n/routing';
+import { useSearchParams } from 'next/navigation';
+import { CategoryData } from '@/src/db/types';
+
 import { Button } from './Button';
 
 export type MenuItem = {
@@ -34,6 +39,7 @@ export type MenuItem = {
   label: string;
   icon: FunctionComponent<SVGProps<SVGSVGElement>>;
   href?: string;
+  target?: string;
   items?: {
     label: string;
     href: string;
@@ -43,101 +49,88 @@ export type MenuItem = {
   devider?: boolean;
 };
 
-const categroies = [
-  { label: 'Arts & Crafts', href: '/video-reviews/productcategory/1' },
-  { label: 'Automotive', href: '/video-reviews/productcategory/2' },
-  { label: 'Baby & Child Care', href: '/video-reviews/productcategory/3' },
-  { label: 'Beauty & Personal Care', href: '/video-reviews/productcategory/4' },
-  { label: 'Books & Media', href: '/video-reviews/productcategory/5' },
-  { label: 'Clothes and Fashion', href: '/video-reviews/productcategory/6' },
-  { label: 'Electronics & Gadgets', href: '/video-reviews/productcategory/7' },
-  { label: 'Food & Beverages', href: '/video-reviews/productcategory/8' },
-  { label: 'Furniture & Decor', href: '/video-reviews/productcategory/9' },
-  { label: 'Gardening & Outdoor Living', href: '/video-reviews/productcategory/10' },
-  { label: 'Health & Wellness', href: '/video-reviews/productcategory/11' },
-  { label: 'Home & Kitchen', href: '/video-reviews/productcategory/12' },
-  { label: 'Jewelry and Watches', href: '/video-reviews/productcategory/13' },
-  { label: 'Music & Instruments', href: '/video-reviews/productcategory/14' },
-  { label: 'Office Supplies', href: '/video-reviews/productcategory/15' },
-  { label: 'Pet Supplies', href: '/video-reviews/productcategory/16' },
-  { label: 'Sports & Outdoors', href: '/video-reviews/productcategory/17' },
-  { label: 'Toys & Games', href: '/video-reviews/productcategory/18' },
-  { label: 'Tools & Home Improvement', href: '/video-reviews/productcategory/19' },
-  { label: 'Travel', href: '/video-reviews/productcategory/20' },
-];
+const defaultMenuItems = (categroies: CategoryData[] = []): MenuItem[] => {
+  return [
+    { key: 'explore', label: 'Explore', icon: BinocularsIcon, href: '/explore' },
+    {
+      key: 'brands',
+      label: 'Brands',
+      icon: StoreIcon,
+      href: '/video-reviews/brand',
+    },
+    {
+      key: 'reviewers',
+      label: 'Reviewers',
+      icon: SpeechBubbleIcon,
+      href: '/video-reviews/reviewers',
+    },
+    {
+      key: 'categories',
+      label: 'Categories',
+      icon: CategoriesIcon,
+      items: categroies?.map(i => ({
+        label: i.categoryName,
+        href: `/video-reviews/productcategory/${i.urlSlug}`,
+      })),
+      itemsLabel: 'viewAllCategories',
+      href: '/video-reviews/productcategory',
+    },
 
-const defaultMenuItems: MenuItem[] = [
-  { key: 'explore', label: 'Explore', icon: BinocularsIcon, href: '/explore' },
-  {
-    key: 'brands',
-    label: 'Brands',
-    icon: StoreIcon,
-    href: '/video-reviews/brand',
-  },
-  {
-    key: 'reviewers',
-    label: 'Reviewers',
-    icon: SpeechBubbleIcon,
-    href: '/video-reviews/reviewers',
-  },
-  {
-    key: 'categories',
-    label: 'Categories',
-    icon: CategoriesIcon,
-    items: categroies,
-    itemsLabel: 'viewAllCategories',
-    href: '/video-reviews/productcategory',
-  },
+    {
+      devider: true,
 
-  {
-    devider: true,
-
-    key: 'learn_more',
-    label: 'Learn more',
-    icon: InfoIcon,
-    href: 'https://www.get.expeerly.com/about-us',
-  },
-  { key: 'submit_video_review', label: 'Submit a video review', icon: VideoIcon },
-  {
-    key: 'for_brands',
-    label: 'For brands & businesses',
-    icon: TagIcon,
-    href: 'https://www.get.expeerly.com/for-brands',
-  },
-  {
-    key: 'for_marketplaces',
-    label: 'For marketplaces',
-    icon: CartIcon,
-    href: 'https://www.get.expeerly.com/for-marketplaces',
-  },
-  {
-    devider: true,
-    key: 'language',
-    label: 'English (EN)',
-    icon: WorldIcon,
-    items: [
-      { label: 'English (EN)', href: 'en' },
-      { label: 'Deutsch (DE)', href: 'de' },
-      { label: 'Français (FR)', href: 'fr' },
-      { label: 'Italiano (IT)', href: 'it' },
-    ],
-  },
-];
+      key: 'learn_more',
+      label: 'Learn more',
+      icon: InfoIcon,
+      href: 'https://www.get.expeerly.com/about-us',
+      target: '_blank',
+    },
+    { key: 'submit_video_review', label: 'Submit a video review', icon: VideoIcon },
+    {
+      key: 'for_brands',
+      label: 'For brands & businesses',
+      icon: TagIcon,
+      href: 'https://www.get.expeerly.com/for-brands',
+      target: '_blank',
+    },
+    {
+      key: 'for_marketplaces',
+      label: 'For marketplaces',
+      icon: CartIcon,
+      href: 'https://www.get.expeerly.com/for-marketplaces',
+      target: '_blank',
+    },
+    {
+      devider: true,
+      key: 'language',
+      label: 'English (EN)',
+      icon: WorldIcon,
+      items: [
+        { label: 'English (EN)', href: 'en' },
+        { label: 'Deutsch (DE)', href: 'de' },
+        { label: 'Français (FR)', href: 'fr' },
+        { label: 'Italiano (IT)', href: 'it' },
+      ],
+    },
+  ];
+};
 
 type DropDownMenuProps = {
-  menuItems?: MenuItem[];
   className?: string;
+  categories: CategoryData[];
 };
 
 const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
-  menuItems = defaultMenuItems,
   className = '',
+  categories,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('menu');
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const menuItems = useMemo(() => defaultMenuItems(categories), [categories]);
 
   // Event Handlers
   const toggleMenu = useCallback(() => {
@@ -372,7 +365,11 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                                 <Link
                                   locale={item.key === 'language' ? subItem.href : undefined}
                                   role="menuitem"
-                                  href={item.key === 'language' ? pathname : subItem.href}
+                                  href={
+                                    item.key === 'language'
+                                      ? `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ''}`
+                                      : subItem.href
+                                  }
                                   title={subItem.label}
                                   className="flex items-center gap-2 w-full text-left pl-2 pr-14 py-2 rounded-lg text-ray-700 hover:bg-grey-100"
                                 >
@@ -391,6 +388,7 @@ const DropDownMenuComponent: FunctionComponent<DropDownMenuProps> = ({
                       href={`${item.href}`}
                       title={t(`${item.key}.label`)}
                       aria-label={t(`${item.key}.aria_label`)}
+                      target={item.target}
                     >
                       <item.icon />
                       <span className="text-grey-700">{t(`${item.key}.label`)}</span>

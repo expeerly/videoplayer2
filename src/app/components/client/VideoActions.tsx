@@ -7,6 +7,7 @@ import isMobile from 'is-mobile';
 import { useTranslations } from 'next-intl';
 import { useSharedDispatch, useSharedState } from '../../context/reducer';
 import { Button } from './Button';
+import Link from 'next/link';
 type VideoActionsProps = {
   video: Video;
   isVideoDetails?: boolean;
@@ -43,10 +44,10 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     if (isMobile() && navigator.share) {
       try {
         await navigator.share({
-          title: video.productName,
+          title: video.product.productName,
           text: t('dynamic_texts.share_action.aria_label', {
-            productName: video.productName,
-            brandName: video.brandName,
+            productName: video.product.productName,
+            brandName: video.brand.name,
           }),
           url: window.location.href,
         });
@@ -56,7 +57,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     } else {
       setIsOpen(true);
     }
-  }, [t, video.brandName, video.productName]);
+  }, [t, video]);
 
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
@@ -92,14 +93,18 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
           <p>{t('more')}</p>
         </button>
 
-        <button onClick={() => {}} className={`flex flex-col items-center text-sm font-semibold`}>
+        <Link
+          target={'_blank'}
+          href={video.product.productLink}
+          className={`flex flex-col items-center text-sm font-semibold`}
+        >
           <div
             className={` w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center !bg-opacity-50 md:!bg-opacity-100`}
           >
             <BagIcon />
           </div>
           <p>{t('shop')}</p>
-        </button>
+        </Link>
       </div>
 
       <ShareDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />

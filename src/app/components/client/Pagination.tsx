@@ -1,23 +1,35 @@
 'use client';
 
-import { FunctionComponent, useMemo, useCallback, useState } from 'react';
+import { FunctionComponent, useMemo, useCallback } from 'react';
 import clsx from 'clsx';
 import { LeftChevronIcon, RightChevronIcon } from '@/src/assets/icons';
 import { useTranslations } from 'next-intl';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export type PaginationProps = {
   totalPages?: number;
-  onPageChange?: (page: number) => void;
   className?: string;
 };
 
 export const Pagination: FunctionComponent<PaginationProps> = ({
   totalPages = 50,
-  onPageChange,
   className = '',
 }) => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
   const t = useTranslations();
+
+  const createQueryString = useCallback(
+    (page: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('page', page.toString());
+      return params.toString();
+    },
+    [searchParams]
+  );
+
   const pageNumbers = useMemo(() => {
     if (totalPages <= 5) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -67,12 +79,11 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
 
   const handlePageChange = useCallback(
     (page: number) => {
-      setCurrentPage(page);
       if (page >= 1 && page <= totalPages) {
-        onPageChange?.(page);
+        router.push(`${pathname}?${createQueryString(page)}`);
       }
     },
-    [onPageChange, totalPages]
+    [pathname, router, createQueryString, totalPages]
   );
 
   return (
@@ -88,18 +99,19 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
         <LeftChevronIcon className="[&>path]:stroke-grey-500" />
       </button>
 
-      {pageNumbers.map((page, idx) => (
-        <button
-          key={`${page}-${idx}`}
-          onClick={() => typeof page === 'number' && handlePageChange(page)}
-          disabled={page === '...'}
-          className={pageButtonClassName(page)}
-          aria-current={currentPage === page ? 'page' : undefined}
-          aria-label={t('pagination', { pagenumber: page })}
-        >
-          {page}
-        </button>
-      ))}
+      {pageNumbers.length > 2 &&
+        pageNumbers.map((page, idx) => (
+          <button
+            key={`${page}-${idx}`}
+            onClick={() => typeof page === 'number' && handlePageChange(page)}
+            disabled={page === '...'}
+            className={pageButtonClassName(page)}
+            aria-current={currentPage === page ? 'page' : undefined}
+            aria-label={t('pagination', { pagenumber: page })}
+          >
+            {page}
+          </button>
+        ))}
 
       <button
         onClick={() => handlePageChange(currentPage + 1)}

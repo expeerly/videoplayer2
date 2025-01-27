@@ -31,11 +31,11 @@ export const createProducts = async (input: ProductInputType[]) => {
           productName: sql`EXCLUDED."productName"`,
           productLink: sql`EXCLUDED."productLink"`,
           productSlug: sql`EXCLUDED."productSlug"`,
+          productPicture: sql`EXCLUDED."productPicture"`,
           brandId: sql`EXCLUDED."brandId"`,
           categoryId: sql`EXCLUDED."categoryId"`,
           globalTradeItemNumber: sql`EXCLUDED."globalTradeItemNumber"`,
           vendorProductNumber: sql`EXCLUDED."vendorProductNumber"`,
-          rating: sql`EXCLUDED."rating"`,
           updatedAt: sql`CURRENT_TIMESTAMP`,
         },
       })
@@ -53,7 +53,7 @@ export async function getProductsCount(): Promise<{ count: number }> {
     const count = await db.$count(product);
     return { count };
   } catch (error) {
-    console.error('Error fetching category count:', error);
+    console.error('Error fetching product count:', error);
     throw new Error((error as Error).message);
   }
 }

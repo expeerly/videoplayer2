@@ -1,6 +1,6 @@
 'use client';
 import { FunctionComponent, memo, useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { useTranslations } from 'use-intl';
+import { useLocale, useTranslations } from 'use-intl';
 import { CloseIcon, FilterIcon } from '@/src/assets/icons';
 import { FilterItemProps } from './FilterCard';
 import clsx from 'clsx';
@@ -8,68 +8,92 @@ import { usePathname, useRouter } from '@/src/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 import { FilterCards } from './FilterCards';
 import { Button } from '../Button';
+import { AllCategoriesData, Languages, AllBrandssData } from '@/src/db/types';
 
 type TabType = 'brands' | 'categories';
 
-const categories: FilterItemProps[] = [
-  { name: 'Travel', icon: '✈️' },
-  { name: 'Automobile', icon: '🚗' },
-  { name: 'Health & Wellness', icon: '❤️' },
-  { name: 'Arts & Crafts', icon: '🎨' },
-  { name: 'Baby & Child Care', icon: '👶' },
-  { name: 'Home & Kitchen', icon: '🏠' },
-  { name: 'Beauty & Personal Care', icon: '💅' },
-  { name: 'Books & Media', icon: '📚' },
-  { name: 'Clothes and Fashion', icon: '👕' },
-  { name: 'Electronics & Gadgets', icon: '📱' },
-  { name: 'Food & Beverages', icon: '🍔' },
-  { name: 'Furniture & Decor', icon: '🛋️' },
-  { name: 'Gardening & Outdoor Living', icon: '🌻' },
-  { name: 'Jewelry and Watches', icon: '💎' },
-  { name: 'Music & Instruments', icon: '🎸' },
-  { name: 'Office Supplies', icon: '📎' },
-  { name: 'Pet Supplies', icon: '🐾' },
-  { name: 'Sports & Outdoors', icon: '🏀' },
-  { name: 'Toys & Games', icon: '🧸' },
-  { name: 'Tools & Home Improvement', icon: '🔧' },
-];
+type Props = {
+  categoriesList: AllCategoriesData[];
+  brandsList: AllBrandssData;
+};
 
-const brands: FilterItemProps[] = [
-  { name: 'Dyson', logo: '/brands/logo.svg' },
-  { name: 'Philips', logo: '/brands/logo1.svg' },
-  { name: 'Sony', logo: '/brands/logo13.svg' },
-  { name: 'Tefal', logo: '/brands/logo11.svg' },
-  { name: 'Zalando', logo: '/brands/logo14.svg' },
-  { name: 'Get Your Guide', logo: '/brands/logo11.svg' },
-  { name: 'Koenig', logo: '/brands/logo5.svg' },
-  { name: 'Bauknecht', logo: '/brands/logo12.svg' },
-  { name: 'Dyson_1', logo: '/brands/logo.svg' },
-  { name: 'Philips_2', logo: '/brands/logo1.svg' },
-  { name: 'Sony_3', logo: '/brands/logo13.svg' },
-  { name: 'Tefal_4', logo: '/brands/logo11.svg' },
-  { name: 'Zalando_5', logo: '/brands/logo14.svg' },
-  { name: 'Get Your Guide_6', logo: '/brands/logo11.svg' },
-  { name: 'Koenig_7', logo: '/brands/logo5.svg' },
-  { name: 'Bauknecht_8', logo: '/brands/logo12.svg' },
-];
+const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList }) => {
+  const [filterState, setFilterState] = useState({
+    isOpen: false,
+    activeTab: 'categories' as TabType,
+    pendingFilters: {
+      brand: [] as string[],
+      category: [] as string[],
+    },
+  });
 
-const FilterComponent: FunctionComponent = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, activeTab, pendingFilters } = filterState;
+
   const menuRef = useRef<HTMLDivElement>(null);
   const t = useTranslations();
+  const local = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<TabType>('categories');
 
-  const appliedFilters = useMemo(
-    () => ({
-      brand: searchParams.getAll('brand'),
-      category: searchParams.getAll('category'),
-    }),
-    [searchParams]
+  const brands = useMemo(
+    () =>
+      brandsList?.reduce(
+        (acc, i) => {
+          acc[i.id] = {
+            name: i.brandName,
+            logo: i.logo || undefined,
+            id: i.id,
+            slug: i.slug,
+          };
+          return acc;
+        },
+        {} as Record<string, FilterItemProps>
+      ),
+    [brandsList]
   );
-  const [pendingFilters, setPendingFilters] = useState(appliedFilters);
+
+  const categories = useMemo(
+    () =>
+      categoriesList?.reduce(
+        (acc, i) => {
+          acc[i.id] = {
+            name: i.categoryData?.[local === '/' ? 'en' : (local as Languages)].categoryName,
+            icon: i.logo || undefined,
+            id: i.id.toString(),
+            slug: i.categoryData?.[local === '/' ? 'en' : (local as Languages)]?.urlSlug,
+          };
+          return acc;
+        },
+        {} as Record<string, FilterItemProps>
+      ),
+    [categoriesList, local]
+  );
+
+  const activeItems = useMemo(
+    () => Object.values(activeTab === 'categories' ? categories : brands),
+    [activeTab, categories, brands]
+  );
+
+  const appliedFilters = useMemo(() => {
+    const brandSlugs = searchParams.getAll('brand');
+    const categorySlugs = searchParams.getAll('category');
+
+    return {
+      brand: brandSlugs
+        .map(slug => {
+          const brand = Object.values(brands).find(b => b.slug === slug);
+          return brand?.id || '';
+        })
+        .filter(Boolean),
+      category: categorySlugs
+        .map(slug => {
+          const category = Object.values(categories).find(c => c.slug === slug);
+          return category?.id || '';
+        })
+        .filter(Boolean),
+    };
+  }, [searchParams, brands, categories]);
 
   const totalSelectedCount = useMemo(
     () => pendingFilters.brand.length + pendingFilters.category.length,
@@ -82,10 +106,7 @@ const FilterComponent: FunctionComponent = () => {
   );
 
   const hasFilterChanges = useMemo(() => {
-    const currentAppliedFilters = {
-      brand: searchParams.getAll('brand'),
-      category: searchParams.getAll('category'),
-    };
+    const currentAppliedFilters = appliedFilters;
 
     if (pendingFilters.brand.length === 0 && pendingFilters.category.length === 0) {
       return currentAppliedFilters.brand.length > 0 || currentAppliedFilters.category.length > 0;
@@ -100,49 +121,76 @@ const FilterComponent: FunctionComponent = () => {
       pendingFilters.category.some(c => !currentAppliedFilters.category.includes(c));
 
     return brandsDiff || categoriesDiff;
-  }, [pendingFilters, searchParams]);
+  }, [pendingFilters, appliedFilters]);
 
-  const updatePendingFilters = useCallback((type: 'brand' | 'category', name: string) => {
-    setPendingFilters(prev => {
-      const currentArray = prev[type];
-      if (currentArray.includes(name)) {
+  const toggleMenu = useCallback(() => {
+    setFilterState(prev => ({
+      ...prev,
+      isOpen: !prev.isOpen,
+    }));
+  }, []);
+
+  const handleItemToggle = useCallback((id: string) => {
+    setFilterState(prev => {
+      const type = prev.activeTab === 'categories' ? 'category' : 'brand';
+      const currentArray = prev.pendingFilters[type];
+
+      if (currentArray.includes(id)) {
         return {
           ...prev,
-          [type]: currentArray.filter(item => item !== name),
+          pendingFilters: {
+            ...prev.pendingFilters,
+            [type]: currentArray.filter(item => item !== id),
+          },
         };
       }
+
       if (currentArray.length >= 5) return prev;
+
       return {
         ...prev,
-        [type]: [...currentArray, name],
+        pendingFilters: {
+          ...prev.pendingFilters,
+          [type]: [...currentArray, id],
+        },
       };
     });
   }, []);
 
-  const handleItemToggle = useCallback(
-    (name: string) => {
-      const type = activeTab === 'categories' ? 'category' : 'brand';
-      updatePendingFilters(type, name);
-    },
-    [activeTab, updatePendingFilters]
-  );
+  const setActiveTab = useCallback((tab: TabType) => {
+    setFilterState(prev => ({
+      ...prev,
+      activeTab: tab,
+    }));
+  }, []);
 
   const handleApplyFilters = useCallback(() => {
     const params = new URLSearchParams();
-    pendingFilters.brand.forEach(brand => params.append('brand', brand));
-    pendingFilters.category.forEach(category => params.append('category', category));
+
+    pendingFilters.brand.forEach(brandId => {
+      const brand = brands[brandId];
+      if (brand?.slug) {
+        params.append('brand', brand.slug);
+      }
+    });
+
+    pendingFilters.category.forEach(categoryId => {
+      const category = categories[categoryId];
+      if (category?.slug) {
+        params.append('category', category.slug);
+      }
+    });
 
     router.push(`${pathname}?${params.toString()}`);
-  }, [pendingFilters, pathname, router]);
+  }, [pendingFilters, pathname, router, brands, categories]);
 
   const handleClearFilters = useCallback(() => {
-    setPendingFilters({ brand: [], category: [] });
+    setFilterState(prev => ({
+      ...prev,
+      pendingFilters: { brand: [], category: [] },
+    }));
     router.push(pathname);
   }, [pathname, router]);
-
-  const toggleMenu = useCallback(() => {
-    setIsOpen(!isOpen);
-  }, [isOpen]);
 
   const handleBodyScroll = useCallback((isMenuOpen: boolean) => {
     if (window.innerWidth < 768) {
@@ -175,7 +223,10 @@ const FilterComponent: FunctionComponent = () => {
         menuRef.current &&
         !menuRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
+        setFilterState(prev => ({
+          ...prev,
+          isOpen: false,
+        }));
       }
     };
 
@@ -184,8 +235,57 @@ const FilterComponent: FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (pathname) setIsOpen(false);
+    if (pathname) {
+      setFilterState(prev => ({
+        ...prev,
+        isOpen: false,
+      }));
+    }
   }, [pathname]);
+
+  useEffect(() => {
+    setFilterState(prev => ({
+      ...prev,
+      pendingFilters: appliedFilters,
+    }));
+  }, [appliedFilters]);
+
+  const activePendingFilters = useMemo(
+    () => (activeTab === 'categories' ? pendingFilters.category : pendingFilters.brand),
+    [activeTab, pendingFilters]
+  );
+
+  const selectedItemNames = useMemo(() => {
+    const items = activeTab === 'categories' ? categories : brands;
+    return activePendingFilters.map(id => items[id]?.name).filter(Boolean);
+  }, [activePendingFilters, activeTab, categories, brands]);
+
+  const filterCardsProps = useMemo(
+    () => ({
+      items: activeItems,
+      pendingFilters: activePendingFilters,
+      onToggle: handleItemToggle,
+    }),
+    [activeItems, activePendingFilters, handleItemToggle]
+  );
+
+  const containerClassName = useMemo(
+    () =>
+      clsx(' inset-0', {
+        'z-50 md:z-10 fixed h-100% bg-grey-100 md:bg-transparent md:static': isOpen,
+        'w-10 overflow-hidden z-10': !isOpen,
+      }),
+    [isOpen]
+  );
+
+  const buttonContainerClassName = useMemo(
+    () =>
+      clsx('', {
+        'absolute right-5 top-[15px] md:top-10 md:right-8 mid-lg:right-12': isOpen,
+        'h-max w-max static md:absolute md:m-0 md:top-10 md:right-8 mid-lg:right-12': !isOpen,
+      }),
+    [isOpen]
+  );
 
   const buttonState = useMemo(() => {
     if (totalAppliedCount > 0 && !hasFilterChanges) {
@@ -227,43 +327,6 @@ const FilterComponent: FunctionComponent = () => {
     handleApplyFilters,
   ]);
 
-  const activeItems = useMemo(
-    () => (activeTab === 'categories' ? categories : brands),
-    [activeTab]
-  );
-
-  const activePendingFilters = useMemo(
-    () => (activeTab === 'categories' ? pendingFilters.category : pendingFilters.brand),
-    [activeTab, pendingFilters]
-  );
-
-  const filterCardsProps = useMemo(
-    () => ({
-      items: activeItems,
-      pendingFilters: activePendingFilters,
-      onToggle: handleItemToggle,
-    }),
-    [activeItems, activePendingFilters, handleItemToggle]
-  );
-
-  const containerClassName = useMemo(
-    () =>
-      clsx(' inset-0', {
-        'z-50 md:z-10 fixed h-100% bg-grey-100 md:bg-transparent md:static': isOpen,
-        'w-10 overflow-hidden z-10': !isOpen,
-      }),
-    [isOpen]
-  );
-
-  const buttonContainerClassName = useMemo(
-    () =>
-      clsx('', {
-        'absolute right-5 top-[15px] md:top-10 md:right-8 mid-lg:right-12': isOpen,
-        'h-max w-max static md:absolute md:m-0 md:top-10 md:right-8 mid-lg:right-12': !isOpen,
-      }),
-    [isOpen]
-  );
-
   return (
     <div className={containerClassName}>
       <div className={buttonContainerClassName}>
@@ -279,11 +342,6 @@ const FilterComponent: FunctionComponent = () => {
           id="menu-button"
           className="p-2 z-30 max-h-10 max-w-10 md:p-3 md:h-12 md:w-12 relative"
         >
-          {totalAppliedCount > 0 && (
-            <span className="absolute top-0 right-0 w-4 h-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">
-              {totalAppliedCount}
-            </span>
-          )}
           {!isOpen ? <FilterIcon /> : <CloseIcon />}
         </Button>
       </div>
@@ -298,8 +356,13 @@ const FilterComponent: FunctionComponent = () => {
         ref={menuRef}
       >
         <div className="w-full h-full flex justify-between flex-col md:h-auto md:bg-white rounded-lg md:shadow-md">
-          <div className="flex items-center h-[70px] px-5 pt-5 md:pt-3 md:h-[42px]">
+          <div className="flex items-center h-[70px] px-5 pt-5 md:pt-3 md:h-[42px] gap-2">
             <h3 className="text-base font-normal capitalize text-left">{t('filter')}</h3>
+            {totalAppliedCount > 0 && (
+              <span className=" size-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">
+                {totalAppliedCount}
+              </span>
+            )}
           </div>
 
           <div className="flex gap-4 px-5 py-5">
@@ -317,12 +380,12 @@ const FilterComponent: FunctionComponent = () => {
           </div>
 
           {activePendingFilters.length > 0 && (
-            <div className="w-full px-5 mb-3 flex gap-1 flex-wrap text-grey-700 text-base font-normal">
+            <div className="flex flex-wrap gap-2 items-center px-5">
               <span>{t('selected')}:</span>
-              {activePendingFilters.map((item, i) => (
-                <span key={item}>
-                  {item}
-                  {i < activePendingFilters.length - 1 && ','}
+              {selectedItemNames.map((name, i) => (
+                <span key={name}>
+                  {name}
+                  {i < selectedItemNames.length - 1 && ','}
                 </span>
               ))}
             </div>

@@ -1,10 +1,16 @@
 import React, { FunctionComponent } from 'react';
 import { ReviewCard } from '../server/ReviewCard';
-import { ProfileCard, ProfileCardProps } from './ProfileCard';
+import { ProfileCard } from './ProfileCard';
 import clsx from 'clsx';
+import { GridData } from '@/src/db/types';
+import { Skeleton } from '../client/Skeleton';
 
 type ReviewGridProps = {
-  headerData?: ProfileCardProps;
+  header?: {
+    dataType?: 'reviewer' | 'brand' | 'category';
+    variant?: 'primary' | 'secondary';
+  };
+
   classNames?: {
     containerClassName?: string;
     cardClassName?: string;
@@ -12,63 +18,26 @@ type ReviewGridProps = {
     headerContainerClassName?: string;
     headerProfileClassName?: string;
   };
-  maxReviews?: number;
   hasProfileHeader?: boolean;
+  data?: GridData;
 };
-const tempreviews = [
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 4.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 4.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 4.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 4.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-  {
-    id: 'eucj4y2BPU1GaxZe43zlF01xHYWQJZdtgqAvaCsw02jks',
-    rating: 3.5,
-    view: 1200,
-    brand: 'TechGurau',
-    productName: 'Smartphone XYZ',
-    category: 'Electronics',
-  },
-];
-
 export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
-  headerData,
+  header,
   classNames,
-  maxReviews,
   hasProfileHeader = true,
+  data,
 }) => {
   return (
     <div className={clsx('w-full flex flex-col gap-5', classNames?.containerClassName)}>
       {hasProfileHeader && (
         <div className={clsx('pl-5 mid-lg:pl-0', classNames?.headerContainerClassName)}>
-          <ProfileCard {...headerData} />
+          <ProfileCard
+            {...data?.info}
+            imageUrl={data?.logo}
+            title={data?.name ?? ''}
+            profileSlug={data?.slug}
+            {...header}
+          />
         </div>
       )}
 
@@ -78,13 +47,40 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
           classNames?.gridClassName
         )}
       >
-        {[...tempreviews, ...tempreviews].slice(0, maxReviews).map((review, i) => (
+        {data?.videos?.map((review, i) => (
           <ReviewCard
             key={`${review.id}-i-${i}`}
             review={review}
             className={classNames?.cardClassName}
           />
         ))}
+      </div>
+    </div>
+  );
+};
+
+export const ReviewGridSkeleton: FunctionComponent<{ count?: number }> = ({ count = 3 }) => {
+  return (
+    <div className="w-full bg-white">
+      <div className="w-full mx-auto md:max-w-[532px] pt-5 md:pt-10">
+        <section>
+          <div className="px-5 md:px-0">
+            <div className="flex gap-4 mb-6">
+              <Skeleton className="h-10 w-10 md:h-14 md:w-14 rounded-full" />
+              <div className="flex flex-1 flex-col">
+                <Skeleton className="h-8 w-48" />
+                <div className="flex gap-1 mt-2">
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </div>
+            </div>
+            <div className="mt-8 flex gap-[9px] flex-wrap">
+              {Array.from({ length: count }).map((_, i) => (
+                <Skeleton key={i} className="h-64 w-[167px] " />
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

@@ -1,41 +1,9 @@
 'use client';
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef } from 'react';
-import { SlideProps, SliderCard } from './SliderCard';
 import clsx from 'clsx';
-import { distributeSlides } from './utils/distributeSlides';
 
-const BRANDS: SlideProps[] = [
-  { name: 'Travel' },
-  { name: 'Automobile' },
-  { name: 'Health & Wellness' },
-  { name: 'Arts & Crafts' },
-  { name: 'Baby & Child Care' },
-  { name: 'Home & Kitchen' },
-  { name: 'Beauty & Personal Care' },
-  { name: 'Books & Media' },
-  { name: 'Clothes and Fashion' },
-  { name: 'Food & Beverages' },
-  { name: 'Electronics & Gadgets' },
-  { name: 'Sports & Fitness' },
-  { name: 'Pets & Animals' },
-  { name: 'Furniture' },
-  { name: 'Toys & Games' },
-  { name: 'Travel' },
-  { name: 'Automobile' },
-  { name: 'Health & Wellness' },
-  { name: 'Arts & Crafts' },
-  { name: 'Baby & Child Care' },
-  { name: 'Home & Kitchen' },
-  { name: 'Beauty & Personal Care' },
-  { name: 'Books & Media' },
-  { name: 'Clothes and Fashion' },
-  { name: 'Food & Beverages' },
-  { name: 'Electronics & Gadgets' },
-  { name: 'Sports & Fitness' },
-  { name: 'Pets & Animals' },
-  { name: 'Furniture' },
-  { name: 'Toys & Games', icon: '🚗' },
-];
+import { SlideProps, SliderCard } from './SliderCard';
+import { distributeSlides } from './utils/distributeSlides';
 
 type StyleClassNames = {
   leftShadowClassName?: string;
@@ -46,17 +14,17 @@ type StyleClassNames = {
 };
 
 type Props = {
-  slides?: SlideProps[];
   styleClassNames?: StyleClassNames;
   isMultiRow?: boolean;
   isBrand?: boolean;
+  slides: SlideProps[];
 };
 
 export const MobileSlider: FunctionComponent<Props> = ({
-  slides = BRANDS,
   styleClassNames,
   isMultiRow,
   isBrand,
+  slides,
 }) => {
   // Refs
   const rowRefs = useRef<(HTMLLIElement | null)[]>([]);
@@ -97,10 +65,10 @@ export const MobileSlider: FunctionComponent<Props> = ({
   }, [isMultiRow]);
 
   // Memoized data
-  const distributedSlides = useMemo(
-    () => (isMultiRow ? distributeSlides(slides) : [slides]),
-    [slides, isMultiRow]
-  );
+
+  const distributedSlides = useMemo(() => {
+    return distributeSlides(slides);
+  }, [slides]);
 
   // Memoized render functions
   const renderSlide = useCallback(

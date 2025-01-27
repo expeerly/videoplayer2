@@ -7,7 +7,7 @@ type Props = {
 
 export const CountsTable: FunctionComponent<Props> = ({ data }) => {
   const tableCountsArray = useMemo(
-    () => Object.entries(data).map(([name, count]) => ({ name, count })),
+    () => (data ? Object.entries(data).map(([name, count]) => ({ name, count })) : []),
     [data]
   );
 

@@ -7,8 +7,6 @@ import { getVideosCount } from '../services/video.services';
 import { handleError } from '../utils/errorHandler';
 import { getLandingPageCount } from '../services/landingPage.services';
 
-export const maxDuration = 50;
-
 export const GET = async () => {
   try {
     const [categories, brands, products, creators, videos, landingPage] = await Promise.all([

@@ -7,38 +7,47 @@ import { getDictionary } from '@/src/lib/dictionary';
 
 export type ProfileCardProps = {
   description?: string;
-  title?: string;
-  subTitle?: string;
-  imageUrl?: string;
-  rating?: number;
+  title: string;
   variant?: 'primary' | 'secondary';
   profileSlug?: string;
   dataType?: 'reviewer' | 'brand' | 'category';
-};
 
-const tempData = {
-  title: 'Marisa C.',
-  subTitle: '38, Zurich (CH)',
-  description:
-    'I love cooking and getting people around in our garden, specially when weather is good...',
+  reviewsCount?: string;
+  age?: number;
+  bio?: string;
+  location?: string;
+  country?: string;
+  rating?: number;
+  imageUrl?: string;
 };
 
 export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
-  description = tempData.description,
-  title = tempData.title,
-  rating,
-  subTitle = tempData.subTitle,
+  title,
   imageUrl,
   variant = 'primary',
   profileSlug,
   dataType,
+  reviewsCount,
+  bio,
+  age,
+  location,
+  country,
+  rating,
 }) => {
   const { t } = await getDictionary();
 
   return (
     <>
       <Link
-        href={`${profileSlug}`}
+        href={
+          profileSlug
+            ? dataType === 'category'
+              ? `/video-reviews/productcategory/${profileSlug}`
+              : dataType === 'brand'
+                ? `/video-reviews/brand/${profileSlug}`
+                : `/video-reviews/reviewers/${profileSlug}`
+            : ''
+        }
         aria-label={
           dataType === 'category'
             ? t('dynamic_texts.home_category_icons.aria_label', { brandname: title })
@@ -52,25 +61,46 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
       >
         <div className="relative">
           <div className="w-10 h-10 rounded-full overflow-hidden">
-            <Avatar src={imageUrl} alt={title} />
+            <Avatar
+              src={imageUrl}
+              alt={title}
+              className={dataType === 'reviewer' ? '[&>img]:object-cover [&>img]:object-top' : ''}
+            />
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           <div className="flex items-center gap-2">
-            <h3 className=" font-bold text-grey-700">{title}</h3>
+            <h3 className=" font-bold text-grey-700 max-w-60 truncate">
+              {dataType === 'reviewer'
+                ? title
+                    .split(' ')
+                    .map((part, index, arr) =>
+                      index === arr.length - 1 ? part.charAt(0) + '.' : part + ' '
+                    )
+                    .join('')
+                : title}
+            </h3>
             {rating && variant === 'primary' && <StarRating rating={rating} />}
             <RightChevronIcon className="w-2 h-3" />
           </div>
           <div className="flex gap-2">
             {rating && variant === 'secondary' && <StarRating rating={rating} />}
-            <p className="text-sm text-grey-500">{subTitle}</p>
+            <p className="text-sm text-grey-500">
+              {dataType === 'category'
+                ? `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`
+                : dataType === 'reviewer'
+                  ? `${age}, ${location}, ${country ?? ''}`
+                  : dataType === 'brand'
+                    ? `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`
+                    : `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`}
+            </p>
           </div>
         </div>
       </Link>
 
-      {!!description && (
+      {!!bio && (
         <div className="flex  sm:w-2/5 items-center mt-2">
-          <p className=" text-grey-700 ml-0 line-clamp-2">{description}</p>
+          <p className=" text-grey-700 ml-0 line-clamp-2">{bio}</p>
         </div>
       )}
     </>

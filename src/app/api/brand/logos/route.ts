@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import { handleGetBrand } from '../../services/brand.services';
 import { handleError } from '../../utils/errorHandler';
-
-export const maxDuration = 50;
+import { brand } from '@/src/db/schema';
 
 export async function GET() {
   try {
-    const brands = await handleGetBrand(['logo', 'brandName']);
+    const brands = await handleGetBrand({
+      logo: brand.logo,
+      brandName: brand.brandName,
+    });
     return NextResponse.json(
       {
         success: true,

@@ -1,7 +1,8 @@
 import { db } from '@/src/db';
-import { video } from '@/src/db/schema';
-import { sql } from 'drizzle-orm';
-import { Video } from '@/src/db/types';
+import { brand, category, creator, product, video } from '@/src/db/schema';
+import { eq, sql, not, and, notInArray } from 'drizzle-orm';
+import { QAPair, Video } from '@/src/db/types';
+import { SupportedLanguage } from '../utils/requestHelpers';
 
 export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
   if (!input?.length) {
@@ -37,11 +38,6 @@ export async function handleCreateVideo(input: Video[]): Promise<Video[]> {
     const validVideos = input.filter(
       video => creatorIdSet.has(video.creatorId!) && productIdSet.has(video.productId!)
     );
-
-    const invalidVideos = input.filter(
-      video => !creatorIdSet.has(video.creatorId!) || !productIdSet.has(video.productId!)
-    );
-    console.log({ invalidVideos: invalidVideos });
 
     if (!validVideos.length) return [];
 
@@ -83,5 +79,226 @@ export async function getVideosCount(): Promise<{ count: number }> {
   } catch (error) {
     console.error('Error fetching video count:', error);
     throw new Error((error as Error).message);
+  }
+}
+
+export async function getVideoById(id: string | number, lang: SupportedLanguage) {
+  if (!id) {
+    throw new Error('Video ID is required');
+  }
+  try {
+    const [videoData] = await db
+      .select({
+        id: video.id,
+        videoTitle: sql<string>`COALESCE(${video.videoTitle}->${lang}->>'title', ${video.videoTitle}->'en'->>'title')`,
+        videoUrl: video.videoUrl,
+        playbackId: video.playbackId,
+        productId: video.productId,
+        creatorId: video.creatorId,
+        published: video.published,
+        cannonicalTag: video.cannonicalTag,
+        resolution: video.resolution,
+        starRating: video.starRating,
+        siteTitle: sql<string>`COALESCE(${video.siteTitle}->${lang}->>'title', ${video.siteTitle}->'en'->>'title')`,
+        metaDescription: sql<string>`COALESCE(${video.metaDescription}->${lang}->>'desc', ${video.metaDescription}->'en'->>'desc')`,
+        creator: {
+          id: creator.id,
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
+          logo: creator.profilePictureURL,
+          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+        },
+        product: {
+          id: product.id,
+          globalTradeItemNumber: product.globalTradeItemNumber,
+          productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          productSlug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
+          productPicture: product.productPicture,
+          productLink: product.productLink,
+        },
+        brand: {
+          id: brand.id,
+          name: brand.brandName,
+          logo: brand.logo,
+          brandSlug: brand.slug,
+          websiteURL: brand.websiteURL,
+        },
+        category: {
+          id: category.id,
+          name: sql<string>`COALESCE(${category.categoryData}->${lang}->>'categoryName', ${category.categoryData}->'en'->>'categoryName')`,
+          slug: sql<string>`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug')`,
+        },
+      })
+      .from(video)
+      .leftJoin(creator, eq(video.creatorId, creator.id))
+      .leftJoin(product, eq(video.productId, product.id))
+      .leftJoin(brand, eq(product.brandId, brand.id))
+      .leftJoin(category, eq(product.categoryId, category.id))
+      .where(eq(video.id, Number(id)))
+      .limit(1);
+
+    if (!videoData) {
+      throw new Error('Video not found');
+    }
+
+    return videoData;
+  } catch (error) {
+    console.error('Error fetching video by ID:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch video details');
+  }
+}
+
+export async function getVideoDetailById(id: string | number, lang: SupportedLanguage) {
+  if (!id) {
+    throw new Error('Video ID is required');
+  }
+  try {
+    const [videoData] = await db
+      .select({
+        id: video.id,
+        summary: sql<string>`COALESCE(${video.summary}->${lang}->>'text', ${video.summary}->'en'->>'text')`,
+        transcript: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
+        starRating: video.starRating,
+        faqs: {
+          question_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqTitle'`,
+          answer_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqAnswer'`,
+          question_2: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqTitle'`,
+          answer_2: sql<string>`${video.faqs}->'faq2'->${lang}->>'faqAnswer'`,
+          question_3: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqTitle'`,
+          answer_3: sql<string>`${video.faqs}->'faq3'->${lang}->>'faqAnswer'`,
+          question_4: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqTitle'`,
+          answer_4: sql<string>`${video.faqs}->'faq4'->${lang}->>'faqAnswer'`,
+          question_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqTitle'`,
+          answer_5: sql<string>`${video.faqs}->'faq5'->${lang}->>'faqAnswer'`,
+        },
+        product: {
+          globalTradeItemNumber: product.globalTradeItemNumber,
+          productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          productLink: product.productLink,
+        },
+        brand: {
+          name: brand.brandName,
+          logo: brand.logo,
+          brandSlug: brand.slug,
+        },
+        creator: {
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
+        },
+      })
+      .from(video)
+      .leftJoin(creator, eq(video.creatorId, creator.id))
+      .leftJoin(product, eq(video.productId, product.id))
+      .leftJoin(brand, eq(product.brandId, brand.id))
+      .where(eq(video.id, Number(id)))
+      .limit(1);
+
+    if (!videoData) {
+      throw new Error('Video not found');
+    }
+
+    return {
+      ...videoData,
+      faqs: Object.entries(videoData.faqs).reduce((acc: QAPair[], [key, value]) => {
+        if (key.startsWith('question')) {
+          const index = key.split('_')[1];
+          const answerKey = `answer_${index}` as keyof typeof videoData.faqs;
+          const answer = videoData.faqs[answerKey];
+          if (!!value && !!answer) {
+            acc.push({
+              question: value,
+              answer: answer,
+            });
+          }
+        }
+        return acc;
+      }, [] as QAPair[]),
+    };
+  } catch (error) {
+    console.error('Error fetching video by ID:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch video details');
+  }
+}
+
+export async function getProductWithRelatedVideos(videoId: string, lang: SupportedLanguage) {
+  try {
+    const existingVideo = await db.query.video.findFirst({
+      where: eq(video.id, Number(videoId)),
+    });
+
+    if (!existingVideo) {
+      throw new Error('Video not found');
+    }
+
+    const [[productInfo], productVideos] = await Promise.all([
+      db
+        .select({
+          id: product.id,
+          name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          logo: product.productPicture,
+          info: {
+            reviewsCount: sql<number>`COUNT(${video.id})`,
+            rating: sql<number>`(
+              SELECT ROUND(COALESCE(AVG(${video.starRating}), 0)::numeric, 2)
+              FROM ${video}
+              WHERE ${video.productId} = ${product.id}
+            )`,
+          },
+        })
+        .from(product)
+        .innerJoin(video, eq(video.productId, product.id))
+        .groupBy(product.id)
+        .where(eq(video.id, Number(videoId)))
+        .limit(1),
+      db
+        .select({
+          id: video.id,
+          playbackId: video.playbackId,
+          videoUrl: video.videoUrl,
+          resolution: video.resolution,
+          productName: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          productSlug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
+          categorySlug: sql<string>`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug')`,
+          brandId: product.brandId,
+          brandName: brand.brandName,
+          brandLogo: brand.logo,
+          brandSlug: brand.slug,
+          rating: video.starRating,
+        })
+        .from(video)
+        .innerJoin(product, eq(video.productId, product.id))
+        .innerJoin(brand, eq(product.brandId, brand.id))
+        .innerJoin(category, eq(product.categoryId, category.id))
+        .where(
+          and(eq(product.id, existingVideo.productId as string), not(eq(video.id, Number(videoId))))
+        )
+        .limit(3),
+    ]);
+
+    return {
+      ...productInfo,
+      videos: productVideos,
+    };
+  } catch (error) {
+    console.error('Error fetching related videos:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch related videos');
+  }
+}
+
+export async function getExploreVideos(videoIds: number[], lang: SupportedLanguage) {
+  try {
+    const randomVideoIds = (
+      await db.query.video.findMany({
+        columns: { id: true },
+        where: notInArray(video.id, videoIds),
+        orderBy: sql`RANDOM()`,
+        limit: 2,
+      })
+    ).map(({ id }) => id);
+
+    const videoResults = await Promise.all(randomVideoIds.map(id => getVideoById(id, lang)));
+
+    return videoResults;
+  } catch (error) {
+    console.error('Error fetching related videos:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch related videos');
   }
 }

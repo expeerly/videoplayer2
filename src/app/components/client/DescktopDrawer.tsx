@@ -13,7 +13,7 @@ export const DesktopDrawer: FunctionComponent<PropsWithChildren<Props>> = ({
 }) => {
   return (
     <div
-      className={`fixed top-[81px] right-0 h-full z-50 bg-black/25 max-h-[calc(100vh-85px)] overflow-auto mid-lg:static mid-lg:w-max mid-lg:bg-transparent  ${isOpen ? 'w-full' : 'w-0'}`}
+      className={`shadow fixed top-[81px] right-0 h-full z-50 bg-black/25 max-h-[calc(100vh-85px)] overflow-auto mid-lg:static mid-lg:w-max mid-lg:bg-transparent  ${isOpen ? 'w-full' : 'w-0'}`}
     >
       <div
         className={`

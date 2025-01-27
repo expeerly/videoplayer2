@@ -1,5 +1,5 @@
 {
-  "id": "0bc5a24d-3219-4a7a-8400-ff1a7d293915",
+  "id": "74e13c47-d32e-4927-b3cc-1093e48a5818",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -43,13 +43,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "rating": {
-          "name": "rating",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
         },
         "createdAt": {
           "name": "createdAt",
@@ -135,11 +128,17 @@
           "primaryKey": true,
           "notNull": true
         },
-        "creatorName": {
-          "name": "creatorName",
+        "firstName": {
+          "name": "firstName",
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "lastName": {
+          "name": "lastName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "bio": {
           "name": "bio",
@@ -399,13 +398,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "rating": {
-          "name": "rating",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
         },
         "createdAt": {
           "name": "createdAt",

@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import { createProducts } from '../services/product.services';
 import { handleError } from '../utils/errorHandler';
 
-export const maxDuration = 50;
-
 export const POST = async (req: Request) => {
   try {
     const { data } = await req.json();

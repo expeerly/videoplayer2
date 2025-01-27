@@ -2,10 +2,10 @@ import { NextPage } from 'next';
 import { Button } from '../../components/client/Button';
 import { CountsTable } from '../../components/client/CountsTable';
 import { LogoutButton } from '../../components/client/LogoutButton';
+import { getCounts } from '../../actions/actions';
 
 const Page: NextPage = async () => {
-  const counts = await fetch(`${process.env.NEXT_ENDPOINT_URL}/counts`);
-  const { data } = await counts.json();
+  const { data } = await getCounts();
 
   return (
     <div className="flex flex-col justify-center py-8 gap-10">

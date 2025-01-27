@@ -30,6 +30,12 @@
   "moreVideosOn": "Altri video su",
   "loading": "Caricamento",
   "shop": "Acquista",
+  "allBrands": "Recensioni video: tutti i marchi",
+  "allCategories": "Recensioni video: tutte le categorie",
+  "allReviewers": "Recensioni video: tutti i tester",
+  "videoReviews": "Recensioni video",
+  "singleReview": "Recensione",
+  "reviews": "Recensioni",
   "buyNow": {
     "label": "Acquista ora",
     "ariaLabel": "Vai al prodotto mostrato nel video"

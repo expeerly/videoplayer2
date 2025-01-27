@@ -18,7 +18,6 @@ export const brand = pgTable('brand', {
   slug: text('slug').notNull().unique(),
   logo: text('logo'),
   websiteURL: text('websiteURL'),
-  rating: real('rating').default(0.0).notNull(),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,
@@ -47,7 +46,8 @@ export const category = pgTable('category', {
 // Creator table
 export const creator = pgTable('creator', {
   id: text('id').primaryKey(),
-  creatorName: text('creatorName').notNull(),
+  firstName: text('firstName').notNull(),
+  lastName: text('lastName'),
   bio: text('bio'),
   profilePictureURL: text('profilePictureURL'),
   age: integer('age'),
@@ -83,11 +83,11 @@ export const product = pgTable('product', {
   productName: jsonb('productName').notNull(),
   productLink: text('productLink').notNull(),
   productSlug: jsonb('productSlug'),
+  productPicture: text('productPicture'),
   brandId: text('brandId').references(() => brand.id),
   categoryId: integer('categoryId').references(() => category.id),
   globalTradeItemNumber: text('globalTradeItemNumber'),
   vendorProductNumber: text('vendorProductNumber'),
-  rating: real('rating').default(0.0),
   createdAt: timestamp('createdAt', {
     precision: 6,
     withTimezone: true,

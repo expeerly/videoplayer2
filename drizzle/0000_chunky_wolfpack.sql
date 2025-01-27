@@ -5,7 +5,6 @@ CREATE TABLE "brand" (
 	"slug" text NOT NULL,
 	"logo" text,
 	"websiteURL" text,
-	"rating" real DEFAULT 0 NOT NULL,
 	"createdAt" timestamp (6) with time zone DEFAULT now(),
 	"updatedAt" timestamp (6) with time zone DEFAULT now(),
 	CONSTRAINT "brand_slug_unique" UNIQUE("slug")
@@ -21,7 +20,8 @@ CREATE TABLE "category" (
 --> statement-breakpoint
 CREATE TABLE "creator" (
 	"id" text PRIMARY KEY NOT NULL,
-	"creatorName" text NOT NULL,
+	"firstName" text NOT NULL,
+	"lastName" text,
 	"bio" text,
 	"profilePictureURL" text,
 	"age" integer,
@@ -64,7 +64,6 @@ CREATE TABLE "product" (
 	"categoryId" integer,
 	"globalTradeItemNumber" text,
 	"vendorProductNumber" text,
-	"rating" real DEFAULT 0,
 	"createdAt" timestamp (6) with time zone DEFAULT now(),
 	"updatedAt" timestamp (6) with time zone DEFAULT now()
 );

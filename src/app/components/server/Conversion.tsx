@@ -3,22 +3,14 @@ import { getDictionary } from '@/src/lib/dictionary';
 import { Slider } from '@/src/app/components/client/Slider/Slider';
 import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Button } from '../client/Button';
+import { LocaleProps } from '@/src/db/types';
+import { getBrands } from '../../actions/actions';
 
-const brands = [
-  { imgURL: '/brands/logo.svg', id: 1, title: 'Dyson' },
-  { imgURL: '/brands/logo1.svg', id: 2, title: 'Philips' },
-  { imgURL: '/brands/logo2.svg', id: 3, title: 'Sony' },
-  { imgURL: '/brands/logo3.svg', id: 4, title: 'Tefal' },
-  { imgURL: '/brands/logo4.svg', id: 5, title: 'Zalando' },
-  { imgURL: '/brands/logo5.svg', id: 6, title: 'Get Your Guide' },
-  { imgURL: '/brands/logo6.svg', id: 7, title: 'Koenig' },
-  { imgURL: '/brands/logo7.svg', id: 8, title: 'Bauknecht' },
-  { imgURL: '/brands/logo8.svg', id: 9, title: 'Dyson_1' },
-  { imgURL: '/brands/logo.svg', id: 10, title: 'Philips_2' },
-];
-
-export const ConversionSlider: FunctionComponent = async () => {
-  const { t } = await getDictionary();
+export const ConversionSlider: FunctionComponent<LocaleProps> = async ({ locale }) => {
+  const [{ t }, { data: brands }] = await Promise.all([
+    getDictionary(),
+    getBrands(locale, 10, true),
+  ]);
 
   return (
     <section
@@ -34,22 +26,34 @@ export const ConversionSlider: FunctionComponent = async () => {
         <p className="text-white px-5 text-center mb-10"> {t('home_retailer_body_text')}</p>
         <div className=" hidden w-full md:flex">
           <Slider
-            slides={brands}
             classNameStyle={{
               leftButtonClassName: '!bg-blue-left-gradient',
               rightButtonClassName: '!bg-blue-right-gradient',
               cardClassName: 'bg-white',
             }}
             isBrand
+            slides={
+              brands?.rows?.map(brand => ({
+                title: brand.brandName,
+                imgURL: brand.logo,
+                slug: brand.slug,
+              })) ?? []
+            }
           />
         </div>
         <div className=" flex w-full md:hidden">
           <MobileSlider
-            slides={brands}
             styleClassNames={{
               cardClassName: 'bg-white',
             }}
             isBrand
+            slides={
+              brands?.rows?.map(brand => ({
+                title: brand.brandName,
+                imgURL: brand.logo,
+                slug: brand.slug,
+              })) ?? []
+            }
           />
         </div>
         <div className="px-5 w-full mt-12 flex justify-center sm:w-max">
@@ -61,6 +65,7 @@ export const ConversionSlider: FunctionComponent = async () => {
             className=" bg-white text-center"
             aria-label={t('integrate_video.aria_label')}
             title={t('integrate_video.label')}
+            target={'_blank'}
           >
             {t('integrate_video.label')}
           </Button>

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getCategory, handleCreateCategory } from '../services/category.services';
+import { getCategoriesForSlider, handleCreateCategory } from '../services/category.services';
 import { handleError } from '../utils/errorHandler';
-
-export const maxDuration = 50;
+import { SupportedLanguage } from '../utils/requestHelpers';
+import { createRouteHandler } from '../utils/baseRouteHandler';
 
 export const POST = async (req: Request) => {
   try {
@@ -22,19 +22,10 @@ export const POST = async (req: Request) => {
   }
 };
 
-export const GET = async () => {
-  try {
-    const category = await getCategory();
-    return NextResponse.json(
-      {
-        success: true,
-        data: category,
-      },
-      {
-        status: 200,
-      }
-    );
-  } catch (error) {
-    return handleError(error);
-  }
-};
+export const GET = createRouteHandler({
+  serviceFunction: async params => {
+    return getCategoriesForSlider(params.language as SupportedLanguage, params.filters!);
+  },
+  includeFilters: true,
+  includeLanguage: true,
+});
