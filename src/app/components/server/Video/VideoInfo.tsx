@@ -24,14 +24,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({ video, isVideoDet
           alt={video.creator?.name}
           className="[&>img]:object-cover"
         />
-        <span>
-          {video.creator?.name
-            .split(' ')
-            .map((part, index, arr) =>
-              index === arr.length - 1 ? part.charAt(0) + '.' : part + ' '
-            )
-            .join('')}
-        </span>
+        <span>{video.creator?.name}</span>
         <BlueTick />
       </Link>
 

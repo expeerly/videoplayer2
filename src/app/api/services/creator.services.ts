@@ -212,7 +212,7 @@ export async function getCreatorByIdWithVideos(
         logo: creator.profilePictureURL,
         name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
         firstName: creator.firstName,
-        slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', ''), '-', ${creator.id}))`,
+        slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id}))`,
         age: creator.age,
         location: creator.location,
         country: creator.country,

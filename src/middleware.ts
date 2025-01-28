@@ -2,17 +2,54 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
+import { getAllCategories } from '@/src/app/actions/actions';
+import { Languages } from '@/src/db/types';
 
 const defaultLocale = 'en';
 const locales = ['en', 'fr', 'it', 'de'];
 
 let requestCount = 0;
-const MAX_REQUESTS = 5; // Maximum requests allowed
-const TIME_WINDOW = 60000; // Time window in milliseconds (1 minute)
+const MAX_REQUESTS = 5;
+const TIME_WINDOW = 60000;
+
+let categoriesCache: {
+  data: Awaited<ReturnType<typeof getAllCategories>>;
+  timestamp: number;
+} | null = null;
+const CACHE_DURATION = 5 * 60 * 1000;
 
 setInterval(() => {
-  requestCount = 0; // Reset the count every minute
+  requestCount = 0;
 }, TIME_WINDOW);
+
+async function getCategoriesData() {
+  if (categoriesCache && Date.now() - categoriesCache.timestamp < CACHE_DURATION) {
+    return categoriesCache.data;
+  }
+
+  const categories = await getAllCategories('en');
+  categoriesCache = {
+    data: categories,
+    timestamp: Date.now(),
+  };
+  return categories;
+}
+
+async function findMatchingCategory(urlSlug: string) {
+  const categories = await getCategoriesData();
+  return categories.data.find(category =>
+    Object.values(category.categoryData).some(
+      data => data.urlSlug.toLowerCase() === urlSlug.toLowerCase()
+    )
+  );
+}
+
+async function getTranslatedSlug(currentSlug: string, currentLocale: Languages) {
+  const category = await findMatchingCategory(currentSlug);
+  if (!category) return currentSlug;
+
+  return category.categoryData[currentLocale]?.urlSlug || currentSlug;
+}
 
 async function authMiddleware(request: NextRequest) {
   if (requestCount >= MAX_REQUESTS) {
@@ -60,15 +97,12 @@ async function authMiddleware(request: NextRequest) {
   const isAdminRoute = request.nextUrl.pathname.includes('/admin');
   const isLoginPage = request.nextUrl.pathname.includes('/admin/login');
 
-  // Handle authentication for admin routes
   if (isAdminRoute) {
     if (!session && !isLoginPage) {
-      // Redirect to login if not authenticated and not on login page
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
 
     if (session && isLoginPage) {
-      // Redirect to admin dashboard if authenticated and on login page
       return NextResponse.redirect(new URL('/admin', request.url));
     }
   }
@@ -76,34 +110,49 @@ async function authMiddleware(request: NextRequest) {
   return response;
 }
 
-// Create the internationalization middleware
 const intlMiddleware = createIntlMiddleware({
   locales,
   defaultLocale,
   localePrefix: 'as-needed',
 });
 
-// Combine both middlewares
-export async function middleware(request: NextRequest) {
-  // First check authentication for admin routes
-  const authResponse = await authMiddleware(request);
+async function handleCategoryTranslation(request: NextRequest, response: NextResponse) {
+  const pathname = request.nextUrl.pathname;
+  const currentLocale = locales.includes(pathname.split('/')[1])
+    ? pathname.split('/')[1]
+    : defaultLocale;
+  const pathParts = pathname.split('/');
+  if (pathParts.length >= 4) {
+    const categoryNum = pathParts.length === 4 ? 2 : 3;
+    const categorySlug = pathParts[categoryNum];
 
-  // If auth middleware redirected, return that response
+    const translatedSlug = await getTranslatedSlug(categorySlug, currentLocale as Languages);
+
+    if (translatedSlug !== categorySlug) {
+      pathParts[categoryNum] = translatedSlug;
+      const newUrl = request.nextUrl.clone();
+      newUrl.pathname = pathParts.join('/');
+      return NextResponse.redirect(newUrl);
+    }
+  }
+
+  return response;
+}
+
+export async function middleware(request: NextRequest) {
+  // Handle authentication
+  const authResponse = await authMiddleware(request);
   if (authResponse.headers.has('Location')) {
     return authResponse;
   }
 
-  // Otherwise, continue with internationalization
-  return intlMiddleware(request);
+  // Handle internationalization
+  const intlResponse = intlMiddleware(request);
+
+  // Handle category translation
+  return handleCategoryTranslation(request, intlResponse);
 }
 
 export const config = {
-  // Matcher entries are connected with OR
-  matcher: [
-    // Match all pathnames except for
-    // - /api, /_next, /_vercel, /static, /public, /favicon.ico, etc.
-    '/((?!api|_next|_vercel|.*\\..*).*)',
-    // Match all admin routes
-    '/admin/:path*',
-  ],
+  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)', '/admin/:path*'],
 };

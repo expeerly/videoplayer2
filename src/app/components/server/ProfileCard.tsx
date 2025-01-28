@@ -70,16 +70,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center gap-2">
-            <h3 className=" font-bold text-grey-700 max-w-60 truncate">
-              {dataType === 'reviewer'
-                ? title
-                    .split(' ')
-                    .map((part, index, arr) =>
-                      index === arr.length - 1 ? part.charAt(0) + '.' : part + ' '
-                    )
-                    .join('')
-                : title}
-            </h3>
+            <h3 className=" font-bold text-grey-700 max-w-60 truncate">{title}</h3>
             {rating && variant === 'primary' && <StarRating rating={rating} />}
             <RightChevronIcon className="w-2 h-3" />
           </div>

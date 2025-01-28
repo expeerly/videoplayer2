@@ -103,9 +103,9 @@ export async function getVideoById(id: string | number, lang: SupportedLanguage)
         metaDescription: sql<string>`COALESCE(${video.metaDescription}->${lang}->>'desc', ${video.metaDescription}->'en'->>'desc')`,
         creator: {
           id: creator.id,
-          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
           logo: creator.profilePictureURL,
-          slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', ''), '-', ${creator.id}))`,
+          slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id}))`,
         },
         product: {
           id: product.id,
@@ -181,7 +181,7 @@ export async function getVideoDetailById(id: string | number, lang: SupportedLan
           brandSlug: brand.slug,
         },
         creator: {
-          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
         },
       })
       .from(video)
@@ -314,8 +314,8 @@ export async function getAllVideos(lang: SupportedLanguage) {
         metaDescription: sql<string>`COALESCE(${video.metaDescription}->${lang}->>'desc', ${video.metaDescription}->'en'->>'desc')`,
         rating: video.starRating,
         creator: {
-          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
-          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
+          slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id}))`,
         },
         product: {
           id: product.id,
