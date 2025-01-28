@@ -156,7 +156,10 @@ export async function getVideoDetailById(id: string | number, lang: SupportedLan
       .select({
         id: video.id,
         summary: sql<string>`COALESCE(${video.summary}->${lang}->>'text', ${video.summary}->'en'->>'text')`,
-        transcript: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
+        transcript: {
+          text: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
+          title: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptTitle', ${video.transcript}->'en'->>'transcriptTitle')`,
+        },
         starRating: video.starRating,
         faqs: {
           question_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqTitle'`,

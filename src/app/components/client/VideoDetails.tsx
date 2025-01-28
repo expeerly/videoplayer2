@@ -67,17 +67,8 @@ export const VideoDetails: FunctionComponent<Props> = ({ data }) => {
 
       <section className="relative">
         <div className="absolute top-0 md:-top-20" id="whatReviewerThinks" />
-        <SectionHeading>
-          What{' '}
-          {data?.creator.name
-            .split(' ')
-            .map((part, index, arr) =>
-              index === arr.length - 1 ? part.charAt(0) + '.' : part + ' '
-            )
-            .join('')}{' '}
-          thinks
-        </SectionHeading>
-        <p className=" mt-1.5 text-grey-700">{data?.transcript}</p>
+        <SectionHeading>{data?.transcript?.title}</SectionHeading>
+        <p className=" mt-1.5 text-grey-700">{data?.transcript?.text}</p>
       </section>
 
       <Divider className="my-5 md:my-8" />
