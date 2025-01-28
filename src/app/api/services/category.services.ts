@@ -346,6 +346,7 @@ export async function getBrandsByCategoryIdWithVideos(
                 'rating', ${video.starRating},
                 'brandId', ${brand.id},
                 'brandName', ${brand.brandName},
+                'brandSlug', ${brand.slug},
                 'brandLogo', ${brand.logo},
                 'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
               'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),
