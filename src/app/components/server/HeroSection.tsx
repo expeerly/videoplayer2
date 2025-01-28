@@ -16,11 +16,13 @@ export const HeroSection: FunctionComponent = async () => {
       >
         <div className="absolute h-[340px] w-[300px] top-7 mobileL:w-[350px] sm:top-6 md:top-16 lg:top-18 left-1/2 transform -translate-x-1/2 flex justify-center">
           <Image
-            src={'/HeaderImage.svg'}
-            alt={'Header Image'}
+            src="/HeaderImage.svg"
+            alt={t('home_h1_title')}
             height={340}
             width={300}
-            className=" mobileL:w-[350px]"
+            priority={true}
+            className="mobileL:w-[350px]"
+            sizes="(max-width: 768px) 350px, 300px"
           />
         </div>
         <div className="w-[80%] flex flex-col gap-2 text-center md:gap-5 mx-auto z-50 items-center text-white sm:mt-10 md:w-[75%] lg:w-[78%]">
