@@ -111,6 +111,24 @@ export async function handleGetCreatorWithVideos(
 
     const brandFilter = brands?.length ? inArray(product.brandId, brands) : undefined;
 
+    let randomCreatorIds: string[] = [];
+    if (random) {
+      const randomCreator = await db
+        .select({
+          id: creator.id,
+        })
+        .from(creator)
+        .innerJoin(video, eq(video.creatorId, creator.id))
+        .groupBy(creator.id)
+        .having(sql`COUNT(DISTINCT ${video.id}) >= 4`)
+        .orderBy(sql`RANDOM()`)
+        .limit(limit);
+
+      if (randomCreator.length > 0) {
+        randomCreatorIds = randomCreator.map(creator => creator.id);
+      }
+    }
+
     // Build where conditions
     const whereConditions = [
       exists(
@@ -126,6 +144,7 @@ export async function handleGetCreatorWithVideos(
             )
           )
       ),
+      ...(randomCreatorIds.length > 0 ? [inArray(creator.id, randomCreatorIds)] : []),
     ];
 
     const [creatorsResult, totalCount] = await Promise.all([
