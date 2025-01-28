@@ -187,7 +187,10 @@ export type VideoDetail = {
   playbackId: string;
   starRating: number;
   summary: string | null;
-  transcript: string;
+  transcript: {
+    text: string;
+    title: string;
+  };
   faqs: QAPair[];
   creator: VideoCreator;
   product: VideoProduct;
