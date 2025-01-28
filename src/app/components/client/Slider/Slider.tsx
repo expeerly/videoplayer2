@@ -36,6 +36,8 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -66,6 +68,50 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
     });
   }, []);
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - position);
+    setIsTransitioning(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setStartX(e.touches[0].pageX - position);
+    setIsTransitioning(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    const containerWidth = containerRef.current?.offsetWidth || 0;
+    const sliderWidth = sliderRef.current?.scrollWidth || 0;
+    const maxScroll = -(sliderWidth - containerWidth + 64);
+
+    const x = e.pageX;
+    const walk = x - startX;
+
+    setPosition(Math.min(0, Math.max(maxScroll, walk)));
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+
+    const containerWidth = containerRef.current?.offsetWidth || 0;
+    const sliderWidth = sliderRef.current?.scrollWidth || 0;
+    const maxScroll = -(sliderWidth - containerWidth + 64);
+
+    const x = e.touches[0].pageX;
+    const walk = x - startX;
+
+    setPosition(Math.min(0, Math.max(maxScroll, walk)));
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    setIsTransitioning(true);
+  };
+
   const handleTransitionEnd = () => {
     setIsTransitioning(false);
   };
@@ -91,14 +137,24 @@ const SliderComponent: FunctionComponent<SliderProps> = ({
 
       <div
         ref={sliderRef}
-        className="transition-transform duration-300 ease-in-out"
+        className={`transition-transform duration-300 ease-in-out cursor-grab ${isDragging ? 'cursor-grabbing' : ''}`}
         style={{
           transform: `translateX(${position}px)`,
           transition: isTransitioning ? 'transform 0.3s ease-in-out' : 'none',
+          userSelect: 'none',
         }}
         onTransitionEnd={handleTransitionEnd}
       >
-        <ul className={`space-y-6 ${classNameStyle.rowContainerClassName || ''}`}>
+        <ul
+          className={`space-y-6 w-max ${classNameStyle.rowContainerClassName || ''}`}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          onMouseMove={handleMouseMove}
+          onTouchMove={handleTouchMove}
+          onMouseUp={handleDragEnd}
+          onMouseLeave={handleDragEnd}
+          onTouchEnd={handleDragEnd}
+        >
           {distributedSlides.map((row, rowIndex) => (
             <li key={rowIndex} className="relative">
               <div className={`overflow-visible mx-8 ${classNameStyle.rowClassName || ''}`}>
