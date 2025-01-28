@@ -8,6 +8,7 @@ import { VideoDetails } from '@/src/app/components/client/VideoDetails';
 import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
 import { NextPage } from 'next';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
   params: Promise<{
@@ -25,6 +26,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     getVideo({ videoId: uniqueId, lang: locale, metaInfo: true }),
     getRelatedVideos({ lang: locale, videoId: uniqueId }),
   ]);
+
+  if (!video || !videoDetails) {
+    notFound();
+  }
 
   return (
     <div className="w-full items-center flex flex-col md:w-max md:mx-auto overflow-auto h-full z-50">

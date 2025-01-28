@@ -7,6 +7,7 @@ import { Languages } from '@/src/db/types';
 import { getAllBrands, getAllCategories, getLandingPageText } from '@/src/app/actions/actions';
 import { getDictionary } from '@/src/lib/dictionary';
 import { LandingPageGrid } from '@/src/app/components/server/LandingPageGrid';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
   params: Promise<{
@@ -21,8 +22,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { data } = await getLandingPageText(locale, 'Creator');
 
   return {
-    title: data?.content.siteTitle,
-    description: data?.content.metaDescription,
+    title: data?.content?.siteTitle,
+    description: data?.content?.metaDescription,
   };
 }
 
@@ -38,6 +39,10 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
     getAllBrands(locale),
     getAllCategories(locale),
   ]);
+
+  if (data === undefined) {
+    notFound();
+  }
 
   return (
     <div className="w-full bg-white">

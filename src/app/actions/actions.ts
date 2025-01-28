@@ -56,9 +56,11 @@ async function apiRequest<T>(
     });
 
     const data = await response.json();
+
     return data;
   } catch (error) {
     console.error('API Error:', error);
+
     return {
       data: {} as T,
       error: error instanceof Error ? error.message : 'Failed to fetch data',

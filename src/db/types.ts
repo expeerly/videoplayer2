@@ -183,14 +183,14 @@ export type VideoResponse = {
 };
 
 export type VideoDetail = {
-  id: string;
+  id: number;
+  playbackId: string;
   starRating: number;
   summary: string | null;
   transcript: string;
   faqs: QAPair[];
-  brand: VideoBrand;
+  creator: VideoCreator;
   product: VideoProduct;
-  creator: {
-    name: string;
-  };
+  brand: VideoBrand;
+  category: VideoCategory;
 };

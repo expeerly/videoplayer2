@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { VideoActions } from '../../client/VideoActions';
-import { Video } from './VideoCard';
 import { StarRating } from '../StarRating';
 import { Avatar } from '../Avatar';
 import { Link } from '@/src/i18n/routing';
 import { BlueTick } from '@/src/assets/icons';
+import { VideoResponse } from '@/src/db/types';
 
 type VideoInfoProps = {
-  video: Video;
+  video: VideoResponse;
   isVideoDetails?: boolean;
 };
 
