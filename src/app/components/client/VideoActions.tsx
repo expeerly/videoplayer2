@@ -42,7 +42,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
   }, [isVideoDetails, videoDetailsDrawer, dispatch]);
 
   const handleShare = useCallback(async () => {
-    if (isMobile() && navigator.share) {
+    if (isMobile({ tablet: true }) && navigator.share) {
       try {
         await navigator.share({
           title: video.product.productName,
