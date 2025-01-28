@@ -8,6 +8,7 @@ import { getPageInfo } from '@/src/app/actions/actions';
 import { ProfileGrid } from '../../../../components/server/ProfileGrid';
 import { getDictionary } from '@/src/lib/dictionary';
 import { ShareButton } from '@/src/app/components/client/ShareButton';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
   params: Promise<{
@@ -30,10 +31,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { locale, categoryProfile } = await params;
-  const page = Number((await searchParams).page) || 1;
+  const page = Number((await searchParams)?.page) || 1;
 
   const { t } = await getDictionary();
   const { data } = await getPageInfo(locale, 'category', categoryProfile);
+
+  if (!data) {
+    notFound();
+  }
 
   return (
     <div className="w-full bg-white">

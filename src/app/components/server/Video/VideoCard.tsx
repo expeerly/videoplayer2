@@ -2,24 +2,14 @@ import { FunctionComponent, ReactNode } from 'react';
 import { VideoActions } from '../../client/VideoActions';
 import { VideoInfo } from './VideoInfo';
 import { VideoPlayer } from '../../client/VideoPlayer';
-import { VideoBrand, VideoCategory, VideoCreator, VideoProduct } from '@/src/db/types';
+import { VideoResponse } from '@/src/db/types';
 
-export interface Video {
-  id: number;
-  playbackId: string;
-  starRating: number;
-  brand: VideoBrand;
-  product: VideoProduct;
-  creator: VideoCreator;
-  category: VideoCategory;
-}
-
-interface VideoCardProps {
-  video: Video;
+type VideoCardProps = {
+  video: VideoResponse;
   isVideoDetails?: boolean;
   isFirst?: boolean;
   detailDrawer?: ReactNode;
-}
+};
 
 export const VideoCard: FunctionComponent<VideoCardProps> = ({ video, isVideoDetails }) => {
   return (

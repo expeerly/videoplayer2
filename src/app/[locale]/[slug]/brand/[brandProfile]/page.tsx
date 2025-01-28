@@ -11,6 +11,7 @@ import { ProfileGrid } from '@/src/app/components/server/ProfileGrid';
 import { getDictionary } from '@/src/lib/dictionary';
 import { ShareButton } from '@/src/app/components/client/ShareButton';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
   params: Promise<{
@@ -37,6 +38,10 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
 
   const { t } = await getDictionary();
   const { data } = await getPageInfo(locale, 'brand', brandProfile);
+
+  if (!data) {
+    notFound();
+  }
 
   return (
     <div className="w-full bg-white">

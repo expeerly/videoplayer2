@@ -9,7 +9,6 @@ type Props = {
   id: number;
   playbackId: string;
 };
-
 export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id }) => {
   const playerRef = useRef<MuxPlayerRefAttributes>(null);
   const containerRef = useRef<HTMLDivElement>(null);

@@ -7,6 +7,7 @@ import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
+import { notFound } from 'next/navigation';
 
 const sampleText = `
 Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
@@ -30,11 +31,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     id: reviewerProfile,
   });
 
-  console.log({ data });
-
   return {
-    title: t('reviewerProfile.siteTitle', { creatorFirstname: data.firstName }),
-    description: t('reviewerProfile.metaDescription', { creatorFirstname: data.firstName }),
+    title: t('reviewerProfile.siteTitle', { creatorFirstname: data?.firstName }),
+    description: t('reviewerProfile.metaDescription', { creatorFirstname: data?.firstName }),
   };
 }
 
@@ -49,6 +48,10 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
     id: reviewerProfile,
     category: interest as string,
   });
+
+  if (!data) {
+    notFound();
+  }
 
   return (
     <div className="w-full bg-white">
