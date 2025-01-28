@@ -7,7 +7,7 @@ import { VideoCard } from '@/src/app/components/server/Video/VideoCard';
 import { VideoDetails } from '@/src/app/components/client/VideoDetails';
 import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
-import { NextPage } from 'next';
+import { Metadata, NextPage } from 'next';
 import { notFound } from 'next/navigation';
 
 type PageProps = {
@@ -16,6 +16,16 @@ type PageProps = {
     uniqueId: string;
   }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, uniqueId } = await params;
+  const { data } = await getVideo({ videoId: uniqueId, lang: locale });
+
+  return {
+    title: data?.siteTitle,
+    description: data?.metaDescription,
+  };
+}
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { t } = await getDictionary();

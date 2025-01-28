@@ -33,8 +33,6 @@ export const InterestsCategories: FunctionComponent<Props> = ({ interests }) => 
     [pathname, router, searchParams, selectedInterest]
   );
 
-  console.log({ selectedInterest });
-
   return (
     <div className="w-full flex gap-2 overflow-auto  md:flex-wrap ">
       {interests?.map(interest => (

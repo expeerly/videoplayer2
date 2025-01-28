@@ -31,19 +31,39 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
   );
 
   const pageNumbers = useMemo(() => {
-    if (totalPages <= 5) {
+    const pages = [];
+    const showEllipsisStart = currentPage > 3;
+    const showEllipsisEnd = currentPage < totalPages - 2;
+
+    if (totalPages <= 7) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    if (currentPage <= 3) {
-      return [1, 2, 3, '...', totalPages];
+    // Always show first page
+    pages.push(1);
+
+    if (showEllipsisStart) {
+      pages.push('...');
     }
 
-    if (currentPage >= totalPages - 2) {
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages];
+    // Calculate center pages
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
     }
 
-    return [1, '...', currentPage, '...', totalPages];
+    if (showEllipsisEnd) {
+      pages.push('...');
+    }
+
+    // Always show last page
+    if (pages[pages.length - 1] !== totalPages) {
+      pages.push(totalPages);
+    }
+
+    return pages;
   }, [currentPage, totalPages]);
 
   const navClassName = useMemo(
