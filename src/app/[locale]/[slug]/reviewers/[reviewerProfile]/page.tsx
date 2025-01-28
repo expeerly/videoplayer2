@@ -1,4 +1,4 @@
-import { getProfile } from '@/src/app/actions/actions';
+import { getAllCategories, getProfile } from '@/src/app/actions/actions';
 import { InterestsCategories } from '@/src/app/components/client/InterestsCategories';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { ShareButton } from '@/src/app/components/client/ShareButton';
@@ -42,11 +42,13 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { interest } = (await searchParams) ?? '';
   const { t } = await getDictionary();
 
+  const { data: allCategories } = await getAllCategories(locale);
+
   const { data } = await getProfile({
     lang: locale,
     gridType: 'creator',
     id: reviewerProfile,
-    category: interest as string,
+    category: allCategories.find(i => i.categoryData[locale].urlSlug === interest)?.id as string,
   });
 
   if (!data) {
@@ -91,7 +93,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
 
         <section className="pt-5 md:pt-[50px]">
           <h3 className="text-lg font-extrabold mb-4 text-grey-700">{t('interests')}</h3>
-          <InterestsCategories interests={data?.interests} />
+          <InterestsCategories interests={data?.interests} allCategories={allCategories} />
         </section>
 
         <section className=" py-7 md:py-[50px]">

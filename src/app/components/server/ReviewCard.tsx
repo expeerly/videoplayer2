@@ -12,9 +12,6 @@ type Props = {
 };
 
 export const ReviewCard: FunctionComponent<Props> = ({ review, className }) => {
-  console.log(
-    `/video-reviews/${review.categorySlug}/${review.brandSlug}/${review.productSlug}/${review.id}`
-  );
   return (
     <div
       key={review.id}
