@@ -50,7 +50,6 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
     id: reviewerProfile,
     category: allCategories.find(i => i.categoryData[locale].urlSlug === interest)?.id as string,
   });
-
   if (!data) {
     notFound();
   }

@@ -7,7 +7,7 @@ import { Skeleton } from '../client/Skeleton';
 
 type ReviewGridProps = {
   header?: {
-    dataType?: 'reviewer' | 'brand' | 'category';
+    dataType?: 'brand' | 'brand-feed' | 'category' | 'product-feed' | 'reviewer';
     variant?: 'primary' | 'secondary';
   };
 

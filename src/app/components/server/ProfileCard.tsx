@@ -10,8 +10,8 @@ export type ProfileCardProps = {
   description?: string;
   title: string;
   variant?: 'primary' | 'secondary';
-  profileSlug?: string;
-  dataType?: 'reviewer' | 'brand' | 'category';
+  profileSlug?: string | { primary: string; secondary: string };
+  dataType?: 'brand' | 'brand-feed' | 'category' | 'product-feed' | 'reviewer';
 
   reviewsCount?: string;
   age?: number;
@@ -37,18 +37,28 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
 }) => {
   const { t } = await getDictionary();
 
+  const getProfileUrl = (type?: string, slug?: string | { primary: string; secondary: string }) => {
+    if (!slug) return '';
+    const primary = typeof slug === 'string' ? slug : slug.primary;
+    const secondary = typeof slug === 'string' ? slug : slug.secondary;
+
+    const paths = {
+      category: `/video-reviews/productcategory/${primary}`,
+      brand: `/video-reviews/brand/${primary}`,
+      reviewer: `/video-reviews/reviewers/${primary}`,
+      'product-feed': `/explore/brand/${primary}/${secondary}`,
+      'brand-feed': `/explore/brand/${primary}`,
+    };
+
+    return paths[type as keyof typeof paths] || '';
+  };
+
+  const url = getProfileUrl(dataType, profileSlug);
+
   return (
     <>
       <Link
-        href={
-          profileSlug
-            ? dataType === 'category'
-              ? `/video-reviews/productcategory/${profileSlug}`
-              : dataType === 'brand'
-                ? `/video-reviews/brand/${profileSlug}`
-                : `/video-reviews/reviewers/${profileSlug}`
-            : ''
-        }
+        href={url}
         aria-label={
           dataType === 'category'
             ? t('dynamic_texts.home_category_icons.aria_label', { brandname: title })

@@ -88,7 +88,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             },
           }}
           header={{
-            type: 'brand',
+            type: 'brand-feed',
           }}
         />
 

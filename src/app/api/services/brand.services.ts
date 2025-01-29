@@ -306,6 +306,10 @@ export async function getBrandProductsWithVideos(
         .select({
           id: product.id,
           name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          slug: {
+            primary: brand.slug,
+            secondary: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
+          },
           logo: product.productPicture,
           info: {
             reviewsCount: sql<number>`COUNT(${video.id})`,
@@ -342,6 +346,7 @@ export async function getBrandProductsWithVideos(
         })
         .from(product)
         .innerJoin(video, eq(video.productId, product.id))
+        .innerJoin(brand, eq(product.brandId, brand.id))
         .where(
           and(
             eq(product.brandId, brandId),
@@ -350,7 +355,7 @@ export async function getBrandProductsWithVideos(
         )
         .limit(limit)
         .offset((page - 1) * limit)
-        .groupBy(product.id),
+        .groupBy(product.id, brand.slug),
     ]);
 
     return {

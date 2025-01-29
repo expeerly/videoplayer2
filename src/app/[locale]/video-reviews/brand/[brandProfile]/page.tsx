@@ -94,6 +94,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           }}
           header={{
             variant: 'secondary',
+            type: 'product-feed',
           }}
         />
 
