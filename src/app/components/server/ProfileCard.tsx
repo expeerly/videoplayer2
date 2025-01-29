@@ -4,6 +4,7 @@ import { FunctionComponent } from 'react';
 import { StarRating } from './StarRating';
 import Link from 'next/link';
 import { getDictionary } from '@/src/lib/dictionary';
+import { LongDescription } from '../client/LongDescription';
 
 export type ProfileCardProps = {
   description?: string;
@@ -90,8 +91,8 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
       </Link>
 
       {!!bio && (
-        <div className="flex  sm:w-2/5 items-center mt-2">
-          <p className=" text-grey-700 ml-0 line-clamp-2">{bio}</p>
+        <div className="flex w-full sm:w-2/3 items-center mt-2">
+          <LongDescription scrollToTop={false} text={bio} maxLines={2} />
         </div>
       )}
     </>

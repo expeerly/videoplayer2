@@ -7,12 +7,14 @@ type LongDescriptionProps = {
   text: string;
   maxLines?: number;
   className?: string;
+  scrollToTop?: boolean;
 };
 
 export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
   text,
   maxLines = 3,
   className = '',
+  scrollToTop = true,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowButton, setShouldShowButton] = useState(false);
@@ -42,22 +44,23 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
   }, [maxLines, text]);
 
   const toggleExpansion = () => {
-    if (isExpanded) {
+    if (isExpanded && scrollToTop) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     setIsExpanded(!isExpanded);
   };
+
+  const lineClamp = clsx({
+    [`line-clamp-${maxLines}`]: !isExpanded,
+    'line-clamp-none': isExpanded,
+  });
 
   return (
     <div className={`w-full max-w-2xl ${className}`}>
       <p
         ref={contentRef}
         onClick={toggleExpansion}
-        className={clsx(
-          'text-sm md:text-base text-gray-500',
-          'cursor-pointer',
-          !isExpanded && 'line-clamp-3'
-        )}
+        className={clsx('text-sm md:text-base text-gray-500 cursor-pointer', lineClamp)}
       >
         {text}
         {shouldShowButton && (
