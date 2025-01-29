@@ -12,7 +12,7 @@ export async function GET(
   const { categories } = getFilterOptions(request);
 
   try {
-    const creator = await getCreatorByIdWithVideos(creatorId.split('-').pop()!, categories, lang);
+    const creator = await getCreatorByIdWithVideos(creatorId, categories, lang);
 
     return NextResponse.json(
       {

@@ -221,7 +221,7 @@ export async function handleGetCreatorWithVideos(
 }
 
 export async function getCreatorByIdWithVideos(
-  creatorId: string,
+  creatorSlug: string,
   interests: number[] = [],
   lang: SupportedLanguage
 ) {
@@ -282,7 +282,9 @@ export async function getCreatorByIdWithVideos(
       })
       .from(creator)
       .leftJoin(video, eq(video.creatorId, creator.id))
-      .where(eq(creator.id, creatorId))
+      .where(
+        sql`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id})) = ${creatorSlug.trim()}`
+      )
       .groupBy(creator.id)
       .orderBy(creator.firstName);
 

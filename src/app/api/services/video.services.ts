@@ -309,10 +309,9 @@ export async function getExploreVideos(
     }
 
     if (creatorSlug) {
-      const creatorId = creatorSlug.split('-').pop();
-      if (creatorId) {
-        whereConditions.push(eq(creator.id, creatorId));
-      }
+      whereConditions.push(
+        sql`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id})) = ${creatorSlug.trim()}`
+      );
     }
 
     let randomVideoIds = (
