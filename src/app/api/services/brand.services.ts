@@ -126,7 +126,7 @@ export async function handleGetBrandsWithVideos(
     const offset = (page - 1) * limit;
 
     let randomBrandId = undefined;
-    if (random) {
+    if (`${random}` === 'true') {
       const randomBrands = await db
         .select({
           id: brand.id,

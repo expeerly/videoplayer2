@@ -141,7 +141,7 @@ export async function handleGetCategoryWithVideos(
     const { categoryFilter, brandFilter } = getFilters(filters);
 
     let randomCategoryId = undefined;
-    if (limit === 1) {
+    if (`${limit}` === '1') {
       const randomCategories = await db
         .select({
           id: category.id,

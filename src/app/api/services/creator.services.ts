@@ -112,7 +112,7 @@ export async function handleGetCreatorWithVideos(
     const brandFilter = brands?.length ? inArray(product.brandId, brands) : undefined;
 
     let randomCreatorIds: string[] = [];
-    if (random) {
+    if (`${random}` === 'true') {
       const randomCreator = await db
         .select({
           id: creator.id,
@@ -125,36 +125,11 @@ export async function handleGetCreatorWithVideos(
         .orderBy(sql`RANDOM()`)
         .limit(limit);
 
-      // Use structured logging for Vercel
-      console.info(
-        JSON.stringify({
-          message: 'Random creators query result',
-          data: randomCreator,
-          timestamp: new Date().toISOString(),
-          environment: process.env.NODE_ENV,
-          query: {
-            random,
-            limit,
-            hasResults: randomCreator.length > 0,
-          },
-        })
-      );
-
       if (randomCreator.length > 0) {
         randomCreatorIds = randomCreator
           .filter(c => (c.videoCount ?? 0) >= 4)
           .map(creator => creator.id);
       }
-
-      // Log the filtered results
-      console.info(
-        JSON.stringify({
-          message: 'Filtered random creators',
-          creatorIds: randomCreatorIds,
-          timestamp: new Date().toISOString(),
-          filteredCount: randomCreatorIds.length,
-        })
-      );
     }
 
     // Build where conditions
