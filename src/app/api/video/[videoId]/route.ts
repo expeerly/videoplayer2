@@ -8,6 +8,9 @@ export const GET = async (req: Request, { params }: { params: Promise<{ videoId:
     const { videoId } = await params;
     const { searchParams } = new URL(req.url);
     const metaInfo = searchParams.get('metaInfo') === 'true';
+    const brandSlug = searchParams.get('brandSlug') || undefined;
+    const productSlug = searchParams.get('productSlug') || undefined;
+    const categorySlug = searchParams.get('categorySlug') || undefined;
 
     const lang = getLanguageFromRequest(req);
 
@@ -19,8 +22,8 @@ export const GET = async (req: Request, { params }: { params: Promise<{ videoId:
     }
 
     const video = await (metaInfo
-      ? getVideoDetailById(videoId, lang)
-      : getVideoById(videoId, lang));
+      ? getVideoDetailById(videoId, lang, { brandSlug, productSlug, categorySlug })
+      : getVideoById(videoId, lang, { brandSlug, productSlug, categorySlug }));
 
     if (!video) {
       return NextResponse.json({ success: false, message: 'Video not found' }, { status: 404 });

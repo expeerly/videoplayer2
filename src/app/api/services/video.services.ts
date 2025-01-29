@@ -82,10 +82,33 @@ export async function getVideosCount(): Promise<{ count: number }> {
   }
 }
 
-export async function getVideoById(id: string | number, lang: SupportedLanguage) {
+export async function getVideoById(
+  id: string | number,
+  lang: SupportedLanguage,
+  filters: { brandSlug?: string; productSlug?: string; categorySlug?: string }
+) {
   if (!id) {
     throw new Error('Video ID is required');
   }
+
+  const whereConditions = [eq(video.id, Number(id))];
+
+  if (filters?.brandSlug) {
+    whereConditions.push(eq(brand.slug, filters.brandSlug));
+  }
+
+  if (filters?.productSlug) {
+    whereConditions.push(
+      sql`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title') = ${filters.productSlug}`
+    );
+  }
+
+  if (filters?.categorySlug) {
+    whereConditions.push(
+      sql`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug') = ${filters.categorySlug}`
+    );
+  }
+
   try {
     const [videoData] = await db
       .select({
@@ -133,7 +156,7 @@ export async function getVideoById(id: string | number, lang: SupportedLanguage)
       .leftJoin(product, eq(video.productId, product.id))
       .leftJoin(brand, eq(product.brandId, brand.id))
       .leftJoin(category, eq(product.categoryId, category.id))
-      .where(eq(video.id, Number(id)))
+      .where(and(...whereConditions))
       .limit(1);
 
     if (!videoData) {
@@ -147,10 +170,33 @@ export async function getVideoById(id: string | number, lang: SupportedLanguage)
   }
 }
 
-export async function getVideoDetailById(id: string | number, lang: SupportedLanguage) {
+export async function getVideoDetailById(
+  id: string | number,
+  lang: SupportedLanguage,
+  filters: { brandSlug?: string; productSlug?: string; categorySlug?: string }
+) {
   if (!id) {
     throw new Error('Video ID is required');
   }
+
+  const whereConditions = [eq(video.id, Number(id))];
+
+  if (filters?.brandSlug) {
+    whereConditions.push(eq(brand.slug, filters.brandSlug));
+  }
+
+  if (filters?.productSlug) {
+    whereConditions.push(
+      sql`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title') = ${filters.productSlug}`
+    );
+  }
+
+  if (filters?.categorySlug) {
+    whereConditions.push(
+      sql`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug') = ${filters.categorySlug}`
+    );
+  }
+
   try {
     const [videoData] = await db
       .select({
@@ -191,7 +237,8 @@ export async function getVideoDetailById(id: string | number, lang: SupportedLan
       .leftJoin(creator, eq(video.creatorId, creator.id))
       .leftJoin(product, eq(video.productId, product.id))
       .leftJoin(brand, eq(product.brandId, brand.id))
-      .where(eq(video.id, Number(id)))
+      .leftJoin(category, eq(product.categoryId, category.id))
+      .where(and(...whereConditions))
       .limit(1);
 
     if (!videoData) {

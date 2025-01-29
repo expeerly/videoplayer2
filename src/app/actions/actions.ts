@@ -238,17 +238,28 @@ export async function getLogos(): Promise<{
 export async function getVideo<T extends boolean = false>({
   videoId,
   lang,
+  filters,
   metaInfo = false as T,
 }: {
   videoId: string;
   lang: Languages;
+  filters?: {
+    brandSlug?: string;
+    productSlug?: string;
+    categorySlug?: string;
+  };
   metaInfo?: T;
 }): Promise<{
   data: T extends true ? VideoDetail : VideoResponse;
   error?: string;
 }> {
+  const filtersString = filters
+    ? Object.entries(filters)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&')
+    : '';
   return apiRequest<T extends true ? VideoDetail : VideoResponse>(
-    `/video/${videoId}?metaInfo=${metaInfo}`,
+    `/video/${videoId}?metaInfo=${metaInfo}&${filtersString}`,
     { lang }
   );
 }

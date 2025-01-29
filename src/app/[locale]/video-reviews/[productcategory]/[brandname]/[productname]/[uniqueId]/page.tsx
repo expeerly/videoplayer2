@@ -14,6 +14,9 @@ type PageProps = {
   params: Promise<{
     locale: Languages;
     uniqueId: string;
+    productcategory: string;
+    brandname: string;
+    productname: string;
   }>;
 };
 
@@ -29,11 +32,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { t } = await getDictionary();
-  const { locale, uniqueId } = await params;
+  const { locale, uniqueId, productcategory, brandname, productname } = await params;
 
   const [{ data: video }, { data: videoDetails }, { data: relatedVideos }] = await Promise.all([
-    getVideo({ videoId: uniqueId, lang: locale }),
-    getVideo({ videoId: uniqueId, lang: locale, metaInfo: true }),
+    getVideo({
+      videoId: uniqueId,
+      lang: locale,
+      filters: { brandSlug: brandname, productSlug: productname, categorySlug: productcategory },
+    }),
+    getVideo({
+      videoId: uniqueId,
+      lang: locale,
+      metaInfo: true,
+      filters: { brandSlug: brandname, productSlug: productname, categorySlug: productcategory },
+    }),
     getRelatedVideos({ lang: locale, videoId: uniqueId }),
   ]);
 
