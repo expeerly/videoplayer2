@@ -132,8 +132,6 @@ export async function handleGetCreatorWithVideos(
       }
     }
 
-    console.log('BRAND CREATOR: ', { random, condition: `${random}` === 'true', randomCreatorIds });
-
     // Build where conditions
     const whereConditions = [
       exists(

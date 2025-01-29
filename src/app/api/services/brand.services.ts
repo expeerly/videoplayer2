@@ -144,8 +144,6 @@ export async function handleGetBrandsWithVideos(
       }
     }
 
-    console.log('BRAND RANDOM: ', { random, condition: `${random}` === 'true', randomBrandId });
-
     const { categoryFilter, brandFilter } = getFilters(filters);
 
     // Build where conditions
