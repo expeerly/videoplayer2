@@ -129,6 +129,8 @@ export async function handleGetCreatorWithVideos(
       }
     }
 
+    console.log('randomCreatorIds', randomCreatorIds);
+
     // Build where conditions
     const whereConditions = [
       exists(
