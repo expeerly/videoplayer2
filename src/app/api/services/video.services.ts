@@ -286,16 +286,59 @@ export async function getProductWithRelatedVideos(videoId: string, lang: Support
   }
 }
 
-export async function getExploreVideos(videoIds: number[], lang: SupportedLanguage) {
+export async function getExploreVideos(
+  videoIds: number[],
+  lang: SupportedLanguage,
+  {
+    brandSlug,
+    productSlug,
+    creatorSlug,
+  }: { brandSlug?: string; productSlug?: string; creatorSlug?: string }
+) {
   try {
-    const randomVideoIds = (
-      await db.query.video.findMany({
-        columns: { id: true },
-        where: notInArray(video.id, videoIds),
-        orderBy: sql`RANDOM()`,
-        limit: 2,
-      })
+    const whereConditions = [notInArray(video.id, videoIds)];
+
+    if (brandSlug) {
+      whereConditions.push(eq(brand.slug, brandSlug));
+    }
+
+    if (productSlug) {
+      whereConditions.push(
+        sql`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title') = ${productSlug}`
+      );
+    }
+
+    if (creatorSlug) {
+      const creatorId = creatorSlug.split('-').pop();
+      if (creatorId) {
+        whereConditions.push(eq(creator.id, creatorId));
+      }
+    }
+
+    let randomVideoIds = (
+      await db
+        .select({
+          id: video.id,
+        })
+        .from(video)
+        .innerJoin(product, eq(video.productId, product.id))
+        .innerJoin(brand, eq(product.brandId, brand.id))
+        .innerJoin(creator, eq(video.creatorId, creator.id))
+        .where(and(...whereConditions))
+        .orderBy(sql`RANDOM()`)
+        .limit(2)
     ).map(({ id }) => id);
+
+    if (randomVideoIds.length === 0) {
+      if (videoIds.length === 0) {
+        throw new Error('No videos found');
+      }
+      randomVideoIds = videoIds;
+    }
+
+    if (randomVideoIds.length === 1 && videoIds.length > 0) {
+      randomVideoIds = [randomVideoIds[0], videoIds[0]];
+    }
 
     const videoResults = await Promise.all(randomVideoIds.map(id => getVideoById(id, lang)));
 
