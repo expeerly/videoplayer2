@@ -85,7 +85,7 @@ export async function getVideosCount(): Promise<{ count: number }> {
 export async function getVideoById(
   id: string | number,
   lang: SupportedLanguage,
-  filters: { brandSlug?: string; productSlug?: string; categorySlug?: string }
+  filters: { brandSlug?: string; productSlug?: string; categorySlug?: string } = {}
 ) {
   if (!id) {
     throw new Error('Video ID is required');
