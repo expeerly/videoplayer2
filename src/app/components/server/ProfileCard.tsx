@@ -10,7 +10,7 @@ export type ProfileCardProps = {
   description?: string;
   title: string;
   variant?: 'primary' | 'secondary';
-  profileSlug?: string | { primary: string; secondary: string };
+  profileSlug?: string;
   dataType?: 'brand' | 'brand-feed' | 'category' | 'product-feed' | 'reviewer';
 
   reviewsCount?: string;
@@ -37,17 +37,15 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
 }) => {
   const { t } = await getDictionary();
 
-  const getProfileUrl = (type?: string, slug?: string | { primary: string; secondary: string }) => {
+  const getProfileUrl = (type?: string, slug?: string) => {
     if (!slug) return '';
-    const primary = typeof slug === 'string' ? slug : slug.primary;
-    const secondary = typeof slug === 'string' ? slug : slug.secondary;
 
     const paths = {
-      category: `/video-reviews/productcategory/${primary}`,
-      brand: `/video-reviews/brand/${primary}`,
-      reviewer: `/video-reviews/reviewers/${primary}`,
-      'product-feed': `/explore/brand/${primary}/${secondary}`,
-      'brand-feed': `/explore/brand/${primary}`,
+      category: `/video-reviews/productcategory/${slug}`,
+      brand: `/video-reviews/brand/${slug}`,
+      reviewer: `/video-reviews/reviewers/${slug}`,
+      'product-feed': `/explore/product/${slug}`,
+      'brand-feed': `/explore/brand/${slug}`,
     };
 
     return paths[type as keyof typeof paths] || '';

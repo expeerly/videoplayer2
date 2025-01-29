@@ -306,10 +306,7 @@ export async function getBrandProductsWithVideos(
         .select({
           id: product.id,
           name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
-          slug: {
-            primary: brand.slug,
-            secondary: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
-          },
+          slug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
           logo: product.productPicture,
           info: {
             reviewsCount: sql<number>`COUNT(${video.id})`,
