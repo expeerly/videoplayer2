@@ -60,7 +60,7 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
       <p
         ref={contentRef}
         onClick={toggleExpansion}
-        className={clsx('text-sm md:text-base text-gray-500 cursor-pointer', lineClamp)}
+        className={clsx('text-sm md:text-base text-grey-500 cursor-pointer', lineClamp)}
       >
         {text}
         {shouldShowButton && (
