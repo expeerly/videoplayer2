@@ -342,6 +342,11 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
           id="menu-button"
           className="p-2 z-30 max-h-10 max-w-10 md:p-3 md:h-12 md:w-12 relative"
         >
+          {!isOpen && totalAppliedCount > 0 && (
+            <span className="absolute top-0 right-0 w-4 h-4 text-[10px] font-bold text-white bg-pink-500 rounded-full flex items-center justify-center">
+              {totalAppliedCount}
+            </span>
+          )}
           {!isOpen ? <FilterIcon /> : <CloseIcon />}
         </Button>
       </div>
