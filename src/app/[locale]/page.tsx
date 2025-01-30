@@ -13,16 +13,32 @@ import { ReviewGridSection } from '../components/server/ReviewGridSection';
 type PageProps = {
   params: Promise<{
     locale: Languages;
-    slug: string;
   }>;
 };
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { t } = await getDictionary();
+  const { locale } = await params;
+  const pageUrl = `${process.env.SITEBASEURL}/${locale === 'en' ? '' : locale}`;
 
   return {
     title: t('home_site_title'),
     description: t('home_meta_description'),
+    openGraph: {
+      type: 'website',
+      title: t('home_site_title'),
+      description: t('home_meta_description'),
+      url: pageUrl,
+      images: [
+        {
+          url: 'https://assets-global.website-files.com/63d7c29fce90dd477edff1e4/645e3c9bacfb26bc656672b0_expeerly_opengraph_image.jpg',
+          width: 1200,
+          height: 630,
+          alt: t('home_site_title'),
+        },
+      ],
+      siteName: 'Expeerly',
+    },
   };
 }
 

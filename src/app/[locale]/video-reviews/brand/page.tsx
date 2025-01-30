@@ -19,13 +19,26 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const { t } = await getDictionary();
-
   const { data } = await getLandingPageText(locale, 'Brand');
 
   return {
     title: data?.content?.siteTitle,
-    description: data?.content?.bodyText || t('all_brands_meta_description'),
+    description: data?.content?.bodyText,
+    openGraph: {
+      type: 'website',
+      title: data?.content?.siteTitle,
+      description: data?.content?.bodyText,
+      url: `${process.env.SITEBASEURL}/${locale}/video-reviews/brand`,
+      images: [
+        {
+          url: 'https://assets-global.website-files.com/63d7c29fce90dd477edff1e4/645e3c9bacfb26bc656672b0_expeerly_opengraph_image.jpg',
+          width: 1200,
+          height: 630,
+          alt: data?.content?.siteTitle,
+        },
+      ],
+      siteName: 'Expeerly',
+    },
   };
 }
 

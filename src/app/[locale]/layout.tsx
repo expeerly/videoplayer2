@@ -17,6 +17,7 @@ import { getCategories } from '../actions/actions';
 import { mulish } from '../fonts';
 
 import './globals.css';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Expeerly App',
@@ -65,6 +66,20 @@ export default async function RootLayout({
             </div>
           </SharedContextProvider>
         </NextIntlClientProvider>
+
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-57T3B2JM1R"
+          strategy="afterInteractive"
+        />
+        <Script id="gtm-setup" strategy="afterInteractive">
+          {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', 'G-57T3B2JM1R');
+                `}
+        </Script>
       </body>
     </html>
   );

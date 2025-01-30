@@ -34,6 +34,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: t('reviewerProfile.siteTitle', { creatorFirstname: data?.firstName }),
     description: t('reviewerProfile.metaDescription', { creatorFirstname: data?.firstName }),
+    openGraph: {
+      type: 'website',
+      title: t('reviewerProfile.siteTitle', { creatorFirstname: data?.firstName }),
+      description: t('reviewerProfile.metaDescription', { creatorFirstname: data?.firstName }),
+      url: `${process.env.SITEBASEURL}/${locale}/video-reviews/reviewers/${reviewerProfile}`,
+      images: [
+        {
+          url: 'https://assets-global.website-files.com/63d7c29fce90dd477edff1e4/645e3c9bacfb26bc656672b0_expeerly_opengraph_image.jpg',
+          width: 1200,
+          height: 630,
+          alt: t('reviewerProfile.siteTitle', { creatorFirstname: data?.firstName }),
+        },
+      ],
+      siteName: 'Expeerly',
+    },
   };
 }
 

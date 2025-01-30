@@ -29,6 +29,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: data?.siteTitle,
     description: data?.metaDesc,
+    openGraph: {
+      type: 'website',
+      title: data?.siteTitle,
+      description: data?.metaDesc,
+      url: `${process.env.SITEBASEURL}/${locale}/video-reviews/brand/${brandProfile}`,
+      images: [
+        {
+          url: 'https://assets-global.website-files.com/63d7c29fce90dd477edff1e4/645e3c9bacfb26bc656672b0_expeerly_opengraph_image.jpg',
+          width: 1200,
+          height: 630,
+          alt: data?.siteTitle,
+        },
+      ],
+      siteName: 'Expeerly',
+    },
   };
 }
 

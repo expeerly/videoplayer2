@@ -21,12 +21,47 @@ type PageProps = {
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale, uniqueId } = await params;
-  const { data } = await getVideo({ videoId: uniqueId, lang: locale });
+  const { locale, uniqueId, productcategory, brandname, productname } = await params;
+  const { data } = await getVideo({
+    videoId: uniqueId,
+    lang: locale,
+    filters: { brandSlug: brandname, productSlug: productname, categorySlug: productcategory },
+  });
+
+  if (!data) return {};
+
+  const pageUrl = `${process.env.SITEBASEURL}/${locale}/${productcategory}/${brandname}/${productname}/${uniqueId}`;
+  const thumbnailUrl = `https://image.mux.com/${data.playbackId}/thumbnail.png`;
+  const videoUrl = `https://stream.mux.com/${data.playbackId}/high.mp4`;
 
   return {
-    title: data?.siteTitle,
-    description: data?.metaDescription,
+    title: data.siteTitle,
+    description: data.metaDescription,
+    openGraph: {
+      type: 'video.other',
+      title: data.siteTitle,
+      url: pageUrl,
+      images: [
+        {
+          url: thumbnailUrl,
+          width: 1200,
+          height: 630,
+          alt: data.videoTitle,
+        },
+      ],
+      description: data.metaDescription,
+      videos: [
+        {
+          url: videoUrl,
+          width: 1920,
+          height: 1080,
+          type: 'video/mp4',
+        },
+      ],
+    },
+    other: {
+      'og:video:actor': data.creator.name,
+    },
   };
 }
 
