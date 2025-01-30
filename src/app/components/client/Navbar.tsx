@@ -66,7 +66,7 @@ const NavbarComponent: FunctionComponent<Props> = ({ categories }) => {
 
   useEffect(() => {
     if (
-      pathname.includes('/explore') &&
+      (pathname.includes('/explore') || pathname.includes('no-more-videos')) &&
       userHistory[userHistory.length - 1]?.includes('/explore')
     ) {
       return;

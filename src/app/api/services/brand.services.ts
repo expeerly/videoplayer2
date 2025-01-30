@@ -125,23 +125,45 @@ export async function handleGetBrandsWithVideos(
   try {
     const offset = (page - 1) * limit;
 
+    let randomBrandId = undefined;
+    if (`${random}` === 'true') {
+      const randomBrands = await db
+        .select({
+          id: brand.id,
+        })
+        .from(brand)
+        .innerJoin(product, eq(brand.id, product.brandId))
+        .innerJoin(video, eq(video.productId, product.id))
+        .groupBy(brand.id)
+        .having(sql`COUNT(DISTINCT ${video.id}) >= 4`)
+        .orderBy(sql`RANDOM()`)
+        .limit(1);
+
+      if (randomBrands.length > 0) {
+        randomBrandId = randomBrands[0].id;
+      }
+    }
+
     const { categoryFilter, brandFilter } = getFilters(filters);
 
     // Build where conditions
-    const whereConditions = exists(
-      db
-        .select()
-        .from(video)
-        .innerJoin(product, eq(video.productId, product.id))
-        .where(
-          and(
-            isValidBrand,
-            eq(product.brandId, brand.id),
-            ...(categoryFilter ? [categoryFilter] : []),
-            ...(brandFilter ? [brandFilter] : [])
+    const whereConditions = [
+      exists(
+        db
+          .select()
+          .from(video)
+          .innerJoin(product, eq(video.productId, product.id))
+          .where(
+            and(
+              isValidBrand,
+              eq(product.brandId, brand.id),
+              ...(categoryFilter ? [categoryFilter] : []),
+              ...(brandFilter ? [brandFilter] : [])
+            )
           )
-        )
-    );
+      ),
+      ...(randomBrandId ? [eq(brand.id, randomBrandId)] : []),
+    ];
 
     const [brandsResult, totalCount] = await Promise.all([
       db
@@ -193,7 +215,7 @@ export async function handleGetBrandsWithVideos(
         .from(brand)
         .leftJoin(product, eq(brand.id, product.brandId))
         .leftJoin(video, eq(product.id, video.productId))
-        .where(whereConditions)
+        .where(and(...whereConditions))
         .groupBy(brand.id)
         .orderBy(random ? sql`RANDOM()` : sql`COUNT(DISTINCT ${video.id}) DESC`)
         .limit(limit)
@@ -204,7 +226,7 @@ export async function handleGetBrandsWithVideos(
           count: sql<number>`COUNT(DISTINCT ${brand.id})`,
         })
         .from(brand)
-        .where(whereConditions)
+        .where(and(...whereConditions))
         .then(result => result[0].count),
     ]);
 
@@ -284,6 +306,7 @@ export async function getBrandProductsWithVideos(
         .select({
           id: product.id,
           name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          slug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
           logo: product.productPicture,
           info: {
             reviewsCount: sql<number>`COUNT(${video.id})`,
@@ -320,6 +343,7 @@ export async function getBrandProductsWithVideos(
         })
         .from(product)
         .innerJoin(video, eq(video.productId, product.id))
+        .innerJoin(brand, eq(product.brandId, brand.id))
         .where(
           and(
             eq(product.brandId, brandId),
@@ -328,7 +352,7 @@ export async function getBrandProductsWithVideos(
         )
         .limit(limit)
         .offset((page - 1) * limit)
-        .groupBy(product.id),
+        .groupBy(product.id, brand.slug),
     ]);
 
     return {

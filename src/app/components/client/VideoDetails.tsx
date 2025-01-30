@@ -15,12 +15,14 @@ export const VideoDetails: FunctionComponent<Props> = ({ data }) => {
 
   return (
     <div className="w-full flex flex-col md:max-w-[497px]">
-      <section className="mb-5">
-        <SectionHeading className="mb-2 ">
-          {t('reviewSummary')} {data?.product?.productName}
-        </SectionHeading>
-        <p className="text-grey-700 font-normal text-base">{data?.summary}</p>
-      </section>
+      {!!data?.summary && (
+        <section className="mb-5">
+          <SectionHeading className="mb-2 ">
+            {t('reviewSummary')} {data?.product?.productName}
+          </SectionHeading>
+          <p className="text-grey-700 font-normal text-base">{data?.summary}</p>
+        </section>
+      )}
 
       <Divider />
 
@@ -52,7 +54,7 @@ export const VideoDetails: FunctionComponent<Props> = ({ data }) => {
       <Divider className=" mb-5 md:mb-6" />
 
       <section>
-        <SectionHeading className="mb-1.5">{t('productHighlights')}</SectionHeading>
+        <SectionHeading className="mb-1.5">{t('rating')}</SectionHeading>
         <div className="flex items-center gap-1 mb-4">
           <span className="font-medium text-grey-700">{data?.starRating}</span>
           <div className="flex gap-0.5">
@@ -65,17 +67,8 @@ export const VideoDetails: FunctionComponent<Props> = ({ data }) => {
 
       <section className="relative">
         <div className="absolute top-0 md:-top-20" id="whatReviewerThinks" />
-        <SectionHeading>
-          What{' '}
-          {data?.creator.name
-            .split(' ')
-            .map((part, index, arr) =>
-              index === arr.length - 1 ? part.charAt(0) + '.' : part + ' '
-            )
-            .join('')}{' '}
-          thinks
-        </SectionHeading>
-        <p className=" mt-1.5 text-grey-700">{data?.transcript}</p>
+        <SectionHeading>{data?.transcript?.title}</SectionHeading>
+        <p className=" mt-1.5 text-grey-700">{data?.transcript?.text}</p>
       </section>
 
       <Divider className="my-5 md:my-8" />

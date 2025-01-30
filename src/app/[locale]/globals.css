@@ -1,12 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-    font-family: 'Mulish', system-ui, sans-serif;
+    font-family: var(--font-mulish), system-ui, sans-serif;
   }
   h2 {
     @apply text-lg font-extrabold leading-normal;
@@ -19,13 +17,10 @@
   }
 }
 
-:root {
-  --font-mulish: 'Mulish', sans-serif;
-}
-
 mux-player {
   --media-object-fit: cover;
   --media-object-position: center;
+  --media-audio-track-menu-button-display: block;
 }
 
 mux-player::part(video) {

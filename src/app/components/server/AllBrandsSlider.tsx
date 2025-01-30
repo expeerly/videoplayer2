@@ -46,7 +46,6 @@ export const AllBrandsSlider: FunctionComponent<Props> = async ({
       </div>
       <div className="md:hidden">
         <MobileSlider
-          isMultiRow={false}
           isBrand
           slides={
             brands?.rows?.map(brand => ({

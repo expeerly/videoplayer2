@@ -1,15 +1,16 @@
 'use client';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { BagIcon, CloseIcon, MoreIcon, ShareIcon } from '@/src/assets/icons';
-import { Video } from '../server/Video/VideoCard';
 import { ShareDialog } from './ShareDialog';
 import isMobile from 'is-mobile';
 import { useTranslations } from 'next-intl';
 import { useSharedDispatch, useSharedState } from '../../context/reducer';
 import { Button } from './Button';
 import Link from 'next/link';
+import { VideoResponse } from '@/src/db/types';
+
 type VideoActionsProps = {
-  video: Video;
+  video: VideoResponse;
   isVideoDetails?: boolean;
 };
 
@@ -41,7 +42,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
   }, [isVideoDetails, videoDetailsDrawer, dispatch]);
 
   const handleShare = useCallback(async () => {
-    if (isMobile() && navigator.share) {
+    if (isMobile({ tablet: true }) && navigator.share) {
       try {
         await navigator.share({
           title: video.product.productName,
@@ -107,7 +108,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
         </Link>
       </div>
 
-      <ShareDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <ShareDialog video={video} isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 };

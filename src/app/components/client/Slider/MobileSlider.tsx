@@ -1,5 +1,5 @@
 'use client';
-import React, { FunctionComponent, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 
 import { SlideProps, SliderCard } from './SliderCard';
@@ -15,20 +15,11 @@ type StyleClassNames = {
 
 type Props = {
   styleClassNames?: StyleClassNames;
-  isMultiRow?: boolean;
   isBrand?: boolean;
   slides: SlideProps[];
 };
 
-export const MobileSlider: FunctionComponent<Props> = ({
-  styleClassNames,
-  isMultiRow,
-  isBrand,
-  slides,
-}) => {
-  // Refs
-  const rowRefs = useRef<(HTMLLIElement | null)[]>([]);
-
+export const MobileSlider: FunctionComponent<Props> = ({ styleClassNames, isBrand, slides }) => {
   // Memoized base classes
   const baseClasses = useMemo(
     () => ({
@@ -47,22 +38,6 @@ export const MobileSlider: FunctionComponent<Props> = ({
     }),
     [baseClasses, styleClassNames]
   );
-
-  // Callbacks
-  const setRowRef = useCallback((el: HTMLLIElement | null, index: number) => {
-    rowRefs.current[index] = el;
-  }, []);
-
-  // Effects
-  useEffect(() => {
-    rowRefs.current.forEach((rowRef, index) => {
-      const rowIndex = index + 1;
-      if ((rowRef && rowIndex % 2 === 0) || (rowRef && !isMultiRow)) {
-        const scrollableWidth = rowRef.scrollWidth - rowRef.clientWidth;
-        rowRef.scrollLeft = scrollableWidth * 0.1;
-      }
-    });
-  }, [isMultiRow]);
 
   // Memoized data
 
@@ -87,13 +62,13 @@ export const MobileSlider: FunctionComponent<Props> = ({
 
   const renderRow = useCallback(
     (row: SlideProps[], index: number) => (
-      <li ref={el => setRowRef(el, index)} key={`row-${index}`} className={combinedClasses.row}>
+      <li key={`row-${index}`} className={combinedClasses.row + `${index === 1 ? ' pl-6' : ''}`}>
         <ul className={baseClasses.slideList}>
           {row.map((brand, idx) => renderSlide(brand, idx))}
         </ul>
       </li>
     ),
-    [baseClasses.slideList, combinedClasses.row, renderSlide, setRowRef]
+    [baseClasses.slideList, combinedClasses.row, renderSlide]
   );
 
   return (

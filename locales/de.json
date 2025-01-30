@@ -1,5 +1,5 @@
 {
-  "home_site_title": "Lohn es sich? Die neusten expeerly Video Erfahrungsberichte",
+  "home_site_title": "Lohnt es sich? Die neusten expeerly Video Erfahrungsberichte",
   "home_meta_description": "Hast du jemals darüber nachgedacht, ob es sich lohnt? Natürlich! Jetzt kannst du echte Videos von echten Menschen sehen, die ihre Erfahrungen mit den neuesten Produkten und Erlebnissen teilen.",
   "home_h1_title": "Lohnt es sich?",
   "home_top_body_text": "Entdecke die neuesten Videoreviews zu deinen Lieblingsprodukten.",
@@ -25,7 +25,6 @@
   "productName": "Produktname",
   "gtinEan": "GTIN/EAN",
   "vendorProductNumber": "Herstellernummer",
-  "productHighlights": "Produkt Highlights",
   "frequentlyAskedQuestions": "Häufige Fragen",
   "moreVideosOn": "Mehr Videos zu",
   "loading": "Laden",
@@ -36,6 +35,11 @@
   "videoReviews": "Video Bewertungen",
   "singleReview": "Bewertung",
   "reviews": "Bewertungen",
+  "rating": "Bewertung",
+  "reviewerProfile": {
+    "siteTitle": "Video Bewertungen von {creatorFirstname}",
+    "metaDescription": "Schau dir Videobewertungen von {creatorFirstname} an und erhalte die besten Einblicke in Produkte und Dienstleistungen."
+  },
   "buyNow": {
     "label": "Jetzt kaufen",
     "ariaLabel": "Zum im Video gezeigten Produkt gehen"

@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { VideoActions } from '../../client/VideoActions';
-import { Video } from './VideoCard';
 import { StarRating } from '../StarRating';
 import { Avatar } from '../Avatar';
 import { Link } from '@/src/i18n/routing';
 import { BlueTick } from '@/src/assets/icons';
+import { VideoResponse } from '@/src/db/types';
 
 type VideoInfoProps = {
-  video: Video;
+  video: VideoResponse;
   isVideoDetails?: boolean;
 };
 
@@ -24,14 +24,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({ video, isVideoDet
           alt={video.creator?.name}
           className="[&>img]:object-cover"
         />
-        <span>
-          {video.creator?.name
-            .split(' ')
-            .map((part, index, arr) =>
-              index === arr.length - 1 ? part.charAt(0) + '.' : part + ' '
-            )
-            .join('')}
-        </span>
+        <span>{video.creator?.name}</span>
         <BlueTick />
       </Link>
 
@@ -45,8 +38,8 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({ video, isVideoDet
             <Avatar src={video?.brand?.logo} alt={video?.brand?.name} />
           </Link>
           <div className="flex flex-col flex-1">
-            <Link href={`/explore/productcategory/${video?.category?.slug}`}>
-              <span className="text-sm">{video?.category?.name}</span>
+            <Link href={`/explore/product/${video?.product?.productSlug}`}>
+              <span className="text-sm">{video?.product.productName}</span>
             </Link>
             <div className="flex gap-2 items-center -mt-0.5">
               <span>{video?.starRating}</span>

@@ -140,6 +140,25 @@ export async function handleGetCategoryWithVideos(
     // Create filter conditions
     const { categoryFilter, brandFilter } = getFilters(filters);
 
+    let randomCategoryId = undefined;
+    if (`${limit}` === '1') {
+      const randomCategories = await db
+        .select({
+          id: category.id,
+        })
+        .from(category)
+        .innerJoin(product, eq(category.id, product.categoryId))
+        .innerJoin(video, eq(video.productId, product.id))
+        .groupBy(category.id)
+        .having(sql`COUNT(DISTINCT ${video.id}) >= 4`)
+        .orderBy(sql`RANDOM()`)
+        .limit(1);
+
+      if (randomCategories.length > 0) {
+        randomCategoryId = randomCategories[0].id;
+      }
+    }
+
     // Build where conditions
     const whereConditions = [
       exists(
@@ -156,6 +175,7 @@ export async function handleGetCategoryWithVideos(
           )
       ),
       ...(categoryFilter ? [categoryFilter] : []),
+      ...(randomCategoryId ? [eq(category.id, randomCategoryId)] : []),
     ];
     const [categoriesResult, totalCount] = await Promise.all([
       db
@@ -326,6 +346,7 @@ export async function getBrandsByCategoryIdWithVideos(
                 'rating', ${video.starRating},
                 'brandId', ${brand.id},
                 'brandName', ${brand.brandName},
+                'brandSlug', ${brand.slug},
                 'brandLogo', ${brand.logo},
                 'productName', COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title'),
               'productSlug', COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title'),

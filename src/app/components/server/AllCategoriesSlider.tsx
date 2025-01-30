@@ -41,7 +41,6 @@ export const AllCategoriesSlider: FunctionComponent<Props> = async ({
       </div>
       <div className="md:hidden">
         <MobileSlider
-          isMultiRow={false}
           slides={categories?.map(i => ({
             name: i.categoryName,
             icon: i.logo,

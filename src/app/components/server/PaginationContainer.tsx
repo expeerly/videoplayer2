@@ -6,7 +6,7 @@ import { CTABlock, CTABlockProps } from './CTABlock';
 
 type Props = {
   header?: {
-    dataType?: 'reviewer' | 'brand' | 'category';
+    dataType?: 'brand' | 'brand-feed' | 'category' | 'product-feed' | 'reviewer';
     variant?: 'primary' | 'secondary';
   };
   classNames?: {

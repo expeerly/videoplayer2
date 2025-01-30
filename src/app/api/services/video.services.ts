@@ -82,10 +82,33 @@ export async function getVideosCount(): Promise<{ count: number }> {
   }
 }
 
-export async function getVideoById(id: string | number, lang: SupportedLanguage) {
+export async function getVideoById(
+  id: string | number,
+  lang: SupportedLanguage,
+  filters: { brandSlug?: string; productSlug?: string; categorySlug?: string } = {}
+) {
   if (!id) {
     throw new Error('Video ID is required');
   }
+
+  const whereConditions = [eq(video.id, Number(id))];
+
+  if (filters?.brandSlug) {
+    whereConditions.push(eq(brand.slug, filters.brandSlug));
+  }
+
+  if (filters?.productSlug) {
+    whereConditions.push(
+      sql`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title') = ${filters.productSlug}`
+    );
+  }
+
+  if (filters?.categorySlug) {
+    whereConditions.push(
+      sql`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug') = ${filters.categorySlug}`
+    );
+  }
+
   try {
     const [videoData] = await db
       .select({
@@ -103,9 +126,9 @@ export async function getVideoById(id: string | number, lang: SupportedLanguage)
         metaDescription: sql<string>`COALESCE(${video.metaDescription}->${lang}->>'desc', ${video.metaDescription}->'en'->>'desc')`,
         creator: {
           id: creator.id,
-          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
           logo: creator.profilePictureURL,
-          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+          slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id}))`,
         },
         product: {
           id: product.id,
@@ -133,7 +156,7 @@ export async function getVideoById(id: string | number, lang: SupportedLanguage)
       .leftJoin(product, eq(video.productId, product.id))
       .leftJoin(brand, eq(product.brandId, brand.id))
       .leftJoin(category, eq(product.categoryId, category.id))
-      .where(eq(video.id, Number(id)))
+      .where(and(...whereConditions))
       .limit(1);
 
     if (!videoData) {
@@ -147,16 +170,42 @@ export async function getVideoById(id: string | number, lang: SupportedLanguage)
   }
 }
 
-export async function getVideoDetailById(id: string | number, lang: SupportedLanguage) {
+export async function getVideoDetailById(
+  id: string | number,
+  lang: SupportedLanguage,
+  filters: { brandSlug?: string; productSlug?: string; categorySlug?: string }
+) {
   if (!id) {
     throw new Error('Video ID is required');
   }
+
+  const whereConditions = [eq(video.id, Number(id))];
+
+  if (filters?.brandSlug) {
+    whereConditions.push(eq(brand.slug, filters.brandSlug));
+  }
+
+  if (filters?.productSlug) {
+    whereConditions.push(
+      sql`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title') = ${filters.productSlug}`
+    );
+  }
+
+  if (filters?.categorySlug) {
+    whereConditions.push(
+      sql`COALESCE(${category.categoryData}->${lang}->>'urlSlug', ${category.categoryData}->'en'->>'urlSlug') = ${filters.categorySlug}`
+    );
+  }
+
   try {
     const [videoData] = await db
       .select({
         id: video.id,
         summary: sql<string>`COALESCE(${video.summary}->${lang}->>'text', ${video.summary}->'en'->>'text')`,
-        transcript: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
+        transcript: {
+          text: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptText', ${video.transcript}->'en'->>'transcriptText')`,
+          title: sql<string>`COALESCE(${video.transcript}->${lang}->>'transcriptTitle', ${video.transcript}->'en'->>'transcriptTitle')`,
+        },
         starRating: video.starRating,
         faqs: {
           question_1: sql<string>`${video.faqs}->'faq1'->${lang}->>'faqTitle'`,
@@ -181,14 +230,15 @@ export async function getVideoDetailById(id: string | number, lang: SupportedLan
           brandSlug: brand.slug,
         },
         creator: {
-          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
         },
       })
       .from(video)
       .leftJoin(creator, eq(video.creatorId, creator.id))
       .leftJoin(product, eq(video.productId, product.id))
       .leftJoin(brand, eq(product.brandId, brand.id))
-      .where(eq(video.id, Number(id)))
+      .leftJoin(category, eq(product.categoryId, category.id))
+      .where(and(...whereConditions))
       .limit(1);
 
     if (!videoData) {
@@ -283,16 +333,58 @@ export async function getProductWithRelatedVideos(videoId: string, lang: Support
   }
 }
 
-export async function getExploreVideos(videoIds: number[], lang: SupportedLanguage) {
+export async function getExploreVideos(
+  videoIds: number[],
+  lang: SupportedLanguage,
+  {
+    brandSlug,
+    productSlug,
+    creatorSlug,
+  }: { brandSlug?: string; productSlug?: string; creatorSlug?: string }
+) {
   try {
-    const randomVideoIds = (
-      await db.query.video.findMany({
-        columns: { id: true },
-        where: notInArray(video.id, videoIds),
-        orderBy: sql`RANDOM()`,
-        limit: 2,
-      })
+    const whereConditions = [notInArray(video.id, videoIds)];
+
+    if (brandSlug) {
+      whereConditions.push(eq(brand.slug, brandSlug));
+    }
+
+    if (productSlug) {
+      whereConditions.push(
+        sql`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title') = ${productSlug}`
+      );
+    }
+
+    if (creatorSlug) {
+      whereConditions.push(
+        sql`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id})) = ${creatorSlug.trim()}`
+      );
+    }
+
+    let randomVideoIds = (
+      await db
+        .select({
+          id: video.id,
+        })
+        .from(video)
+        .innerJoin(product, eq(video.productId, product.id))
+        .innerJoin(brand, eq(product.brandId, brand.id))
+        .innerJoin(creator, eq(video.creatorId, creator.id))
+        .where(and(...whereConditions))
+        .orderBy(sql`RANDOM()`)
+        .limit(2)
     ).map(({ id }) => id);
+
+    if (randomVideoIds.length === 0) {
+      if (videoIds.length === 0) {
+        throw new Error('No videos found');
+      }
+      randomVideoIds = videoIds;
+    }
+
+    if (randomVideoIds.length === 1 && videoIds.length > 0) {
+      randomVideoIds = [randomVideoIds[0], videoIds[0]];
+    }
 
     const videoResults = await Promise.all(randomVideoIds.map(id => getVideoById(id, lang)));
 
@@ -314,8 +406,8 @@ export async function getAllVideos(lang: SupportedLanguage) {
         metaDescription: sql<string>`COALESCE(${video.metaDescription}->${lang}->>'desc', ${video.metaDescription}->'en'->>'desc')`,
         rating: video.starRating,
         creator: {
-          name: sql<string>`CONCAT(${creator.firstName}, ' ', ${creator.lastName})`,
-          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+          name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
+          slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id}))`,
         },
         product: {
           id: product.id,

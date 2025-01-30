@@ -11,7 +11,7 @@ type Props = {
   type: 'brand' | 'category';
   ctaBlock: CTABlockProps;
   header?: {
-    type?: 'brand' | 'category' | 'reviewer';
+    type?: 'brand' | 'brand-feed' | 'category' | 'product-feed' | 'reviewer';
     variant?: 'primary' | 'secondary';
   };
 } & LocaleProps;
@@ -30,8 +30,6 @@ export const ProfileGrid: FunctionComponent<Props> = async ({
     id,
     page,
   });
-
-  console.log({ data });
 
   return (
     <Suspense fallback={<ReviewGridSkeleton count={9} />}>

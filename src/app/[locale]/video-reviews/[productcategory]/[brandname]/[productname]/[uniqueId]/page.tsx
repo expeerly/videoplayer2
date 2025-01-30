@@ -7,24 +7,51 @@ import { VideoCard } from '@/src/app/components/server/Video/VideoCard';
 import { VideoDetails } from '@/src/app/components/client/VideoDetails';
 import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
-import { NextPage } from 'next';
+import { Metadata, NextPage } from 'next';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
   params: Promise<{
     locale: Languages;
     uniqueId: string;
+    productcategory: string;
+    brandname: string;
+    productname: string;
   }>;
 };
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, uniqueId } = await params;
+  const { data } = await getVideo({ videoId: uniqueId, lang: locale });
+
+  return {
+    title: data?.siteTitle,
+    description: data?.metaDescription,
+  };
+}
+
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { t } = await getDictionary();
-  const { locale, uniqueId } = await params;
+  const { locale, uniqueId, productcategory, brandname, productname } = await params;
 
   const [{ data: video }, { data: videoDetails }, { data: relatedVideos }] = await Promise.all([
-    getVideo({ videoId: uniqueId, lang: locale }),
-    getVideo({ videoId: uniqueId, lang: locale, metaInfo: true }),
+    getVideo({
+      videoId: uniqueId,
+      lang: locale,
+      filters: { brandSlug: brandname, productSlug: productname, categorySlug: productcategory },
+    }),
+    getVideo({
+      videoId: uniqueId,
+      lang: locale,
+      metaInfo: true,
+      filters: { brandSlug: brandname, productSlug: productname, categorySlug: productcategory },
+    }),
     getRelatedVideos({ lang: locale, videoId: uniqueId }),
   ]);
+
+  if (!video || !videoDetails) {
+    notFound();
+  }
 
   return (
     <div className="w-full items-center flex flex-col md:w-max md:mx-auto overflow-auto h-full z-50">
@@ -33,7 +60,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       </div>
       <div className="w-full px-5 flex flex-col md:max-w-[497px] mx-auto pt-7 md:pt-2 md:px-0 relative">
         <div id="details" className="absolute  top-0  md:-top-20" />
-        <ScrollToSection>
+        <ScrollToSection hasFAQ={videoDetails.faqs.length > 0}>
           <PageHeading>{video.videoTitle}</PageHeading>
         </ScrollToSection>
         <div className="pt-7">

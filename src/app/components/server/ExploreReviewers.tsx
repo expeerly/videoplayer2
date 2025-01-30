@@ -22,7 +22,7 @@ export const ExploreReviewers: React.FunctionComponent<{ locale: Languages }> = 
 
   return (
     <section className="flex flex-col gap-8 w-full py-12  md:pt-14 md:pb-[70px] md:max-w-[900px]">
-      <h2 className="px-5 font-extrabold text-2xl text-center text-grey-700 sm:w-1/2 md:w-2/3 lg:w-2/4 sm:text-start mid-lg:px-0">
+      <h2 className="px-5 font-extrabold text-2xl text-center text-grey-700 mid-lg:px-0">
         {t('home_h2')}
       </h2>
 
@@ -36,7 +36,7 @@ export const ExploreReviewers: React.FunctionComponent<{ locale: Languages }> = 
         />
       ))}
 
-      <div className="w-full sm:max-w-[300px] px-5 mid-lg:px-0">
+      <div className="w-full sm:max-w-[300px] px-5 mx-auto">
         <Button
           title={t('explore_all_reviewers.label')}
           aria-label={t('explore_all_reviewers.aria_label')}

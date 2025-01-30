@@ -1,17 +1,11 @@
 import React, { FunctionComponent } from 'react';
-import { getDictionary } from '@/src/lib/dictionary';
-import { Slider } from '@/src/app/components/client/Slider/Slider';
-import { MobileSlider } from '@/src/app/components/client/Slider/MobileSlider';
 import { Button } from '../client/Button';
 import { LocaleProps } from '@/src/db/types';
-import { getBrands } from '../../actions/actions';
+import { RetailerSection } from '../client/Retailer/RetailerSection';
+import { getDictionary } from '@/src/lib/dictionary';
 
-export const ConversionSlider: FunctionComponent<LocaleProps> = async ({ locale }) => {
-  const [{ t }, { data: brands }] = await Promise.all([
-    getDictionary(),
-    getBrands(locale, 10, true),
-  ]);
-
+export const ConversionSlider: FunctionComponent<LocaleProps> = async () => {
+  const { t } = await getDictionary();
   return (
     <section
       className="relative w-full bg-blue-500 flex justify-center bg-top bg-no-repeat md:bg-bottom md:bg-transparent bg-cover"
@@ -24,37 +18,8 @@ export const ConversionSlider: FunctionComponent<LocaleProps> = async ({ locale 
           {t('home_h2_retailer')}
         </h2>
         <p className="text-white px-5 text-center mb-10"> {t('home_retailer_body_text')}</p>
-        <div className=" hidden w-full md:flex">
-          <Slider
-            classNameStyle={{
-              leftButtonClassName: '!bg-blue-left-gradient',
-              rightButtonClassName: '!bg-blue-right-gradient',
-              cardClassName: 'bg-white',
-            }}
-            isBrand
-            slides={
-              brands?.rows?.map(brand => ({
-                title: brand.brandName,
-                imgURL: brand.logo,
-                slug: brand.slug,
-              })) ?? []
-            }
-          />
-        </div>
-        <div className=" flex w-full md:hidden">
-          <MobileSlider
-            styleClassNames={{
-              cardClassName: 'bg-white',
-            }}
-            isBrand
-            slides={
-              brands?.rows?.map(brand => ({
-                title: brand.brandName,
-                imgURL: brand.logo,
-                slug: brand.slug,
-              })) ?? []
-            }
-          />
+        <div className="w-full flex justify-center overflow-hidden">
+          <RetailerSection />
         </div>
         <div className="px-5 w-full mt-12 flex justify-center sm:w-max">
           <Button

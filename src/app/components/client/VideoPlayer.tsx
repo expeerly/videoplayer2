@@ -1,27 +1,59 @@
 'use client';
 
-import { FunctionComponent, useEffect, useRef } from 'react';
+import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 import MuxPlayer, { MuxPlayerRefAttributes } from '@mux/mux-player-react';
 import { usePathname } from '@/src/i18n/routing';
+import { useLocale } from 'next-intl';
 
 type Props = {
-  id: number;
+  id?: string;
   playbackId: string;
+  isVideoDetails?: boolean;
 };
-
-export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id }) => {
+export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id, isVideoDetails }) => {
   const playerRef = useRef<MuxPlayerRefAttributes>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const locale = useLocale();
+
+  const onCanPlay = useCallback(() => {
+    if (playerRef.current && playerRef.current.audioTracks) {
+      for (let i = 0; i < playerRef.current.audioTracks.length; i++) {
+        const track = playerRef.current.audioTracks[i];
+        if (track) {
+          track.enabled = track.language.startsWith(locale);
+        }
+      }
+    }
+
+    if (playerRef.current && playerRef.current.textTracks) {
+      for (let i = 0; i < playerRef.current.textTracks.length; i++) {
+        const track = playerRef.current.textTracks[i];
+        if (track) {
+          track.mode = track.language.startsWith(locale) ? 'showing' : 'hidden';
+        }
+      }
+    }
+  }, [locale]);
 
   useEffect(() => {
     if (!playerRef.current) return;
-    if (pathname.includes(`${id}`)) {
+    if (isVideoDetails) {
       playerRef.current.play().catch(console.log);
+      return;
+    }
+    if (pathname.includes(id ? id?.split('-')[0] : '')) {
+      const activeVideoId = localStorage.getItem('activeVideoId');
+
+      if (activeVideoId === id) {
+        playerRef.current.play().catch(console.log);
+      } else {
+        playerRef.current.pause();
+      }
     } else {
       playerRef.current.pause();
     }
-  }, [pathname, id]);
+  }, [id, pathname, isVideoDetails]);
 
   return (
     <div ref={containerRef} className={`w-full h-full relative `}>
@@ -37,7 +69,7 @@ export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id }) => {
           video_title: ' ',
         }}
         defaultHiddenCaptions={false}
-        thumbnailTime={0}
+        onCanPlay={onCanPlay}
       />
     </div>
   );

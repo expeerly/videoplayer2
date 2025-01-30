@@ -7,13 +7,16 @@ export const GET = async (request: Request) => {
   try {
     const { searchParams } = new URL(request.url);
     const videoId = searchParams.get('videoId') || '';
+    const brandSlug = searchParams.get('brand') || '';
+    const productSlug = searchParams.get('product') || '';
+    const creatorSlug = searchParams.get('creator') || '';
 
     const lang = getLanguageFromRequest(request);
     const videoIds = videoId
       .split(',')
       .filter(Boolean)
       .map(id => Number(id));
-    const video = await getExploreVideos(videoIds, lang);
+    const video = await getExploreVideos(videoIds, lang, { brandSlug, productSlug, creatorSlug });
 
     if (!video) {
       return NextResponse.json({ success: false, message: 'Video not found' }, { status: 404 });

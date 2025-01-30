@@ -111,6 +111,27 @@ export async function handleGetCreatorWithVideos(
 
     const brandFilter = brands?.length ? inArray(product.brandId, brands) : undefined;
 
+    let randomCreatorIds: string[] = [];
+    if (`${random}` === 'true') {
+      const randomCreator = await db
+        .select({
+          id: creator.id,
+          videoCount: sql<number>`COUNT(DISTINCT ${video.id})::int`,
+        })
+        .from(creator)
+        .innerJoin(video, eq(video.creatorId, creator.id))
+        .groupBy(creator.id)
+        .having(sql`COUNT(DISTINCT ${video.id}) >= 4`)
+        .orderBy(sql`RANDOM()`)
+        .limit(limit);
+
+      if (randomCreator.length > 0) {
+        randomCreatorIds = randomCreator
+          .filter(c => (c.videoCount ?? 0) >= 4)
+          .map(creator => creator.id);
+      }
+    }
+
     // Build where conditions
     const whereConditions = [
       exists(
@@ -126,6 +147,7 @@ export async function handleGetCreatorWithVideos(
             )
           )
       ),
+      ...(randomCreatorIds.length > 0 ? [inArray(creator.id, randomCreatorIds)] : []),
     ];
 
     const [creatorsResult, totalCount] = await Promise.all([
@@ -134,7 +156,7 @@ export async function handleGetCreatorWithVideos(
           id: creator.id,
           logo: creator.profilePictureURL,
           name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
-          slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+          slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id}))`,
           info: {
             age: creator.age,
             location: creator.location,
@@ -199,7 +221,7 @@ export async function handleGetCreatorWithVideos(
 }
 
 export async function getCreatorByIdWithVideos(
-  creatorId: string,
+  creatorSlug: string,
   interests: number[] = [],
   lang: SupportedLanguage
 ) {
@@ -211,7 +233,8 @@ export async function getCreatorByIdWithVideos(
         id: creator.id,
         logo: creator.profilePictureURL,
         name: sql<string>`CONCAT(${creator.firstName}, ' ', LEFT(${creator.lastName}, 1), '.')`,
-        slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
+        firstName: creator.firstName,
+        slug: sql<string>`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id}))`,
         age: creator.age,
         location: creator.location,
         country: creator.country,
@@ -259,7 +282,9 @@ export async function getCreatorByIdWithVideos(
       })
       .from(creator)
       .leftJoin(video, eq(video.creatorId, creator.id))
-      .where(eq(creator.id, creatorId))
+      .where(
+        sql`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id})) = ${creatorSlug.trim()}`
+      )
       .groupBy(creator.id)
       .orderBy(creator.firstName);
 

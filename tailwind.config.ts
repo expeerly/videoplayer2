@@ -7,7 +7,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        mulish: ['var(--font-mulish)'],
+        sans: ['var(--font-mulish)', 'system-ui', 'sans-serif'],
       },
       backgroundImage: {
         'blue-left-gradient': 'linear-gradient(90deg, #4B49EB 40.5%, rgba(75, 73, 235, 0) 100%)',

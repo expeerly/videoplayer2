@@ -3,7 +3,10 @@ import { useTranslations } from 'next-intl';
 import React, { FunctionComponent, PropsWithChildren, useCallback } from 'react';
 import { Button } from './Button';
 
-export const ScrollToSection: FunctionComponent<PropsWithChildren> = ({ children }) => {
+export const ScrollToSection: FunctionComponent<PropsWithChildren<{ hasFAQ: boolean }>> = ({
+  children,
+  hasFAQ,
+}) => {
   const t = useTranslations();
 
   const scrollToElement = useCallback((elementId: string) => {
@@ -40,14 +43,16 @@ export const ScrollToSection: FunctionComponent<PropsWithChildren> = ({ children
         >
           {t('review.label')}
         </Button>
-        <Button
-          onClick={faqButtonHandler}
-          size="lg"
-          variant="outline"
-          className="w-full text-sm px-6 mobileM:w-max"
-        >
-          FAQS & Product Details
-        </Button>
+        {hasFAQ && (
+          <Button
+            onClick={faqButtonHandler}
+            size="lg"
+            variant="outline"
+            className="w-full text-sm px-6 mobileM:w-max"
+          >
+            FAQS & Product Details
+          </Button>
+        )}
       </div>
     </section>
   );

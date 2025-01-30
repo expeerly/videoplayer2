@@ -4,13 +4,14 @@ import { FunctionComponent } from 'react';
 import { StarRating } from './StarRating';
 import Link from 'next/link';
 import { getDictionary } from '@/src/lib/dictionary';
+import { LongDescription } from '../client/LongDescription';
 
 export type ProfileCardProps = {
   description?: string;
   title: string;
   variant?: 'primary' | 'secondary';
   profileSlug?: string;
-  dataType?: 'reviewer' | 'brand' | 'category';
+  dataType?: 'brand' | 'brand-feed' | 'category' | 'product-feed' | 'reviewer';
 
   reviewsCount?: string;
   age?: number;
@@ -36,18 +37,26 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
 }) => {
   const { t } = await getDictionary();
 
+  const getProfileUrl = (type?: string, slug?: string) => {
+    if (!slug) return '';
+
+    const paths = {
+      category: `/video-reviews/productcategory/${slug}`,
+      brand: `/video-reviews/brand/${slug}`,
+      reviewer: `/video-reviews/reviewers/${slug}`,
+      'product-feed': `/explore/product/${slug}`,
+      'brand-feed': `/explore/brand/${slug}`,
+    };
+
+    return paths[type as keyof typeof paths] || '';
+  };
+
+  const url = getProfileUrl(dataType, profileSlug);
+
   return (
     <>
       <Link
-        href={
-          profileSlug
-            ? dataType === 'category'
-              ? `/video-reviews/productcategory/${profileSlug}`
-              : dataType === 'brand'
-                ? `/video-reviews/brand/${profileSlug}`
-                : `/video-reviews/reviewers/${profileSlug}`
-            : ''
-        }
+        href={url}
         aria-label={
           dataType === 'category'
             ? t('dynamic_texts.home_category_icons.aria_label', { brandname: title })
@@ -70,16 +79,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center gap-2">
-            <h3 className=" font-bold text-grey-700 max-w-60 truncate">
-              {dataType === 'reviewer'
-                ? title
-                    .split(' ')
-                    .map((part, index, arr) =>
-                      index === arr.length - 1 ? part.charAt(0) + '.' : part + ' '
-                    )
-                    .join('')
-                : title}
-            </h3>
+            <h3 className=" font-bold text-grey-700 max-w-60 truncate">{title}</h3>
             {rating && variant === 'primary' && <StarRating rating={rating} />}
             <RightChevronIcon className="w-2 h-3" />
           </div>
@@ -99,8 +99,8 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
       </Link>
 
       {!!bio && (
-        <div className="flex  sm:w-2/5 items-center mt-2">
-          <p className=" text-grey-700 ml-0 line-clamp-2">{bio}</p>
+        <div className="flex w-full sm:w-2/3 items-center mt-2">
+          <LongDescription scrollToTop={false} text={bio} maxLines={2} />
         </div>
       )}
     </>

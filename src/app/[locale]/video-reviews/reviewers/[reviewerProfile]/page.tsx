@@ -1,4 +1,4 @@
-import { getProfile } from '@/src/app/actions/actions';
+import { getAllCategories, getProfile } from '@/src/app/actions/actions';
 import { InterestsCategories } from '@/src/app/components/client/InterestsCategories';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
 import { ShareButton } from '@/src/app/components/client/ShareButton';
@@ -6,7 +6,8 @@ import { Avatar } from '@/src/app/components/server/Avatar';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
-import { NextPage } from 'next';
+import { Metadata, NextPage } from 'next';
+import { notFound } from 'next/navigation';
 
 const sampleText = `
 Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
@@ -21,17 +22,37 @@ type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, reviewerProfile } = await params;
+  const { t } = await getDictionary();
+  const { data } = await getProfile({
+    lang: locale,
+    gridType: 'creator',
+    id: reviewerProfile,
+  });
+
+  return {
+    title: t('reviewerProfile.siteTitle', { creatorFirstname: data?.firstName }),
+    description: t('reviewerProfile.metaDescription', { creatorFirstname: data?.firstName }),
+  };
+}
+
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { locale, reviewerProfile } = await params;
   const { interest } = (await searchParams) ?? '';
   const { t } = await getDictionary();
 
+  const { data: allCategories } = await getAllCategories(locale);
+
   const { data } = await getProfile({
     lang: locale,
     gridType: 'creator',
     id: reviewerProfile,
-    category: interest as string,
+    category: allCategories.find(i => i.categoryData[locale].urlSlug === interest)?.id as string,
   });
+  if (!data) {
+    notFound();
+  }
 
   return (
     <div className="w-full bg-white">
@@ -47,7 +68,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
               <h1 className=" text-lg md:text-2xl font-extrabold text-grey-700 ">{data?.name}</h1>
               <div className="mb-3">
                 <p className="text-grey-500">
-                  {data?.age} {data?.location}, {data?.country}
+                  {data?.age}, {data?.location}, {data?.country}
                 </p>
               </div>
               <div className="hidden md:block">
@@ -70,8 +91,8 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
         </section>
 
         <section className="pt-5 md:pt-[50px]">
-          <h3 className="text-lg font-extrabold mb-4 text-grey-700 md:hidden">{t('interests')}</h3>
-          <InterestsCategories interests={data?.interests} />
+          <h3 className="text-lg font-extrabold mb-4 text-grey-700">{t('interests')}</h3>
+          <InterestsCategories interests={data?.interests} allCategories={allCategories} />
         </section>
 
         <section className=" py-7 md:py-[50px]">
