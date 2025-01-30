@@ -38,7 +38,7 @@ export const VideoInfo: FunctionComponent<VideoInfoProps> = ({ video, isVideoDet
             <Avatar src={video?.brand?.logo} alt={video?.brand?.name} />
           </Link>
           <div className="flex flex-col flex-1">
-            <Link href={`/explore/productcategory/${video?.category?.slug}`}>
+            <Link href={`/explore/product/${video?.product?.productSlug}`}>
               <span className="text-sm">{video?.product.productName}</span>
             </Link>
             <div className="flex gap-2 items-center -mt-0.5">

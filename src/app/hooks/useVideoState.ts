@@ -5,6 +5,7 @@ export type VideoState = {
   videos: VideoResponse[];
   loading: boolean;
   error: string | null;
+  isMoreVideos: boolean;
 };
 
 export const useVideoState = () => {
@@ -12,19 +13,20 @@ export const useVideoState = () => {
     videos: [],
     loading: false,
     error: null,
+    isMoreVideos: true,
   });
 
   const operations = useMemo(
     () => ({
-      addVideos: (newVideos: VideoResponse[]) => {
-        setState(prev => {
-          const videoMap = new Map(prev.videos.map(video => [video.id, video]));
-          newVideos.forEach(video => videoMap.set(video.id, video));
-          return {
-            ...prev,
-            videos: Array.from(videoMap.values()),
-          };
-        });
+      addVideos: (newVideos: VideoResponse[], isMoreVideos: boolean) => {
+        setState(prev => ({
+          ...prev,
+          videos: [...prev.videos, ...newVideos],
+          isMoreVideos: isMoreVideos,
+        }));
+      },
+      clearVideos: () => {
+        setState(prev => ({ ...prev, videos: [], isMoreVideos: true }));
       },
       setLoading: (loading: boolean) => {
         setState(prev => (prev.loading === loading ? prev : { ...prev, loading }));

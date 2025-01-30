@@ -17,14 +17,14 @@ export const RetailerSection: FunctionComponent = () => {
             partnername: retailer.name,
           })}
           href={retailer.webkitURL}
-          className="h-[50px] w-max bg-white flex items-center justify-center rounded-full border border-black overflow-hidden focus:outline-none focus:ring-0 px-6 md:px-8"
+          className="h-[50px] min-w-52 w-full bg-white flex items-center justify-center rounded-full border border-black overflow-hidden focus:outline-none focus:ring-0 px-6 md:px-8"
         >
           <Image
             src={retailer.logo}
             alt={retailer.name}
-            width={100}
+            width={200}
             height={32}
-            className=" h-11"
+            className=" h-11 "
           />
         </Link>
       ))}

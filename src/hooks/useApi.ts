@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import axios, { AxiosResponse, AxiosError } from 'axios';
+import { useLocale } from 'next-intl';
 
 // Base response type
 export type ApiResponse<T> = {
@@ -25,6 +26,7 @@ type ApiCallResult<T> = {
 export const useApiCall = <T>(): ApiCallResult<T> => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const locale = useLocale();
 
   const handleRequest = useCallback(
     async <R>(
@@ -41,20 +43,29 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
           typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_ENDPOINT_URL;
         const apiURL = url.startsWith('http') ? url : `${baseUrl}/api${url}`;
 
+        const headers = {
+          lang: locale,
+        };
+
         switch (method) {
           case 'post':
-            response = await axios.post<ApiResponse<R>>(apiURL, payload);
+            response = await axios.post<ApiResponse<R>>(apiURL, payload, { headers });
             break;
           case 'put':
-            response = await axios.put<ApiResponse<R>>(apiURL, payload);
+            response = await axios.put<ApiResponse<R>>(apiURL, payload, { headers });
             break;
           case 'delete':
-            response = await axios.delete<ApiResponse<R>>(apiURL, { data: payload });
+            response = await axios.delete<ApiResponse<R>>(apiURL, {
+              headers,
+              data: payload,
+            });
             break;
           default:
-            response = await axios.get<ApiResponse<R>>(apiURL, { params: payload });
+            response = await axios.get<ApiResponse<R>>(apiURL, {
+              headers,
+              params: payload,
+            });
         }
-
         return response.data;
       } catch (err) {
         const axiosError = err as AxiosError;
@@ -64,7 +75,7 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
         setLoading(false);
       }
     },
-    []
+    [locale]
   );
 
   const get = useCallback(

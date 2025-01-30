@@ -6,10 +6,11 @@ import { usePathname } from '@/src/i18n/routing';
 import { useLocale } from 'next-intl';
 
 type Props = {
-  id: number;
+  id?: string;
   playbackId: string;
+  isVideoDetails?: boolean;
 };
-export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id }) => {
+export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id, isVideoDetails }) => {
   const playerRef = useRef<MuxPlayerRefAttributes>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -37,12 +38,22 @@ export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id }) => {
 
   useEffect(() => {
     if (!playerRef.current) return;
-    if (pathname.includes(`${id}`)) {
+    if (isVideoDetails) {
       playerRef.current.play().catch(console.log);
+      return;
+    }
+    if (pathname.includes(id ? id?.split('-')[0] : '')) {
+      const activeVideoId = localStorage.getItem('activeVideoId');
+
+      if (activeVideoId === id) {
+        playerRef.current.play().catch(console.log);
+      } else {
+        playerRef.current.pause();
+      }
     } else {
       playerRef.current.pause();
     }
-  }, [pathname, id]);
+  }, [id, pathname, isVideoDetails]);
 
   return (
     <div ref={containerRef} className={`w-full h-full relative `}>

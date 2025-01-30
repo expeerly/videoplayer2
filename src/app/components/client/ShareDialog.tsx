@@ -35,10 +35,8 @@ export const ShareDialog: FunctionComponent<Props> = ({ isOpen, video, onClose }
   const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setUrl(window.location.href);
-    }
-  }, []);
+    setUrl(`${process.env.SITEBASEURL}/explore/${video.id}`);
+  }, [video]);
 
   const generateShareLink = useCallback(
     (platform: string) => {

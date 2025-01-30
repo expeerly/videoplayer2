@@ -1,8 +1,10 @@
 import { useRef, useEffect } from 'react';
 
+type VideoVisibilityCallback = (videoId: string, index: string) => void;
+
 export const useVideoScroll = (
   containerRef: React.RefObject<HTMLDivElement | null>,
-  onVideoVisible: (videoId: string) => void
+  onVideoVisible: VideoVisibilityCallback
 ) => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const callbackRef = useRef(onVideoVisible);
@@ -26,9 +28,12 @@ export const useVideoScroll = (
       const visibleEntry = entries.find(entry => entry.isIntersecting);
       if (!visibleEntry?.target) return;
 
-      const videoId = visibleEntry.target.getAttribute('data-video-id');
-      if (videoId) {
-        callbackRef.current(videoId);
+      const videoElement = visibleEntry.target;
+      const videoId = videoElement.getAttribute('data-video-id');
+      const videoUniqueId = videoElement.getAttribute('data-video-unique-id');
+
+      if (videoId && videoUniqueId) {
+        callbackRef.current(videoId, videoUniqueId);
       }
     };
 
