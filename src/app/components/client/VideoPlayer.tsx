@@ -69,7 +69,7 @@ export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id, isVideoD
           video_title: ' ',
         }}
         defaultHiddenCaptions={false}
-        onCanPlay={onCanPlay}
+        onLoadedData={onCanPlay}
       />
     </div>
   );

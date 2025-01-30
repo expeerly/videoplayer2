@@ -1,13 +1,20 @@
-import { useRef, useCallback, useState } from 'react';
+import { useRef, useCallback, useState, useEffect } from 'react';
 
 import { useVideoState } from './useVideoState';
 import { useApiCall } from '@/src/hooks/useApi';
 import { VideoResponse } from '@/src/db/types';
+import { notFound } from 'next/navigation';
 
 export const useVideoFetching = (operations: ReturnType<typeof useVideoState>['operations']) => {
-  const { get } = useApiCall();
+  const { get, error } = useApiCall();
   const [lastVideosIds, setLastVideosIds] = useState<number[]>([]);
   const fetchingRef = useRef(false);
+
+  useEffect(() => {
+    if (error?.status === 404) {
+      notFound();
+    }
+  }, [error]);
 
   return useCallback(
     async (videoId?: string, type?: string, slug?: string) => {
@@ -28,6 +35,7 @@ export const useVideoFetching = (operations: ReturnType<typeof useVideoState>['o
           const res = await get<VideoResponse>(
             `/video/${videoId}/?videoIds=${lastVideosIds.join(',')}`
           );
+
           if (!!res?.data.id) {
             operations.addVideos([res.data], true);
             setLastVideosIds([res.data.id]);
@@ -53,6 +61,7 @@ export const useVideoFetching = (operations: ReturnType<typeof useVideoState>['o
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Failed to fetch videos';
         operations.setError(errorMessage);
+        notFound();
       } finally {
         operations.setLoading(false);
         fetchingRef.current = false;

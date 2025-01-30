@@ -16,7 +16,7 @@ type RequestPayload = Record<string, unknown>;
 // API call result type
 type ApiCallResult<T> = {
   loading: boolean;
-  error: string | null;
+  error: AxiosError | undefined;
   get: <R = T>(url: string, params?: RequestParams) => Promise<ApiResponse<R> | null>;
   post: <R = T>(url: string, payload: RequestPayload) => Promise<ApiResponse<R> | null>;
   put: <R = T>(url: string, payload: RequestPayload) => Promise<ApiResponse<R> | null>;
@@ -25,7 +25,7 @@ type ApiCallResult<T> = {
 
 export const useApiCall = <T>(): ApiCallResult<T> => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AxiosError>();
   const locale = useLocale();
 
   const handleRequest = useCallback(
@@ -35,7 +35,7 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
       payload?: RequestParams | RequestPayload
     ): Promise<ApiResponse<R> | null> => {
       setLoading(true);
-      setError(null);
+      setError(undefined);
 
       try {
         let response: AxiosResponse<ApiResponse<R>>;
@@ -69,7 +69,7 @@ export const useApiCall = <T>(): ApiCallResult<T> => {
         return response.data;
       } catch (err) {
         const axiosError = err as AxiosError;
-        setError(axiosError.message);
+        setError(axiosError);
         return null;
       } finally {
         setLoading(false);
