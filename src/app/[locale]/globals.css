@@ -26,3 +26,10 @@ mux-player {
 mux-player::part(video) {
   --media-webkit-text-track-transform: translateY(-120px) scale(0.98);
 }
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
