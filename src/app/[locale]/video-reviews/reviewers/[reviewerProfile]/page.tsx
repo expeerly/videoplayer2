@@ -72,7 +72,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
                 </p>
               </div>
               <div className="hidden md:block">
-                <LongDescription text={data?.bio || ''} />
+                <LongDescription text={data?.bio || ''} paragraphClassName="text-grey-700" />
               </div>
             </div>
             <div
