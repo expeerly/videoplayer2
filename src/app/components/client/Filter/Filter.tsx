@@ -395,15 +395,6 @@ const FilterComponent: FunctionComponent<Props> = ({ categoriesList, brandsList 
 
           <div className="flex-wrap flex gap-4 py-3 px-5 border-t justify-center md:border-t-0 md:pb-[30px] mobileL:flex-nowrap">
             <Button
-              href={`/video-reviews/${activeTab === 'brands' ? 'brand' : 'productcategory'}`}
-              variant="outline"
-              size="lg"
-              aria-label={t('view_all.aria_label')}
-              className="h-11 !px-0 text-center w-full"
-            >
-              {t('view_all.label')}
-            </Button>
-            <Button
               onClick={buttonState.onClick}
               size="lg"
               variant={buttonState.variant}
