@@ -36,6 +36,9 @@
   "singleReview": "Recensione",
   "reviews": "Recensioni",
   "rating": "Punteggio",
+  "exploreSiteTitle": "Expeerly - Scopri le recensioni video",
+  "exploreMetaDescription": "Scopri le ultime recensioni video di prodotti e servizi dei tuoi marchi preferiti. I nostri tester condividono le loro esperienze attuali.",
+  "explore_no_more_videos": "Non ci sono altri video da vedere.",
   "reviewerProfile": {
     "siteTitle": "Recensioni video {creatorFirstname}",
     "metaDescription": "Guarda le recensioni video di {creatorFirstname} e ottieni le migliori informazioni su prodotti e servizi."

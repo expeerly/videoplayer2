@@ -1,5 +1,5 @@
 import { RightChevronIcon } from '@/src/assets/icons';
-import { Avatar } from './Avatar';
+import { Avatar } from '../client/Avatar';
 import { FunctionComponent } from 'react';
 import { StarRating } from './StarRating';
 import Link from 'next/link';

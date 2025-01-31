@@ -36,6 +36,9 @@
   "singleReview": "Avis",
   "reviews": "Avis",
   "rating": "Note",
+  "exploreSiteTitle": "Expeerly - Découvrez les critiques vidéo",
+  "exploreMetaDescription": "Découvrez les dernières critiques vidéo des produits et services de vos marques préférées. Nos testeurs partagent leurs expériences actuelles.",
+  "explore_no_more_videos": "Il n'y a plus de vidéos à voir.",
   "reviewerProfile": {
     "siteTitle": "Avis vidéos {creatorFirstname}",
     "metaDescription": "Regardez les avis vidéo de {creatorFirstname} et obtenez les meilleurs insights sur les produits et service"

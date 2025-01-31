@@ -1,13 +1,13 @@
 import { getAllCategories, getProfile } from '@/src/app/actions/actions';
 import { InterestsCategories } from '@/src/app/components/client/InterestsCategories';
 import { LongDescription } from '@/src/app/components/client/LongDescription';
-import { ShareButton } from '@/src/app/components/client/ShareButton';
-import { Avatar } from '@/src/app/components/server/Avatar';
+import { Avatar } from '@/src/app/components/client/Avatar';
 import { ReviewGrid } from '@/src/app/components/server/ReviewGrid';
 import { Languages } from '@/src/db/types';
 import { getDictionary } from '@/src/lib/dictionary';
 import { Metadata, NextPage } from 'next';
 import { notFound } from 'next/navigation';
+import { ShareDialog } from '@/src/app/components/client/ShareDialog';
 
 const sampleText = `
 Dyson technology. Solving the problems others ignore. Be the first to know about our latest releases, so you can enjoy discounts and other perks. Tempor amet in integer diam interdum. Amet rhoncus pellentesque lacus quam nunc nunc nec elit. Urna semper donec fermentum blandit lorem vel ut ullamcorper malesuada.
@@ -95,9 +95,13 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
                 'flex flex-col gap-0.5 md:absolute md:m-0 md:top-10 md:right-8 mid-lg:right-12'
               }
             >
-              <ShareButton title={data?.name} text={''} />
-
-              <p className="text-grey-700 text-xs font-bold">Share</p>
+              <ShareDialog
+                data={{
+                  title: data?.name,
+                  description: t(data?.bio || ''),
+                }}
+                hasEmbed={false}
+              />
             </div>
           </div>
           <div className=" md:hidden">

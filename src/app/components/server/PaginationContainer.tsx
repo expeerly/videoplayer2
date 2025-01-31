@@ -19,6 +19,7 @@ type Props = {
 };
 
 export const PaginationContainer: FunctionComponent<Props> = ({ data, header, ctaBlock }) => {
+  console.log(data.total);
   return (
     <div>
       {data?.rows?.map((i, index) => (
@@ -40,9 +41,11 @@ export const PaginationContainer: FunctionComponent<Props> = ({ data, header, ct
           )}
         </React.Fragment>
       ))}
-      <section className="py-8">
-        <Pagination totalPages={Math.ceil(data?.total / 4)} />
-      </section>
+      {Number(data?.total) > 4 && (
+        <section className="py-8">
+          <Pagination totalPages={Math.ceil(data?.total / 4)} />
+        </section>
+      )}
       {!!ctaBlock && (
         <div className=" md:hidden">
           <CTABlock {...ctaBlock} />

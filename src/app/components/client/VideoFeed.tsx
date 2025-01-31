@@ -10,8 +10,8 @@ import { useVideoFetching } from '../../hooks/useVideoFetching';
 import { useVideoScroll } from '../../hooks/useVideoScroll';
 import { VideoCard } from '../server/Video/VideoCard';
 import { Spinner } from './Spinner';
-import { Button } from './Button';
-import { BinocularsIcon } from '@/src/assets/icons';
+import clsx from 'clsx';
+import { useTranslations } from 'next-intl';
 
 // Types
 type VideoContainerProps = {
@@ -50,35 +50,22 @@ const LoadingSpinner: FunctionComponent = () => (
 const VideoContainer: FunctionComponent<VideoContainerProps> = ({
   video,
   uniqueId,
-  clearVideos,
   isMoreVideos,
-}) => (
-  <div
-    className="video-container h-full snap-start snap-always pb-4 sm:h-[95%] sm:py-6"
-    data-video-id={video.id}
-    data-video-unique-id={uniqueId}
-  >
-    {'playbackId' in video && (
-      <>
-        <VideoCard video={video as VideoResponse} videoId={uniqueId} />
+}) => {
+  const t = useTranslations();
 
-        {!isMoreVideos && (
-          <div className="text-gray-500 flex flex-col gap-2 w-full mx-auto sm:max-w-[441px] md:pr-[58px]">
-            <p className="text-grey-700 text-center">There are no more videos to watch.</p>
-            <Button
-              variant="outline"
-              href={ROUTES.EXPLORE}
-              className="!text-grey-700 !border-black hover:border-black"
-              onClick={clearVideos}
-            >
-              <BinocularsIcon /> Go to explore
-            </Button>
-          </div>
-        )}
-      </>
-    )}
-  </div>
-);
+  return (
+    <div
+      className={clsx('video-container h-full snap-start snap-always pb-4 sm:py-6 sm:h-[95%] ')}
+      data-video-id={video.id}
+      data-video-unique-id={uniqueId}
+    >
+      <VideoCard video={video as VideoResponse} videoId={uniqueId} />
+
+      {!isMoreVideos && <p className="text-grey-700 text-center">{t('explore_no_more_videos')}</p>}
+    </div>
+  );
+};
 
 // Main component
 export const VideoFeed: FunctionComponent = () => {

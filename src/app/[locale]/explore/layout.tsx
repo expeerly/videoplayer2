@@ -1,6 +1,17 @@
 import React, { FunctionComponent } from 'react';
 import Drawer from '../../components/client/Drawer';
 import { VideoFeed } from '../../components/client/VideoFeed';
+import { Metadata } from 'next';
+import { getDictionary } from '@/src/lib/dictionary';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDictionary();
+
+  return {
+    title: t('exploreSiteTitle'),
+    description: t('exploreMetaDescription'),
+  };
+}
 
 const VideoFeedLayout: FunctionComponent = () => {
   return (

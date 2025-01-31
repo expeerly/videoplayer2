@@ -52,7 +52,7 @@ async function apiRequest<T>(
       headers: {
         lang: options.lang,
       },
-      // next: { revalidate: options.revalidate ?? 600 },
+      next: { revalidate: options.revalidate ?? 3600 },
     });
 
     const data = await response.json();

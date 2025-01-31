@@ -1,5 +1,5 @@
 import { LongDescription } from '@/src/app/components/client/LongDescription';
-import { Avatar } from '@/src/app/components/server/Avatar';
+import { Avatar } from '@/src/app/components/client/Avatar';
 import { Metadata, NextPage } from 'next';
 import { PageHeading } from '@/src/app/components/server/PageHeading';
 import { SEOSection } from '@/src/app/components/server/SEOSection';
@@ -7,8 +7,8 @@ import { Languages } from '@/src/db/types';
 import { getPageInfo } from '@/src/app/actions/actions';
 import { ProfileGrid } from '../../../../components/server/ProfileGrid';
 import { getDictionary } from '@/src/lib/dictionary';
-import { ShareButton } from '@/src/app/components/client/ShareButton';
 import { notFound } from 'next/navigation';
+import { ShareDialog } from '@/src/app/components/client/ShareDialog';
 
 type PageProps = {
   params: Promise<{
@@ -79,9 +79,13 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
                   'flex flex-col gap-0.5 justify-center items-center md:absolute md:m-0 md:top-10 md:right-12'
                 }
               >
-                <ShareButton title={data?.name} text={''} />
-
-                <p className="text-grey-700 text-xs font-bold">Share</p>
+                <ShareDialog
+                  data={{
+                    title: data?.name,
+                    description: t(data?.bodyText),
+                  }}
+                  hasEmbed={false}
+                />
               </div>
             </div>
             <LongDescription text={data.bodyText} />
