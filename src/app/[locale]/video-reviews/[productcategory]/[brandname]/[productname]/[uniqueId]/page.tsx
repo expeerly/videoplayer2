@@ -101,26 +101,28 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         <div className="pt-7">
           <VideoDetails data={videoDetails} />
         </div>
-        <Divider className="my-5 md:my-6" />
       </div>
 
       {relatedVideos.videos?.length > 1 && (
-        <div className="flex w-full justify-center flex-col gap-6 mb-16 md:mx-auto md:w-max">
-          <h1 className="px-5 text-left font-extrabold text-2xl text-grey-700 w-full md:text-center">
-            {t('moreVideosOn')} {video.product.productName}
-          </h1>
-          <div className="w-full md:max-w-[531px]">
-            <ReviewGrid
-              classNames={{
-                gridClassName: '!gap-[15px] md:justify-center',
-              }}
-              header={{
-                variant: 'secondary',
-              }}
-              data={relatedVideos}
-            />
+        <>
+          <Divider className="my-5 md:my-6" />
+          <div className="flex w-full justify-center flex-col gap-6 mb-16 md:mx-auto md:w-max">
+            <h1 className="px-5 text-left font-extrabold text-2xl text-grey-700 w-full md:text-center">
+              {t('moreVideosOn')} {video.product.productName}
+            </h1>
+            <div className="w-full md:max-w-[531px]">
+              <ReviewGrid
+                classNames={{
+                  gridClassName: '!gap-[15px] md:justify-center',
+                }}
+                header={{
+                  variant: 'secondary',
+                }}
+                data={relatedVideos}
+              />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

@@ -100,7 +100,12 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
 
       {!!bio && (
         <div className="flex w-full sm:w-2/3 items-center mt-2">
-          <LongDescription scrollToTop={false} text={bio} maxLines={2} />
+          <LongDescription
+            scrollToTop={false}
+            text={bio}
+            maxLines={2}
+            paragraphClassName="text-grey-700"
+          />
         </div>
       )}
     </>

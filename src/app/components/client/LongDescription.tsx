@@ -7,6 +7,7 @@ type LongDescriptionProps = {
   text: string;
   maxLines?: number;
   className?: string;
+  paragraphClassName?: string;
   scrollToTop?: boolean;
 };
 
@@ -14,6 +15,7 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
   text,
   maxLines = 3,
   className = '',
+  paragraphClassName = '',
   scrollToTop = true,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -60,7 +62,11 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
       <p
         ref={contentRef}
         onClick={toggleExpansion}
-        className={clsx('text-sm md:text-base text-gray-500 cursor-pointer', lineClamp)}
+        className={clsx(
+          'text-sm md:text-base text-grey-500 cursor-pointer',
+          lineClamp,
+          paragraphClassName
+        )}
       >
         {text}
         {shouldShowButton && (
