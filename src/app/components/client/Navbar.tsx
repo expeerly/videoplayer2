@@ -65,15 +65,24 @@ const NavbarComponent: FunctionComponent<Props> = ({ categories }) => {
   );
 
   useEffect(() => {
-    if (
-      (pathname.includes('/explore') || pathname.includes('no-more-videos')) &&
-      userHistory[userHistory.length - 1]?.includes('/explore')
-    ) {
+    if (pathname.includes('/explore')) {
       return;
     }
+
+    if (userHistory.length > 1 && pathname === userHistory[userHistory.length - 1]) {
+      console.log('here', userHistory[userHistory.length - 1]);
+      dispatch({
+        type: 'USER_HISTORY',
+        payload: userHistory.slice(0, -1),
+      });
+    }
+
     dispatch({ type: 'USER_HISTORY', payload: [...userHistory, pathname] });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, pathname]);
+
+  console.log(userHistory);
 
   return (
     <header className={headerClasses}>

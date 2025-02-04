@@ -90,7 +90,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   return (
     <div className="w-full items-center flex flex-col md:w-max md:mx-auto overflow-auto h-full z-50">
-      <div className="flex w-full h-[90vh] md:h-[calc(100vh-150px)] pt-6">
+      <div className="flex w-full h-[90vh] md:h-[calc(100vh-150px)] md:pt-6">
         <VideoCard key={video.id} video={video} isVideoDetails isFirst />
       </div>
       <div className="w-full px-5 flex flex-col md:max-w-[497px] mx-auto pt-7 md:pt-2 md:px-0 relative">

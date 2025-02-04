@@ -81,7 +81,7 @@ export const ShareDialog: FunctionComponent<Props> = ({ video, hasEmbed = true, 
       };
       return links[platform] || '#';
     },
-    [url, video, data]
+    [url, video, data, hasEmbed]
   );
 
   const handleShare = useCallback(

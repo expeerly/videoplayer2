@@ -36,7 +36,6 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
       setShouldShowButton(hasOverflow);
     };
 
-    // Check on mount and window resize
     checkOverflow();
     window.addEventListener('resize', checkOverflow);
 
@@ -52,9 +51,11 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
     setIsExpanded(!isExpanded);
   };
 
-  const lineClamp = clsx({
-    [`line-clamp-${maxLines}`]: !isExpanded,
+  const textClassName = clsx({
+    [`line-clamp-3`]: !isExpanded && maxLines === 3,
+    [`line-clamp-2`]: !isExpanded && maxLines === 2,
     'line-clamp-none': isExpanded,
+    [paragraphClassName]: paragraphClassName,
   });
 
   return (
@@ -62,11 +63,7 @@ export const LongDescription: FunctionComponent<LongDescriptionProps> = ({
       <p
         ref={contentRef}
         onClick={toggleExpansion}
-        className={clsx(
-          'text-sm md:text-base text-grey-500 cursor-pointer',
-          lineClamp,
-          paragraphClassName
-        )}
+        className={clsx('text-sm md:text-base text-grey-500 cursor-pointer', textClassName)}
       >
         {text}
         {shouldShowButton && (

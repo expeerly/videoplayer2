@@ -56,13 +56,18 @@ const VideoContainer: FunctionComponent<VideoContainerProps> = ({
 
   return (
     <div
-      className={clsx('video-container h-full snap-start snap-always pb-4 sm:py-6 sm:h-[95%] ')}
+      className={clsx('video-container h-full snap-start snap-always pb-4 sm:py-6', {
+        'sm:h-full sm:pb-0': !isMoreVideos,
+        'sm:h-[95%]': isMoreVideos,
+      })}
       data-video-id={video.id}
       data-video-unique-id={uniqueId}
     >
-      <VideoCard video={video as VideoResponse} videoId={uniqueId} />
+      <VideoCard video={video} videoId={uniqueId} />
 
-      {!isMoreVideos && <p className="text-grey-700 text-center">{t('explore_no_more_videos')}</p>}
+      {!isMoreVideos && (
+        <p className="text-grey-700 text-center md:py-5">{t('explore_no_more_videos')}</p>
+      )}
     </div>
   );
 };
@@ -153,8 +158,13 @@ export const VideoFeed: FunctionComponent = () => {
   }, [navigationDeps, fetchVideos]);
 
   useEffect(() => {
-    const entryPath = userHistory[userHistory.length - 2];
-    const handleBack = () => router.push(entryPath || '/');
+    const handleBack = () => {
+      if (userHistory.length > 1) {
+        window.history.go(-1);
+      } else {
+        router.push('/');
+      }
+    };
 
     window.addEventListener('popstate', handleBack);
     return () => window.removeEventListener('popstate', handleBack);

@@ -7,6 +7,7 @@ import { useSharedDispatch, useSharedState } from '../../context/reducer';
 import { Button } from './Button';
 import Link from 'next/link';
 import { VideoResponse } from '@/src/db/types';
+import { useRouter } from 'next/navigation';
 
 type VideoActionsProps = {
   video: VideoResponse;
@@ -17,6 +18,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
   const t = useTranslations();
   const dispatch = useSharedDispatch();
   const { videoDetailsDrawer, userHistory } = useSharedState();
+  const router = useRouter();
 
   const moreButtonHandler = useCallback(() => {
     if (isVideoDetails) {
@@ -39,6 +41,24 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     }
   }, [isVideoDetails, videoDetailsDrawer, dispatch]);
 
+  const closeButtonHandler = useCallback(() => {
+    const tabHistoryLength = window.history.length;
+    const userHistoryLength = userHistory.length;
+
+    if (userHistory.length <= 1) {
+      router.push('/');
+      return;
+    }
+    if (isVideoDetails) {
+      window.history.back();
+      return;
+    }
+
+    if (tabHistoryLength >= userHistoryLength) {
+      window.history.go(-1);
+    }
+  }, [isVideoDetails, router, userHistory]);
+
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
       <Button
@@ -46,7 +66,7 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
         variant={'secondary'}
         size="sm"
         className="!bg-opacity-50 md:!bg-opacity-100 !bg-grey-500"
-        href={userHistory[userHistory.length - 2] ?? '/'}
+        onClick={closeButtonHandler}
       >
         <CloseIcon className="[&>g>path]:!fill-white" />
       </Button>

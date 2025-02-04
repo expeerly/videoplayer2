@@ -20,6 +20,8 @@ export type ProfileCardProps = {
   country?: string;
   rating?: number;
   imageUrl?: string;
+
+  isExpanded?: boolean;
 };
 
 export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
@@ -34,6 +36,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
   location,
   country,
   rating,
+  isExpanded = false,
 }) => {
   const { t } = await getDictionary();
 
@@ -100,12 +103,18 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
 
       {!!bio && (
         <div className="flex w-full sm:w-2/3 items-center mt-2">
-          <LongDescription
-            scrollToTop={false}
-            text={bio}
-            maxLines={2}
-            paragraphClassName="text-grey-700"
-          />
+          {isExpanded ? (
+            <LongDescription
+              scrollToTop={false}
+              text={bio}
+              maxLines={2}
+              paragraphClassName="text-grey-700"
+            />
+          ) : (
+            <Link href={url} className="text-sm text-grey-700 line-clamp-2">
+              {bio}
+            </Link>
+          )}
         </div>
       )}
     </>
