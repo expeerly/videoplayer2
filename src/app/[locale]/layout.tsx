@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { getMessages } from 'next-intl/server';
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import { Footer } from '@/src/app/components/server/Footer';
 import { Sidebar } from '@/src/app/components/server/Sidebar/Sidebar';
@@ -60,6 +61,7 @@ export default async function RootLayout({
                 <main className="flex-1 w-full md:w-[75%] mid-lg:w-[calc(100%-275px)] relative ">
                   {children}
                   <Analytics />
+                  <SpeedInsights />
                 </main>
               </div>
               <Footer />
