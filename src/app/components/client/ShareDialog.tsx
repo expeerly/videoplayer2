@@ -110,19 +110,7 @@ export const ShareDialog: FunctionComponent<Props> = ({ video, hasEmbed = true, 
       .catch(err => console.error('Failed to copy:', err));
   }, []);
 
-  const embedCode = useMemo(
-    () =>
-      `<iframe 
-        width="441px" 
-        height="784px" 
-        src="https://stream.mux.com/${video?.playbackId}/high.mp4"
-        title="${video?.videoTitle}" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        allowfullscreen
-      ></iframe>`,
-    [video]
-  );
+  const embedCode = useMemo(() => `https://stream.mux.com/${video?.playbackId}/high.mp4`, [video]);
 
   const toggleShareDialog = useCallback(async () => {
     if (isMobile({ tablet: true }) && navigator.share) {
