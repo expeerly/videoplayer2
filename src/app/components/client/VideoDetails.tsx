@@ -16,15 +16,16 @@ export const VideoDetails: FunctionComponent<Props> = ({ data }) => {
   return (
     <div className="w-full flex flex-col md:max-w-[497px]">
       {!!data?.summary && (
-        <section className="mb-5">
-          <SectionHeading className="mb-2 ">
-            {t('reviewSummary')} {data?.product?.productName}
-          </SectionHeading>
-          <p className="text-grey-700 font-normal text-base">{data?.summary}</p>
-        </section>
+        <>
+          <section className="mb-5">
+            <SectionHeading className="mb-2 ">
+              {t('reviewSummary')} {data?.product?.productName}
+            </SectionHeading>
+            <p className="text-grey-700 font-normal text-base">{data?.summary}</p>
+          </section>
+          <Divider />
+        </>
       )}
-
-      <Divider />
 
       <section className=" my-5 md:pt-6 md:pb-8">
         <SectionHeading className="mb-4">{t('productDetails')}</SectionHeading>

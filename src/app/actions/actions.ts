@@ -48,13 +48,21 @@ async function apiRequest<T>(
     const url = await createApiUrl(path, options.queryParams);
     console.info('Fetching:', url);
 
-    const response = await fetch(url, {
+    const fetchOptions: RequestInit & { next?: { revalidate?: number } } = {
       headers: {
         lang: options.lang,
       },
-      // next: { revalidate: options.revalidate ?? 600 },
-    });
+    };
 
+    // Only set cache options if revalidate is not 0
+    if (options.revalidate !== 0) {
+      fetchOptions.next = { revalidate: 3600 };
+      fetchOptions.cache = 'force-cache';
+    } else {
+      fetchOptions.cache = 'no-store';
+    }
+
+    const response = await fetch(url, fetchOptions);
     const data = await response.json();
 
     return data;

@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
   },
   env: {
     NEXT_ENDPOINT_URL: process.env.NEXT_ENDPOINT_URL,
+    SITEBASEURL: process.env.SITEBASEURL,
   },
 };
 

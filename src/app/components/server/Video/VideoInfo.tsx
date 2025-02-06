@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { VideoActions } from '../../client/VideoActions';
 import { StarRating } from '../StarRating';
-import { Avatar } from '../Avatar';
+import { Avatar } from '../../client/Avatar';
 import { Link } from '@/src/i18n/routing';
 import { BlueTick } from '@/src/assets/icons';
 import { VideoResponse } from '@/src/db/types';

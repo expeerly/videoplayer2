@@ -37,7 +37,7 @@ async function getCategoriesData() {
 
 async function findMatchingCategory(urlSlug: string) {
   const categories = await getCategoriesData();
-  return categories.data.find(category =>
+  return categories?.data?.find(category =>
     Object.values(category.categoryData).some(
       data => data.urlSlug.toLowerCase() === urlSlug.toLowerCase()
     )

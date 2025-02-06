@@ -1,13 +1,13 @@
 'use client';
-import React, { FunctionComponent, useCallback, useState } from 'react';
-import { BagIcon, CloseIcon, MoreIcon, ShareIcon } from '@/src/assets/icons';
+import React, { FunctionComponent, useCallback } from 'react';
+import { BagIcon, CloseIcon, MoreIcon } from '@/src/assets/icons';
 import { ShareDialog } from './ShareDialog';
-import isMobile from 'is-mobile';
 import { useTranslations } from 'next-intl';
 import { useSharedDispatch, useSharedState } from '../../context/reducer';
 import { Button } from './Button';
 import Link from 'next/link';
 import { VideoResponse } from '@/src/db/types';
+import { useRouter } from 'next/navigation';
 
 type VideoActionsProps = {
   video: VideoResponse;
@@ -15,10 +15,10 @@ type VideoActionsProps = {
 };
 
 export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVideoDetails }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const t = useTranslations();
   const dispatch = useSharedDispatch();
   const { videoDetailsDrawer, userHistory } = useSharedState();
+  const router = useRouter();
 
   const moreButtonHandler = useCallback(() => {
     if (isVideoDetails) {
@@ -41,24 +41,23 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
     }
   }, [isVideoDetails, videoDetailsDrawer, dispatch]);
 
-  const handleShare = useCallback(async () => {
-    if (isMobile({ tablet: true }) && navigator.share) {
-      try {
-        await navigator.share({
-          title: video.product.productName,
-          text: t('dynamic_texts.share_action.aria_label', {
-            productName: video.product.productName,
-            brandName: video.brand.name,
-          }),
-          url: window.location.href,
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-      }
-    } else {
-      setIsOpen(true);
+  const closeButtonHandler = useCallback(() => {
+    const tabHistoryLength = window.history.length;
+    const userHistoryLength = userHistory.length;
+
+    if (userHistory.length <= 1) {
+      router.push('/');
+      return;
     }
-  }, [t, video]);
+    if (isVideoDetails) {
+      window.history.back();
+      return;
+    }
+
+    if (tabHistoryLength >= userHistoryLength) {
+      window.history.go(-1);
+    }
+  }, [isVideoDetails, router, userHistory]);
 
   return (
     <div className="flex h-full flex-col items-center justify-between gap-6 ">
@@ -67,20 +66,13 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
         variant={'secondary'}
         size="sm"
         className="!bg-opacity-50 md:!bg-opacity-100 !bg-grey-500"
-        href={userHistory[userHistory.length - 2] ?? '/'}
+        onClick={closeButtonHandler}
       >
         <CloseIcon className="[&>g>path]:!fill-white" />
       </Button>
 
       <div className="flex flex-col gap-6">
-        <button className="flex flex-col items-center gap-1 text-sm font-semibold">
-          <div
-            className={`w-10 h-10 bg-grey-500 rounded-full flex items-center justify-center text-white !bg-opacity-50 md:!bg-opacity-100`}
-          >
-            <ShareIcon onClick={handleShare} />
-          </div>
-          {t('dynamic_texts.share.label')}
-        </button>
+        <ShareDialog video={video} />
 
         <button
           onClick={moreButtonHandler}
@@ -107,8 +99,6 @@ export const VideoActions: FunctionComponent<VideoActionsProps> = ({ video, isVi
           <p>{t('shop')}</p>
         </Link>
       </div>
-
-      <ShareDialog video={video} isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 };

@@ -35,10 +35,6 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
     const showEllipsisStart = currentPage > 3;
     const showEllipsisEnd = currentPage < totalPages - 2;
 
-    if (totalPages <= 7) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
-
     // Always show first page
     pages.push(1);
 
@@ -47,11 +43,13 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
     }
 
     // Calculate center pages
-    const start = Math.max(2, currentPage - 1);
-    const end = Math.min(totalPages - 1, currentPage + 1);
+    const start = Math.max(2, currentPage - 2);
+    const end = Math.min(totalPages - 1, currentPage + 2);
 
     for (let i = start; i <= end; i++) {
-      pages.push(i);
+      if (i > 1 && i < totalPages) {
+        pages.push(i);
+      }
     }
 
     if (showEllipsisEnd) {
@@ -119,19 +117,18 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
         <LeftChevronIcon className="[&>path]:stroke-grey-500" />
       </button>
 
-      {pageNumbers.length > 2 &&
-        pageNumbers.map((page, idx) => (
-          <button
-            key={`${page}-${idx}`}
-            onClick={() => typeof page === 'number' && handlePageChange(page)}
-            disabled={page === '...'}
-            className={pageButtonClassName(page)}
-            aria-current={currentPage === page ? 'page' : undefined}
-            aria-label={t('pagination', { pagenumber: page })}
-          >
-            {page}
-          </button>
-        ))}
+      {pageNumbers.map((page, idx) => (
+        <button
+          key={`${page}-${idx}`}
+          onClick={() => typeof page === 'number' && handlePageChange(page)}
+          disabled={page === '...'}
+          className={pageButtonClassName(page)}
+          aria-current={currentPage === page ? 'page' : undefined}
+          aria-label={t('pagination', { pagenumber: page })}
+        >
+          {page}
+        </button>
+      ))}
 
       <button
         onClick={() => handlePageChange(currentPage + 1)}

@@ -142,7 +142,7 @@ export const Button: FunctionComponent<PropsWithChildren<UnifiedButtonProps>> = 
     <button
       className={classes}
       {...(rest as ButtonElementProps)}
-      disabled={loading ?? rest.disabled}
+      disabled={loading || rest.disabled}
     >
       {loading ? <Spinner size={size} /> : content}
     </button>

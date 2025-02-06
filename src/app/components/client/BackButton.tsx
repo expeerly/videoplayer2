@@ -5,6 +5,7 @@ import { Button } from './Button';
 import clsx from 'clsx';
 import { LeftChevronIcon } from '@/src/assets/icons';
 import { usePathname, useRouter } from '@/src/i18n/routing';
+import { useSharedState } from '../../context/reducer';
 
 type Props = {
   className?: string;
@@ -14,18 +15,19 @@ export const BackButton: FunctionComponent<Props> = ({ className }) => {
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname === '/';
+  const { userHistory } = useSharedState();
 
   const goBack = useCallback(() => {
     if (isHomePage) {
       return;
     }
 
-    if (window && window.history.length > 2) {
+    if (userHistory.length > 1) {
       router.back();
     } else {
       router.push('/');
     }
-  }, [isHomePage, router]);
+  }, [isHomePage, router, userHistory]);
 
   const backButtonClasses = useMemo(
     () =>

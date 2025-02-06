@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { VideoThumbnail } from './VideoThumbnail';
 import { StarRating } from './StarRating';
-import { Avatar } from './Avatar';
+import { Avatar } from '../client/Avatar';
 import clsx from 'clsx';
 import { GridVideo } from '@/src/db/types';
 import Link from 'next/link';

@@ -35,6 +35,9 @@
   "singleReview": "Review",
   "reviews": "Reviews",
   "rating": "Rating",
+  "exploreSiteTitle": "Expeerly - Explore Video Reviews",
+  "exploreMetaDescription": "Explore the latest Video Reviews on product and services from your favourite brands. Our Reviewers share the latest experiences.",
+  "explore_no_more_videos": "There are no more videos to watch.",
   "reviewerProfile": {
     "siteTitle": "Video Reviews by {creatorFirstname}",
     "metaDescription": "Watch video reviews by {creatorFirstname} and get the best insights on products and services."
