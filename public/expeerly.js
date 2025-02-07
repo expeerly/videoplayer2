@@ -4,15 +4,18 @@
    *
    * Finds all <expeerly> elements, retrieves config from their attributes,
    * fetches the video data from the Bubble endpoint, and renders a layout
+   * using the "Mulish" font throughout.
    */
   function expeerly() {
+    // to ensure the Mulish font is loaded from Google Fonts
+    ensureMulishFont();
+
     const expeerlyElements = document.querySelectorAll("expeerly");
     if (!expeerlyElements.length) {
       console.warn("Expeerly: No <expeerly> elements found on the page.");
       return;
     }
 
-    // For simple localization of the “(X reviews)” text
     const REVIEW_TEXT_MAP = {
       en: "reviews",
       de: "Bewertungen",
@@ -81,9 +84,7 @@
             }
           });
           const avgRating = sumRating / totalCount;
-          const avgRating1Decimal = (Math.round(avgRating * 10) / 10).toFixed(
-            1
-          );
+          const avgRating1Decimal = (Math.round(avgRating * 10) / 10).toFixed(1);
 
           // Slice displayed videos
           const videos = allVideos.slice(0, maxVideos);
@@ -96,11 +97,11 @@
 
           // Build final HTML
           let html = `
-          <div class="expeerly-wrapper" style="max-width:900px; margin:20px auto; padding:10px;">
+          <div class="expeerly-wrapper" style="margin:20px auto; padding:10px; font-family:'Mulish', sans-serif;">
             <!-- Header: Expeerly icon + rating + (X reviews) -->
             <div style="display:flex; flex-direction: column; align-items:flex-start; gap:10px; margin-bottom:8px;">
               <img src="${expeerlyLogo}" alt="Expeerly Logo" style="height:60px;" />
-              <!-- Put rating block below the logo with margin-top -->
+              <!-- Rating block below the logo -->
               <div style="display: flex; gap: 10px;">
                 <div style="font-size:1.5rem; color:#2C1277; font-weight:bold;">
                   ${avgRating1Decimal}
@@ -144,7 +145,6 @@
                   data-store-id="${storeId}"
                 >
                 </mux-player>
-                
                 <!-- Top-left rating + view count under it -->
                 <div style="position:absolute; top:8px; left:8px; color:white;">
                   <div style="display:flex; margin-bottom:4px;">
@@ -180,11 +180,11 @@
           html += `
             </div>
             <!-- Footer text -->
-            <div style="margin-top:12px; font-size:0.9rem; color:${accentColor}">
+            <div style="margin-top:12px; font-size:0.9rem; color:${accentColor};">
               <p>
                 ${FOOTER_TEXT_MAP[lang] || FOOTER_TEXT_MAP.en}
                 <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="color:${accentColor}; text-decoration:underline;">
-                  <strong>Expeerly.com</strong>
+                  <strong>Learn More</strong>
                 </a>
               </p>
             </div>
@@ -227,11 +227,25 @@
       } else {
         // Empty (unfilled) star
         return `
-          <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" style="margin-right:2px;">
+          <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="#E8E8EA" stroke="none" stroke-width="2" style="margin-right:2px;">
             <path d="M12 17.27l6.18 3.73-1.64-7.08L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.68-1.64 7.08L12 17.27z"/>
           </svg>
         `;
       }
+    }
+  }
+
+  // 2. Insert the <link> for Mulish font if not present
+  function ensureMulishFont() {
+    const existingLink = document.querySelector(
+      'link[href*="fonts.googleapis.com"][href*="Mulish"]'
+    );
+    if (!existingLink) {
+      const linkEl = document.createElement("link");
+      linkEl.rel = "stylesheet";
+      linkEl.href =
+        "https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap";
+      document.head.appendChild(linkEl);
     }
   }
 
