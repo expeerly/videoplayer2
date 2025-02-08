@@ -25,10 +25,10 @@
 
     // For localized footer text
     const FOOTER_TEXT_MAP = {
-      en: "Expeerly is an independent review community and service. Learn more.",
-      de: "Expeerly ist eine unabhängige Bewertungs-Community und Service. Mehr erfahren.",
-      fr: "Expeerly est une communauté et un service d'évaluation indépendant. En savoir plus.",
-      it: "Expeerly è una comunità e un servizio di recensioni indipendente. Scopri di più.",
+      en: `Expeerly is an independent review community and service. <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="color:#4B49EB; text-decoration:underline;">Learn more.</a>`,
+      de: `Expeerly ist eine unabhängige Bewertungs-Community und Service. <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="color:#4B49EB; text-decoration:underline;">Mehr erfahren.</a>`,
+      fr: `Expeerly est une communauté et un service d'évaluation indépendant. <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="color:#4B49EB; text-decoration:underline;">En savoir plus.</a>`,
+      it: `Expeerly è una comunità e un servizio di recensioni indipendente. <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="color:#4B49EB; text-decoration:underline;">Scopri di più.</a>`,
     };
 
     expeerlyElements.forEach((container) => {
@@ -42,7 +42,7 @@
         container.getAttribute("max-videos") || "999",
         10
       );
-      const accentColor = container.getAttribute("accent-color") || "#00bcd4";
+      const accentColor = container.getAttribute("accent-color") || "#4B49EB";
       const theme = container.getAttribute("theme") || "light"; // 'light' or 'dark'
       const lang = container.getAttribute("lang") || "en";
       const storeId = container.getAttribute("store-id") || "";
@@ -99,15 +99,15 @@
           let html = `
           <div class="expeerly-wrapper" style="margin:20px auto; padding:10px; font-family:'Mulish', sans-serif;">
             <!-- Header: Expeerly icon + rating + (X reviews) -->
-            <div style="display:flex; flex-direction: column; align-items:flex-start; gap:10px; margin-bottom:8px;">
+            <div style="display:flex; flex-direction: column; align-items:flex-start; margin-bottom:8px;">
               <img src="${expeerlyLogo}" alt="Expeerly Logo" style="height:60px;" />
               <!-- Rating block below the logo -->
-              <div style="display: flex; gap: 10px;">
-                <div style="font-size:1.5rem; color:#2C1277; font-weight:bold;">
+              <div style="display: flex; gap: 10px; font-size: 14px; align-items: flex-end;">
+                <div style="font-size:14px; color:#2C1277; font-weight:bold;">
                   ${avgRating1Decimal}
                 </div>
                 <div style="display:inline-flex; align-items:center; margin-top:4px;">
-                  ${renderStarsInline(avgRating)}
+                  ${renderStarsInline(avgRating, 14)}
                   <span style="margin-left:8px; color:#ff0080; font-weight:500;">
                     (${totalCount} ${
             REVIEW_TEXT_MAP[lang] || REVIEW_TEXT_MAP.en
@@ -148,14 +148,14 @@
                 <!-- Top-left rating + view count under it -->
                 <div style="position:absolute; top:8px; left:8px; color:white;">
                   <div style="display:flex; margin-bottom:4px;">
-                    ${renderStarsInline(rating, 16)}
+                    ${renderStarsInline(rating, 14)}
                   </div>
-                  <div style="display:flex; align-items:center; font-size:0.85rem;">
+                  <!-- <div style="display:flex; align-items:center; font-size:0.85rem;">
                     <svg style="width:14px; height:14px; margin-right:4px;" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"></path>
                     </svg>
                     1.425.255
-                  </div>
+                  </div> -->
                 </div>
 
                 <!-- Bottom overlay with reviewer info -->
@@ -180,12 +180,9 @@
           html += `
             </div>
             <!-- Footer text -->
-            <div style="margin-top:12px; font-size:0.9rem; color:${accentColor};">
+            <div style="margin-top:12px; font-size:14px; color:${accentColor}">
               <p>
                 ${FOOTER_TEXT_MAP[lang] || FOOTER_TEXT_MAP.en}
-                <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="color:${accentColor}; text-decoration:underline;">
-                  <strong>Learn More</strong>
-                </a>
               </p>
             </div>
           </div>
