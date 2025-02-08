@@ -211,7 +211,7 @@
     }
 
     /**
-     * Returns an inline star (filled or empty) as an SVG string.
+     * Returns an inline star (empty or filled) as an SVG string.
      */
     function starSVG(filled, size) {
       if (filled) {
