@@ -20,7 +20,13 @@
     }
 
     // Basic localized text for "(X reviews)"
-    const REVIEW_TEXT_MAP = {
+    const REVIEW_TEXT_SINGULAR_MAP = {
+      en: "review",
+      de: "Bewertung",
+      fr: "avis",
+      it: "recensione",
+    };
+    const REVIEW_TEXT_PLURAL_MAP = {
       en: "reviews",
       de: "Bewertungen",
       fr: "avis",
@@ -139,7 +145,15 @@
               "https://www.expeerly.com/expeerly_reviewed_MINIMAL.svg";
           }
 
-          // 4. Render based on data-type
+          // 4. Decide singular vs. plural "review" text
+          const locale = globalOptions.locale || "en";
+          const singularWord =
+            REVIEW_TEXT_SINGULAR_MAP[locale] || REVIEW_TEXT_SINGULAR_MAP.en;
+          const pluralWord =
+            REVIEW_TEXT_PLURAL_MAP[locale] || REVIEW_TEXT_PLURAL_MAP.en;
+          const reviewLabel = totalCount === 1 ? singularWord : pluralWord;
+
+          // 5. Render based on data-type
           let outputHTML = "";
           if (dataType === "badge") {
             outputHTML = renderBadge({
@@ -157,8 +171,7 @@
               avgRating,
               avgRatingStr,
               totalReviews: totalCount,
-              reviewLabel:
-                REVIEW_TEXT_MAP[globalOptions.locale || "en"] || "reviews",
+              reviewLabel,
               footerLabel: FOOTER_TEXT_MAP[globalOptions.locale || "en"],
               storeId,
             });
