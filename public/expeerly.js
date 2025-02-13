@@ -86,7 +86,7 @@
 
       // 2. Build API URL & fetch data
       const apiUrl =
-        "https://app.expeerly.com/version-71uz2/api/1.1/wf/get-product-videos-processed/?gtin=" +
+        "https://app.expeerly.com/api/1.1/wf/get-product-videos-processed/?gtin=" +
         encodeURIComponent(gtin);
 
       fetch(apiUrl)
