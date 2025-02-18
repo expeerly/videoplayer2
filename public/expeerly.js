@@ -98,13 +98,15 @@
             !data.response ||
             !Array.isArray(data.response.videos)
           ) {
-            container.innerHTML = "No Expeerly reviews available.";
+            container.innerHTML = "";
+            console.log("No Expeerly reviews available.");
             return;
           }
 
           const reviews = data.response.videos;
           if (!reviews.length) {
-            container.innerHTML = "No Expeerly reviews found for this product.";
+            container.innerHTML = "";
+            console.log("Expeerly: No reviews found for GTIN", gtin);
             return;
           }
 
@@ -324,6 +326,8 @@
       const shortLast = lastName ? lastName[0].toUpperCase() + "." : "";
       const rating =
         typeof review.rating_number === "number" ? review.rating_number : 0;
+      const profilePic =
+        review.reviewer_profile_pic_image || "https://via.placeholder.com/64";
       return `
         <div class="expeerly--review-item" style="position:relative; width:180px; height:320px; border-radius:8px; overflow:hidden; flex-shrink:0; border:1px solid #ddd;">
           ${
@@ -350,7 +354,13 @@
 
           <!-- reviewer bottom -->
           <div style="position:absolute; bottom:0; left:0; width:100%; background:linear-gradient(transparent, rgba(0,0,0,0.7)); color:white; padding:8px; display:flex; align-items:center; gap:8px; font-size:0.9rem;">
-            <div style="width:32px; height:32px; background:#ccc; border-radius:50%; flex-shrink:0;"></div>
+            <div style="width:32px; height:32px; border-radius:50%; flex-shrink:0;">
+              <img
+                src="${profilePic}"
+                alt="Reviewer"
+                style="width:32px; height:32px; border-radius:50%; object-fit:cover; flex-shrink:0;" 
+              />
+            </div>
             <div style="display:flex; align-items:center; gap:6px;">
               <span>${firstName} ${shortLast}</span>
               <svg style="width:16px; height:16px; border-radius:50%; background:#1ecbe1; fill:white;" viewBox="0 0 24 24">
