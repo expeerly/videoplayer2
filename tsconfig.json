@@ -29,5 +29,5 @@
     ".next/types/**/*.ts",
     "src/app/[locale]/[...not_found]"
   ],
-  "exclude": ["node_modules", "src/assets/**/*.js", "src/assets/**/*.ts"]
+  "exclude": ["node_modules", "src/assets/**/*.js", "public"]
 }
