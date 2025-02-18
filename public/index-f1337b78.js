@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-assign-module-variable */
 'use strict';
 
@@ -11,18 +11,12 @@ function _interopNamespace(e) {
     Object.keys(e).forEach(function (k) {
       if (k !== 'default') {
         var d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(
-          n,
-          k,
-          d.get
-            ? d
-            : {
-                enumerable: true,
-                get: function () {
-                  return e[k];
-                },
-              }
-        );
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: function () {
+            return e[k];
+          }
+        });
       }
     });
   }
@@ -31,121 +25,38 @@ function _interopNamespace(e) {
 }
 
 const NAMESPACE = 'expeerly-implementation';
-const BUILD = /* expeerly-implementation */ {
-  allRenderFn: true,
-  appendChildSlotFix: false,
-  asyncLoading: true,
-  asyncQueue: false,
-  attachStyles: true,
-  cloneNodeFix: false,
-  cmpDidLoad: false,
-  cmpDidRender: false,
-  cmpDidUnload: false,
-  cmpDidUpdate: false,
-  cmpShouldUpdate: false,
-  cmpWillLoad: true,
-  cmpWillRender: false,
-  cmpWillUpdate: false,
-  connectedCallback: false,
-  constructableCSS: true,
-  cssAnnotations: true,
-  devTools: false,
-  disconnectedCallback: false,
-  element: false,
-  event: false,
-  experimentalScopedSlotChanges: false,
-  experimentalSlotFixes: false,
-  formAssociated: false,
-  hasRenderFn: true,
-  hostListener: false,
-  hostListenerTarget: false,
-  hostListenerTargetBody: false,
-  hostListenerTargetDocument: false,
-  hostListenerTargetParent: false,
-  hostListenerTargetWindow: false,
-  hotModuleReplacement: false,
-  hydrateClientSide: false,
-  hydrateServerSide: false,
-  hydratedAttribute: false,
-  hydratedClass: true,
-  hydratedSelectorName: 'hydrated',
-  initializeNextTick: false,
-  invisiblePrehydration: true,
-  isDebug: false,
-  isDev: false,
-  isTesting: false,
-  lazyLoad: true,
-  lifecycle: true,
-  lifecycleDOMEvents: false,
-  member: true,
-  method: false,
-  mode: false,
-  modernPropertyDecls: false,
-  observeAttribute: true,
-  profile: false,
-  prop: true,
-  propBoolean: false,
-  propMutable: false,
-  propNumber: true,
-  propString: true,
-  reflect: false,
-  scoped: false,
-  scopedSlotTextContentFix: false,
-  scriptDataOpts: false,
-  shadowDelegatesFocus: false,
-  shadowDom: true,
-  slot: false,
-  slotChildNodesFix: false,
-  slotRelocation: false,
-  state: true,
-  style: true,
-  svg: true,
-  taskQueue: true,
-  transformTagName: false,
-  updatable: true,
-  vdomAttribute: true,
-  vdomClass: true,
-  vdomFunctional: false,
-  vdomKey: true,
-  vdomListener: true,
-  vdomPropOrAttr: true,
-  vdomRef: false,
-  vdomRender: true,
-  vdomStyle: true,
-  vdomText: true,
-  vdomXlink: false,
-  watchCallback: false,
-};
+const BUILD = /* expeerly-implementation */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, cmpDidLoad: false, cmpDidRender: false, cmpDidUnload: false, cmpDidUpdate: false, cmpShouldUpdate: false, cmpWillLoad: true, cmpWillRender: false, cmpWillUpdate: false, connectedCallback: false, constructableCSS: true, cssAnnotations: true, devTools: false, disconnectedCallback: false, element: false, event: false, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: false, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: false, isTesting: false, lazyLoad: true, lifecycle: true, lifecycleDOMEvents: false, member: true, method: false, mode: false, modernPropertyDecls: false, observeAttribute: true, profile: false, prop: true, propBoolean: false, propMutable: false, propNumber: true, propString: true, reflect: false, scoped: false, scopedSlotTextContentFix: false, scriptDataOpts: false, shadowDelegatesFocus: false, shadowDom: true, slot: false, slotChildNodesFix: false, slotRelocation: false, state: true, style: true, svg: true, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: true, vdomFunctional: false, vdomKey: true, vdomListener: true, vdomPropOrAttr: true, vdomRef: false, vdomRender: true, vdomStyle: true, vdomText: true, vdomXlink: false, watchCallback: false };
 
 /*
  Stencil Client Platform v4.26.0 | MIT Licensed | https://stenciljs.com
  */
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
-  for (var name in all) __defProp(target, name, { get: all[name], enumerable: true });
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 
 // src/utils/constants.ts
-var SVG_NS = 'http://www.w3.org/2000/svg';
-var HTML_NS = 'http://www.w3.org/1999/xhtml';
+var SVG_NS = "http://www.w3.org/2000/svg";
+var HTML_NS = "http://www.w3.org/1999/xhtml";
 
 // src/client/client-host-ref.ts
 var hostRefs = /* @__PURE__ */ new WeakMap();
-var getHostRef = ref => hostRefs.get(ref);
+var getHostRef = (ref) => hostRefs.get(ref);
 var registerInstance = (lazyInstance, hostRef) => {
-  hostRefs.set((hostRef.$lazyInstance$ = lazyInstance), hostRef);
+  hostRefs.set(hostRef.$lazyInstance$ = lazyInstance, hostRef);
 };
 var registerHost = (hostElement, cmpMeta) => {
   const hostRef = {
     $flags$: 0,
     $hostElement$: hostElement,
     $cmpMeta$: cmpMeta,
-    $instanceValues$: /* @__PURE__ */ new Map(),
+    $instanceValues$: /* @__PURE__ */ new Map()
   };
   {
-    hostRef.$onReadyPromise$ = new Promise(r => (hostRef.$onReadyResolve$ = r));
-    hostElement['s-p'] = [];
-    hostElement['s-rc'] = [];
+    hostRef.$onReadyPromise$ = new Promise((r) => hostRef.$onReadyResolve$ = r);
+    hostElement["s-p"] = [];
+    hostElement["s-rc"] = [];
   }
   const ref = hostRefs.set(hostElement, hostRef);
   return ref;
@@ -156,69 +67,64 @@ var consoleError = (e, el) => (0, console.error)(e, el);
 // src/client/client-load-module.ts
 var cmpModules = /* @__PURE__ */ new Map();
 var loadModule = (cmpMeta, hostRef, hmrVersionId) => {
-  const exportName = cmpMeta.$tagName$.replace(/-/g, '_');
+  const exportName = cmpMeta.$tagName$.replace(/-/g, "_");
   const bundleId = cmpMeta.$lazyBundleId$;
   if (!bundleId) {
     return void 0;
   }
-  const module = cmpModules.get(bundleId);
+  const module = cmpModules.get(bundleId) ;
   if (module) {
     return module[exportName];
   }
   /*!__STENCIL_STATIC_IMPORT_SWITCH__*/
-  return Promise.resolve()
-    .then(function () {
-      return /*#__PURE__*/ _interopNamespace(
-        require(
-          /* @vite-ignore */
-          /* webpackInclude: /\.entry\.js$/ */
-          /* webpackExclude: /\.system\.entry\.js$/ */
-          /* webpackMode: "lazy" */
-          `./${bundleId}.entry.js${''}`
-        )
-      );
-    })
-    .then(
-      importedModule => {
-        {
-          cmpModules.set(bundleId, importedModule);
-        }
-        return importedModule[exportName];
-      },
-      e => {
-        consoleError(e, hostRef.$hostElement$);
+  return Promise.resolve().then(function () { return /*#__PURE__*/_interopNamespace(require(
+    /* @vite-ignore */
+    /* webpackInclude: /\.entry\.js$/ */
+    /* webpackExclude: /\.system\.entry\.js$/ */
+    /* webpackMode: "lazy" */
+    `./${bundleId}.entry.js${""}`
+  )); }).then(
+    (importedModule) => {
+      {
+        cmpModules.set(bundleId, importedModule);
       }
-    );
+      return importedModule[exportName];
+    },
+    (e) => {
+      consoleError(e, hostRef.$hostElement$);
+    }
+  );
 };
 
 // src/client/client-style.ts
 var styles = /* @__PURE__ */ new Map();
-var HYDRATED_STYLE_ID = 'sty-id';
-var HYDRATED_CSS = '{visibility:hidden}.hydrated{visibility:inherit}';
-var SLOT_FB_CSS = 'slot-fb{display:contents}slot-fb[hidden]{display:none}';
-var win = typeof window !== 'undefined' ? window : {};
+var HYDRATED_STYLE_ID = "sty-id";
+var HYDRATED_CSS = "{visibility:hidden}.hydrated{visibility:inherit}";
+var SLOT_FB_CSS = "slot-fb{display:contents}slot-fb[hidden]{display:none}";
+var win = typeof window !== "undefined" ? window : {};
 var doc = win.document || { head: {} };
 var plt = {
   $flags$: 0,
-  $resourcesUrl$: '',
-  jmp: h2 => h2(),
-  raf: h2 => requestAnimationFrame(h2),
+  $resourcesUrl$: "",
+  jmp: (h2) => h2(),
+  raf: (h2) => requestAnimationFrame(h2),
   ael: (el, eventName, listener, opts) => el.addEventListener(eventName, listener, opts),
   rel: (el, eventName, listener, opts) => el.removeEventListener(eventName, listener, opts),
-  ce: (eventName, opts) => new CustomEvent(eventName, opts),
+  ce: (eventName, opts) => new CustomEvent(eventName, opts)
 };
-var promiseResolve = v => Promise.resolve(v);
+var promiseResolve = (v) => Promise.resolve(v);
 var supportsConstructableStylesheets = /* @__PURE__ */ (() => {
   try {
     new CSSStyleSheet();
-    return typeof new CSSStyleSheet().replaceSync === 'function';
-  } catch (e) {}
+    return typeof new CSSStyleSheet().replaceSync === "function";
+  } catch (e) {
+  }
   return false;
-})();
+})() ;
 var queuePending = false;
 var queueDomReads = [];
 var queueDomWrites = [];
-var queueTask = (queue, write) => cb => {
+var queueTask = (queue, write) => (cb) => {
   queue.push(cb);
   if (!queuePending) {
     queuePending = true;
@@ -229,7 +135,7 @@ var queueTask = (queue, write) => cb => {
     }
   }
 };
-var consume = queue => {
+var consume = (queue) => {
   for (let i2 = 0; i2 < queue.length; i2++) {
     try {
       queue[i2](performance.now());
@@ -243,27 +149,22 @@ var flush = () => {
   consume(queueDomReads);
   {
     consume(queueDomWrites);
-    if ((queuePending = queueDomReads.length > 0)) {
+    if (queuePending = queueDomReads.length > 0) {
       plt.raf(flush);
     }
   }
 };
-var nextTick = cb => promiseResolve().then(cb);
+var nextTick = (cb) => promiseResolve().then(cb);
 var writeTask = /* @__PURE__ */ queueTask(queueDomWrites, true);
-var isComplexType = o => {
+var isComplexType = (o) => {
   o = typeof o;
-  return o === 'object' || o === 'function';
+  return o === "object" || o === "function";
 };
 
 // src/utils/query-nonce-meta-tag-content.ts
 function queryNonceMetaTagContent(doc2) {
   var _a, _b, _c;
-  return (_c =
-    (_b = (_a = doc2.head) == null ? void 0 : _a.querySelector('meta[name="csp-nonce"]')) == null
-      ? void 0
-      : _b.getAttribute('content')) != null
-    ? _c
-    : void 0;
+  return (_c = (_b = (_a = doc2.head) == null ? void 0 : _a.querySelector('meta[name="csp-nonce"]')) == null ? void 0 : _b.getAttribute("content")) != null ? _c : void 0;
 }
 
 // src/utils/result.ts
@@ -273,23 +174,23 @@ __export(result_exports, {
   map: () => map,
   ok: () => ok,
   unwrap: () => unwrap,
-  unwrapErr: () => unwrapErr,
+  unwrapErr: () => unwrapErr
 });
-var ok = value => ({
+var ok = (value) => ({
   isOk: true,
   isErr: false,
-  value,
+  value
 });
-var err = value => ({
+var err = (value) => ({
   isOk: false,
   isErr: true,
-  value,
+  value
 });
 function map(result, fn) {
   if (result.isOk) {
     const val = fn(result.value);
     if (val instanceof Promise) {
-      return val.then(newVal => ok(newVal));
+      return val.then((newVal) => ok(newVal));
     } else {
       return ok(val);
     }
@@ -298,23 +199,23 @@ function map(result, fn) {
     const value = result.value;
     return err(value);
   }
-  throw 'should never get here';
+  throw "should never get here";
 }
-var unwrap = result => {
+var unwrap = (result) => {
   if (result.isOk) {
     return result.value;
   } else {
     throw result.value;
   }
 };
-var unwrapErr = result => {
+var unwrapErr = (result) => {
   if (result.isErr) {
     return result.value;
   } else {
     throw result.value;
   }
 };
-var createTime = (fnName, tagName = '') => {
+var createTime = (fnName, tagName = "") => {
   {
     return () => {
       return;
@@ -334,13 +235,13 @@ var h = (nodeName, vnodeData, ...children) => {
   let simple = false;
   let lastSimple = false;
   const vNodeChildren = [];
-  const walk = c => {
+  const walk = (c) => {
     for (let i2 = 0; i2 < c.length; i2++) {
       child = c[i2];
       if (Array.isArray(child)) {
         walk(child);
-      } else if (child != null && typeof child !== 'boolean') {
-        if ((simple = typeof nodeName !== 'function' && !isComplexType(child))) {
+      } else if (child != null && typeof child !== "boolean") {
+        if (simple = typeof nodeName !== "function" && !isComplexType(child)) {
           child = String(child);
         }
         if (simple && lastSimple) {
@@ -360,12 +261,7 @@ var h = (nodeName, vnodeData, ...children) => {
     {
       const classData = vnodeData.className || vnodeData.class;
       if (classData) {
-        vnodeData.class =
-          typeof classData !== 'object'
-            ? classData
-            : Object.keys(classData)
-                .filter(k => classData[k])
-                .join(' ');
+        vnodeData.class = typeof classData !== "object" ? classData : Object.keys(classData).filter((k) => classData[k]).join(" ");
       }
     }
   }
@@ -385,7 +281,7 @@ var newVNode = (tag, text) => {
     $tag$: tag,
     $text$: text,
     $elm$: null,
-    $children$: null,
+    $children$: null
   };
   {
     vnode.$attrs$ = null;
@@ -396,7 +292,7 @@ var newVNode = (tag, text) => {
   return vnode;
 };
 var Host = {};
-var isHost = node => node && node.$tag$ === Host;
+var isHost = (node) => node && node.$tag$ === Host;
 var parsePropertyValue = (propValue, propType) => {
   if (propValue != null && !isComplexType(propValue)) {
     if (propType & 2 /* Number */) {
@@ -419,7 +315,7 @@ var registerStyle = (scopeId2, cssText, allowCS) => {
   let style = styles.get(scopeId2);
   if (supportsConstructableStylesheets && allowCS) {
     style = style || new CSSStyleSheet();
-    if (typeof style === 'string') {
+    if (typeof style === "string") {
       style = cssText;
     } else {
       style.replaceSync(cssText);
@@ -433,49 +329,38 @@ var addStyle = (styleContainerNode, cmpMeta, mode) => {
   var _a;
   const scopeId2 = getScopeId(cmpMeta);
   const style = styles.get(scopeId2);
-  styleContainerNode =
-    styleContainerNode.nodeType === 11 /* DocumentFragment */ ? styleContainerNode : doc;
+  styleContainerNode = styleContainerNode.nodeType === 11 /* DocumentFragment */ ? styleContainerNode : doc;
   if (style) {
-    if (typeof style === 'string') {
+    if (typeof style === "string") {
       styleContainerNode = styleContainerNode.head || styleContainerNode;
       let appliedStyles = rootAppliedStyles.get(styleContainerNode);
       let styleElm;
       if (!appliedStyles) {
-        rootAppliedStyles.set(styleContainerNode, (appliedStyles = /* @__PURE__ */ new Set()));
+        rootAppliedStyles.set(styleContainerNode, appliedStyles = /* @__PURE__ */ new Set());
       }
       if (!appliedStyles.has(scopeId2)) {
         {
-          styleElm =
-            document.querySelector(`[${HYDRATED_STYLE_ID}="${scopeId2}"]`) ||
-            doc.createElement('style');
+          styleElm = document.querySelector(`[${HYDRATED_STYLE_ID}="${scopeId2}"]`) || doc.createElement("style");
           styleElm.innerHTML = style;
           const nonce = (_a = plt.$nonce$) != null ? _a : queryNonceMetaTagContent(doc);
           if (nonce != null) {
-            styleElm.setAttribute('nonce', nonce);
+            styleElm.setAttribute("nonce", nonce);
           }
-          if (!((cmpMeta.$flags$ & 1) /* shadowDomEncapsulation */)) {
-            if (styleContainerNode.nodeName === 'HEAD') {
-              const preconnectLinks = styleContainerNode.querySelectorAll('link[rel=preconnect]');
-              const referenceNode2 =
-                preconnectLinks.length > 0
-                  ? preconnectLinks[preconnectLinks.length - 1].nextSibling
-                  : styleContainerNode.querySelector('style');
+          if (!(cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */)) {
+            if (styleContainerNode.nodeName === "HEAD") {
+              const preconnectLinks = styleContainerNode.querySelectorAll("link[rel=preconnect]");
+              const referenceNode2 = preconnectLinks.length > 0 ? preconnectLinks[preconnectLinks.length - 1].nextSibling : styleContainerNode.querySelector("style");
               styleContainerNode.insertBefore(
                 styleElm,
-                (referenceNode2 == null ? void 0 : referenceNode2.parentNode) === styleContainerNode
-                  ? referenceNode2
-                  : null
+                (referenceNode2 == null ? void 0 : referenceNode2.parentNode) === styleContainerNode ? referenceNode2 : null
               );
-            } else if ('host' in styleContainerNode) {
+            } else if ("host" in styleContainerNode) {
               if (supportsConstructableStylesheets) {
                 const stylesheet = new CSSStyleSheet();
                 stylesheet.replaceSync(style);
-                styleContainerNode.adoptedStyleSheets = [
-                  stylesheet,
-                  ...styleContainerNode.adoptedStyleSheets,
-                ];
+                styleContainerNode.adoptedStyleSheets = [stylesheet, ...styleContainerNode.adoptedStyleSheets];
               } else {
-                const existingStyleContainer = styleContainerNode.querySelector('style');
+                const existingStyleContainer = styleContainerNode.querySelector("style");
                 if (existingStyleContainer) {
                   existingStyleContainer.innerHTML = style + existingStyleContainer.innerHTML;
                 } else {
@@ -503,58 +388,56 @@ var addStyle = (styleContainerNode, cmpMeta, mode) => {
   }
   return scopeId2;
 };
-var attachStyles = hostRef => {
+var attachStyles = (hostRef) => {
   const cmpMeta = hostRef.$cmpMeta$;
   const elm = hostRef.$hostElement$;
   const flags = cmpMeta.$flags$;
-  const endAttachStyles = createTime('attachStyles', cmpMeta.$tagName$);
-  const scopeId2 = addStyle(elm.shadowRoot ? elm.shadowRoot : elm.getRootNode(), cmpMeta);
-  if (
-    (flags & 10 /* needsScopedEncapsulation */ && flags & 2) /* scopedCssEncapsulation */ ||
-    flags & 128 /* shadowNeedsScopedCss */
-  ) {
-    elm['s-sc'] = scopeId2;
-    elm.classList.add(scopeId2 + '-h');
+  const endAttachStyles = createTime("attachStyles", cmpMeta.$tagName$);
+  const scopeId2 = addStyle(
+    elm.shadowRoot ? elm.shadowRoot : elm.getRootNode(),
+    cmpMeta);
+  if ((flags & 10 /* needsScopedEncapsulation */ && flags & 2 /* scopedCssEncapsulation */ || flags & 128 /* shadowNeedsScopedCss */)) {
+    elm["s-sc"] = scopeId2;
+    elm.classList.add(scopeId2 + "-h");
   }
   endAttachStyles();
 };
-var getScopeId = (cmp, mode) => 'sc-' + cmp.$tagName$;
+var getScopeId = (cmp, mode) => "sc-" + (cmp.$tagName$);
 var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags, initialRender) => {
   if (oldValue !== newValue) {
     let isProp = isMemberInElement(elm, memberName);
     let ln = memberName.toLowerCase();
-    if (memberName === 'class') {
+    if (memberName === "class") {
       const classList = elm.classList;
       const oldClasses = parseClassList(oldValue);
       let newClasses = parseClassList(newValue);
       {
-        classList.remove(...oldClasses.filter(c => c && !newClasses.includes(c)));
-        classList.add(...newClasses.filter(c => c && !oldClasses.includes(c)));
+        classList.remove(...oldClasses.filter((c) => c && !newClasses.includes(c)));
+        classList.add(...newClasses.filter((c) => c && !oldClasses.includes(c)));
       }
-    } else if (memberName === 'style') {
+    } else if (memberName === "style") {
       {
         for (const prop in oldValue) {
           if (!newValue || newValue[prop] == null) {
-            if (prop.includes('-')) {
+            if (prop.includes("-")) {
               elm.style.removeProperty(prop);
             } else {
-              elm.style[prop] = '';
+              elm.style[prop] = "";
             }
           }
         }
       }
       for (const prop in newValue) {
         if (!oldValue || newValue[prop] !== oldValue[prop]) {
-          if (prop.includes('-')) {
+          if (prop.includes("-")) {
             elm.style.setProperty(prop, newValue[prop]);
           } else {
             elm.style[prop] = newValue[prop];
           }
         }
       }
-    } else if (memberName === 'key');
-    else if (!isProp && memberName[0] === 'o' && memberName[1] === 'n') {
-      if (memberName[2] === '-') {
+    } else if (memberName === "key") ; else if ((!isProp ) && memberName[0] === "o" && memberName[1] === "n") {
+      if (memberName[2] === "-") {
         memberName = memberName.slice(3);
       } else if (isMemberInElement(win, ln)) {
         memberName = ln.slice(2);
@@ -563,7 +446,7 @@ var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags, initialRen
       }
       if (oldValue || newValue) {
         const capture = memberName.endsWith(CAPTURE_EVENT_SUFFIX);
-        memberName = memberName.replace(CAPTURE_EVENT_REGEX, '');
+        memberName = memberName.replace(CAPTURE_EVENT_REGEX, "");
         if (oldValue) {
           plt.rel(elm, memberName, oldValue, capture);
         }
@@ -573,14 +456,14 @@ var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags, initialRen
       }
     } else {
       const isComplex = isComplexType(newValue);
-      if ((isProp || (isComplex && newValue !== null)) && !isSvg) {
+      if ((isProp || isComplex && newValue !== null) && !isSvg) {
         try {
-          if (!elm.tagName.includes('-')) {
-            const n = newValue == null ? '' : newValue;
-            if (memberName === 'list') {
+          if (!elm.tagName.includes("-")) {
+            const n = newValue == null ? "" : newValue;
+            if (memberName === "list") {
               isProp = false;
             } else if (oldValue == null || elm[memberName] != n) {
-              if (typeof elm.__lookupSetter__(memberName) === 'function') {
+              if (typeof elm.__lookupSetter__(memberName) === "function") {
                 elm[memberName] = n;
               } else {
                 elm.setAttribute(memberName, n);
@@ -589,16 +472,17 @@ var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags, initialRen
           } else if (elm[memberName] !== newValue) {
             elm[memberName] = newValue;
           }
-        } catch (e) {}
+        } catch (e) {
+        }
       }
       if (newValue == null || newValue === false) {
-        if (newValue !== false || elm.getAttribute(memberName) === '') {
+        if (newValue !== false || elm.getAttribute(memberName) === "") {
           {
             elm.removeAttribute(memberName);
           }
         }
       } else if ((!isProp || flags & 4 /* isHost */ || isSvg) && !isComplex) {
-        newValue = newValue === true ? '' : newValue;
+        newValue = newValue === true ? "" : newValue;
         {
           elm.setAttribute(memberName, newValue);
         }
@@ -607,25 +491,22 @@ var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags, initialRen
   }
 };
 var parseClassListRegex = /\s/;
-var parseClassList = value => {
-  if (typeof value === 'object' && value && 'baseVal' in value) {
+var parseClassList = (value) => {
+  if (typeof value === "object" && value && "baseVal" in value) {
     value = value.baseVal;
   }
-  if (!value || typeof value !== 'string') {
+  if (!value || typeof value !== "string") {
     return [];
   }
   return value.split(parseClassListRegex);
 };
-var CAPTURE_EVENT_SUFFIX = 'Capture';
-var CAPTURE_EVENT_REGEX = new RegExp(CAPTURE_EVENT_SUFFIX + '$');
+var CAPTURE_EVENT_SUFFIX = "Capture";
+var CAPTURE_EVENT_REGEX = new RegExp(CAPTURE_EVENT_SUFFIX + "$");
 
 // src/runtime/vdom/update-element.ts
 var updateElement = (oldVnode, newVnode, isSvgMode2, isInitialRender) => {
-  const elm =
-    newVnode.$elm$.nodeType === 11 /* DocumentFragment */ && newVnode.$elm$.host
-      ? newVnode.$elm$.host
-      : newVnode.$elm$;
-  const oldVnodeAttrs = (oldVnode && oldVnode.$attrs$) || {};
+  const elm = newVnode.$elm$.nodeType === 11 /* DocumentFragment */ && newVnode.$elm$.host ? newVnode.$elm$.host : newVnode.$elm$;
+  const oldVnodeAttrs = oldVnode && oldVnode.$attrs$ || {};
   const newVnodeAttrs = newVnode.$attrs$ || {};
   {
     for (const memberName of sortedAttrNames(Object.keys(oldVnodeAttrs))) {
@@ -636,8 +517,7 @@ var updateElement = (oldVnode, newVnode, isSvgMode2, isInitialRender) => {
           oldVnodeAttrs[memberName],
           void 0,
           isSvgMode2,
-          newVnode.$flags$
-        );
+          newVnode.$flags$);
       }
     }
   }
@@ -648,16 +528,17 @@ var updateElement = (oldVnode, newVnode, isSvgMode2, isInitialRender) => {
       oldVnodeAttrs[memberName],
       newVnodeAttrs[memberName],
       isSvgMode2,
-      newVnode.$flags$
-    );
+      newVnode.$flags$);
   }
 };
 function sortedAttrNames(attrNames) {
-  return attrNames.includes('ref')
-    ? // we need to sort these to ensure that `'ref'` is the last attr
-      [...attrNames.filter(attr => attr !== 'ref'), 'ref']
-    : // no need to sort, return the original array
-      attrNames;
+  return attrNames.includes("ref") ? (
+    // we need to sort these to ensure that `'ref'` is the last attr
+    [...attrNames.filter((attr) => attr !== "ref"), "ref"]
+  ) : (
+    // no need to sort, return the original array
+    attrNames
+  );
 }
 var hostTagName;
 var useNativeShadowDom = false;
@@ -671,15 +552,13 @@ var createElm = (oldParentVNode, newParentVNode, childIndex) => {
     elm = newVNode2.$elm$ = doc.createTextNode(newVNode2.$text$);
   } else {
     if (!isSvgMode) {
-      isSvgMode = newVNode2.$tag$ === 'svg';
+      isSvgMode = newVNode2.$tag$ === "svg";
     }
     elm = newVNode2.$elm$ = doc.createElementNS(
       isSvgMode ? SVG_NS : HTML_NS,
-      !useNativeShadowDom && BUILD.slotRelocation && newVNode2.$flags$ & 2 /* isSlotFallback */
-        ? 'slot-fb'
-        : newVNode2.$tag$
-    );
-    if (isSvgMode && newVNode2.$tag$ === 'foreignObject') {
+      !useNativeShadowDom && BUILD.slotRelocation && newVNode2.$flags$ & 2 /* isSlotFallback */ ? "slot-fb" : newVNode2.$tag$
+    ) ;
+    if (isSvgMode && newVNode2.$tag$ === "foreignObject") {
       isSvgMode = false;
     }
     {
@@ -694,14 +573,14 @@ var createElm = (oldParentVNode, newParentVNode, childIndex) => {
       }
     }
     {
-      if (newVNode2.$tag$ === 'svg') {
+      if (newVNode2.$tag$ === "svg") {
         isSvgMode = false;
-      } else if (elm.tagName === 'foreignObject') {
+      } else if (elm.tagName === "foreignObject") {
         isSvgMode = true;
       }
     }
   }
-  elm['s-hn'] = hostTagName;
+  elm["s-hn"] = hostTagName;
   return elm;
 };
 var addVnodes = (parentElm, before, parentVNode, vnodes, startIdx, endIdx) => {
@@ -828,14 +707,14 @@ var isSameVnode = (leftVNode, rightVNode, isInitialRender = false) => {
   return false;
 };
 var patch = (oldVNode, newVNode2, isInitialRender = false) => {
-  const elm = (newVNode2.$elm$ = oldVNode.$elm$);
+  const elm = newVNode2.$elm$ = oldVNode.$elm$;
   const oldChildren = oldVNode.$children$;
   const newChildren = newVNode2.$children$;
   const tag = newVNode2.$tag$;
   const text = newVNode2.$text$;
   if (text === null) {
     {
-      isSvgMode = tag === 'svg' ? true : tag === 'foreignObject' ? false : isSvgMode;
+      isSvgMode = tag === "svg" ? true : tag === "foreignObject" ? false : isSvgMode;
     }
     {
       {
@@ -846,18 +725,16 @@ var patch = (oldVNode, newVNode2, isInitialRender = false) => {
       updateChildren(elm, oldChildren, newVNode2, newChildren, isInitialRender);
     } else if (newChildren !== null) {
       if (oldVNode.$text$ !== null) {
-        elm.textContent = '';
+        elm.textContent = "";
       }
       addVnodes(elm, null, newVNode2, newChildren, 0, newChildren.length - 1);
     } else if (
       // don't do this on initial render as it can cause non-hydrated content to be removed
-      !isInitialRender &&
-      BUILD.updatable &&
-      oldChildren !== null
+      !isInitialRender && BUILD.updatable && oldChildren !== null
     ) {
       removeVnodes(oldChildren, 0, oldChildren.length - 1);
     }
-    if (isSvgMode && tag === 'svg') {
+    if (isSvgMode && tag === "svg") {
       isSvgMode = false;
     }
   } else if (oldVNode.$text$ !== text) {
@@ -877,7 +754,7 @@ var renderVdom = (hostRef, renderFnResults, isInitialLoad = false) => {
   hostTagName = hostElm.tagName;
   if (isInitialLoad && rootVnode.$attrs$) {
     for (const key of Object.keys(rootVnode.$attrs$)) {
-      if (hostElm.hasAttribute(key) && !['key', 'ref', 'style', 'class'].includes(key)) {
+      if (hostElm.hasAttribute(key) && !["key", "ref", "style", "class"].includes(key)) {
         rootVnode.$attrs$[key] = hostElm[key];
       }
     }
@@ -885,23 +762,20 @@ var renderVdom = (hostRef, renderFnResults, isInitialLoad = false) => {
   rootVnode.$tag$ = null;
   rootVnode.$flags$ |= 4 /* isHost */;
   hostRef.$vnode$ = rootVnode;
-  rootVnode.$elm$ = oldVNode.$elm$ = hostElm.shadowRoot || hostElm;
-  useNativeShadowDom =
-    !!((cmpMeta.$flags$ & 1) /* shadowDomEncapsulation */) &&
-    !((cmpMeta.$flags$ & 128) /* shadowNeedsScopedCss */);
+  rootVnode.$elm$ = oldVNode.$elm$ = hostElm.shadowRoot || hostElm ;
+  useNativeShadowDom = !!(cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */) && !(cmpMeta.$flags$ & 128 /* shadowNeedsScopedCss */);
   patch(oldVNode, rootVnode, isInitialLoad);
 };
 
 // src/runtime/update-component.ts
 var attachToAncestor = (hostRef, ancestorComponent) => {
-  if (ancestorComponent && !hostRef.$onRenderResolve$ && ancestorComponent['s-p']) {
-    const index = ancestorComponent['s-p'].push(
+  if (ancestorComponent && !hostRef.$onRenderResolve$ && ancestorComponent["s-p"]) {
+    const index = ancestorComponent["s-p"].push(
       new Promise(
-        r =>
-          (hostRef.$onRenderResolve$ = () => {
-            ancestorComponent['s-p'].splice(index - 1, 1);
-            r();
-          })
+        (r) => hostRef.$onRenderResolve$ = () => {
+          ancestorComponent["s-p"].splice(index - 1, 1);
+          r();
+        }
       )
     );
   }
@@ -916,12 +790,12 @@ var scheduleUpdate = (hostRef, isInitialLoad) => {
   }
   attachToAncestor(hostRef, hostRef.$ancestorComponent$);
   const dispatch = () => dispatchHooks(hostRef, isInitialLoad);
-  return writeTask(dispatch);
+  return writeTask(dispatch) ;
 };
 var dispatchHooks = (hostRef, isInitialLoad) => {
   const elm = hostRef.$hostElement$;
-  const endSchedule = createTime('scheduleUpdate', hostRef.$cmpMeta$.$tagName$);
-  const instance = hostRef.$lazyInstance$;
+  const endSchedule = createTime("scheduleUpdate", hostRef.$cmpMeta$.$tagName$);
+  const instance = hostRef.$lazyInstance$ ;
   if (!instance) {
     throw new Error(
       `Can't render component <${elm.tagName.toLowerCase()} /> with invalid Stencil runtime! Make sure this imported component is compiled with a \`externalRuntime: true\` flag. For more information, please refer to https://stenciljs.com/docs/custom-elements#externalruntime`
@@ -930,42 +804,37 @@ var dispatchHooks = (hostRef, isInitialLoad) => {
   let maybePromise;
   if (isInitialLoad) {
     {
-      maybePromise = safeCall(instance, 'componentWillLoad', void 0, elm);
+      maybePromise = safeCall(instance, "componentWillLoad", void 0, elm);
     }
   }
   endSchedule();
   return enqueue(maybePromise, () => updateComponent(hostRef, instance, isInitialLoad));
 };
-var enqueue = (maybePromise, fn) =>
-  isPromisey(maybePromise)
-    ? maybePromise.then(fn).catch(err2 => {
-        console.error(err2);
-        fn();
-      })
-    : fn();
-var isPromisey = maybePromise =>
-  maybePromise instanceof Promise ||
-  (maybePromise && maybePromise.then && typeof maybePromise.then === 'function');
+var enqueue = (maybePromise, fn) => isPromisey(maybePromise) ? maybePromise.then(fn).catch((err2) => {
+  console.error(err2);
+  fn();
+}) : fn();
+var isPromisey = (maybePromise) => maybePromise instanceof Promise || maybePromise && maybePromise.then && typeof maybePromise.then === "function";
 var updateComponent = async (hostRef, instance, isInitialLoad) => {
   var _a;
   const elm = hostRef.$hostElement$;
-  const endUpdate = createTime('update', hostRef.$cmpMeta$.$tagName$);
-  const rc = elm['s-rc'];
+  const endUpdate = createTime("update", hostRef.$cmpMeta$.$tagName$);
+  const rc = elm["s-rc"];
   if (isInitialLoad) {
     attachStyles(hostRef);
   }
-  const endRender = createTime('render', hostRef.$cmpMeta$.$tagName$);
+  const endRender = createTime("render", hostRef.$cmpMeta$.$tagName$);
   {
     callRender(hostRef, instance, elm, isInitialLoad);
   }
   if (rc) {
-    rc.map(cb => cb());
-    elm['s-rc'] = void 0;
+    rc.map((cb) => cb());
+    elm["s-rc"] = void 0;
   }
   endRender();
   endUpdate();
   {
-    const childrenPromises = (_a = elm['s-p']) != null ? _a : [];
+    const childrenPromises = (_a = elm["s-p"]) != null ? _a : [];
     const postUpdate = () => postUpdateComponent(hostRef);
     if (childrenPromises.length === 0) {
       postUpdate();
@@ -978,7 +847,7 @@ var updateComponent = async (hostRef, instance, isInitialLoad) => {
 };
 var callRender = (hostRef, instance, elm, isInitialLoad) => {
   try {
-    instance = instance.render();
+    instance = instance.render() ;
     {
       hostRef.$flags$ &= ~16 /* isQueuedForUpdate */;
     }
@@ -997,12 +866,12 @@ var callRender = (hostRef, instance, elm, isInitialLoad) => {
   }
   return null;
 };
-var postUpdateComponent = hostRef => {
+var postUpdateComponent = (hostRef) => {
   const tagName = hostRef.$cmpMeta$.$tagName$;
   const elm = hostRef.$hostElement$;
-  const endPostUpdate = createTime('postUpdate', tagName);
+  const endPostUpdate = createTime("postUpdate", tagName);
   const ancestorComponent = hostRef.$ancestorComponent$;
-  if (!((hostRef.$flags$ & 64) /* hasLoadedComponent */)) {
+  if (!(hostRef.$flags$ & 64 /* hasLoadedComponent */)) {
     hostRef.$flags$ |= 64 /* hasLoadedComponent */;
     {
       addHydratedFlag(elm);
@@ -1025,11 +894,11 @@ var postUpdateComponent = hostRef => {
     if (hostRef.$flags$ & 512 /* needsRerender */) {
       nextTick(() => scheduleUpdate(hostRef, false));
     }
-    hostRef.$flags$ &= ~((4 /* isWaitingForChildren */ | 512) /* needsRerender */);
+    hostRef.$flags$ &= ~(4 /* isWaitingForChildren */ | 512 /* needsRerender */);
   }
 };
-var appDidLoad = who => {
-  nextTick(() => emitEvent(win, 'appload', { detail: { namespace: NAMESPACE } }));
+var appDidLoad = (who) => {
+  nextTick(() => emitEvent(win, "appload", { detail: { namespace: NAMESPACE } }));
 };
 var safeCall = (instance, method, arg, elm) => {
   if (instance && instance[method]) {
@@ -1041,9 +910,9 @@ var safeCall = (instance, method, arg, elm) => {
   }
   return void 0;
 };
-var addHydratedFlag = elm => {
+var addHydratedFlag = (elm) => {
   var _a;
-  return elm.classList.add((_a = BUILD.hydratedSelectorName) != null ? _a : 'hydrated');
+  return elm.classList.add((_a = BUILD.hydratedSelectorName) != null ? _a : "hydrated") ;
 };
 
 // src/runtime/set-value.ts
@@ -1057,14 +926,14 @@ var setValue = (ref, propName, newVal, cmpMeta) => {
   }
   const oldVal = hostRef.$instanceValues$.get(propName);
   const flags = hostRef.$flags$;
-  const instance = hostRef.$lazyInstance$;
+  const instance = hostRef.$lazyInstance$ ;
   newVal = parsePropertyValue(newVal, cmpMeta.$members$[propName][0]);
   const areBothNaN = Number.isNaN(oldVal) && Number.isNaN(newVal);
   const didValueChange = newVal !== oldVal && !areBothNaN;
-  if ((!((flags & 8) /* isConstructingInstance */) || oldVal === void 0) && didValueChange) {
+  if ((!(flags & 8 /* isConstructingInstance */) || oldVal === void 0) && didValueChange) {
     hostRef.$instanceValues$.set(propName, newVal);
     if (instance) {
-      if ((flags & (2 /* hasRendered */ | 16) /* isQueuedForUpdate */) === 2 /* hasRendered */) {
+      if ((flags & (2 /* hasRendered */ | 16 /* isQueuedForUpdate */)) === 2 /* hasRendered */) {
         scheduleUpdate(hostRef, false);
       }
     }
@@ -1075,22 +944,18 @@ var setValue = (ref, propName, newVal, cmpMeta) => {
 var proxyComponent = (Cstr, cmpMeta, flags) => {
   var _a, _b;
   const prototype = Cstr.prototype;
-  if (cmpMeta.$members$ || BUILD.watchCallback) {
+  if (cmpMeta.$members$ || BUILD.watchCallback ) {
     const members = Object.entries((_a = cmpMeta.$members$) != null ? _a : {});
     members.map(([memberName, [memberFlags]]) => {
-      if (
-        memberFlags & 31 /* Prop */ ||
-        (flags & 2 /* proxyState */ && memberFlags & 32) /* State */
-      ) {
-        const { get: origGetter, set: origSetter } =
-          Object.getOwnPropertyDescriptor(prototype, memberName) || {};
+      if ((memberFlags & 31 /* Prop */ || (flags & 2 /* proxyState */) && memberFlags & 32 /* State */)) {
+        const { get: origGetter, set: origSetter } = Object.getOwnPropertyDescriptor(prototype, memberName) || {};
         if (origGetter) cmpMeta.$members$[memberName][0] |= 2048 /* Getter */;
         if (origSetter) cmpMeta.$members$[memberName][0] |= 4096 /* Setter */;
         if (flags & 1 /* isElementConstructor */ || !origGetter) {
           Object.defineProperty(prototype, memberName, {
             get() {
               {
-                if ((cmpMeta.$members$[memberName][0] & 2048) /* Getter */ === 0) {
+                if ((cmpMeta.$members$[memberName][0] & 2048 /* Getter */) === 0) {
                   return getValue(this, memberName);
                 }
                 const ref = getHostRef(this);
@@ -1100,38 +965,30 @@ var proxyComponent = (Cstr, cmpMeta, flags) => {
               }
             },
             configurable: true,
-            enumerable: true,
+            enumerable: true
           });
         }
         Object.defineProperty(prototype, memberName, {
           set(newValue) {
             const ref = getHostRef(this);
             if (origSetter) {
-              const currentValue =
-                memberFlags & 32 /* State */ ? this[memberName] : ref.$hostElement$[memberName];
-              if (typeof currentValue === 'undefined' && ref.$instanceValues$.get(memberName)) {
+              const currentValue = memberFlags & 32 /* State */ ? this[memberName] : ref.$hostElement$[memberName];
+              if (typeof currentValue === "undefined" && ref.$instanceValues$.get(memberName)) {
                 newValue = ref.$instanceValues$.get(memberName);
               } else if (!ref.$instanceValues$.get(memberName) && currentValue) {
                 ref.$instanceValues$.set(memberName, currentValue);
               }
               origSetter.apply(this, [parsePropertyValue(newValue, memberFlags)]);
-              newValue =
-                memberFlags & 32 /* State */ ? this[memberName] : ref.$hostElement$[memberName];
+              newValue = memberFlags & 32 /* State */ ? this[memberName] : ref.$hostElement$[memberName];
               setValue(this, memberName, newValue, cmpMeta);
               return;
             }
             {
-              if (
-                (flags & 1) /* isElementConstructor */ === 0 ||
-                (cmpMeta.$members$[memberName][0] & 4096) /* Setter */ === 0
-              ) {
+              if ((flags & 1 /* isElementConstructor */) === 0 || (cmpMeta.$members$[memberName][0] & 4096 /* Setter */) === 0) {
                 setValue(this, memberName, newValue, cmpMeta);
                 if (flags & 1 /* isElementConstructor */ && !ref.$lazyInstance$) {
                   ref.$onReadyPromise$.then(() => {
-                    if (
-                      cmpMeta.$members$[memberName][0] & 4096 /* Setter */ &&
-                      ref.$lazyInstance$[memberName] !== ref.$instanceValues$.get(memberName)
-                    ) {
+                    if (cmpMeta.$members$[memberName][0] & 4096 /* Setter */ && ref.$lazyInstance$[memberName] !== ref.$instanceValues$.get(memberName)) {
                       ref.$lazyInstance$[memberName] = newValue;
                     }
                   });
@@ -1152,48 +1009,38 @@ var proxyComponent = (Cstr, cmpMeta, flags) => {
                 ref.$onReadyPromise$.then(() => setterSetVal());
               }
             }
-          },
+          }
         });
       }
     });
-    if (flags & 1 /* isElementConstructor */) {
+    if ((flags & 1 /* isElementConstructor */)) {
       const attrNameToPropName = /* @__PURE__ */ new Map();
-      prototype.attributeChangedCallback = function (attrName, oldValue, newValue) {
+      prototype.attributeChangedCallback = function(attrName, oldValue, newValue) {
         plt.jmp(() => {
           var _a2;
           const propName = attrNameToPropName.get(attrName);
           if (this.hasOwnProperty(propName) && BUILD.lazyLoad) {
             newValue = this[propName];
             delete this[propName];
-          } else if (
-            prototype.hasOwnProperty(propName) &&
-            typeof this[propName] === 'number' && // cast type to number to avoid TS compiler issues
-            this[propName] == newValue
-          ) {
+          } else if (prototype.hasOwnProperty(propName) && typeof this[propName] === "number" && // cast type to number to avoid TS compiler issues
+          this[propName] == newValue) {
             return;
           } else if (propName == null) {
             const hostRef = getHostRef(this);
             const flags2 = hostRef == null ? void 0 : hostRef.$flags$;
-            if (
-              flags2 &&
-              !((flags2 & 8) /* isConstructingInstance */) &&
-              flags2 & 128 /* isWatchReady */ &&
-              newValue !== oldValue
-            ) {
-              const instance = hostRef.$lazyInstance$;
+            if (flags2 && !(flags2 & 8 /* isConstructingInstance */) && flags2 & 128 /* isWatchReady */ && newValue !== oldValue) {
+              const instance = hostRef.$lazyInstance$ ;
               const entry = (_a2 = cmpMeta.$watchers$) == null ? void 0 : _a2[attrName];
-              entry == null
-                ? void 0
-                : entry.forEach(callbackName => {
-                    if (instance[callbackName] != null) {
-                      instance[callbackName].call(instance, newValue, oldValue, attrName);
-                    }
-                  });
+              entry == null ? void 0 : entry.forEach((callbackName) => {
+                if (instance[callbackName] != null) {
+                  instance[callbackName].call(instance, newValue, oldValue, attrName);
+                }
+              });
             }
             return;
           }
           const propDesc = Object.getOwnPropertyDescriptor(prototype, propName);
-          newValue = newValue === null && typeof this[propName] === 'boolean' ? false : newValue;
+          newValue = newValue === null && typeof this[propName] === "boolean" ? false : newValue;
           if (newValue !== this[propName] && (!propDesc.get || !!propDesc.set)) {
             this[propName] = newValue;
           }
@@ -1202,13 +1049,11 @@ var proxyComponent = (Cstr, cmpMeta, flags) => {
       Cstr.observedAttributes = Array.from(
         /* @__PURE__ */ new Set([
           ...Object.keys((_b = cmpMeta.$watchers$) != null ? _b : {}),
-          ...members
-            .filter(([_, m]) => m[0] & 15 /* HasAttribute */)
-            .map(([propName, m]) => {
-              const attrName = m[1] || propName;
-              attrNameToPropName.set(attrName, propName);
-              return attrName;
-            }),
+          ...members.filter(([_, m]) => m[0] & 15 /* HasAttribute */).map(([propName, m]) => {
+            const attrName = m[1] || propName;
+            attrNameToPropName.set(attrName, propName);
+            return attrName;
+          })
         ])
       );
     }
@@ -1219,12 +1064,12 @@ var proxyComponent = (Cstr, cmpMeta, flags) => {
 // src/runtime/initialize-component.ts
 var initializeComponent = async (elm, hostRef, cmpMeta, hmrVersionId) => {
   let Cstr;
-  if ((hostRef.$flags$ & 32) /* hasInitializedComponent */ === 0) {
+  if ((hostRef.$flags$ & 32 /* hasInitializedComponent */) === 0) {
     hostRef.$flags$ |= 32 /* hasInitializedComponent */;
     const bundleId = cmpMeta.$lazyBundleId$;
     if (bundleId) {
       const CstrImport = loadModule(cmpMeta, hostRef);
-      if (CstrImport && 'then' in CstrImport) {
+      if (CstrImport && "then" in CstrImport) {
         const endLoad = uniqueTime();
         Cstr = await CstrImport;
         endLoad();
@@ -1232,15 +1077,13 @@ var initializeComponent = async (elm, hostRef, cmpMeta, hmrVersionId) => {
         Cstr = CstrImport;
       }
       if (!Cstr) {
-        throw new Error(
-          `Constructor for "${cmpMeta.$tagName$}#${hostRef.$modeName$}" was not found`
-        );
+        throw new Error(`Constructor for "${cmpMeta.$tagName$}#${hostRef.$modeName$}" was not found`);
       }
       if (!Cstr.isProxied) {
         proxyComponent(Cstr, cmpMeta, 2 /* proxyState */);
         Cstr.isProxied = true;
       }
-      const endNewInstance = createTime('createInstance', cmpMeta.$tagName$);
+      const endNewInstance = createTime("createInstance", cmpMeta.$tagName$);
       {
         hostRef.$flags$ |= 8 /* isConstructingInstance */;
       }
@@ -1256,44 +1099,45 @@ var initializeComponent = async (elm, hostRef, cmpMeta, hmrVersionId) => {
     } else {
       Cstr = elm.constructor;
       const cmpTag = elm.localName;
-      customElements.whenDefined(cmpTag).then(() => (hostRef.$flags$ |= 128) /* isWatchReady */);
+      customElements.whenDefined(cmpTag).then(() => hostRef.$flags$ |= 128 /* isWatchReady */);
     }
     if (Cstr && Cstr.style) {
       let style;
-      if (typeof Cstr.style === 'string') {
+      if (typeof Cstr.style === "string") {
         style = Cstr.style;
       }
       const scopeId2 = getScopeId(cmpMeta);
       if (!styles.has(scopeId2)) {
-        const endRegisterStyles = createTime('registerStyles', cmpMeta.$tagName$);
-        registerStyle(scopeId2, style, !!((cmpMeta.$flags$ & 1) /* shadowDomEncapsulation */));
+        const endRegisterStyles = createTime("registerStyles", cmpMeta.$tagName$);
+        registerStyle(scopeId2, style, !!(cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */));
         endRegisterStyles();
       }
     }
   }
   const ancestorComponent = hostRef.$ancestorComponent$;
   const schedule = () => scheduleUpdate(hostRef, true);
-  if (ancestorComponent && ancestorComponent['s-rc']) {
-    ancestorComponent['s-rc'].push(schedule);
+  if (ancestorComponent && ancestorComponent["s-rc"]) {
+    ancestorComponent["s-rc"].push(schedule);
   } else {
     schedule();
   }
 };
-var fireConnectedCallback = (instance, elm) => {};
+var fireConnectedCallback = (instance, elm) => {
+};
 
 // src/runtime/connected-callback.ts
-var connectedCallback = elm => {
-  if ((plt.$flags$ & 1) /* isTmpDisconnected */ === 0) {
+var connectedCallback = (elm) => {
+  if ((plt.$flags$ & 1 /* isTmpDisconnected */) === 0) {
     const hostRef = getHostRef(elm);
     const cmpMeta = hostRef.$cmpMeta$;
-    const endConnected = createTime('connectedCallback', cmpMeta.$tagName$);
-    if (!((hostRef.$flags$ & 1) /* hasConnected */)) {
+    const endConnected = createTime("connectedCallback", cmpMeta.$tagName$);
+    if (!(hostRef.$flags$ & 1 /* hasConnected */)) {
       hostRef.$flags$ |= 1 /* hasConnected */;
       {
         let ancestorComponent = elm;
-        while ((ancestorComponent = ancestorComponent.parentNode || ancestorComponent.host)) {
-          if (ancestorComponent['s-p']) {
-            attachToAncestor(hostRef, (hostRef.$ancestorComponent$ = ancestorComponent));
+        while (ancestorComponent = ancestorComponent.parentNode || ancestorComponent.host) {
+          if (ancestorComponent["s-p"]) {
+            attachToAncestor(hostRef, hostRef.$ancestorComponent$ = ancestorComponent);
             break;
           }
         }
@@ -1311,20 +1155,19 @@ var connectedCallback = elm => {
         initializeComponent(elm, hostRef, cmpMeta);
       }
     } else {
-      if (hostRef == null ? void 0 : hostRef.$lazyInstance$);
-      else if (hostRef == null ? void 0 : hostRef.$onReadyPromise$) {
+      if (hostRef == null ? void 0 : hostRef.$lazyInstance$) ; else if (hostRef == null ? void 0 : hostRef.$onReadyPromise$) {
         hostRef.$onReadyPromise$.then(() => fireConnectedCallback());
       }
     }
     endConnected();
   }
 };
-var disconnectInstance = (instance, elm) => {};
-var disconnectedCallback = async elm => {
-  if ((plt.$flags$ & 1) /* isTmpDisconnected */ === 0) {
+var disconnectInstance = (instance, elm) => {
+};
+var disconnectedCallback = async (elm) => {
+  if ((plt.$flags$ & 1 /* isTmpDisconnected */) === 0) {
     const hostRef = getHostRef(elm);
-    if (hostRef == null ? void 0 : hostRef.$lazyInstance$);
-    else if (hostRef == null ? void 0 : hostRef.$onReadyPromise$) {
+    if (hostRef == null ? void 0 : hostRef.$lazyInstance$) ; else if (hostRef == null ? void 0 : hostRef.$onReadyPromise$) {
       hostRef.$onReadyPromise$.then(() => disconnectInstance());
     }
   }
@@ -1344,21 +1187,21 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
   const exclude = options.exclude || [];
   const customElements2 = win.customElements;
   const head = doc.head;
-  const metaCharset = /* @__PURE__ */ head.querySelector('meta[charset]');
-  const dataStyles = /* @__PURE__ */ doc.createElement('style');
+  const metaCharset = /* @__PURE__ */ head.querySelector("meta[charset]");
+  const dataStyles = /* @__PURE__ */ doc.createElement("style");
   const deferredConnectedCallbacks = [];
   let appLoadFallback;
   let isBootstrapping = true;
   Object.assign(plt, options);
-  plt.$resourcesUrl$ = new URL(options.resourcesUrl || './', doc.baseURI).href;
+  plt.$resourcesUrl$ = new URL(options.resourcesUrl || "./", doc.baseURI).href;
   let hasSlotRelocation = false;
-  lazyBundles.map(lazyBundle => {
-    lazyBundle[1].map(compactMeta => {
+  lazyBundles.map((lazyBundle) => {
+    lazyBundle[1].map((compactMeta) => {
       const cmpMeta = {
         $flags$: compactMeta[0],
         $tagName$: compactMeta[1],
         $members$: compactMeta[2],
-        $listeners$: compactMeta[3],
+        $listeners$: compactMeta[3]
       };
       if (cmpMeta.$flags$ & 4 /* hasSlotRelocation */) {
         hasSlotRelocation = true;
@@ -1378,10 +1221,10 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
             {
               if (!self.shadowRoot) {
                 {
-                  self.attachShadow({ mode: 'open' });
+                  self.attachShadow({ mode: "open" });
                 }
               } else {
-                if (self.shadowRoot.mode !== 'open') {
+                if (self.shadowRoot.mode !== "open") {
                   throw new Error(
                     `Unable to re-use existing shadow root for ${cmpMeta.$tagName$}! Mode is set to ${self.shadowRoot.mode} but Stencil only supports open shadow roots.`
                   );
@@ -1410,16 +1253,11 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
           plt.raf(() => {
             var _a3;
             const hostRef = getHostRef(this);
-            const i2 = deferredConnectedCallbacks.findIndex(host => host === this);
+            const i2 = deferredConnectedCallbacks.findIndex((host) => host === this);
             if (i2 > -1) {
               deferredConnectedCallbacks.splice(i2, 1);
             }
-            if (
-              ((_a3 = hostRef == null ? void 0 : hostRef.$vnode$) == null
-                ? void 0
-                : _a3.$elm$) instanceof Node &&
-              !hostRef.$vnode$.$elm$.isConnected
-            ) {
+            if (((_a3 = hostRef == null ? void 0 : hostRef.$vnode$) == null ? void 0 : _a3.$elm$) instanceof Node && !hostRef.$vnode$.$elm$.isConnected) {
               delete hostRef.$vnode$.$elm$;
             }
           });
@@ -1446,27 +1284,27 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
       dataStyles.textContent += cmpTags.sort() + HYDRATED_CSS;
     }
     if (dataStyles.innerHTML.length) {
-      dataStyles.setAttribute('data-styles', '');
+      dataStyles.setAttribute("data-styles", "");
       const nonce = (_a = plt.$nonce$) != null ? _a : queryNonceMetaTagContent(doc);
       if (nonce != null) {
-        dataStyles.setAttribute('nonce', nonce);
+        dataStyles.setAttribute("nonce", nonce);
       }
       head.insertBefore(dataStyles, metaCharset ? metaCharset.nextSibling : head.firstChild);
     }
   }
   isBootstrapping = false;
   if (deferredConnectedCallbacks.length) {
-    deferredConnectedCallbacks.map(host => host.connectedCallback());
+    deferredConnectedCallbacks.map((host) => host.connectedCallback());
   } else {
     {
-      plt.jmp(() => (appLoadFallback = setTimeout(appDidLoad, 30)));
+      plt.jmp(() => appLoadFallback = setTimeout(appDidLoad, 30));
     }
   }
   endBootstrap();
 };
 
 // src/runtime/nonce.ts
-var setNonce = nonce => (plt.$nonce$ = nonce);
+var setNonce = (nonce) => plt.$nonce$ = nonce;
 
 exports.bootstrapLazy = bootstrapLazy;
 exports.h = h;
