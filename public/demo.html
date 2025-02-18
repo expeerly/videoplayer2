@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Expeerly Retailer Integration</title>
+
+    <script type="module" src="./expeerly.js"></script>
+
+  </head>
+  <body>
+    <expeerly-component
+      type="carousel"
+      gtin="4548736157088"
+      theme="light"
+      max-videos="4"
+    >
+    </expeerly-component>
+
+    <script>
+      setTimeout(()=>{
+        const expeerlyElement = document.createElement('expeerly-component');
+        expeerlyElement.setAttribute('type', 'badge');
+        expeerlyElement.setAttribute('gtin', '4548736157088');
+        expeerlyElement.setAttribute('theme', 'dark');
+        expeerlyElement.setAttribute('max-videos', '4');
+
+        document.body.appendChild(expeerlyElement);
+
+      },1500)
+
+      setTimeout(()=>{
+        const expeerlyElement = document.createElement('expeerly-component');
+        expeerlyElement.setAttribute('type', 'reviewblock');
+        expeerlyElement.setAttribute('gtin', '4548736157088');
+        expeerlyElement.setAttribute('theme', 'dark');
+        expeerlyElement.setAttribute('max-videos', '4');
+        expeerlyElement.setAttribute('locale', 'de');
+
+        document.body.appendChild(expeerlyElement);
+
+      },3000)
+    </script>
+  </body>
+</html>
