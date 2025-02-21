@@ -169,7 +169,7 @@ const ExpeerlyComponent = class {
                     borderRadius: '8px',
                     overflow: 'hidden',
                     flexShrink: '0',
-                } }, playbackId ? (h("mux-player", { "playback-id": playbackId, "stream-type": "on-demand", controls: true, muted: true, "data-store-id": storeId, style: { width: '100%', height: '100%', objectFit: 'cover' } })) : (h("div", { style: {
+                } }, playbackId ? (h("mux-player", { "playback-id": playbackId, "stream-type": "on-demand", controls: true, muted: true, "metadata-custom-1": storeId, style: { width: '100%', height: '100%', objectFit: 'cover' } })) : (h("div", { style: {
                     width: '100%',
                     height: '100%',
                     background: '#ccc',
@@ -208,7 +208,7 @@ const ExpeerlyComponent = class {
                 overflow: 'hidden',
                 flexShrink: '0',
                 border: '1px solid #ddd',
-            } }, playbackId ? (h("mux-player", { "playback-id": playbackId, "stream-type": "on-demand", controls: true, muted: true, "data-store-id": this.storeId, style: { width: '100%', height: '100%', objectFit: 'cover' } })) : (h("div", { style: {
+            } }, playbackId ? (h("mux-player", { "playback-id": playbackId, "stream-type": "on-demand", controls: true, muted: true, "metadata-custom-1": this.storeId, style: { width: '100%', height: '100%', objectFit: 'cover' } })) : (h("div", { style: {
                 width: '100%',
                 height: '100%',
                 background: '#ccc',
