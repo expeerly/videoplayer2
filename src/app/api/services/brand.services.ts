@@ -15,7 +15,7 @@ export async function handleCreateBrand(input: BrandInputType[]): Promise<Brand[
       .insert(brand)
       .values(input)
       .onConflictDoUpdate({
-        target: brand.slug,
+        target: brand.id,
         set: {
           brandName: sql`EXCLUDED."brandName"`,
           brandData: sql`EXCLUDED."brandData"`,
