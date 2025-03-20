@@ -29,7 +29,7 @@ export const chunkArray = <T>(array: T[], size: number): T[][] => {
 
 export const uploadData = async (
   transformedData: TransformResult[],
-  cb: (data: TransformResult[]) => Promise<ApiResponse<unknown> | null>,
+  cb: (data: TransformResult[]) => Promise<ApiResponse<string[]> | null>,
   chunkSize = 100
 ) => {
   const dataChunks = chunkArray(transformedData, chunkSize);
@@ -40,8 +40,9 @@ export const uploadData = async (
   for (const chunk of dataChunks) {
     try {
       const res = await cb(chunk);
-      if (res?.success) {
-        successCount += chunk?.length;
+      if (res?.success && res?.data) {
+        successCount += res?.data?.length || 0;
+        failedCount += chunk?.length - (res?.data?.length || 0);
       } else {
         failedCount += chunk?.length;
       }

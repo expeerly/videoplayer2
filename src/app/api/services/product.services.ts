@@ -12,8 +12,15 @@ export const createProducts = async (input: ProductInputType[]) => {
     throw new Error('Input is required and cannot be empty');
   }
 
+  const brandIds = input.map(item => item.brandId).filter(Boolean) as string[];
+
+  const existingBrands = await db.query.brand.findMany({
+    where: (brand, { inArray }) => inArray(brand.id, brandIds),
+  });
+
+  const products = input.filter(item => existingBrands.some(brand => brand.id === item.brandId));
   // Ensure proper date handling and validate categoryId
-  const processedInput = input.map(item => {
+  const processedInput = products.map(item => {
     return {
       ...item,
       createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
