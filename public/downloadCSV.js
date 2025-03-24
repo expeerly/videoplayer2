@@ -54,4 +54,4 @@ async function downloadCSVFromBubble() {
   }
 }
 
-downloadCSVFromBubble();
+// downloadCSVFromBubble();
