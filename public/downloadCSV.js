@@ -1,6 +1,6 @@
 async function downloadCSVFromBubble() {
   const endpoint =
-    "https://app.expeerly.com/version-922nc/api/1.1/wf/get_csv_gtin";
+    "https://app.expeerly.com/api/1.1/wf/get_csv_gtin";
 
   try {
     // Fetch the data
