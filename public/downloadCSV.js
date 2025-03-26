@@ -15,7 +15,7 @@ async function downloadCSVFromBubble() {
       return;
     }
 
-    const filtered = data.filter((row) => row.id || row.gtin || row.upc);
+    const filtered = data.filter((row) => row.gtin || row.upc);
 
     // Extract headers from the first object
     const headers = Object.keys(data[0]);
