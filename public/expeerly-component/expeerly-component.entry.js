@@ -66,12 +66,14 @@ const ExpeerlyComponent = class {
             const data = await response.json();
             if (!data || data.status !== 'success' || !data.response || !Array.isArray(data.response.videos)) {
                 this.errorMessage = 'No Expeerly reviews available.';
+                this.reviews = [];
                 this.loading = false;
                 return;
             }
             const fetchedReviews = data.response.videos;
             if (fetchedReviews.length === 0) {
                 this.errorMessage = 'No Expeerly reviews found for this product.';
+                this.reviews = [];
                 this.loading = false;
                 return;
             }
@@ -90,7 +92,8 @@ const ExpeerlyComponent = class {
             return h("div", { style: { fontFamily: 'Mulish,sans-serif' } }, "Loading Expeerly reviews...");
         }
         if (this.errorMessage) {
-            return h("div", null, this.errorMessage);
+            console.error(this.errorMessage);
+            return null;
         }
         // Render based on type
         switch (this.type) {
@@ -110,8 +113,6 @@ const ExpeerlyComponent = class {
                     avgRating: this.calculateAvgRating(),
                     avgRatingStr: this.calculateAvgRating().toString(),
                     totalReviews: this.reviews.length,
-                    // reviewLabel: this.calculateAvgRating() === 1 ? 'Review' : 'Reviews',
-                    // footerLabel: 'Expeerly is an independent review community and service. Learn more.',
                 });
             case 'carousel':
                 return this.renderCarousel({
@@ -157,10 +158,19 @@ const ExpeerlyComponent = class {
         const blockBg = theme === 'dark' ? '#2C1277' : '#FFFFFF'; // Background color based on theme
         const blockFg = theme === 'dark' ? '#FFFFFF' : '#000000'; // Text color based on theme
         const logoHeight = theme === 'minimal' ? '24px' : '60px'; // Logo height based on theme
-        return (h("div", { class: "expeerly--reviewblock", style: { fontFamily: 'Mulish,sans-serif', margin: '20px auto', padding: '10px' } }, h("div", { style: { background: blockBg, color: blockFg, padding: '8px', borderRadius: '8px', marginBottom: '8px', maxWidth: '300px' } }, h("img", { src: expeerlyLogo, alt: "Expeerly Logo", style: { height: logoHeight } }), h("div", { style: { display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' } }, h("div", { style: { fontSize: '14px', fontWeight: 'bold' } }, avgRatingStr), h("div", { style: { display: 'inline-flex', alignItems: 'center' } }, this.renderStarsInline(avgRating)), h("span", { style: { color: '#ff0080' } }, "(", totalReviews, " ", reviewLabel, ")"))), h("div", { style: { display: 'flex', gap: '16px', overflowX: 'auto' } }, reviews.map(r => this.renderReviewItem(r))), h("div", { style: { marginTop: '12px', fontSize: '14px', color: accentColor }, innerHTML: footerLabel })));
+        return (h("div", { class: "expeerly--reviewblock", style: {
+                fontFamily: 'Mulish,sans-serif',
+                margin: reviews.length > 0 ? '20px auto' : '0',
+                padding: reviews.length > 0 ? '10px' : '0',
+            } }, h("div", { style: { background: blockBg, color: blockFg, padding: '8px', borderRadius: '8px', marginBottom: '8px', maxWidth: '300px' } }, h("img", { src: expeerlyLogo, alt: "Expeerly Logo", style: { height: logoHeight } }), h("div", { style: { display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' } }, h("div", { style: { fontSize: '14px', fontWeight: 'bold' } }, avgRatingStr), h("div", { style: { display: 'inline-flex', alignItems: 'center' } }, this.renderStarsInline(avgRating)), h("span", { style: { color: '#ff0080' } }, "(", totalReviews, " ", reviewLabel, ")"))), h("div", { style: { display: 'flex', gap: '16px', overflowX: 'auto' } }, reviews.map(r => this.renderReviewItem(r))), h("div", { style: { marginTop: '12px', fontSize: '14px', color: accentColor }, innerHTML: footerLabel })));
     }
     renderCarousel({ reviews, storeId }) {
-        return (h("div", { class: "expeerly--carousel", style: { fontFamily: 'Mulish,sans-serif', margin: '20px auto', padding: '10px', borderRadius: '6px' } }, h("div", { style: { display: 'flex', gap: '16px', overflowX: 'auto' } }, reviews.map(rev => {
+        return (h("div", { class: "expeerly--carousel", style: {
+                fontFamily: 'Mulish,sans-serif',
+                margin: reviews.length > 0 ? '20px auto' : '0',
+                padding: reviews.length > 0 ? '10px' : '0',
+                borderRadius: '6px',
+            } }, h("div", { style: { display: 'flex', gap: '16px', overflowX: 'auto' } }, reviews.map(rev => {
             const playbackId = rev.mux_playback_id_text || '';
             return (h("div", { class: "expeerly--slide", style: {
                     position: 'relative',
