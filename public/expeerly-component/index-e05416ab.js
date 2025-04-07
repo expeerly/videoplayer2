@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-this-alias */
-/* eslint-disable @next/next/no-assign-module-variable */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 const NAMESPACE = 'expeerly-implementation';
-const BUILD = /* expeerly-implementation */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, cmpDidLoad: false, cmpDidRender: false, cmpDidUnload: false, cmpDidUpdate: false, cmpShouldUpdate: false, cmpWillLoad: true, cmpWillRender: false, cmpWillUpdate: false, connectedCallback: false, constructableCSS: true, cssAnnotations: true, devTools: false, disconnectedCallback: false, element: false, event: false, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: false, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: false, isTesting: false, lazyLoad: true, lifecycle: true, lifecycleDOMEvents: false, member: true, method: false, mode: false, modernPropertyDecls: false, observeAttribute: true, profile: false, prop: true, propBoolean: false, propMutable: false, propNumber: true, propString: true, reflect: false, scoped: false, scopedSlotTextContentFix: false, scriptDataOpts: false, shadowDelegatesFocus: false, shadowDom: true, slot: false, slotChildNodesFix: false, slotRelocation: false, state: true, style: true, svg: true, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: true, vdomFunctional: false, vdomKey: true, vdomListener: true, vdomPropOrAttr: true, vdomRef: false, vdomRender: true, vdomStyle: true, vdomText: true, vdomXlink: false, watchCallback: false };
+const BUILD = /* expeerly-implementation */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, cmpDidLoad: true, cmpDidRender: false, cmpDidUnload: false, cmpDidUpdate: false, cmpShouldUpdate: false, cmpWillLoad: true, cmpWillRender: false, cmpWillUpdate: false, connectedCallback: false, constructableCSS: true, cssAnnotations: true, devTools: false, disconnectedCallback: true, element: false, event: false, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: false, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: false, isTesting: false, lazyLoad: true, lifecycle: true, lifecycleDOMEvents: false, member: true, method: false, mode: false, modernPropertyDecls: false, observeAttribute: true, profile: false, prop: true, propBoolean: false, propMutable: false, propNumber: true, propString: true, reflect: false, scoped: false, scopedSlotTextContentFix: false, scriptDataOpts: false, shadowDelegatesFocus: false, shadowDom: true, slot: false, slotChildNodesFix: false, slotRelocation: false, state: true, style: true, svg: true, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: true, vdomFunctional: false, vdomKey: true, vdomListener: true, vdomPropOrAttr: true, vdomRef: false, vdomRender: true, vdomStyle: true, vdomText: true, vdomXlink: false, watchCallback: false };
 
 /*
  Stencil Client Platform v4.26.0 | MIT Licensed | https://stenciljs.com
@@ -847,11 +844,15 @@ var postUpdateComponent = (hostRef) => {
   const tagName = hostRef.$cmpMeta$.$tagName$;
   const elm = hostRef.$hostElement$;
   const endPostUpdate = createTime("postUpdate", tagName);
+  const instance = hostRef.$lazyInstance$ ;
   const ancestorComponent = hostRef.$ancestorComponent$;
   if (!(hostRef.$flags$ & 64 /* hasLoadedComponent */)) {
     hostRef.$flags$ |= 64 /* hasLoadedComponent */;
     {
       addHydratedFlag(elm);
+    }
+    {
+      safeCall(instance, "componentDidLoad", void 0, elm);
     }
     endPostUpdate();
     {
@@ -1140,12 +1141,17 @@ var connectedCallback = (elm) => {
   }
 };
 var disconnectInstance = (instance, elm) => {
+  {
+    safeCall(instance, "disconnectedCallback", void 0, elm || instance);
+  }
 };
 var disconnectedCallback = async (elm) => {
   if ((plt.$flags$ & 1 /* isTmpDisconnected */) === 0) {
     const hostRef = getHostRef(elm);
-    if (hostRef == null ? void 0 : hostRef.$lazyInstance$) ; else if (hostRef == null ? void 0 : hostRef.$onReadyPromise$) {
-      hostRef.$onReadyPromise$.then(() => disconnectInstance());
+    if (hostRef == null ? void 0 : hostRef.$lazyInstance$) {
+      disconnectInstance(hostRef.$lazyInstance$, elm);
+    } else if (hostRef == null ? void 0 : hostRef.$onReadyPromise$) {
+      hostRef.$onReadyPromise$.then(() => disconnectInstance(hostRef.$lazyInstance$, elm));
     }
   }
   if (rootAppliedStyles.has(elm)) {
@@ -1285,4 +1291,4 @@ var setNonce = (nonce) => plt.$nonce$ = nonce;
 
 export { bootstrapLazy as b, h, promiseResolve as p, registerInstance as r, setNonce as s };
 
-//# sourceMappingURL=index-ab2b827b.js.map
+//# sourceMappingURL=index-e05416ab.js.map
