@@ -17,7 +17,7 @@ export const HowExpeerlyWorks: FunctionComponent = async () => {
         <Button
           size="lg"
           className="w-full sm:w-[300px] mx-auto"
-          href="https://www.get.expeerly.com/about-us"
+          href="https://www.get.expeerly.com/"
           variant="outline"
           aria-label={t('learn_more.aria_label')}
         >

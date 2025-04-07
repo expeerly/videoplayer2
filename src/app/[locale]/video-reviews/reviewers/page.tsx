@@ -86,7 +86,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
             button: {
               label: t('CTABlockAllReviewers.learnMore'),
               ariaLabel: t('CTABlockAllReviewers.learnMore_arialabel'),
-              href: 'https://www.get.expeerly.com/become-a-creator',
+              href: 'https://www.get.expeerly.com/reviewers',
             },
           }}
         />

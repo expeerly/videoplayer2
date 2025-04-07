@@ -30,7 +30,7 @@ export const Footer: FunctionComponent = async () => {
           </div>
           <div className="flex flex-col gap-6">
             <Link
-              href="https://www.get.expeerly.com/about-us"
+              href="https://www.get.expeerly.com/"
               className="text-grey-700 font-bold"
               aria-label={t('about_us.aria_label')}
               target="_blank"
