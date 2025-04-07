@@ -105,11 +105,11 @@
       "aria_label": "Soumettre une critique vidéo en tant que critique"
     },
     "for_brands": {
-      "label": "Pour marques et entreprises",
+      "label": "Pour marques & entreprises",
       "aria_label": "En savoir plus sur Expeerly en tant que marque ou entreprise"
     },
     "for_marketplaces": {
-      "label": "Pour marketplaces",
+      "label": "Pour marchands & marketplaces",
       "aria_label": "En savoir plus sur Expeerly en tant que marketplace ou boutique en ligne"
     },
     "language": {

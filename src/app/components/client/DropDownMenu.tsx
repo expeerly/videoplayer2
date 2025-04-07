@@ -82,14 +82,14 @@ const defaultMenuItems = (categroies: CategoryData[] = []): MenuItem[] => {
       key: 'learn_more',
       label: 'Learn more',
       icon: InfoIcon,
-      href: 'https://www.get.expeerly.com/about-us',
+      href: 'https://www.get.expeerly.com/',
       target: '_blank',
     },
     {
       key: 'submit_video_review',
       label: 'Submit a video review',
       icon: VideoIcon,
-      href: 'https://www.get.expeerly.com/become-a-creator',
+      href: 'https://www.get.expeerly.com/reviewers',
       target: '_blank',
     },
     {
@@ -103,7 +103,7 @@ const defaultMenuItems = (categroies: CategoryData[] = []): MenuItem[] => {
       key: 'for_marketplaces',
       label: 'For marketplaces',
       icon: CartIcon,
-      href: 'https://www.get.expeerly.com/for-marketplaces',
+      href: 'https://www.get.expeerly.com/retailers',
       target: '_blank',
     },
     {

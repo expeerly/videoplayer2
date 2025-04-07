@@ -25,7 +25,7 @@ export const ConversionSlider: FunctionComponent<LocaleProps> = async () => {
           <Button
             size="lg"
             variant="secondary"
-            href="https://www.get.expeerly.com/for-marketplaces"
+            href="https://www.get.expeerly.com/retailers"
             fullWidth
             className=" bg-white text-center"
             aria-label={t('integrate_video.aria_label')}
