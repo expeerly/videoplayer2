@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { r as registerInstance, h } from './index-e05416ab.js';
+import { r as registerInstance, h } from './index-ab2b827b.js';
 
 window.expeerly = {
     config: {
