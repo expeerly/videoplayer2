@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { r as registerInstance, h } from './index-ab2b827b.js';
+import { r as registerInstance, h, g as getElement } from './index-366bcf8a.js';
 
 window.expeerly = {
     config: {
@@ -31,6 +31,7 @@ const ExpeerlyComponent = class {
         this.loading = true;
         this.errorMessage = '';
         this.reviews = [];
+        this.playingPlaybackId = '';
         // LOCALE MAPS
         this.REVIEW_TEXT_SINGULAR_MAP = {
             en: 'review',
@@ -50,6 +51,29 @@ const ExpeerlyComponent = class {
             fr: `Expeerly est une communauté et un service d'évaluation indépendant. <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">En savoir plus.</a>`,
             it: `Expeerly è una comunità e un servizio di recensioni indipendente. <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">Scopri di più.</a>`,
         };
+        /**
+         * Called when any mux‑player starts playing.
+         * We pause all the others, then mark this one as playing.
+         */
+        this.handlePlaying = (_ev, playbackId) => {
+            var _a;
+            // pause every other mux-player in our shadow
+            const players = ((_a = this.el.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelectorAll('mux-player')) || [];
+            players.forEach((p) => {
+                if (p.getAttribute('playback-id') !== playbackId) {
+                    p.pause();
+                }
+            });
+            this.playingPlaybackId = playbackId;
+        };
+        /**
+         * Called on pause or ended: clear our playing flag if it matches.
+         */
+        this.handlePauseOrEnd = (_ev, playbackId) => {
+            if (this.playingPlaybackId === playbackId) {
+                this.playingPlaybackId = '';
+            }
+        };
     }
     componentWillLoad() {
         this.loadReviews();
@@ -66,12 +90,14 @@ const ExpeerlyComponent = class {
             const data = await response.json();
             if (!data || data.status !== 'success' || !data.response || !Array.isArray(data.response.videos)) {
                 this.errorMessage = 'No Expeerly reviews available.';
+                this.reviews = [];
                 this.loading = false;
                 return;
             }
             const fetchedReviews = data.response.videos;
             if (fetchedReviews.length === 0) {
                 this.errorMessage = 'No Expeerly reviews found for this product.';
+                this.reviews = [];
                 this.loading = false;
                 return;
             }
@@ -90,7 +116,8 @@ const ExpeerlyComponent = class {
             return h("div", { style: { fontFamily: 'Mulish,sans-serif' } }, "Loading Expeerly reviews...");
         }
         if (this.errorMessage) {
-            return h("div", null, this.errorMessage);
+            console.error(this.errorMessage);
+            return null;
         }
         // Render based on type
         switch (this.type) {
@@ -110,13 +137,6 @@ const ExpeerlyComponent = class {
                     avgRating: this.calculateAvgRating(),
                     avgRatingStr: this.calculateAvgRating().toString(),
                     totalReviews: this.reviews.length,
-                    // reviewLabel: this.calculateAvgRating() === 1 ? 'Review' : 'Reviews',
-                    // footerLabel: 'Expeerly is an independent review community and service. Learn more.',
-                });
-            case 'carousel':
-                return this.renderCarousel({
-                    reviews: this.reviews.slice(0, this.maxVideos),
-                    storeId: this.storeId,
                 });
         }
     }
@@ -157,27 +177,11 @@ const ExpeerlyComponent = class {
         const blockBg = theme === 'dark' ? '#2C1277' : '#FFFFFF'; // Background color based on theme
         const blockFg = theme === 'dark' ? '#FFFFFF' : '#000000'; // Text color based on theme
         const logoHeight = theme === 'minimal' ? '24px' : '60px'; // Logo height based on theme
-        return (h("div", { class: "expeerly--reviewblock", style: { fontFamily: 'Mulish,sans-serif', margin: '20px auto', padding: '10px' } }, h("div", { style: { background: blockBg, color: blockFg, padding: '8px', borderRadius: '8px', marginBottom: '8px', maxWidth: '300px' } }, h("img", { src: expeerlyLogo, alt: "Expeerly Logo", style: { height: logoHeight } }), h("div", { style: { display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' } }, h("div", { style: { fontSize: '14px', fontWeight: 'bold' } }, avgRatingStr), h("div", { style: { display: 'inline-flex', alignItems: 'center' } }, this.renderStarsInline(avgRating)), h("span", { style: { color: '#ff0080' } }, "(", totalReviews, " ", reviewLabel, ")"))), h("div", { style: { display: 'flex', gap: '16px', overflowX: 'auto' } }, reviews.map(r => this.renderReviewItem(r))), h("div", { style: { marginTop: '12px', fontSize: '14px', color: accentColor }, innerHTML: footerLabel })));
-    }
-    renderCarousel({ reviews, storeId }) {
-        return (h("div", { class: "expeerly--carousel", style: { fontFamily: 'Mulish,sans-serif', margin: '20px auto', padding: '10px', borderRadius: '6px' } }, h("div", { style: { display: 'flex', gap: '16px', overflowX: 'auto' } }, reviews.map(rev => {
-            const playbackId = rev.mux_playback_id_text || '';
-            return (h("div", { class: "expeerly--slide", style: {
-                    position: 'relative',
-                    width: '180px',
-                    height: '320px',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    flexShrink: '0',
-                } }, playbackId ? (h("mux-player", { "playback-id": playbackId, "stream-type": "on-demand", controls: true, muted: true, "metadata-custom-1": storeId, style: { width: '100%', height: '100%', objectFit: 'cover' } })) : (h("div", { style: {
-                    width: '100%',
-                    height: '100%',
-                    background: '#ccc',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                } }, "No video"))));
-        }))));
+        return (h("div", { class: "expeerly--reviewblock", style: {
+                fontFamily: 'Mulish,sans-serif',
+                margin: reviews.length > 0 ? '20px auto' : '0',
+                padding: reviews.length > 0 ? '10px' : '0',
+            } }, h("div", { style: { background: blockBg, color: blockFg, padding: '8px', borderRadius: '8px', marginBottom: '8px', maxWidth: '300px' } }, h("img", { src: expeerlyLogo, alt: "Expeerly Logo", style: { height: logoHeight } }), h("div", { style: { display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' } }, h("div", { style: { fontSize: '14px', fontWeight: 'bold' } }, avgRatingStr), h("div", { style: { display: 'inline-flex', alignItems: 'center' } }, this.renderStarsInline(avgRating)), h("span", { style: { color: '#ff0080' } }, "(", totalReviews, " ", reviewLabel, ")"))), h("div", { style: { display: 'flex', gap: '16px', overflowX: 'auto' } }, reviews.map(r => this.renderReviewItem(r))), h("div", { style: { marginTop: '12px', fontSize: '14px', color: accentColor }, innerHTML: footerLabel })));
     }
     renderStarsInline(avgRating) {
         const roundRating = Math.round(avgRating);
@@ -195,11 +199,13 @@ const ExpeerlyComponent = class {
     }
     renderReviewItem(reviewData) {
         const playbackId = reviewData.mux_playback_id_text || '';
+        const isPlaying = this.playingPlaybackId === playbackId;
         const firstName = reviewData.reviewer_first_name_text || 'User';
         const lastName = reviewData.reviewer_last_name_text || '';
         const shortLast = lastName ? lastName[0].toUpperCase() + '.' : '';
         const rating = typeof reviewData.rating_number === 'number' ? reviewData.rating_number : 0;
         const profilePic = reviewData.reviewer_profile_pic_image || 'https://via.placeholder.com/64';
+        console.log('Playback ID:', playbackId);
         return (h("div", { style: {
                 position: 'relative',
                 width: '180px',
@@ -208,14 +214,14 @@ const ExpeerlyComponent = class {
                 overflow: 'hidden',
                 flexShrink: '0',
                 border: '1px solid #ddd',
-            } }, playbackId ? (h("mux-player", { "playback-id": playbackId, "stream-type": "on-demand", controls: true, muted: true, "metadata-custom-1": this.storeId, style: { width: '100%', height: '100%', objectFit: 'cover' } })) : (h("div", { style: {
+            } }, playbackId ? (h("mux-player", { id: `player-${playbackId}`, "playback-id": playbackId, "stream-type": "on-demand", controls: true, "metadata-custom-1": this.storeId, style: { width: '100%', height: '100%', objectFit: 'cover' }, onPlaying: (ev) => this.handlePlaying(ev, playbackId), onPause: (ev) => this.handlePauseOrEnd(ev, playbackId), onEnded: (ev) => this.handlePauseOrEnd(ev, playbackId) })) : (h("div", { style: {
                 width: '100%',
                 height: '100%',
                 background: '#ccc',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-            } }, "No video")), h("div", { style: { position: 'absolute', top: '8px', left: '8px', color: 'white' } }, h("div", { style: { display: 'flex', marginBottom: '4px' } }, this.renderStarsInline(rating))), h("div", { style: {
+            } }, "No video")), h("div", { style: { position: 'absolute', top: '8px', left: '8px', color: 'white' } }, h("div", { style: { display: 'flex', marginBottom: '4px' } }, this.renderStarsInline(rating))), h("div", { class: "review-overlay", style: {
                 position: 'absolute',
                 bottom: '0',
                 left: '0',
@@ -223,7 +229,7 @@ const ExpeerlyComponent = class {
                 background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
                 color: 'white',
                 padding: '8px',
-                display: 'flex',
+                display: isPlaying ? 'none' : 'flex',
                 alignItems: 'center',
                 gap: '8px',
                 fontSize: '0.9rem',
@@ -250,6 +256,7 @@ const ExpeerlyComponent = class {
         }
         return ratingCount > 0 ? parseFloat((Math.round((sumRating / ratingCount) * 10) / 10).toFixed(1)) : 0;
     }
+    get el() { return getElement(this); }
 };
 
 export { ExpeerlyComponent as expeerly_component };

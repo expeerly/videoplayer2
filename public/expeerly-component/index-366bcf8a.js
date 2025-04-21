@@ -282,6 +282,7 @@ var parsePropertyValue = (propValue, propType) => {
   }
   return propValue;
 };
+var getElement = (ref) => getHostRef(ref).$hostElement$ ;
 var emitEvent = (elm, name, opts) => {
   const ev = plt.ce(name, opts);
   elm.dispatchEvent(ev);
@@ -1283,6 +1284,6 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
 // src/runtime/nonce.ts
 var setNonce = (nonce) => plt.$nonce$ = nonce;
 
-export { bootstrapLazy as b, h, promiseResolve as p, registerInstance as r, setNonce as s };
+export { bootstrapLazy as b, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
 
-//# sourceMappingURL=index-ab2b827b.js.map
+//# sourceMappingURL=index-366bcf8a.js.map
