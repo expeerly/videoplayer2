@@ -32,6 +32,7 @@ const ExpeerlyComponent = class {
         this.errorMessage = '';
         this.reviews = [];
         this.playingPlaybackId = '';
+        this.playedPlaybackIds = new Set();
         // LOCALE MAPS
         this.REVIEW_TEXT_SINGULAR_MAP = {
             en: 'review',
@@ -57,6 +58,8 @@ const ExpeerlyComponent = class {
          */
         this.handlePlaying = (_ev, playbackId) => {
             var _a;
+            // mark it as played
+            this.playedPlaybackIds.add(playbackId);
             // pause every other mux-player in our shadow
             const players = ((_a = this.el.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelectorAll('mux-player')) || [];
             players.forEach((p) => {
@@ -84,7 +87,7 @@ const ExpeerlyComponent = class {
             this.loading = false;
             return;
         }
-        this.apiUrl = `https://app.expeerly.com/api/1.1/wf/get-product-videos-processed/?gtin=${encodeURIComponent(this.gtin)}`;
+        this.apiUrl = `https://app.expeerly.com/api/1.1/wf/get-product-videos-processed/?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
         try {
             const response = await fetch(this.apiUrl);
             const data = await response.json();
@@ -200,12 +203,12 @@ const ExpeerlyComponent = class {
     renderReviewItem(reviewData) {
         const playbackId = reviewData.mux_playback_id_text || '';
         const isPlaying = this.playingPlaybackId === playbackId;
+        const hasPlayed = this.playedPlaybackIds.has(playbackId);
         const firstName = reviewData.reviewer_first_name_text || 'User';
         const lastName = reviewData.reviewer_last_name_text || '';
         const shortLast = lastName ? lastName[0].toUpperCase() + '.' : '';
         const rating = typeof reviewData.rating_number === 'number' ? reviewData.rating_number : 0;
         const profilePic = reviewData.reviewer_profile_pic_image || 'https://via.placeholder.com/64';
-        console.log('Playback ID:', playbackId);
         return (h("div", { style: {
                 position: 'relative',
                 width: '180px',
@@ -229,7 +232,7 @@ const ExpeerlyComponent = class {
                 background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
                 color: 'white',
                 padding: '8px',
-                display: isPlaying ? 'none' : 'flex',
+                display: hasPlayed || isPlaying ? 'none' : 'flex',
                 alignItems: 'center',
                 gap: '8px',
                 fontSize: '0.9rem',
