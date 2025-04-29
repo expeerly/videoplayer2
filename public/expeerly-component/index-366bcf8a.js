@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
+/* eslint-disable @next/next/no-assign-module-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const NAMESPACE = 'expeerly-implementation';
 const BUILD = /* expeerly-implementation */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, cmpDidLoad: false, cmpDidRender: false, cmpDidUnload: false, cmpDidUpdate: false, cmpShouldUpdate: false, cmpWillLoad: true, cmpWillRender: false, cmpWillUpdate: false, connectedCallback: false, constructableCSS: true, cssAnnotations: true, devTools: false, disconnectedCallback: false, element: false, event: false, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: false, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: false, isTesting: false, lazyLoad: true, lifecycle: true, lifecycleDOMEvents: false, member: true, method: false, mode: false, modernPropertyDecls: false, observeAttribute: true, profile: false, prop: true, propBoolean: false, propMutable: false, propNumber: true, propString: true, reflect: false, scoped: false, scopedSlotTextContentFix: false, scriptDataOpts: false, shadowDelegatesFocus: false, shadowDom: true, slot: false, slotChildNodesFix: false, slotRelocation: false, state: true, style: true, svg: true, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: true, vdomFunctional: false, vdomKey: true, vdomListener: true, vdomPropOrAttr: true, vdomRef: false, vdomRender: true, vdomStyle: true, vdomText: true, vdomXlink: false, watchCallback: false };
 
@@ -279,6 +282,7 @@ var parsePropertyValue = (propValue, propType) => {
   }
   return propValue;
 };
+var getElement = (ref) => getHostRef(ref).$hostElement$ ;
 var emitEvent = (elm, name, opts) => {
   const ev = plt.ce(name, opts);
   elm.dispatchEvent(ev);
@@ -1280,6 +1284,6 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
 // src/runtime/nonce.ts
 var setNonce = (nonce) => plt.$nonce$ = nonce;
 
-export { bootstrapLazy as b, h, promiseResolve as p, registerInstance as r, setNonce as s };
+export { bootstrapLazy as b, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
 
-//# sourceMappingURL=index-ab2b827b.js.map
+//# sourceMappingURL=index-366bcf8a.js.map
