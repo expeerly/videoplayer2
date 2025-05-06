@@ -1,9 +1,7 @@
 async function downloadCSVFromBubble() {
-  const endpoint =
-    "https://app.expeerly.com/api/1.1/wf/get_csv_gtin";
+  const endpoint = "https://app.expeerly.com/api/1.1/wf/get_csv_gtin";
 
   try {
-    // Fetch the data
     const response = await fetch(endpoint);
     const output = await response.text();
     const jsonStartIndex = output.indexOf("[");
@@ -15,12 +13,21 @@ async function downloadCSVFromBubble() {
       return;
     }
 
-    const filtered = data.filter((row) => row.gtin || row.upc);
+    // Use a Set to track seen GTINs
+    const seenGTINs = new Set();
 
-    // Extract headers from the first object
-    const headers = Object.keys(data[0]);
+    // Filter: must have non-empty, non-zero GTIN and not duplicated
+    const filtered = data.filter((row) => {
+      const gtin = row.gtin?.trim();
+      const isValid = gtin && gtin !== "0" && !seenGTINs.has(gtin);
+      if (isValid) seenGTINs.add(gtin);
+      return isValid;
+    });
 
-    // Convert JSON to CSV
+    // Extract headers from the first valid row
+    const headers = Object.keys(filtered[0] || {});
+
+    // Convert to CSV
     const csv = [
       headers.join(","), // header row
       ...filtered.map((row) =>
@@ -30,22 +37,18 @@ async function downloadCSVFromBubble() {
       ),
     ].join("\n");
 
-    // Create blob and download
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
 
-    // Timestamped filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const filename = `processed-gtin-${timestamp}.csv`;
 
-    // Create a link and click it to download
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
 
-    // Cleanup
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   } catch (err) {
