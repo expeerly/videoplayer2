@@ -77,6 +77,30 @@ const ExpeerlyComponent = class {
                 this.playingPlaybackId = '';
             }
         };
+        /**
+         * Fired when <mux-player> has enough data to start playback.
+         * We can now reach `event.target.media` (the <video>),
+         * read its audioTracks/textTracks, and enable the ones matching our locale.
+         */
+        this.handleLoadedData = (ev) => {
+            const playerEl = ev.target; // the <mux-player> element
+            const media = playerEl.media; // underlying <video>
+            if (!media)
+                return;
+            // 1) switch audio tracks
+            const atList = media.audioTracks;
+            if (atList === null || atList === void 0 ? void 0 : atList.length) {
+                for (let i = 0; i < atList.length; i++) {
+                    const t = atList[i];
+                    t.enabled = t.language.startsWith(this.locale);
+                }
+            }
+            // 2) switch subtitle (text) tracks
+            for (let i = 0; i < media.textTracks.length; i++) {
+                const t = media.textTracks[i];
+                t.mode = t.language.startsWith(this.locale) ? 'showing' : 'hidden';
+            }
+        };
     }
     componentWillLoad() {
         this.loadReviews();
@@ -217,7 +241,7 @@ const ExpeerlyComponent = class {
                 overflow: 'hidden',
                 flexShrink: '0',
                 border: '1px solid #ddd',
-            } }, playbackId ? (h("mux-player", { id: `player-${playbackId}`, "playback-id": playbackId, "stream-type": "on-demand", controls: true, "metadata-custom-1": this.storeId, style: { width: '100%', height: '100%', objectFit: 'cover' }, onPlaying: (ev) => this.handlePlaying(ev, playbackId), onPause: (ev) => this.handlePauseOrEnd(ev, playbackId), onEnded: (ev) => this.handlePauseOrEnd(ev, playbackId) })) : (h("div", { style: {
+            } }, playbackId ? (h("mux-player", { id: `player-${playbackId}`, "playback-id": playbackId, "stream-type": "on-demand", controls: true, "metadata-custom-1": this.storeId, "default-hidden-captions": false, onLoadedData: this.handleLoadedData, style: { width: '100%', height: '100%', objectFit: 'cover' }, onPlaying: (ev) => this.handlePlaying(ev, playbackId), onPause: (ev) => this.handlePauseOrEnd(ev, playbackId), onEnded: (ev) => this.handlePauseOrEnd(ev, playbackId) })) : (h("div", { style: {
                 width: '100%',
                 height: '100%',
                 background: '#ccc',
