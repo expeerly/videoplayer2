@@ -111,7 +111,8 @@ const ExpeerlyComponent = class {
             this.loading = false;
             return;
         }
-        this.apiUrl = `https://app.expeerly.com/api/1.1/wf/get-product-videos-processed/?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
+        // this.apiUrl = `https://app.expeerly.com/api/1.1/wf/get-product-videos-processed/?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
+        this.apiUrl = ``;
         try {
             const response = await fetch(this.apiUrl);
             const data = await response.json();
