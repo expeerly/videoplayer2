@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { r as registerInstance, h, g as getElement } from './index-366bcf8a.js';
 
 window.expeerly = {
@@ -8,6 +7,7 @@ window.expeerly = {
         storeId: '',
         theme: 'dark',
         maxVideo: 999,
+        rateLimits: {},
     },
 };
 function ensureMuxScript() {
@@ -32,7 +32,10 @@ const ExpeerlyComponent = class {
         this.errorMessage = '';
         this.reviews = [];
         this.playingPlaybackId = '';
+        this.rateLimited = false;
         this.playedPlaybackIds = new Set();
+        this.MAX_REQUESTS_PER_DAY = 1000;
+        this.RATE_LIMIT_TIME_WINDOW = 24 * 60 * 60 * 1000;
         // LOCALE MAPS
         this.REVIEW_TEXT_SINGULAR_MAP = {
             en: 'review',
@@ -51,6 +54,13 @@ const ExpeerlyComponent = class {
             de: `Expeerly ist eine unabhängige Bewertungs-Community und Service. <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">Mehr erfahren.</a>`,
             fr: `Expeerly est une communauté et un service d'évaluation indépendant. <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">En savoir plus.</a>`,
             it: `Expeerly è una comunità e un servizio di recensioni indipendente. <a href="https://expeerly.com" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">Scopri di più.</a>`,
+        };
+        // Rate limiting error messages
+        this.RATE_LIMIT_ERROR_MAP = {
+            en: 'Daily API request limit reached (200 requests per day per access key). Please try again tomorrow.',
+            de: 'Tägliches API-Anfragelimit erreicht (200 Anfragen pro Tag pro Zugriffsschlüssel). Bitte versuchen Sie es morgen erneut.',
+            fr: "Limite quotidienne de requêtes API atteinte (200 requêtes par jour par clé d'accès). Veuillez réessayer demain.",
+            it: 'Limite giornaliero di richieste API raggiunto (200 richieste al giorno per chiave di accesso). Si prega di riprovare domani.',
         };
         /**
          * Called when any mux‑player starts playing.
@@ -102,6 +112,32 @@ const ExpeerlyComponent = class {
             }
         };
     }
+    /**
+     * Check if the current access key has exceeded its rate limit
+     * Returns true if rate limited, false otherwise
+     */
+    checkRateLimit() {
+        if (!this.accessKey)
+            return false;
+        // Initialize rate limit tracking for this access key if it doesn't exist
+        if (!window.expeerly.config.rateLimits[this.accessKey]) {
+            window.expeerly.config.rateLimits[this.accessKey] = {
+                requestTimestamps: [],
+            };
+        }
+        const limitConfig = window.expeerly.config.rateLimits[this.accessKey];
+        const now = Date.now();
+        // Remove timestamps that are outside the current time window (24 hours)
+        limitConfig.requestTimestamps = limitConfig.requestTimestamps.filter(timestamp => now - timestamp < this.RATE_LIMIT_TIME_WINDOW);
+        // Check if rate limit is exceeded (200 requests per day)
+        if (limitConfig.requestTimestamps.length >= this.MAX_REQUESTS_PER_DAY) {
+            console.warn(`Rate limit exceeded for access key: ${this.accessKey}`);
+            return true;
+        }
+        // If not rate limited, add current timestamp to the list
+        limitConfig.requestTimestamps.push(now);
+        return false;
+    }
     componentWillLoad() {
         this.loadReviews();
     }
@@ -111,28 +147,60 @@ const ExpeerlyComponent = class {
             this.loading = false;
             return;
         }
-        // this.apiUrl = `https://app.expeerly.com/api/1.1/wf/get-product-videos-processed/?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
-        this.apiUrl = ``;
+        // Check rate limit before proceeding
+        this.rateLimited = this.checkRateLimit();
+        if (this.rateLimited) {
+            this.errorMessage = this.RATE_LIMIT_ERROR_MAP[this.locale] || this.RATE_LIMIT_ERROR_MAP.en;
+            this.loading = false;
+            return;
+        }
+        const cacheKey = `${this.gtin}::${this.accessKey}`;
+        this.apiUrl = `https://app.expeerly.com/api/1.1/wf/get-product-videos-processed/?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
+        // 1. Check in-memory response cache
+        const cached = ExpeerlyComponent.responseCache.get(cacheKey);
+        if (cached && Date.now() - cached.timestamp < ExpeerlyComponent.CACHE_TTL) {
+            this.reviews = cached.data;
+            this.loading = false;
+            return;
+        }
+        // 2. Reuse in-flight promise if already fetching
+        let fetchPromise = ExpeerlyComponent.promiseCache.get(cacheKey);
+        if (!fetchPromise) {
+            fetchPromise = fetch(this.apiUrl)
+                .then(res => res.json())
+                .then(data => {
+                var _a;
+                if (!data || data.status !== 'success' || !((_a = data.response) === null || _a === void 0 ? void 0 : _a.videos)) {
+                    throw new Error('Invalid Expeerly response');
+                }
+                return data.response.videos;
+            })
+                .then(videos => {
+                // store in response cache
+                ExpeerlyComponent.responseCache.set(cacheKey, {
+                    timestamp: Date.now(),
+                    data: videos,
+                });
+                return videos;
+            })
+                .finally(() => {
+                // clean up promise cache
+                ExpeerlyComponent.promiseCache.delete(cacheKey);
+            });
+            ExpeerlyComponent.promiseCache.set(cacheKey, fetchPromise);
+        }
         try {
-            const response = await fetch(this.apiUrl);
-            const data = await response.json();
-            if (!data || data.status !== 'success' || !data.response || !Array.isArray(data.response.videos)) {
-                this.errorMessage = 'No Expeerly reviews available.';
-                this.reviews = [];
-                this.loading = false;
-                return;
-            }
-            const fetchedReviews = data.response.videos;
-            if (fetchedReviews.length === 0) {
+            const videos = await fetchPromise;
+            if (videos.length === 0) {
                 this.errorMessage = 'No Expeerly reviews found for this product.';
                 this.reviews = [];
-                this.loading = false;
-                return;
             }
-            // Keep them all in this.reviews
-            this.reviews = fetchedReviews;
+            else {
+                this.reviews = videos;
+            }
         }
-        catch (error) {
+        catch (err) {
+            console.error(err);
             this.errorMessage = 'Error fetching reviews.';
         }
         finally {
@@ -142,6 +210,10 @@ const ExpeerlyComponent = class {
     render() {
         if (this.loading) {
             return h("div", { style: { fontFamily: 'Mulish,sans-serif' } }, "Loading Expeerly reviews...");
+        }
+        if (this.rateLimited) {
+            console.error(this.errorMessage);
+            return null;
         }
         if (this.errorMessage) {
             console.error(this.errorMessage);
@@ -286,6 +358,10 @@ const ExpeerlyComponent = class {
     }
     get el() { return getElement(this); }
 };
+// --- CACHING SETUP ---
+ExpeerlyComponent.responseCache = new Map();
+ExpeerlyComponent.promiseCache = new Map();
+ExpeerlyComponent.CACHE_TTL = 5 * 60 * 1000;
 
 export { ExpeerlyComponent as expeerly_component };
 
