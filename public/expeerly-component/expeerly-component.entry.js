@@ -34,7 +34,7 @@ const ExpeerlyComponent = class {
         this.playingPlaybackId = '';
         this.rateLimited = false;
         this.playedPlaybackIds = new Set();
-        this.MAX_REQUESTS_PER_DAY = 1000;
+        this.MAX_REQUESTS_PER_DAY = 10000;
         this.RATE_LIMIT_TIME_WINDOW = 24 * 60 * 60 * 1000;
         // LOCALE MAPS
         this.REVIEW_TEXT_SINGULAR_MAP = {
