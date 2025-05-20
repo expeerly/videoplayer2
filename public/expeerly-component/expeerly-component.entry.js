@@ -57,10 +57,10 @@ const ExpeerlyComponent = class {
         };
         // Rate limiting error messages
         this.RATE_LIMIT_ERROR_MAP = {
-            en: 'Daily API request limit reached (200 requests per day per access key). Please try again tomorrow.',
-            de: 'Tägliches API-Anfragelimit erreicht (200 Anfragen pro Tag pro Zugriffsschlüssel). Bitte versuchen Sie es morgen erneut.',
-            fr: "Limite quotidienne de requêtes API atteinte (200 requêtes par jour par clé d'accès). Veuillez réessayer demain.",
-            it: 'Limite giornaliero di richieste API raggiunto (200 richieste al giorno per chiave di accesso). Si prega di riprovare domani.',
+            en: 'Daily API request limit reached. Please try again tomorrow.',
+            de: 'Tägliches API-Anfragelimit erreicht. Bitte versuchen Sie es morgen erneut.',
+            fr: "Limite quotidienne de requêtes API atteinte. Veuillez réessayer demain.",
+            it: 'Limite giornaliero di richieste API raggiunto. Si prega di riprovare domani.',
         };
         /**
          * Called when any mux‑player starts playing.
