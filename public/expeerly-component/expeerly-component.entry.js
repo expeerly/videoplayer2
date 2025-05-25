@@ -34,7 +34,7 @@ const ExpeerlyComponent = class {
         this.playingPlaybackId = '';
         this.rateLimited = false;
         this.playedPlaybackIds = new Set();
-        this.MAX_REQUESTS_PER_DAY = 10000;
+        this.MAX_REQUESTS_PER_DAY = 1000;
         this.RATE_LIMIT_TIME_WINDOW = 24 * 60 * 60 * 1000;
         // LOCALE MAPS
         this.REVIEW_TEXT_SINGULAR_MAP = {
@@ -314,7 +314,7 @@ const ExpeerlyComponent = class {
                 overflow: 'hidden',
                 flexShrink: '0',
                 border: '1px solid #ddd',
-            } }, playbackId ? (h("mux-player", { id: `player-${playbackId}`, "playback-id": playbackId, "stream-type": "on-demand", controls: true, "metadata-custom-1": this.storeId, "default-hidden-captions": false, onLoadedData: this.handleLoadedData, style: { width: '100%', height: '100%', objectFit: 'cover' }, onPlaying: (ev) => this.handlePlaying(ev, playbackId), onPause: (ev) => this.handlePauseOrEnd(ev, playbackId), onEnded: (ev) => this.handlePauseOrEnd(ev, playbackId) })) : (h("div", { style: {
+            } }, playbackId ? (h("mux-player", { id: `player-${playbackId}`, "playback-id": playbackId, "playback-engine": "mse", "stream-type": "on-demand", controls: true, "metadata-custom-1": this.storeId, "default-hidden-captions": false, onLoadedData: this.handleLoadedData, style: { width: '100%', height: '100%', objectFit: 'cover' }, onPlaying: (ev) => this.handlePlaying(ev, playbackId), onPause: (ev) => this.handlePauseOrEnd(ev, playbackId), onEnded: (ev) => this.handlePauseOrEnd(ev, playbackId) })) : (h("div", { style: {
                 width: '100%',
                 height: '100%',
                 background: '#ccc',
