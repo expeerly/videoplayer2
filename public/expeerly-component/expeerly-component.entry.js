@@ -34,7 +34,7 @@ const ExpeerlyComponent = class {
         this.playingPlaybackId = '';
         this.rateLimited = false;
         this.playedPlaybackIds = new Set();
-        this.MAX_REQUESTS_PER_DAY = 10000;
+        this.MAX_REQUESTS_PER_DAY = 1000;
         this.RATE_LIMIT_TIME_WINDOW = 24 * 60 * 60 * 1000;
         // LOCALE MAPS
         this.REVIEW_TEXT_SINGULAR_MAP = {
@@ -59,7 +59,7 @@ const ExpeerlyComponent = class {
         this.RATE_LIMIT_ERROR_MAP = {
             en: 'Daily API request limit reached. Please try again tomorrow.',
             de: 'Tägliches API-Anfragelimit erreicht. Bitte versuchen Sie es morgen erneut.',
-            fr: "Limite quotidienne de requêtes API atteinte. Veuillez réessayer demain.",
+            fr: 'Limite quotidienne de requêtes API atteinte. Veuillez réessayer demain.',
             it: 'Limite giornaliero di richieste API raggiunto. Si prega di riprovare domani.',
         };
         /**
@@ -155,7 +155,7 @@ const ExpeerlyComponent = class {
             return;
         }
         const cacheKey = `${this.gtin}::${this.accessKey}`;
-        this.apiUrl = `https://app.expeerly.com/api/1.1/wf/get-product-videos-processed/?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
+        this.apiUrl = `https://api.expeerly.com/api/videos?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
         // 1. Check in-memory response cache
         const cached = ExpeerlyComponent.responseCache.get(cacheKey);
         if (cached && Date.now() - cached.timestamp < ExpeerlyComponent.CACHE_TTL) {
@@ -164,30 +164,32 @@ const ExpeerlyComponent = class {
             return;
         }
         // 2. Reuse in-flight promise if already fetching
-        let fetchPromise = ExpeerlyComponent.promiseCache.get(cacheKey);
+        let fetchPromise = ExpeerlyComponent.promiseCache.get(this.apiUrl);
         if (!fetchPromise) {
-            fetchPromise = fetch(this.apiUrl)
+            fetchPromise = fetch(this.apiUrl, {
+                mode: 'cors', // ← explicitly request CORS
+                headers: { 'Content-Type': 'application/json' },
+            })
                 .then(res => res.json())
                 .then(data => {
                 var _a;
-                if (!data || data.status !== 'success' || !((_a = data.response) === null || _a === void 0 ? void 0 : _a.videos)) {
+                // new shape: { status, response: { videos: [...] } }
+                if ((data === null || data === void 0 ? void 0 : data.status) !== 'success' || !Array.isArray((_a = data.response) === null || _a === void 0 ? void 0 : _a.videos)) {
                     throw new Error('Invalid Expeerly response');
                 }
                 return data.response.videos;
             })
                 .then(videos => {
-                // store in response cache
-                ExpeerlyComponent.responseCache.set(cacheKey, {
+                ExpeerlyComponent.responseCache.set(this.apiUrl, {
                     timestamp: Date.now(),
                     data: videos,
                 });
                 return videos;
             })
                 .finally(() => {
-                // clean up promise cache
-                ExpeerlyComponent.promiseCache.delete(cacheKey);
+                ExpeerlyComponent.promiseCache.delete(this.apiUrl);
             });
-            ExpeerlyComponent.promiseCache.set(cacheKey, fetchPromise);
+            ExpeerlyComponent.promiseCache.set(this.apiUrl, fetchPromise);
         }
         try {
             const videos = await fetchPromise;
@@ -298,14 +300,14 @@ const ExpeerlyComponent = class {
         return h("span", { style: { display: 'inline-flex' } }, stars);
     }
     renderReviewItem(reviewData) {
-        const playbackId = reviewData.mux_playback_id_text || '';
+        const playbackId = reviewData.muxPlaybackId || '';
         const isPlaying = this.playingPlaybackId === playbackId;
         const hasPlayed = this.playedPlaybackIds.has(playbackId);
-        const firstName = reviewData.reviewer_first_name_text || 'User';
-        const lastName = reviewData.reviewer_last_name_text || '';
+        const firstName = reviewData.reviewerFirstName || 'User';
+        const lastName = reviewData.reviewerLastName || '';
         const shortLast = lastName ? lastName[0].toUpperCase() + '.' : '';
-        const rating = typeof reviewData.rating_number === 'number' ? reviewData.rating_number : 0;
-        const profilePic = reviewData.reviewer_profile_pic_image || 'https://via.placeholder.com/64';
+        const rating = typeof reviewData.rating === 'number' ? reviewData.rating : 0;
+        const profilePic = reviewData.reviewerProfilePic || 'https://via.placeholder.com/64';
         return (h("div", { style: {
                 position: 'relative',
                 width: '180px',
@@ -314,7 +316,7 @@ const ExpeerlyComponent = class {
                 overflow: 'hidden',
                 flexShrink: '0',
                 border: '1px solid #ddd',
-            } }, playbackId ? (h("mux-player", { id: `player-${playbackId}`, "playback-id": playbackId, "stream-type": "on-demand", controls: true, "metadata-custom-1": this.storeId, "default-hidden-captions": false, onLoadedData: this.handleLoadedData, style: { width: '100%', height: '100%', objectFit: 'cover' }, onPlaying: (ev) => this.handlePlaying(ev, playbackId), onPause: (ev) => this.handlePauseOrEnd(ev, playbackId), onEnded: (ev) => this.handlePauseOrEnd(ev, playbackId) })) : (h("div", { style: {
+            } }, playbackId ? (h("mux-player", { id: `player-${playbackId}`, "playback-id": playbackId, "playback-engine": "mse", "stream-type": "on-demand", controls: true, "metadata-custom-1": this.storeId, "default-hidden-captions": false, onLoadedData: this.handleLoadedData, style: { width: '100%', height: '100%', objectFit: 'cover' }, onPlaying: (ev) => this.handlePlaying(ev, playbackId), onPause: (ev) => this.handlePauseOrEnd(ev, playbackId), onEnded: (ev) => this.handlePauseOrEnd(ev, playbackId) })) : (h("div", { style: {
                 width: '100%',
                 height: '100%',
                 background: '#ccc',
@@ -349,8 +351,8 @@ const ExpeerlyComponent = class {
         let sumRating = 0;
         let ratingCount = 0;
         for (const rev of this.reviews) {
-            if (typeof rev.rating_number === 'number' && rev.rating_number > 0) {
-                sumRating += rev.rating_number;
+            if (typeof rev.rating === 'number' && rev.rating > 0) {
+                sumRating += rev.rating;
                 ratingCount++;
             }
         }
