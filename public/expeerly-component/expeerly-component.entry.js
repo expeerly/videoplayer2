@@ -59,7 +59,7 @@ const ExpeerlyComponent = class {
         this.RATE_LIMIT_ERROR_MAP = {
             en: 'Daily API request limit reached. Please try again tomorrow.',
             de: 'Tägliches API-Anfragelimit erreicht. Bitte versuchen Sie es morgen erneut.',
-            fr: "Limite quotidienne de requêtes API atteinte. Veuillez réessayer demain.",
+            fr: 'Limite quotidienne de requêtes API atteinte. Veuillez réessayer demain.',
             it: 'Limite giornaliero di richieste API raggiunto. Si prega di riprovare domani.',
         };
         /**
@@ -155,7 +155,7 @@ const ExpeerlyComponent = class {
             return;
         }
         const cacheKey = `${this.gtin}::${this.accessKey}`;
-        this.apiUrl = `https://api.expeerly.com/api/videos/?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
+        this.apiUrl = `https://api.expeerly.com/api/videos?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
         // 1. Check in-memory response cache
         const cached = ExpeerlyComponent.responseCache.get(cacheKey);
         if (cached && Date.now() - cached.timestamp < ExpeerlyComponent.CACHE_TTL) {
@@ -351,8 +351,8 @@ const ExpeerlyComponent = class {
         let sumRating = 0;
         let ratingCount = 0;
         for (const rev of this.reviews) {
-            if (typeof rev.rating_number === 'number' && rev.rating_number > 0) {
-                sumRating += rev.rating_number;
+            if (typeof rev.rating === 'number' && rev.rating > 0) {
+                sumRating += rev.rating;
                 ratingCount++;
             }
         }
