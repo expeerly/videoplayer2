@@ -155,7 +155,7 @@ const ExpeerlyComponent = class {
             return;
         }
         const cacheKey = `${this.gtin}::${this.accessKey}`;
-        this.apiUrl = `https://app.expeerly.com/api/1.1/wf/get-product-videos-processed/?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
+        this.apiUrl = `https://api.expeerly.com/api/videos/?gtin=${encodeURIComponent(this.gtin)}&access_key=${encodeURIComponent(this.accessKey)}`;
         // 1. Check in-memory response cache
         const cached = ExpeerlyComponent.responseCache.get(cacheKey);
         if (cached && Date.now() - cached.timestamp < ExpeerlyComponent.CACHE_TTL) {
@@ -164,30 +164,32 @@ const ExpeerlyComponent = class {
             return;
         }
         // 2. Reuse in-flight promise if already fetching
-        let fetchPromise = ExpeerlyComponent.promiseCache.get(cacheKey);
+        let fetchPromise = ExpeerlyComponent.promiseCache.get(this.apiUrl);
         if (!fetchPromise) {
-            fetchPromise = fetch(this.apiUrl)
+            fetchPromise = fetch(this.apiUrl, {
+                mode: 'cors', // ← explicitly request CORS
+                headers: { 'Content-Type': 'application/json' },
+            })
                 .then(res => res.json())
                 .then(data => {
                 var _a;
-                if (!data || data.status !== 'success' || !((_a = data.response) === null || _a === void 0 ? void 0 : _a.videos)) {
+                // new shape: { status, response: { videos: [...] } }
+                if ((data === null || data === void 0 ? void 0 : data.status) !== 'success' || !Array.isArray((_a = data.response) === null || _a === void 0 ? void 0 : _a.videos)) {
                     throw new Error('Invalid Expeerly response');
                 }
                 return data.response.videos;
             })
                 .then(videos => {
-                // store in response cache
-                ExpeerlyComponent.responseCache.set(cacheKey, {
+                ExpeerlyComponent.responseCache.set(this.apiUrl, {
                     timestamp: Date.now(),
                     data: videos,
                 });
                 return videos;
             })
                 .finally(() => {
-                // clean up promise cache
-                ExpeerlyComponent.promiseCache.delete(cacheKey);
+                ExpeerlyComponent.promiseCache.delete(this.apiUrl);
             });
-            ExpeerlyComponent.promiseCache.set(cacheKey, fetchPromise);
+            ExpeerlyComponent.promiseCache.set(this.apiUrl, fetchPromise);
         }
         try {
             const videos = await fetchPromise;
@@ -298,14 +300,14 @@ const ExpeerlyComponent = class {
         return h("span", { style: { display: 'inline-flex' } }, stars);
     }
     renderReviewItem(reviewData) {
-        const playbackId = reviewData.mux_playback_id_text || '';
+        const playbackId = reviewData.muxPlaybackId || '';
         const isPlaying = this.playingPlaybackId === playbackId;
         const hasPlayed = this.playedPlaybackIds.has(playbackId);
-        const firstName = reviewData.reviewer_first_name_text || 'User';
-        const lastName = reviewData.reviewer_last_name_text || '';
+        const firstName = reviewData.reviewerFirstName || 'User';
+        const lastName = reviewData.reviewerLastName || '';
         const shortLast = lastName ? lastName[0].toUpperCase() + '.' : '';
-        const rating = typeof reviewData.rating_number === 'number' ? reviewData.rating_number : 0;
-        const profilePic = reviewData.reviewer_profile_pic_image || 'https://via.placeholder.com/64';
+        const rating = typeof reviewData.rating === 'number' ? reviewData.rating : 0;
+        const profilePic = reviewData.reviewerProfilePic || 'https://via.placeholder.com/64';
         return (h("div", { style: {
                 position: 'relative',
                 width: '180px',
