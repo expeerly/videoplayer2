@@ -91,7 +91,7 @@ export async function getVideoById(
     throw new Error('Video ID is required');
   }
 
-  const whereConditions = [eq(video.id, Number(id))];
+  const whereConditions = [eq(video.id, Number(id)), eq(video.published, true)];
 
   if (filters?.brandSlug) {
     whereConditions.push(eq(brand.slug, filters.brandSlug));
@@ -179,7 +179,7 @@ export async function getVideoDetailById(
     throw new Error('Video ID is required');
   }
 
-  const whereConditions = [eq(video.id, Number(id))];
+  const whereConditions = [eq(video.id, Number(id)), eq(video.published, true)];
 
   if (filters?.brandSlug) {
     whereConditions.push(eq(brand.slug, filters.brandSlug));
@@ -343,7 +343,7 @@ export async function getExploreVideos(
   }: { brandSlug?: string; productSlug?: string; creatorSlug?: string }
 ) {
   try {
-    const whereConditions = [notInArray(video.id, videoIds)];
+    const whereConditions = [notInArray(video.id, videoIds), eq(video.published, true)];
 
     if (brandSlug) {
       whereConditions.push(eq(brand.slug, brandSlug));

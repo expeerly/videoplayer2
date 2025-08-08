@@ -3,7 +3,7 @@ import { brand, category, product, video } from '@/src/db/schema';
 import { eq, exists, sql, and, SQL } from 'drizzle-orm';
 import { Category, CategoryInputType } from '@/src/db/types';
 import { FilterParams, PaginationParams, SupportedLanguage } from '../utils/requestHelpers';
-import { getFilters, hasCategoryVideos } from './queries';
+import { getFilters, hasBrandVideos, hasCategoryVideos } from './queries';
 
 /**
  * Creates or updates multiple categories
@@ -189,7 +189,7 @@ export async function handleGetCategoryWithVideos(
               SELECT COUNT(*)
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
-              WHERE ${product.categoryId} = ${category.id}
+              WHERE ${product.categoryId} = ${category.id} AND ${video.published} = true
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
             )`.as('reviewsCount'),
           },
@@ -213,7 +213,7 @@ export async function handleGetCategoryWithVideos(
               FROM ${video}
               JOIN ${product} ON ${category.id} = ${product.categoryId}
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
-              WHERE ${video.productId} = ${product.id} AND ${product.categoryId} = ${category.id}
+              WHERE ${video.productId} = ${product.id} AND ${video.published} = true AND ${product.categoryId} = ${category.id}
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
               GROUP BY ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productSlug}, ${product.productName}, ${video.id}
               LIMIT ${videoCount}
@@ -281,7 +281,7 @@ export async function getCategoryInfoWithSlug(categorySlug: string, lang: Suppor
           SELECT COUNT(*)
           FROM ${video}
           JOIN ${product} ON ${video.productId} = ${product.id}
-          WHERE ${product.categoryId} = ${category.id}
+          WHERE ${product.categoryId} = ${category.id} AND ${video.published} = true
         )`,
       })
       .from(category)
@@ -314,7 +314,8 @@ export async function getBrandsByCategoryIdWithVideos(
         })
         .from(brand)
         .innerJoin(product, eq(product.brandId, brand.id))
-        .where(eq(product.categoryId, Number(categoryId)))
+        .innerJoin(video, eq(video.productId, product.id))
+        .where(and(eq(product.categoryId, Number(categoryId)), hasBrandVideos))
         .then(result => result[0].count),
       db
         .select({
@@ -327,7 +328,7 @@ export async function getBrandsByCategoryIdWithVideos(
               SELECT COUNT(*)
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
-              WHERE ${product.brandId} = ${brand.id}
+              WHERE ${product.brandId} = ${brand.id} AND ${video.published} = true
             )`,
             rating: sql<number>`(
               SELECT ROUND(COALESCE(AVG(${video.starRating}), 0)::numeric, 2)
@@ -356,7 +357,7 @@ export async function getBrandsByCategoryIdWithVideos(
             FROM ${video}
             JOIN ${product} ON ${video.productId} = ${product.id}
             JOIN ${category} ON ${product.categoryId} = ${category.id}
-            WHERE ${product.brandId} = ${brand.id}
+            WHERE ${product.brandId} = ${brand.id} AND ${video.published} = true
             AND ${product.categoryId} = ${Number(categoryId)}
           )`,
         })
@@ -364,7 +365,7 @@ export async function getBrandsByCategoryIdWithVideos(
         .innerJoin(product, eq(product.brandId, brand.id))
         .innerJoin(video, eq(video.productId, product.id))
         .innerJoin(category, eq(category.id, product.categoryId))
-        .where(eq(product.categoryId, Number(categoryId)))
+        .where(and(eq(product.categoryId, Number(categoryId)), hasBrandVideos))
         .groupBy(brand.id)
         .orderBy(brand.brandName)
         .limit(limit)

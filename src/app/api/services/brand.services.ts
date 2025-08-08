@@ -206,7 +206,7 @@ export async function handleGetBrandsWithVideos(
               FROM ${video}
               JOIN ${product} ON ${brand.id} = ${product.brandId}
               JOIN ${category} ON ${product.categoryId} = ${category.id}
-              WHERE ${video.productId} = ${product.id}
+              WHERE ${video.productId} = ${product.id} AND ${video.published} = true
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
               GROUP BY ${category.categoryData}, ${product.productSlug}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
             ) subq
@@ -264,7 +264,7 @@ export async function getBrandInfoWithSlug(brandSlug: string, lang: SupportedLan
               SELECT COUNT(*)
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
-              WHERE ${product.brandId} = ${brand.id}
+              WHERE ${product.brandId} = ${brand.id} AND ${video.published} = true
             )`,
       })
       .from(brand)
@@ -336,7 +336,7 @@ export async function getBrandProductsWithVideos(
             FROM ${video}
             JOIN ${brand} ON ${product.brandId} = ${brand.id}
             JOIN ${category} ON ${product.categoryId} = ${category.id}
-            WHERE ${video.productId} = ${product.id} AND ${product.brandId} = ${brandId}
+            WHERE ${video.productId} = ${product.id} AND ${video.published} = true AND ${product.brandId} = ${brandId}
             GROUP BY ${brand.brandName}, ${product.productName}, ${product.productSlug}, ${category.categoryData}, ${product.brandId}, ${brand.logo}, ${brand.slug}, ${video.id}
           ) subq
         )`,

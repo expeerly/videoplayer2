@@ -11,7 +11,7 @@ export const hasBrandVideos = exists(
     .select({ one: sql`1` })
     .from(video)
     .innerJoin(product, eq(video.productId, product.id))
-    .where(eq(product.brandId, brand.id))
+    .where(and(eq(product.brandId, brand.id), eq(video.published, true)))
 );
 
 export const isValidBrand = and(hasBrandLogo, hasBrandName, hasBrandVideos);
@@ -22,7 +22,7 @@ export const hasCategoryVideos = exists(
     .select({ one: sql`1` })
     .from(video)
     .innerJoin(product, eq(video.productId, product.id))
-    .where(eq(product.categoryId, category.id))
+    .where(and(eq(product.categoryId, category.id), eq(video.published, true)))
 );
 
 // Common queries
