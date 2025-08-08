@@ -55,12 +55,12 @@ async function apiRequest<T>(
     };
 
     // Only set cache options if revalidate is not 0
-    if (options.revalidate !== 0) {
-      fetchOptions.next = { revalidate: 3600 };
-      fetchOptions.cache = 'force-cache';
-    } else {
-      fetchOptions.cache = 'no-store';
-    }
+    // if (options.revalidate !== 0) {
+    //   fetchOptions.next = { revalidate: 3600 };
+    //   fetchOptions.cache = 'force-cache';
+    // } else {
+    //   fetchOptions.cache = 'no-store';
+    // }
 
     const response = await fetch(url, fetchOptions);
     const data = await response.json();
