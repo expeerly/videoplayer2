@@ -55,6 +55,8 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
     getAllCategories(locale),
   ]);
 
+  console.log('All', { allBrands, allCategories });
+
   return (
     <div className="w-full bg-white">
       <div className="w-full pt-5 md:pt-10">
