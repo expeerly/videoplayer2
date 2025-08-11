@@ -184,7 +184,7 @@ export async function handleGetCreatorWithVideos(
               JOIN ${product} ON ${video.productId} = ${product.id}
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
               JOIN ${category} ON ${product.categoryId} = ${category.id}
-              WHERE ${video.creatorId} = ${creator.id}
+              WHERE ${video.creatorId} = ${creator.id} AND ${video.published} = true
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
               GROUP BY ${category.categoryData}, ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
               LIMIT ${videoCount}
@@ -274,7 +274,7 @@ export async function getCreatorByIdWithVideos(
               JOIN ${product} ON ${video.productId} = ${product.id}
               JOIN ${brand} ON ${product.brandId} = ${brand.id}
               JOIN ${category} ON ${product.categoryId} = ${category.id}
-              WHERE ${video.creatorId} = ${creator.id} 
+              WHERE ${video.creatorId} = ${creator.id} AND ${video.published} = true
               ${filter ? sql`AND ${filter}` : sql``}
               GROUP BY ${category.categoryData}, ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
             ) subq
@@ -283,7 +283,10 @@ export async function getCreatorByIdWithVideos(
       .from(creator)
       .leftJoin(video, eq(video.creatorId, creator.id))
       .where(
-        sql`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id})) = ${creatorSlug.trim()}`
+        and(
+          eq(video.published, true),
+          sql`LOWER(CONCAT(REPLACE(${creator.firstName}, ' ', '-'), '-', ${creator.id})) = ${creatorSlug.trim()}`
+        )
       )
       .groupBy(creator.id)
       .orderBy(creator.firstName);

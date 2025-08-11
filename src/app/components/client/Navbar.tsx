@@ -70,7 +70,6 @@ const NavbarComponent: FunctionComponent<Props> = ({ categories }) => {
     }
 
     if (userHistory.length > 1 && pathname === userHistory[userHistory.length - 1]) {
-      console.log('here', userHistory[userHistory.length - 1]);
       dispatch({
         type: 'USER_HISTORY',
         payload: userHistory.slice(0, -1),
@@ -81,8 +80,6 @@ const NavbarComponent: FunctionComponent<Props> = ({ categories }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, pathname]);
-
-  console.log(userHistory);
 
   return (
     <header className={headerClasses}>

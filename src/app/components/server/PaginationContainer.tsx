@@ -19,7 +19,6 @@ type Props = {
 };
 
 export const PaginationContainer: FunctionComponent<Props> = ({ data, header, ctaBlock }) => {
-  console.log(data.total);
   return (
     <div>
       {data?.rows?.map((i, index) => (
