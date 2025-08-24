@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-assign-module-variable */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const NAMESPACE = 'expeerly-implementation';
-const BUILD = /* expeerly-implementation */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, cmpDidLoad: false, cmpDidRender: false, cmpDidUnload: false, cmpDidUpdate: false, cmpShouldUpdate: false, cmpWillLoad: true, cmpWillRender: false, cmpWillUpdate: false, connectedCallback: false, constructableCSS: true, cssAnnotations: true, devTools: false, disconnectedCallback: false, element: false, event: false, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: false, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: false, isTesting: false, lazyLoad: true, lifecycle: true, lifecycleDOMEvents: false, member: true, method: false, mode: false, modernPropertyDecls: false, observeAttribute: true, profile: false, prop: true, propBoolean: false, propMutable: false, propNumber: true, propString: true, reflect: false, scoped: false, scopedSlotTextContentFix: false, scriptDataOpts: false, shadowDelegatesFocus: false, shadowDom: true, slot: false, slotChildNodesFix: false, slotRelocation: false, state: true, style: true, svg: true, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: true, vdomFunctional: false, vdomKey: true, vdomListener: true, vdomPropOrAttr: true, vdomRef: false, vdomRender: true, vdomStyle: true, vdomText: true, vdomXlink: false, watchCallback: false };
+const BUILD = /* expeerly-implementation */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, cmpDidLoad: false, cmpDidRender: false, cmpDidUnload: false, cmpDidUpdate: false, cmpShouldUpdate: false, cmpWillLoad: true, cmpWillRender: false, cmpWillUpdate: false, connectedCallback: false, constructableCSS: true, cssAnnotations: true, devTools: false, disconnectedCallback: true, element: false, event: false, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: false, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: false, isTesting: false, lazyLoad: true, lifecycle: true, lifecycleDOMEvents: false, member: true, method: false, mode: false, modernPropertyDecls: false, observeAttribute: true, profile: false, prop: true, propBoolean: false, propMutable: false, propNumber: true, propString: true, reflect: true, scoped: false, scopedSlotTextContentFix: false, scriptDataOpts: false, shadowDelegatesFocus: false, shadowDom: true, slot: true, slotChildNodesFix: false, slotRelocation: false, state: true, style: true, svg: true, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: true, vdomFunctional: true, vdomKey: true, vdomListener: true, vdomPropOrAttr: true, vdomRef: false, vdomRender: true, vdomStyle: true, vdomText: true, vdomXlink: false, watchCallback: true };
 
 /*
  Stencil Client Platform v4.26.0 | MIT Licensed | https://stenciljs.com
@@ -242,6 +242,13 @@ var h = (nodeName, vnodeData, ...children) => {
       }
     }
   }
+  if (typeof nodeName === "function") {
+    return nodeName(
+      vnodeData === null ? {} : vnodeData,
+      vNodeChildren,
+      vdomFnUtils
+    );
+  }
   const vnode = newVNode(nodeName, null);
   vnode.$attrs$ = vnodeData;
   if (vNodeChildren.length > 0) {
@@ -270,6 +277,36 @@ var newVNode = (tag, text) => {
 };
 var Host = {};
 var isHost = (node) => node && node.$tag$ === Host;
+var vdomFnUtils = {
+  forEach: (children, cb) => children.map(convertToPublic).forEach(cb),
+  map: (children, cb) => children.map(convertToPublic).map(cb).map(convertToPrivate)
+};
+var convertToPublic = (node) => ({
+  vattrs: node.$attrs$,
+  vchildren: node.$children$,
+  vkey: node.$key$,
+  vname: node.$name$,
+  vtag: node.$tag$,
+  vtext: node.$text$
+});
+var convertToPrivate = (node) => {
+  if (typeof node.vtag === "function") {
+    const vnodeData = { ...node.vattrs };
+    if (node.vkey) {
+      vnodeData.key = node.vkey;
+    }
+    if (node.vname) {
+      vnodeData.name = node.vname;
+    }
+    return h(node.vtag, vnodeData, ...node.vchildren || []);
+  }
+  const vnode = newVNode(node.vtag, node.vtext);
+  vnode.$attrs$ = node.vattrs;
+  vnode.$children$ = node.vchildren;
+  vnode.$key$ = node.vkey;
+  vnode.$name$ = node.vname;
+  return vnode;
+};
 var parsePropertyValue = (propValue, propType) => {
   if (propValue != null && !isComplexType(propValue)) {
     if (propType & 2 /* Number */) {
@@ -695,7 +732,7 @@ var patch = (oldVNode, newVNode2, isInitialRender = false) => {
       isSvgMode = tag === "svg" ? true : tag === "foreignObject" ? false : isSvgMode;
     }
     {
-      {
+      if (tag === "slot" && !useNativeShadowDom) ; else {
         updateElement(oldVNode, newVNode2, isSvgMode);
       }
     }
@@ -730,6 +767,12 @@ var renderVdom = (hostRef, renderFnResults, isInitialLoad = false) => {
   const oldVNode = hostRef.$vnode$ || newVNode(null, null);
   const rootVnode = isHost(renderFnResults) ? renderFnResults : h(null, null, renderFnResults);
   hostTagName = hostElm.tagName;
+  if (cmpMeta.$attrsToReflect$) {
+    rootVnode.$attrs$ = rootVnode.$attrs$ || {};
+    cmpMeta.$attrsToReflect$.map(
+      ([propName, attribute]) => rootVnode.$attrs$[attribute] = hostElm[propName]
+    );
+  }
   if (isInitialLoad && rootVnode.$attrs$) {
     for (const key of Object.keys(rootVnode.$attrs$)) {
       if (hostElm.hasAttribute(key) && !["key", "ref", "style", "class"].includes(key)) {
@@ -902,6 +945,7 @@ var setValue = (ref, propName, newVal, cmpMeta) => {
       `Couldn't find host element for "${cmpMeta.$tagName$}" as it is unknown to this Stencil runtime. This usually happens when integrating a 3rd party Stencil component with another Stencil component or application. Please reach out to the maintainers of the 3rd party Stencil component or report this on the Stencil Discord server (https://chat.stenciljs.com) or comment on this similar [GitHub issue](https://github.com/ionic-team/stencil/issues/5457).`
     );
   }
+  const elm = hostRef.$hostElement$ ;
   const oldVal = hostRef.$instanceValues$.get(propName);
   const flags = hostRef.$flags$;
   const instance = hostRef.$lazyInstance$ ;
@@ -911,6 +955,18 @@ var setValue = (ref, propName, newVal, cmpMeta) => {
   if ((!(flags & 8 /* isConstructingInstance */) || oldVal === void 0) && didValueChange) {
     hostRef.$instanceValues$.set(propName, newVal);
     if (instance) {
+      if (cmpMeta.$watchers$ && flags & 128 /* isWatchReady */) {
+        const watchMethods = cmpMeta.$watchers$[propName];
+        if (watchMethods) {
+          watchMethods.map((watchMethodName) => {
+            try {
+              instance[watchMethodName](newVal, oldVal, propName);
+            } catch (e) {
+              consoleError(e, elm);
+            }
+          });
+        }
+      }
       if ((flags & (2 /* hasRendered */ | 16 /* isQueuedForUpdate */)) === 2 /* hasRendered */) {
         scheduleUpdate(hostRef, false);
       }
@@ -922,7 +978,10 @@ var setValue = (ref, propName, newVal, cmpMeta) => {
 var proxyComponent = (Cstr, cmpMeta, flags) => {
   var _a, _b;
   const prototype = Cstr.prototype;
-  if (cmpMeta.$members$ || BUILD.watchCallback ) {
+  if (cmpMeta.$members$ || (cmpMeta.$watchers$ || Cstr.watchers)) {
+    if (Cstr.watchers && !cmpMeta.$watchers$) {
+      cmpMeta.$watchers$ = Cstr.watchers;
+    }
     const members = Object.entries((_a = cmpMeta.$members$) != null ? _a : {});
     members.map(([memberName, [memberFlags]]) => {
       if ((memberFlags & 31 /* Prop */ || (flags & 2 /* proxyState */) && memberFlags & 32 /* State */)) {
@@ -1028,8 +1087,12 @@ var proxyComponent = (Cstr, cmpMeta, flags) => {
         /* @__PURE__ */ new Set([
           ...Object.keys((_b = cmpMeta.$watchers$) != null ? _b : {}),
           ...members.filter(([_, m]) => m[0] & 15 /* HasAttribute */).map(([propName, m]) => {
+            var _a2;
             const attrName = m[1] || propName;
             attrNameToPropName.set(attrName, propName);
+            if (m[0] & 512 /* ReflectAttr */) {
+              (_a2 = cmpMeta.$attrsToReflect$) == null ? void 0 : _a2.push([propName, attrName]);
+            }
             return attrName;
           })
         ])
@@ -1058,6 +1121,9 @@ var initializeComponent = async (elm, hostRef, cmpMeta, hmrVersionId) => {
         throw new Error(`Constructor for "${cmpMeta.$tagName$}#${hostRef.$modeName$}" was not found`);
       }
       if (!Cstr.isProxied) {
+        {
+          cmpMeta.$watchers$ = Cstr.watchers;
+        }
         proxyComponent(Cstr, cmpMeta, 2 /* proxyState */);
         Cstr.isProxied = true;
       }
@@ -1072,6 +1138,9 @@ var initializeComponent = async (elm, hostRef, cmpMeta, hmrVersionId) => {
       }
       {
         hostRef.$flags$ &= ~8 /* isConstructingInstance */;
+      }
+      {
+        hostRef.$flags$ |= 128 /* isWatchReady */;
       }
       endNewInstance();
     } else {
@@ -1141,12 +1210,17 @@ var connectedCallback = (elm) => {
   }
 };
 var disconnectInstance = (instance, elm) => {
+  {
+    safeCall(instance, "disconnectedCallback", void 0, elm || instance);
+  }
 };
 var disconnectedCallback = async (elm) => {
   if ((plt.$flags$ & 1 /* isTmpDisconnected */) === 0) {
     const hostRef = getHostRef(elm);
-    if (hostRef == null ? void 0 : hostRef.$lazyInstance$) ; else if (hostRef == null ? void 0 : hostRef.$onReadyPromise$) {
-      hostRef.$onReadyPromise$.then(() => disconnectInstance());
+    if (hostRef == null ? void 0 : hostRef.$lazyInstance$) {
+      disconnectInstance(hostRef.$lazyInstance$, elm);
+    } else if (hostRef == null ? void 0 : hostRef.$onReadyPromise$) {
+      hostRef.$onReadyPromise$.then(() => disconnectInstance(hostRef.$lazyInstance$, elm));
     }
   }
   if (rootAppliedStyles.has(elm)) {
@@ -1175,6 +1249,7 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
   let hasSlotRelocation = false;
   lazyBundles.map((lazyBundle) => {
     lazyBundle[1].map((compactMeta) => {
+      var _a2;
       const cmpMeta = {
         $flags$: compactMeta[0],
         $tagName$: compactMeta[1],
@@ -1186,6 +1261,12 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
       }
       {
         cmpMeta.$members$ = compactMeta[2];
+      }
+      {
+        cmpMeta.$attrsToReflect$ = [];
+      }
+      {
+        cmpMeta.$watchers$ = (_a2 = compactMeta[4]) != null ? _a2 : {};
       }
       const tagName = cmpMeta.$tagName$;
       const HostElement = class extends HTMLElement {
@@ -1284,6 +1365,6 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
 // src/runtime/nonce.ts
 var setNonce = (nonce) => plt.$nonce$ = nonce;
 
-export { bootstrapLazy as b, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
+export { Host as H, bootstrapLazy as b, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
 
-//# sourceMappingURL=index-366bcf8a.js.map
+//# sourceMappingURL=index-02ff1379.js.map

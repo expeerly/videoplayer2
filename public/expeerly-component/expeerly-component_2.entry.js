@@ -1,4 +1,4 @@
-import { r as registerInstance, h, g as getElement } from './index-366bcf8a.js';
+import { r as registerInstance, h, g as getElement } from './index-02ff1379.js';
 
 window.expeerly = {
     config: {
@@ -365,6 +365,330 @@ ExpeerlyComponent.responseCache = new Map();
 ExpeerlyComponent.promiseCache = new Map();
 ExpeerlyComponent.CACHE_TTL = 5 * 60 * 1000;
 
-export { ExpeerlyComponent as expeerly_component };
+const ExpeerlyFlyWidget = class {
+    constructor(hostRef) {
+        registerInstance(this, hostRef);
+        this.theme = 'light';
+        this.position = 'top-right';
+        this.zIndex = 1000;
+        this.locale = 'de';
+        // State
+        this.expanded = false;
+        this.loading = true;
+        this.errorMessage = '';
+        this.currentIndex = 0;
+        this.videos = [];
+        this.totalReviews = 0;
+        this.avgRating = 0;
+        this.viewportSlides = 3;
+        // Card widths
+        this.ACTIVE_W = 167;
+        this.GHOST_W = 130;
+        this.setSlidesForViewport = () => {
+            this.viewportSlides = window.innerWidth < 768 ? 1 : 3;
+        };
+        this.handleLoadedData = (ev) => {
+            const playerEl = ev.target; // the <mux-player> element
+            const media = playerEl.media; // underlying <video>
+            if (!media)
+                return;
+            // 1) switch audio tracks
+            const atList = media.audioTracks;
+            if (atList === null || atList === void 0 ? void 0 : atList.length) {
+                for (let i = 0; i < atList.length; i++) {
+                    const t = atList[i];
+                    t.enabled = t.language.startsWith(this.locale);
+                }
+            }
+            // 2) switch subtitle (text) tracks
+            for (let i = 0; i < media.textTracks.length; i++) {
+                const t = media.textTracks[i];
+                t.mode = t.language.startsWith(this.locale) ? 'showing' : 'hidden';
+            }
+        };
+        // Controls
+        this.toggleExpanded = () => (this.expanded = !this.expanded);
+        this.closeExpanded = () => (this.expanded = false);
+        this.showPrev = () => (this.currentIndex = Math.max(0, this.currentIndex - 1));
+        this.showNext = () => {
+            const visible = this.viewportSlides;
+            const maxIndex = Math.max(0, this.videos.length - visible);
+            this.currentIndex = Math.min(maxIndex, this.currentIndex + 1);
+        };
+    }
+    // Utils
+    ensureMuxScript() {
+        const existing = document.querySelector('script[src*="mux-player"]');
+        if (!existing) {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/@mux/mux-player';
+            document.head.appendChild(s);
+        }
+    }
+    normalizeInputs() {
+        if (!this.accessKey) {
+            this.accessKey = this.el.getAttribute('access-key') || this.el.getAttribute('access_key') || '';
+        }
+        if (!this.brandId) {
+            this.brandId = this.el.getAttribute('brand-id') || this.el.getAttribute('brand_id') || this.el.getAttribute('brandid') || '';
+        }
+    }
+    async propsChanged() {
+        await this.loadBrandVideos();
+    }
+    async componentWillLoad() {
+        this.ensureMuxScript();
+        this.setSlidesForViewport();
+        window.addEventListener('resize', this.setSlidesForViewport);
+        this.normalizeInputs();
+        await this.loadBrandVideos();
+    }
+    disconnectedCallback() {
+        window.removeEventListener('resize', this.setSlidesForViewport);
+    }
+    async loadBrandVideos() {
+        var _a;
+        this.normalizeInputs();
+        if (!this.accessKey || !this.brandId) {
+            console.warn('[expeerly-fly-widget] Missing accessKey or brandId', {
+                accessKey: this.accessKey,
+                brandId: this.brandId,
+            });
+            this.errorMessage = 'Missing access key or brand id.';
+            this.loading = false;
+            return;
+        }
+        this.loading = true;
+        try {
+            const url = `https://api.expeerly.com/api/brand-videos?access_key=${encodeURIComponent(this.accessKey)}&brand_id=${encodeURIComponent(this.brandId)}`;
+            const res = await fetch(url, { mode: 'cors' });
+            const json = await res.json();
+            if (json.status !== 'success' || !((_a = json.response) === null || _a === void 0 ? void 0 : _a.videos))
+                throw new Error('Invalid response');
+            const vids = json.response.videos.map(v => ({
+                id: v._id,
+                playbackId: v.muxPlaybackId,
+                productName: v.productName,
+                rating: v.rating || 0,
+                reviewerFirstName: v.reviewerFirstName || 'User',
+                reviewerLastName: v.reviewerLastName || '',
+                reviewerProfilePic: v.reviewerProfilePic || 'https://via.placeholder.com/64',
+                createdDate: v['Created Date'],
+            }));
+            // newest first
+            this.videos = vids.sort((a, b) => (b.createdDate || 0) - (a.createdDate || 0));
+            this.totalReviews = this.videos.length;
+            const sum = this.videos.reduce((s, v) => s + (v.rating || 0), 0);
+            this.avgRating = this.videos.length ? Math.round((sum / this.videos.length) * 10) / 10 : 0;
+            this.errorMessage = '';
+        }
+        catch (e) {
+            console.error(e);
+            this.errorMessage = 'Unable to load brand videos.';
+        }
+        finally {
+            this.loading = false;
+        }
+    }
+    // Style helpers
+    getPositionStyle() {
+        const base = { position: 'fixed', zIndex: String(this.zIndex) };
+        const inset = '20px';
+        switch (this.position) {
+            case 'top-left':
+                Object.assign(base, { top: inset, left: inset });
+                break;
+            case 'top-right':
+                Object.assign(base, { top: inset, right: inset });
+                break;
+            case 'bottom-left':
+                Object.assign(base, { bottom: inset, left: inset });
+                break;
+            case 'bottom-right':
+                Object.assign(base, { bottom: inset, right: inset });
+                break;
+        }
+        return base;
+    }
+    getModalAnchorStyle() {
+        const inset = '20px';
+        const base = { position: 'fixed', zIndex: String(this.zIndex + 1) };
+        switch (this.position) {
+            case 'top-left':
+                Object.assign(base, { top: inset, left: inset });
+                break;
+            case 'top-right':
+                Object.assign(base, { top: inset, right: inset });
+                break;
+            case 'bottom-left':
+                Object.assign(base, { bottom: inset, left: inset });
+                break;
+            case 'bottom-right':
+                Object.assign(base, { bottom: inset, right: inset });
+                break;
+        }
+        return base;
+    }
+    colors() {
+        const isDark = this.theme === 'dark';
+        return {
+            badgeBg: isDark ? '#2C1277' : '#FFFFFF',
+            badgeFg: isDark ? '#FFFFFF' : '#000000',
+            modalBg: isDark ? '#2C1277' : '#FFFFFF',
+            modalFg: isDark ? '#FFFFFF' : '#000000',
+            accent: '#FA0F9C',
+        };
+    }
+    getExpeerlyLogo() {
+        return this.theme === 'light' ? 'https://www.expeerly.com/expeerly_reviewed_icon_LIGHT.svg' : 'https://www.expeerly.com/expeerly_reviewed_icon_DARK.svg';
+    }
+    reviewWord() {
+        const singular = { en: 'review', de: 'Bewertung', fr: 'avis', it: 'recensione' };
+        const plural = { en: 'reviews', de: 'Bewertungen', fr: 'avis', it: 'recensioni' };
+        return this.totalReviews === 1 ? singular[this.locale] || singular.en : plural[this.locale] || plural.en;
+    }
+    renderStars(value, key) {
+        const stars = [];
+        const full = Math.floor(value);
+        const frac = value - full;
+        for (let i = 0; i < 5; i++) {
+            if (i < full) {
+                stars.push(h("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "#FFD700", stroke: "#FFD700", style: { marginRight: '2px' } }, h("path", { d: "M12 17.27l6.18 3.73-1.64-7.08L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.68-1.64 7.08L12 17.27z" })));
+            }
+            else if (i === full && frac > 0) {
+                const id = `half-${key}-${i}`;
+                const pct = Math.round(frac * 100);
+                stars.push(h("svg", { width: "20", height: "20", viewBox: "0 0 24 24", style: { marginRight: '2px' } }, h("defs", null, h("linearGradient", { id: id, x1: "0%", y1: "0%", x2: "100%", y2: "0%" }, h("stop", { offset: `${pct}%`, "stop-color": "#FFD700" }), h("stop", { offset: `${pct}%`, "stop-color": "#E8E8EA" }))), h("path", { d: "M12 17.27l6.18 3.73-1.64-7.08L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.68-1.64 7.08L12 17.27z", fill: `url(#${id})`, stroke: "#FFD700" })));
+            }
+            else {
+                stars.push(h("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "#E8E8EA", style: { marginRight: '2px' } }, h("path", { d: "M12 17.27l6.18 3.73-1.64-7.08L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.68-1.64 7.08L12 17.27z" })));
+            }
+        }
+        return h("span", { style: { display: 'inline-flex' } }, stars);
+    }
+    // RENDER
+    render() {
+        const { badgeBg, badgeFg, modalBg, modalFg, accent } = this.colors();
+        // —— Badge ——
+        const badge = (h("div", { part: "badge", style: Object.assign(Object.assign({}, this.getPositionStyle()), { background: badgeBg, color: badgeFg, padding: '16px', borderRadius: '12px', boxShadow: '0 10px 22px rgba(0,0,0,.15)', cursor: 'pointer', display: 'inline-flex', flexDirection: 'column', gap: '4px', minWidth: '160px', fontFamily: 'Mulish,sans-serif' }), onClick: this.toggleExpanded }, h("div", { style: { display: 'flex', alignItems: 'center', gap: '10px' } }, h("img", { src: this.getExpeerlyLogo(), alt: "Expeerly Reviewed", style: { height: '80px' } })), h("div", { style: { display: 'flex', alignItems: 'center', gap: '10px' } }, h("span", { style: { fontWeight: '700', fontSize: '20px' } }, this.avgRating.toFixed(1)), this.renderStars(this.avgRating, 'badge')), h("div", { style: { color: accent, fontSize: '18px', fontWeight: '700' } }, "(", this.totalReviews, " ", this.reviewWord(), ")")));
+        // —— Expanded modal ——
+        const visible = this.viewportSlides;
+        const leftGhost = this.currentIndex > 0 ? this.videos[this.currentIndex - 1] : null;
+        const active = this.videos.slice(this.currentIndex, this.currentIndex + visible);
+        const rightGhost = this.currentIndex + visible < this.videos.length ? this.videos[this.currentIndex + visible] : null;
+        // ghost renderer (directional fade)
+        const renderGhost = (v, side) => {
+            const pos = side === 'left' ? { left: '8px' } : { right: '8px' };
+            const fadeMask = side === 'left' ? 'linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,1) 35%)' : 'linear-gradient(to left, rgba(0,0,0,0), rgba(0,0,0,1) 35%)';
+            return (h("div", { style: Object.assign({ position: 'absolute', top: '50%', transform: 'translateY(-50%)', width: `${this.GHOST_W}px`, opacity: '0.35', filter: 'grayscale(30%)', pointerEvents: 'none', WebkitMaskImage: fadeMask, maskImage: fadeMask }, pos) }, this.renderCard(v)));
+        };
+        const modal = this.expanded && (h("div", { part: "overlay", style: {
+                position: 'fixed',
+                inset: '0',
+                background: 'transparent',
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-end',
+                zIndex: String(this.zIndex + 1),
+            }, onClick: this.closeExpanded }, h("div", { part: "modal", style: Object.assign(Object.assign({}, this.getModalAnchorStyle()), { background: modalBg, color: modalFg, borderRadius: '16px', marginRight: '20px', boxShadow: '0 24px 64px rgba(0,0,0,.3)', padding: '16px', overflow: 'hidden', fontFamily: 'Mulish,sans-serif' }), onClick: e => e.stopPropagation() }, h("div", { style: {
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                marginBottom: '10px',
+                flexWrap: this.viewportSlides === 1 ? 'wrap' : 'nowrap',
+            } }, h("img", { src: this.getExpeerlyLogo(), alt: "Expeerly", style: { height: '48px' } }), h("div", { style: {
+                display: 'flex',
+                flexDirection: this.viewportSlides === 1 ? 'column' : 'row',
+                alignItems: this.viewportSlides === 1 ? 'flex-start' : 'center',
+                gap: this.viewportSlides === 1 ? '6px' : '10px',
+            } }, h("div", { style: { display: 'flex', alignItems: 'center', gap: '5px' } }, h("div", { style: { fontWeight: '800', fontSize: '14px', marginLeft: '4px' } }, this.avgRating.toFixed(1)), h("div", null, this.renderStars(this.avgRating, 'hdr'))), h("div", { style: {
+                color: accent,
+                fontSize: '14px',
+                fontWeight: '600',
+                marginLeft: this.viewportSlides === 1 ? '0' : '4px',
+            } }, "(", this.totalReviews, " ", this.reviewWord(), ")")), h("button", { "aria-label": "Close", onClick: this.closeExpanded, style: {
+                marginLeft: 'auto',
+                background: 'transparent',
+                border: 'none',
+                color: modalFg,
+                fontSize: '1.6rem',
+                cursor: 'pointer',
+            } }, "\u2715")), h("div", { style: { position: 'relative', padding: '0 64px', minHeight: '272px' } }, leftGhost && renderGhost(leftGhost, 'left'), h("div", { style: { display: 'flex', gap: '18px', justifyContent: 'center', position: 'relative', zIndex: '2' } }, this.loading ? (h("div", { style: { margin: 'auto' } }, "Loading\u2026")) : (active.map(v => h("div", { style: { width: `${this.ACTIVE_W}px`, flex: '0 0 auto' } }, this.renderCard(v, true))))), rightGhost && renderGhost(rightGhost, 'right'), h("button", { onClick: this.showPrev, disabled: this.currentIndex === 0, "aria-label": "Previous", style: {
+                position: 'absolute',
+                left: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                border: 'none',
+                background: '#ECEAF6',
+                color: '#333',
+                cursor: 'pointer',
+                boxShadow: '0 2px 6px rgba(0,0,0,.2)',
+            } }, h("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "currentColor", "aria-hidden": "true", style: { display: 'flex', alignItems: 'center', justifyContent: 'center' } }, h("path", { d: "M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" }))), h("button", { onClick: this.showNext, disabled: this.currentIndex + visible >= this.videos.length, "aria-label": "Next", style: {
+                position: 'absolute',
+                right: '16px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                border: 'none',
+                background: '#ECEAF6',
+                color: '#333',
+                cursor: 'pointer',
+                boxShadow: '0 2px 6px rgba(0,0,0,.2)',
+            } }, h("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "currentColor", "aria-hidden": "true", style: { display: 'flex', alignItems: 'center', justifyContent: 'center' } }, h("path", { d: "m8.59 16.59 1.41 1.41 6-6-6-6-1.41 1.41L13.17 12z" })))))));
+        return (h(h.Fragment, null, badge, modal));
+    }
+    // Card renderer (active or ghost)
+    renderCard(v, emphasize = false) {
+        const radius = '18px';
+        const shortLast = v.reviewerLastName ? v.reviewerLastName[0].toUpperCase() + '.' : '';
+        const cardH = emphasize ? 272 : 212;
+        return (h("div", { style: {
+                position: 'relative',
+                borderRadius: radius,
+                overflow: 'hidden',
+                background: '#000',
+                boxShadow: emphasize ? '0 12px 28px rgba(0,0,0,.35)' : '0 6px 14px rgba(0,0,0,.2)',
+                fontFamily: 'Mulish,sans-serif',
+                width: '100%',
+                height: `${cardH}px`,
+            } }, h("mux-player", { "playback-id": v.playbackId, "stream-type": "on-demand", controls: true, "default-hidden-captions": false, onLoadedData: this.handleLoadedData, style: {
+                'width': '100%',
+                'height': '100%',
+                '--media-object-fit': 'cover',
+                '--media-object-position': 'center',
+                '--poster-object-fit': 'cover',
+                '--poster-object-position': 'center',
+                'background': 'transparent',
+                'display': 'block',
+            } }), h("div", { style: { position: 'absolute', top: '10px', left: '12px' } }, this.renderStars(v.rating || 0, `card-${v.id}`)), h("div", { style: {
+                position: 'absolute',
+                left: '0',
+                right: '0',
+                bottom: '0',
+                padding: '10px',
+                color: '#fff',
+                background: 'linear-gradient(transparent, rgba(0,0,0,.7))',
+            } }, h("div", { style: { display: 'flex', alignItems: 'center', gap: '10px' } }, h("div", { style: { width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', flexShrink: '0' } }, h("img", { src: v.reviewerProfilePic, alt: "Reviewer", style: { width: '28px', height: '28px', objectFit: 'cover' } })), h("div", { style: { flex: '1 1 auto', minWidth: '0' } }, h("div", { style: {
+                fontWeight: '700',
+                fontSize: '14px',
+                lineHeight: '1.1',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+            }, title: v.productName }, v.productName), h("div", { style: { marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px' } }, h("span", null, v.reviewerFirstName, " ", shortLast), h("svg", { style: { width: '16px', height: '16px', borderRadius: '50%', background: '#1ecbe1', fill: 'white' }, viewBox: "0 0 24 24", "aria-hidden": "true" }, h("path", { d: "M9 16.17 5.12 12.29 3.7 13.71 9 19l10-11-1.41-1.41z" }))))))));
+    }
+    get el() { return getElement(this); }
+    static get watchers() { return {
+        "accessKey": ["propsChanged"],
+        "brandId": ["propsChanged"]
+    }; }
+};
 
-//# sourceMappingURL=expeerly-component.entry.js.map
+export { ExpeerlyComponent as expeerly_component, ExpeerlyFlyWidget as expeerly_fly_widget };
+
+//# sourceMappingURL=expeerly-component_2.entry.js.map
