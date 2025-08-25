@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Expeerly Retailer Integration</title>
 
-    <script type="module" src="./expeerly.js"></script>
+    <script type="module" src="./expeerly.js" defer></script>
 
   </head>
   <body>
@@ -16,10 +16,17 @@
       theme="dark"
       max-videos="4"
     ></expeerly-component>
-    <expeerly-fly-widget access-key="wh7lfdrjis80lailext3ixamm4alvfdt" brand-id="1736839165884x528675462710558700" theme="light" position="bottom-right" locale="de">
-</expeerly-fly-widget>
+    <!-- <expeerly-fly-widget access-key="wh7lfdrjis80lailext3ixamm4alvfdt" brand-id="1736839165884x528675462710558700" theme="light" position="bottom-right" locale="de">
+</expeerly-fly-widget> -->
 
     <script>
+      const ExpeerlyFlyWidget = document.createElement('expeerly-fly-widget');
+      ExpeerlyFlyWidget.setAttribute('access-key', 'wh7lfdrjis80lailext3ixamm4alvfdt');
+      ExpeerlyFlyWidget.setAttribute('brand-id', '1736839165884x528675462710558700');
+      ExpeerlyFlyWidget.setAttribute('theme', 'light');
+      ExpeerlyFlyWidget.setAttribute('position', 'bottom-right');
+      ExpeerlyFlyWidget.setAttribute('locale', 'de');
+      document.body.appendChild(ExpeerlyFlyWidget);
       // setTimeout(()=>{
       //   const expeerlyElement = document.createElement('expeerly-component');
       //   expeerlyElement.setAttribute('type', 'badge');

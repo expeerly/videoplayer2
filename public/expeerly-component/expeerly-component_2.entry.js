@@ -1,4 +1,4 @@
-import { r as registerInstance, h, g as getElement } from './index-02ff1379.js';
+import { r as registerInstance, h, g as getElement, f as forceUpdate } from './index-6424e9ac.js';
 
 window.expeerly = {
     config: {
@@ -381,11 +381,56 @@ const ExpeerlyFlyWidget = class {
         this.totalReviews = 0;
         this.avgRating = 0;
         this.viewportSlides = 3;
+        this.playingPlaybackId = '';
+        this.playingId = null;
         // Card widths
         this.ACTIVE_W = 167;
         this.GHOST_W = 130;
         this.setSlidesForViewport = () => {
             this.viewportSlides = window.innerWidth < 768 ? 1 : 3;
+        };
+        /**
+         * Called when any mux‑player starts playing.
+         * We pause all the others, then mark this one as playing.
+         */
+        // private handlePlaying = (_ev: Event, playbackId: string) => {
+        //   // mark it as played
+        //   // this.playedPlaybackIds.add(playbackId);
+        //   // pause every other mux-player in our shadow
+        //   const players = this.el.shadowRoot?.querySelectorAll('mux-player') || [];
+        //   players.forEach((p: any) => {
+        //     if (p.getAttribute('playback-id') !== playbackId) {
+        //       p.pause();
+        //     }
+        //   });
+        //   this.playingPlaybackId = playbackId;
+        // };
+        // /**
+        //  * Called on pause or ended: clear our playing flag if it matches.
+        //  */
+        // private handlePauseOrEnd = (_ev: Event, playbackId: string) => {
+        //   if (this.playingPlaybackId === playbackId) {
+        //     this.playingPlaybackId = '';
+        //   }
+        // };
+        this.setPlaying = (playbackId) => {
+            var _a;
+            // pause all others
+            const players = ((_a = this.el.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelectorAll('mux-player')) || [];
+            players.forEach((p) => {
+                if (p.getAttribute('playback-id') !== playbackId)
+                    p.pause();
+            });
+            this.playingPlaybackId = playbackId; // state (for declarative UI)
+            this.setCardPlayingAttr(playbackId); // imperative fallback
+            forceUpdate(this); // ensure re-render now
+        };
+        this.clearPlaying = (playbackId) => {
+            if (!playbackId || this.playingPlaybackId === playbackId) {
+                this.playingPlaybackId = '';
+            }
+            this.clearCardPlayingAttr(playbackId); // show footer again
+            forceUpdate(this);
         };
         this.handleLoadedData = (ev) => {
             const playerEl = ev.target; // the <mux-player> element
@@ -423,6 +468,40 @@ const ExpeerlyFlyWidget = class {
             const s = document.createElement('script');
             s.src = 'https://cdn.jsdelivr.net/npm/@mux/mux-player';
             document.head.appendChild(s);
+        }
+    }
+    setCardPlayingAttr(playbackId) {
+        const root = this.el.shadowRoot;
+        if (!root)
+            return;
+        const cards = Array.from(root.querySelectorAll('.ex-card'));
+        for (const card of cards) {
+            const pid = card.dataset.pid;
+            const footer = card.querySelector('.ex-footer');
+            if (pid === playbackId) {
+                card.setAttribute('data-playing', 'true');
+                if (footer)
+                    footer.style.display = 'none';
+            }
+            else {
+                card.removeAttribute('data-playing');
+                if (footer)
+                    footer.style.display = '';
+            }
+        }
+    }
+    clearCardPlayingAttr(playbackId) {
+        const root = this.el.shadowRoot;
+        if (!root)
+            return;
+        const cards = Array.from(root.querySelectorAll('.ex-card'));
+        for (const card of cards) {
+            if (!playbackId || card.dataset.pid === playbackId) {
+                card.removeAttribute('data-playing');
+                const footer = card.querySelector('.ex-footer');
+                if (footer)
+                    footer.style.display = '';
+            }
         }
     }
     normalizeInputs() {
@@ -647,7 +726,8 @@ const ExpeerlyFlyWidget = class {
         const radius = '18px';
         const shortLast = v.reviewerLastName ? v.reviewerLastName[0].toUpperCase() + '.' : '';
         const cardH = emphasize ? 272 : 212;
-        return (h("div", { style: {
+        const isPlaying = this.playingPlaybackId === v.playbackId;
+        return (h("div", { class: "ex-card", "data-pid": v.playbackId, style: {
                 position: 'relative',
                 borderRadius: radius,
                 overflow: 'hidden',
@@ -656,7 +736,7 @@ const ExpeerlyFlyWidget = class {
                 fontFamily: 'Mulish,sans-serif',
                 width: '100%',
                 height: `${cardH}px`,
-            } }, h("mux-player", { "playback-id": v.playbackId, "stream-type": "on-demand", controls: true, "default-hidden-captions": false, onLoadedData: this.handleLoadedData, style: {
+            } }, h("mux-player", { "playback-id": v.playbackId, "stream-type": "on-demand", controls: true, "default-hidden-captions": false, onLoadedData: this.handleLoadedData, onPlay: () => this.setPlaying(v.playbackId), onPlaying: () => this.setPlaying(v.playbackId), onPause: () => this.clearPlaying(v.playbackId), onEnded: () => this.clearPlaying(v.playbackId), style: {
                 'width': '100%',
                 'height': '100%',
                 '--media-object-fit': 'cover',
@@ -667,13 +747,14 @@ const ExpeerlyFlyWidget = class {
                 'display': 'block',
             } }), h("div", { style: { position: 'absolute', top: '10px', left: '12px' } }, this.renderStars(v.rating || 0, `card-${v.id}`)), h("div", { style: {
                 position: 'absolute',
+                display: isPlaying ? 'none' : 'block',
                 left: '0',
                 right: '0',
                 bottom: '0',
                 padding: '10px',
                 color: '#fff',
                 background: 'linear-gradient(transparent, rgba(0,0,0,.7))',
-            } }, h("div", { style: { display: 'flex', alignItems: 'center', gap: '10px' } }, h("div", { style: { width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', flexShrink: '0' } }, h("img", { src: v.reviewerProfilePic, alt: "Reviewer", style: { width: '28px', height: '28px', objectFit: 'cover' } })), h("div", { style: { flex: '1 1 auto', minWidth: '0' } }, h("div", { style: {
+            } }, h("div", { style: { display: isPlaying ? 'none' : 'flex', alignItems: 'center', gap: '10px' } }, h("div", { style: { width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', flexShrink: '0' } }, h("img", { src: v.reviewerProfilePic, alt: "Reviewer", style: { width: '28px', height: '28px', objectFit: 'cover' } })), h("div", { style: { flex: '1 1 auto', minWidth: '0' } }, h("div", { style: {
                 fontWeight: '700',
                 fontSize: '14px',
                 lineHeight: '1.1',
