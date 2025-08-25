@@ -918,16 +918,6 @@ var postUpdateComponent = (hostRef) => {
     hostRef.$flags$ &= ~(4 /* isWaitingForChildren */ | 512 /* needsRerender */);
   }
 };
-var forceUpdate = (ref) => {
-  {
-    const hostRef = getHostRef(ref);
-    const isConnected = hostRef.$hostElement$.isConnected;
-    if (isConnected && (hostRef.$flags$ & (2 /* hasRendered */ | 16 /* isQueuedForUpdate */)) === 2 /* hasRendered */) {
-      scheduleUpdate(hostRef, false);
-    }
-    return isConnected;
-  }
-};
 var appDidLoad = (who) => {
   nextTick(() => emitEvent(win, "appload", { detail: { namespace: NAMESPACE } }));
 };
@@ -1375,6 +1365,6 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
 // src/runtime/nonce.ts
 var setNonce = (nonce) => plt.$nonce$ = nonce;
 
-export { Host as H, bootstrapLazy as b, forceUpdate as f, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
+export { Host as H, bootstrapLazy as b, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
 
-//# sourceMappingURL=index-6424e9ac.js.map
+//# sourceMappingURL=index-02ff1379.js.map
