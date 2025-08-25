@@ -1,4 +1,4 @@
-import { r as registerInstance, h, g as getElement, f as forceUpdate } from './index-6424e9ac.js';
+import { r as registerInstance, h, g as getElement } from './index-02ff1379.js';
 
 window.expeerly = {
     config: {
@@ -386,51 +386,27 @@ const ExpeerlyFlyWidget = class {
         // Card widths
         this.ACTIVE_W = 167;
         this.GHOST_W = 130;
+        this.hiddenFooterIds = new Set();
         this.setSlidesForViewport = () => {
             this.viewportSlides = window.innerWidth < 768 ? 1 : 3;
         };
-        /**
-         * Called when any mux‑player starts playing.
-         * We pause all the others, then mark this one as playing.
-         */
-        // private handlePlaying = (_ev: Event, playbackId: string) => {
-        //   // mark it as played
-        //   // this.playedPlaybackIds.add(playbackId);
-        //   // pause every other mux-player in our shadow
-        //   const players = this.el.shadowRoot?.querySelectorAll('mux-player') || [];
-        //   players.forEach((p: any) => {
-        //     if (p.getAttribute('playback-id') !== playbackId) {
-        //       p.pause();
-        //     }
-        //   });
-        //   this.playingPlaybackId = playbackId;
-        // };
-        // /**
-        //  * Called on pause or ended: clear our playing flag if it matches.
-        //  */
-        // private handlePauseOrEnd = (_ev: Event, playbackId: string) => {
-        //   if (this.playingPlaybackId === playbackId) {
-        //     this.playingPlaybackId = '';
-        //   }
-        // };
         this.setPlaying = (playbackId) => {
             var _a;
-            // pause all others
-            const players = ((_a = this.el.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelectorAll('mux-player')) || [];
-            players.forEach((p) => {
+            // Pause other players
+            (((_a = this.el.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelectorAll('mux-player')) || []).forEach((p) => {
                 if (p.getAttribute('playback-id') !== playbackId)
                     p.pause();
             });
-            this.playingPlaybackId = playbackId; // state (for declarative UI)
-            this.setCardPlayingAttr(playbackId); // imperative fallback
-            forceUpdate(this); // ensure re-render now
+            // Mark this one as the active player and lock its footer hidden
+            this.playingPlaybackId = playbackId;
+            this.hiddenFooterIds.add(playbackId); // <- keep hidden even when paused
+            this.applyFooterVisibility();
         };
         this.clearPlaying = (playbackId) => {
             if (!playbackId || this.playingPlaybackId === playbackId) {
                 this.playingPlaybackId = '';
             }
-            this.clearCardPlayingAttr(playbackId); // show footer again
-            forceUpdate(this);
+            this.applyFooterVisibility();
         };
         this.handleLoadedData = (ev) => {
             const playerEl = ev.target; // the <mux-player> element
@@ -470,39 +446,19 @@ const ExpeerlyFlyWidget = class {
             document.head.appendChild(s);
         }
     }
-    setCardPlayingAttr(playbackId) {
+    applyFooterVisibility() {
         const root = this.el.shadowRoot;
         if (!root)
             return;
-        const cards = Array.from(root.querySelectorAll('.ex-card'));
-        for (const card of cards) {
+        const cards = root.querySelectorAll('.ex-card');
+        cards.forEach(card => {
             const pid = card.dataset.pid;
             const footer = card.querySelector('.ex-footer');
-            if (pid === playbackId) {
-                card.setAttribute('data-playing', 'true');
-                if (footer)
-                    footer.style.display = 'none';
-            }
-            else {
-                card.removeAttribute('data-playing');
-                if (footer)
-                    footer.style.display = '';
-            }
-        }
-    }
-    clearCardPlayingAttr(playbackId) {
-        const root = this.el.shadowRoot;
-        if (!root)
-            return;
-        const cards = Array.from(root.querySelectorAll('.ex-card'));
-        for (const card of cards) {
-            if (!playbackId || card.dataset.pid === playbackId) {
-                card.removeAttribute('data-playing');
-                const footer = card.querySelector('.ex-footer');
-                if (footer)
-                    footer.style.display = '';
-            }
-        }
+            if (!footer)
+                return;
+            const shouldHide = this.hiddenFooterIds.has(pid) || this.playingPlaybackId === pid;
+            footer.style.display = shouldHide ? 'none' : '';
+        });
     }
     normalizeInputs() {
         if (!this.accessKey) {
@@ -727,6 +683,7 @@ const ExpeerlyFlyWidget = class {
         const shortLast = v.reviewerLastName ? v.reviewerLastName[0].toUpperCase() + '.' : '';
         const cardH = emphasize ? 272 : 212;
         const isPlaying = this.playingPlaybackId === v.playbackId;
+        const hideFooter = isPlaying || this.hiddenFooterIds.has(v.playbackId);
         return (h("div", { class: "ex-card", "data-pid": v.playbackId, style: {
                 position: 'relative',
                 borderRadius: radius,
@@ -747,14 +704,14 @@ const ExpeerlyFlyWidget = class {
                 'display': 'block',
             } }), h("div", { style: { position: 'absolute', top: '10px', left: '12px' } }, this.renderStars(v.rating || 0, `card-${v.id}`)), h("div", { style: {
                 position: 'absolute',
-                display: isPlaying ? 'none' : 'block',
+                display: hideFooter ? 'none' : 'block',
                 left: '0',
                 right: '0',
                 bottom: '0',
                 padding: '10px',
                 color: '#fff',
                 background: 'linear-gradient(transparent, rgba(0,0,0,.7))',
-            } }, h("div", { style: { display: isPlaying ? 'none' : 'flex', alignItems: 'center', gap: '10px' } }, h("div", { style: { width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', flexShrink: '0' } }, h("img", { src: v.reviewerProfilePic, alt: "Reviewer", style: { width: '28px', height: '28px', objectFit: 'cover' } })), h("div", { style: { flex: '1 1 auto', minWidth: '0' } }, h("div", { style: {
+            } }, h("div", { style: { display: hideFooter ? 'none' : 'flex', alignItems: 'center', gap: '10px' } }, h("div", { style: { width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', flexShrink: '0' } }, h("img", { src: v.reviewerProfilePic, alt: "Reviewer", style: { width: '28px', height: '28px', objectFit: 'cover' } })), h("div", { style: { flex: '1 1 auto', minWidth: '0' } }, h("div", { style: {
                 fontWeight: '700',
                 fontSize: '14px',
                 lineHeight: '1.1',
