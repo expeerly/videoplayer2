@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MetadataRoute } from 'next';
 import {
   getAllBrands,
@@ -9,221 +10,142 @@ import {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-type Brand = {
-  id: string;
-  logo: string;
-  brandName: string;
-  slug: string;
-};
+type Lang = 'en' | 'de' | 'fr' | 'it' | 'x-default';
+type HrefLangs = Record<Lang, string>;
+type Entry = { url: string; lastModified?: string; alternates?: { languages: HrefLangs } };
+
+const LANGS: Lang[] = ['en', 'de', 'fr', 'it', 'x-default'];
+
+function makeLangMap(
+  base: string,
+  localized: (l: Exclude<Lang, 'x-default'>) => string
+): HrefLangs {
+  const m = {} as HrefLangs;
+  for (const l of LANGS) {
+    m[l] = l === 'x-default' ? base : localized(l);
+  }
+  return m;
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { data: Allvideos } = await getAllVideos('en');
-  const { data: AllBrands } = await getAllBrands('en');
-  const { data: AllCategories } = await getAllCategories('en');
-  const { data: AllCreators } = await getAllCreatorsSlug();
+  const ENV_BASE = process.env.SITEBASEURL?.replace(/\/+$/, '');
+  const BASE = ENV_BASE && ENV_BASE.startsWith('http') ? ENV_BASE : 'https://www.expeerly.com';
 
-  const languages = ['en', 'de', 'fr', 'it', 'x-default'];
+  let videos: any[] = [];
+  let brands: any[] = [];
+  let categories: any[] = [];
+  let creators: any[] = [];
 
-  type Language = (typeof languages)[number];
-  type SITEMAP = {
-    url: string;
-    alternates: {
-      languages: {
-        [key in Language]: string;
-      };
-    };
-  };
+  try {
+    const [v, b, c, cr] = await Promise.allSettled([
+      getAllVideos('en'),
+      getAllBrands('en'),
+      getAllCategories('en'),
+      getAllCreatorsSlug(),
+    ]);
+    if (v.status === 'fulfilled') videos = v.value?.data || [];
+    if (b.status === 'fulfilled') brands = b.value?.data || [];
+    if (c.status === 'fulfilled') categories = c.value?.data || [];
+    if (cr.status === 'fulfilled') creators = cr.value?.data || [];
+  } catch {
+    // swallow — sitemap should never 500
+  }
 
-  const Homepages: SITEMAP[] = [];
-  const BrandSliderPages: SITEMAP[] = [];
-  const CategorySliderPages: { url: string }[] = [];
-  const DetailPages: { url: string }[] = [];
-  const CreatorsPages: SITEMAP[] = [];
+  const entries: Entry[] = [];
 
-  const HomeLinks: SITEMAP = {
-    url: '',
-    alternates: {
-      languages: {} as { [key in Language]: string },
-    },
-  };
-
-  const SliderLinks: SITEMAP = {
-    url: '',
-    alternates: {
-      languages: {} as { [key in Language]: string },
-    },
-  };
-
-  let BrandSliderLinks: SITEMAP = {
-    url: '',
-    alternates: {
-      languages: {} as { [key in Language]: string },
-    },
-  };
-
-  let CategorySliderLinks: SITEMAP = {
-    url: '',
-    alternates: {
-      languages: {} as { [key in Language]: string },
-    },
-  };
-
-  let DetailPageLinks: SITEMAP = {
-    url: '',
-    alternates: {
-      languages: {} as { [key in Language]: string },
-    },
-  };
-
-  languages.map(locale => {
-    //add to url
-    HomeLinks.url = `${process.env.SITEBASEURL}`;
-    SliderLinks.url = `${process.env.SITEBASEURL}/video-reviews`;
-
-    //add to languages
-    const prevHomeData = { ...HomeLinks.alternates.languages };
-    const prevSliderData = { ...SliderLinks.alternates.languages };
-
-    HomeLinks.alternates.languages = {
-      ...prevHomeData,
-      [locale]:
-        locale == 'en' || locale == 'x-default'
-          ? `${process.env.SITEBASEURL}`
-          : `${process.env.SITEBASEURL}/${locale}`,
-    };
-
-    SliderLinks.alternates.languages = {
-      ...prevSliderData,
-      [locale]:
-        locale == 'en' || locale == 'x-default'
-          ? `${process.env.SITEBASEURL}/video-reviews`
-          : `${process.env.SITEBASEURL}/${locale}/video-reviews`,
-    };
+  // Home
+  entries.push({
+    url: BASE,
+    lastModified: new Date().toISOString(),
+    alternates: { languages: makeLangMap(BASE, l => (l === 'en' ? BASE : `${BASE}/${l}`)) },
   });
 
-  Homepages.push(HomeLinks);
+  // Reviews index
+  entries.push({
+    url: `${BASE}/video-reviews`,
+    alternates: {
+      languages: makeLangMap(`${BASE}/video-reviews`, l =>
+        l === 'en' ? `${BASE}/video-reviews` : `${BASE}/${l}/video-reviews`
+      ),
+    },
+  });
 
-  //Adding Brand Slider Pages
-  AllBrands?.map((brand: Brand) => {
-    BrandSliderLinks.url = `${process.env.SITEBASEURL}/video-reviews/brand/${brand.slug}`;
-
-    const newData = { ...BrandSliderLinks.alternates.languages };
-
-    languages.forEach(locale => {
-      newData[locale] =
-        locale == 'en' || locale == 'x-default'
-          ? `${process.env.SITEBASEURL}/video-reviews/brand/${brand.slug}`
-          : `${process.env.SITEBASEURL}/${locale}/video-reviews/brand/${brand.slug}`;
-    });
-
-    BrandSliderLinks.alternates.languages = newData;
-
-    BrandSliderPages.push({ ...BrandSliderLinks });
-
-    BrandSliderLinks = {
-      url: '',
+  // Brand pages
+  for (const brand of brands) {
+    const slug = brand?.slug;
+    if (!slug) continue;
+    const baseUrl = `${BASE}/video-reviews/brand/${slug}`;
+    entries.push({
+      url: baseUrl,
       alternates: {
-        languages: {} as { [key in Language]: string },
+        languages: makeLangMap(baseUrl, l =>
+          l === 'en' ? baseUrl : `${BASE}/${l}/video-reviews/brand/${slug}`
+        ),
       },
-    };
-  });
-
-  AllCreators?.map(i => {
-    BrandSliderLinks.url = `${process.env.SITEBASEURL}/video-reviews/reviewers/${i.slug}`;
-
-    const newData = { ...BrandSliderLinks.alternates.languages };
-
-    languages.forEach(locale => {
-      newData[locale] =
-        locale == 'en' || locale == 'x-default'
-          ? `${process.env.SITEBASEURL}/video-reviews/reviewers/${i.slug}`
-          : `${process.env.SITEBASEURL}/${locale}/video-reviews/reviewers/${i.slug}`;
     });
+  }
 
-    BrandSliderLinks.alternates.languages = newData;
-
-    CreatorsPages.push({ ...BrandSliderLinks });
-
-    BrandSliderLinks = {
-      url: '',
+  // Creator pages
+  for (const cr of creators) {
+    const slug = cr?.slug;
+    if (!slug) continue;
+    const baseUrl = `${BASE}/video-reviews/reviewers/${slug}`;
+    entries.push({
+      url: baseUrl,
       alternates: {
-        languages: {} as { [key in Language]: string },
+        languages: makeLangMap(baseUrl, l =>
+          l === 'en' ? baseUrl : `${BASE}/${l}/video-reviews/reviewers/${slug}`
+        ),
       },
-    };
-  });
-
-  AllCategories?.map(category => {
-    const catagoryData = category.categoryData as Record<string, { urlSlug: string }>;
-
-    CategorySliderLinks.url = `${process.env.SITEBASEURL}/productcategory/${
-      catagoryData['en'].urlSlug
-    }`;
-
-    const newData = { ...CategorySliderLinks.alternates.languages };
-
-    languages.forEach(locale => {
-      newData[locale] =
-        locale == 'en' || locale == 'x-default'
-          ? `${process.env.SITEBASEURL}/video-reviews/productcategory/${catagoryData['en'].urlSlug}`
-          : `${process.env.SITEBASEURL}/${locale}/video-reviews/productcategory/${
-              catagoryData[locale].urlSlug
-            }`;
     });
+  }
 
-    CategorySliderLinks.alternates.languages = newData;
+  // Category pages (consistent path)
+  for (const cat of categories) {
+    const catData = cat?.categoryData as
+      | Record<'en' | 'de' | 'fr' | 'it', { urlSlug?: string }>
+      | undefined;
+    const enSlug = catData?.en?.urlSlug;
+    if (!enSlug) continue;
 
-    CategorySliderPages.push({ ...CategorySliderLinks });
-
-    CategorySliderLinks = {
-      url: '',
+    const baseUrl = `${BASE}/video-reviews/productcategory/${enSlug}`;
+    entries.push({
+      url: baseUrl,
       alternates: {
-        languages: {} as { [key in Language]: string },
+        languages: makeLangMap(baseUrl, l => {
+          if (l === 'en') return baseUrl;
+          const locSlug = catData?.[l]?.urlSlug || enSlug;
+          return `${BASE}/${l}/video-reviews/productcategory/${locSlug}`;
+        }),
       },
-    };
-  });
-
-  type LocaleKeys = 'en' | 'de' | 'fr' | 'it';
-
-  Allvideos?.map(video => {
-    const videoId = video.id;
-    const categorySlug = video.category?.slug;
-    const brandSlug = video?.brand?.brandSlug;
-    const productSlug = video.product?.productSlug;
-
-    DetailPageLinks.url = `${process.env.SITEBASEURL}/video-reviews/${categorySlug}/${brandSlug}/${productSlug}/${videoId}`;
-
-    const newData = { ...DetailPageLinks.alternates.languages };
-
-    languages.forEach(locale => {
-      newData[locale] =
-        locale == 'en' || locale == 'x-default'
-          ? `${process.env.SITEBASEURL}/video-reviews/${
-              categorySlug
-            }/${brandSlug}/${productSlug}/${videoId}`
-          : `${process.env.SITEBASEURL}/${locale}/video-reviews/${
-              AllCategories.find(i => i.categoryData.en.urlSlug === categorySlug)?.categoryData?.[
-                locale as LocaleKeys
-              ]?.urlSlug
-            }/${brandSlug}/${productSlug}/${videoId}`;
     });
+  }
 
-    DetailPageLinks.alternates.languages = newData;
+  // Detail pages (skip incomplete)
+  for (const v of videos) {
+    const id = v?.id;
+    const categorySlug = v?.category?.slug;
+    const brandSlug = v?.brand?.brandSlug;
+    const productSlug = v?.product?.productSlug;
+    if (!id || !categorySlug || !brandSlug || !productSlug) continue;
 
-    DetailPages.push({ ...DetailPageLinks });
+    const baseUrl = `${BASE}/video-reviews/${categorySlug}/${brandSlug}/${productSlug}/${id}`;
+    const cat = categories.find((c: any) => c?.categoryData?.en?.urlSlug === categorySlug);
+    const catData = cat?.categoryData as
+      | Record<'en' | 'de' | 'fr' | 'it', { urlSlug?: string }>
+      | undefined;
 
-    DetailPageLinks = {
-      url: '',
+    entries.push({
+      url: baseUrl,
       alternates: {
-        languages: {} as { [key in Language]: string },
+        languages: makeLangMap(baseUrl, l => {
+          if (l === 'en') return baseUrl;
+          const locCatSlug = catData?.[l]?.urlSlug || categorySlug;
+          return `${BASE}/${l}/video-reviews/${locCatSlug}/${brandSlug}/${productSlug}/${id}`;
+        }),
       },
-    };
-  });
+    });
+  }
 
-  return [
-    ...Homepages,
-    ...BrandSliderPages,
-    ...CategorySliderPages,
-    ...DetailPages,
-    ...CreatorsPages,
-  ];
+  return entries as MetadataRoute.Sitemap;
 }
