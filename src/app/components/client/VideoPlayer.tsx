@@ -99,6 +99,8 @@ export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id, isVideoD
         ref={playerRef}
         autoPlay
         loop
+        streamType="on-demand"
+        onCanPlay={onCanPlay}
         muted={false}
         playbackId={playbackId}
         className="absolute bottom-0 top-0 left-0 right-0 h-full w-full"
@@ -107,7 +109,7 @@ export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id, isVideoD
           video_title: ' ',
         }}
         defaultHiddenCaptions={false}
-        onLoadedData={onCanPlay}
+        // onLoadedData={onCanPlay}
       />
     </div>
   );
