@@ -17,21 +17,59 @@ export const VideoPlayer: FunctionComponent<Props> = ({ playbackId, id, isVideoD
   const locale = useLocale();
 
   const onCanPlay = useCallback(() => {
-    if (playerRef.current && playerRef.current.audioTracks) {
-      for (let i = 0; i < playerRef.current.audioTracks.length; i++) {
-        const track = playerRef.current.audioTracks[i];
-        if (track) {
-          track.enabled = track.language.startsWith(locale);
-        }
+    // if (playerRef.current && playerRef.current.audioTracks) {
+    //   for (let i = 0; i < playerRef.current.audioTracks.length; i++) {
+    //     const track = playerRef.current.audioTracks[i];
+    //     if (track) {
+    //       track.enabled = track.language.startsWith(locale);
+    //     }
+    //   }
+    // }
+
+    // if (playerRef.current && playerRef.current.textTracks) {
+    //   for (let i = 0; i < playerRef.current.textTracks.length; i++) {
+    //     const track = playerRef.current.textTracks[i];
+    //     if (track) {
+    //       track.mode = track.language.startsWith(locale) ? 'showing' : 'hidden';
+    //     }
+    //   }
+    // }
+
+    type MuxPlayerWithMedia = {
+      media?: {
+        nativeEl?: HTMLVideoElement | null;
+      } | null;
+    };
+
+    const muxPlayerEl = playerRef.current as unknown as MuxPlayerWithMedia;
+    if (!muxPlayerEl?.media?.nativeEl) return;
+
+    const videoEl = muxPlayerEl.media.nativeEl as HTMLVideoElement;
+
+    const normalize = (val?: string) => (val || '').toLowerCase().slice(0, 2);
+    const locale2 = normalize(locale);
+
+    // Audio tracks
+    type LocalAudioTrack = { language?: string; enabled?: boolean };
+    type LocalAudioTrackList = { length: number; [index: number]: LocalAudioTrack | undefined };
+    const audioTracks = (videoEl as unknown as { audioTracks?: LocalAudioTrackList }).audioTracks;
+    if (audioTracks) {
+      for (let i = 0; i < audioTracks.length; i++) {
+        const track = audioTracks[i];
+        if (!track) continue;
+        const lang2 = normalize(track.language);
+        track.enabled = lang2 === locale2;
       }
     }
 
-    if (playerRef.current && playerRef.current.textTracks) {
-      for (let i = 0; i < playerRef.current.textTracks.length; i++) {
-        const track = playerRef.current.textTracks[i];
-        if (track) {
-          track.mode = track.language.startsWith(locale) ? 'showing' : 'hidden';
-        }
+    // Text tracks (subtitles)
+    const { textTracks } = videoEl;
+    if (textTracks) {
+      for (let i = 0; i < textTracks.length; i++) {
+        const track = textTracks[i];
+        if (!track) continue;
+        const lang2 = normalize(track.language);
+        track.mode = lang2 === locale2 ? 'showing' : 'hidden';
       }
     }
   }, [locale]);
