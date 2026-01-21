@@ -63,8 +63,7 @@ const HomePage: NextPage<PageProps> = async ({ params }) => {
           }
         />
       </section>
-      {/* <CategoriesSlider locale={locale} /> */}
-      <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]  ">
+      <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]">
         <ReviewGridSection
           getGridVideos={() =>
             getGridVideos({
