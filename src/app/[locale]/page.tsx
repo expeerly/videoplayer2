@@ -44,20 +44,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const HomePage: NextPage<PageProps> = async ({ params }) => {
   const { locale } = await params;
-  const categoriesWithVideos = await getGridVideos({
-    lang: locale,
-    gridType: 'category',
-    page: 1,
-    limit: 1,
-    videoCount: 5,
-    random: true,
-  });
-
-  // Filter categories to ensure they have at least one video
-  const validCategories = (
-    categoriesWithVideos.data as unknown as Array<{ videos: Array<unknown>; id: string }>
-  ).filter(category => category.videos.length > 0);
-
   return (
     <div className="flex flex-col w-full items-center justify-center">
       <HeroSection />
@@ -77,26 +63,20 @@ const HomePage: NextPage<PageProps> = async ({ params }) => {
           }
         />
       </section>
-      {/* Render valid categories only */}
-      {validCategories.map(category => (
-        <section
-          key={category.id}
-          className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]"
-        >
-          <ReviewGridSection
-            getGridVideos={() =>
-              getGridVideos({
-                lang: locale,
-                gridType: 'category',
-                page: 1,
-                limit: 1,
-                videoCount: 5,
-                random: true,
-              })
-            }
-          />
-        </section>
-      ))}
+      <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]">
+        <ReviewGridSection
+          getGridVideos={() =>
+            getGridVideos({
+              lang: locale,
+              gridType: 'category',
+              page: 1,
+              limit: 1,
+              videoCount: 5,
+              random: true,
+            })
+          }
+        />
+      </section>
       <ConversionSlider locale={locale} />
       <HowExpeerlyWorks />
     </div>

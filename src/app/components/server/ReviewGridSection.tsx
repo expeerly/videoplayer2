@@ -10,13 +10,26 @@ type Props = {
 };
 
 export const ReviewGridSection: FunctionComponent<Props> = async ({ getGridVideos }) => {
-  const { data: brandVideos } = await getGridVideos();
+  const { data: gridData } = await getGridVideos();
+
+  // Check if data exists and has rows with videos
+  if (!gridData || !gridData.rows || gridData.rows.length === 0) {
+    return null;
+  }
+
+  // Filter out rows that don't have videos
+  const validRows = gridData.rows.filter(row => row.videos && row.videos.length > 0);
+
+  if (validRows.length === 0) {
+    return null;
+  }
+
   return (
     <ReviewGrid
       header={{
         dataType: 'brand',
       }}
-      data={brandVideos?.rows?.[0]}
+      data={validRows[0]}
     />
   );
 };
