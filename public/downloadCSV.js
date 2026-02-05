@@ -67,42 +67,44 @@
     return String(v).trim();
   };
 
-  const normalizeVariants = (v) => {
-    if (v == null) return "";
+  const normalizeToArray = (v) => {
+    if (v == null) return [];
 
-    // Array case
     if (Array.isArray(v)) {
       return v
         .map((x) => normalizeScalar(x))
-        .filter((x) => x && x !== "0")
-        .join(", ");
+        .filter((x) => x && x !== "0");
     }
 
-    // String case: could already be "a,b,c" or "a, b, c"
     if (typeof v === "string") {
       const s = v.trim();
-      if (!s) return "";
-
-      // If it looks like CSV-ish, normalize spacing after commas
+      if (!s) return [];
       if (s.includes(",")) {
         return s
           .split(",")
           .map((x) => normalizeScalar(x))
-          .filter((x) => x && x !== "0")
-          .join(", ");
+          .filter((x) => x && x !== "0");
       }
-
-      // Single value string
-      return s === "0" ? "" : s;
+      return s === "0" ? [] : [s];
     }
 
-    // Number or other scalar
     const one = normalizeScalar(v);
-    return one && one !== "0" ? one : "";
+    return one && one !== "0" ? [one] : [];
   };
 
-  const toCsvCell = (value) =>
-    `"${String(value ?? "").replace(/"/g, '""')}"`;
+  const uniq = (arr) => {
+    const seen = new Set();
+    const out = [];
+    for (const x of arr) {
+      if (!seen.has(x)) {
+        seen.add(x);
+        out.push(x);
+      }
+    }
+    return out;
+  };
+
+  const toCsvCell = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
 
   try {
     const response = await fetch(endpoint, { method: "GET" });
@@ -112,52 +114,74 @@
 
     const output = await response.text();
 
-    // Your endpoint may include text before the JSON array
+    // If the response contains text before JSON, slice from the first '['
     const jsonStartIndex = output.indexOf("[");
     if (jsonStartIndex === -1) {
       throw new Error("Could not find JSON array start '[' in API response.");
     }
 
-    const jsonString = output.slice(jsonStartIndex);
-    const data = JSON.parse(jsonString);
-
+    const data = JSON.parse(output.slice(jsonStartIndex));
     if (!Array.isArray(data) || data.length === 0) {
       alert("No data returned from API.");
       return;
     }
 
-    // Optional: dedupe by GTIN (same behavior as your current file),
-    // but make it robust and based on base gtin string.
-    const seenGTINs = new Set();
-    const filtered = data.filter((row) => {
-      const gtin = normalizeScalar(row?.gtin);
-      const isValid = gtin && gtin !== "0" && !seenGTINs.has(gtin);
-      if (isValid) seenGTINs.add(gtin);
-      return isValid;
-    });
+    // Merge records by base gtin to avoid losing variants on duplicates
+    // If gtin is empty/invalid, fallback to id key so the row is still kept.
+    const merged = new Map();
 
-    if (filtered.length === 0) {
+    for (const row of data) {
+      const id = normalizeScalar(row?.id);
+      const gtin = normalizeScalar(row?.gtin);
+      const upc = normalizeScalar(row?.upc);
+
+      const gtinVariantsArr = normalizeToArray(row?.gtinVariants);
+      const upcVariantsArr = normalizeToArray(row?.upcVariants);
+
+      const key = gtin && gtin !== "0" ? `gtin:${gtin}` : `id:${id}`;
+
+      if (!merged.has(key)) {
+        merged.set(key, {
+          id,
+          gtin,
+          upc,
+          gtinVariants: [],
+          upcVariants: [],
+        });
+      }
+
+      const cur = merged.get(key);
+
+      // Keep a stable id, but fill if missing
+      if (!cur.id && id) cur.id = id;
+
+      // Keep base fields, but fill if missing
+      if (!cur.gtin && gtin) cur.gtin = gtin;
+      if (!cur.upc && upc) cur.upc = upc;
+
+      // Merge variants (union)
+      cur.gtinVariants = uniq([...cur.gtinVariants, ...gtinVariantsArr]);
+      cur.upcVariants = uniq([...cur.upcVariants, ...upcVariantsArr]);
+    }
+
+    const rows = Array.from(merged.values()).map((r) => ({
+      id: r.id,
+      gtin: r.gtin,
+      upc: r.upc,
+      gtinVariants: r.gtinVariants.join(", "),
+      upcVariants: r.upcVariants.join(", "),
+    }));
+
+    if (rows.length === 0) {
       alert("No valid rows to export.");
       return;
     }
 
-    // Keep fixed headers, do not derive from first row
     const headers = ["id", "gtin", "upc", "gtinVariants", "upcVariants"];
-
-    // Normalize rows so variants always show up as "a, b, c"
-    const normalizedRows = filtered.map((row) => ({
-      id: normalizeScalar(row?.id),
-      gtin: normalizeScalar(row?.gtin),
-      upc: normalizeScalar(row?.upc),
-      gtinVariants: normalizeVariants(row?.gtinVariants),
-      upcVariants: normalizeVariants(row?.upcVariants),
-    }));
 
     const csv = [
       headers.join(","),
-      ...normalizedRows.map((row) =>
-        headers.map((h) => toCsvCell(row[h])).join(",")
-      ),
+      ...rows.map((row) => headers.map((h) => toCsvCell(row[h])).join(",")),
     ].join("\n");
 
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
