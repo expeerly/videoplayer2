@@ -16,16 +16,34 @@ async function downloadCSVFromBubble() {
     // Use a Set to track seen GTINs
     const seenGTINs = new Set();
 
-    // Filter: must have non-empty, non-zero GTIN and not duplicated
+    // Filter: must have non-empty, non-zero GTIN, not duplicated, and not published
     const filtered = data.filter((row) => {
       const gtin = row.gtin?.trim();
-      const isValid = gtin && gtin !== "0" && !seenGTINs.has(gtin);
-      if (isValid) seenGTINs.add(gtin);
+      const isValidGtin = gtin && gtin !== "0" && !seenGTINs.has(gtin);
+      // exclude published entries (common field names/status values)
+      const pubVal = row.published?.toString?.().toLowerCase();
+      const statusVal = row.status?.toString?.().toLowerCase();
+      const isPublished =
+        pubVal === "true" ||
+        pubVal === "yes" ||
+        statusVal === "published";
+      const isValid = isValidGtin && !isPublished;
+      if (isValidGtin) seenGTINs.add(gtin);
       return isValid;
     });
 
-    // Extract headers from the first valid row
-    const headers = Object.keys(filtered[0] || {});
+    // Extract headers as the union of keys across all filtered rows
+    const headersSet = new Set();
+    filtered.forEach((row) => {
+      Object.keys(row || {}).forEach((k) => headersSet.add(k));
+    });
+
+    // Prefer a sensible order for common columns
+    const priority = ["id", "gtin", "upc", "gtinVariants", "upcVariants"];
+    const headers = [
+      ...priority.filter((h) => headersSet.has(h)),
+      ...[...headersSet].filter((h) => !priority.includes(h)),
+    ];
 
     // Convert to CSV
     const csv = [
