@@ -16,25 +16,24 @@ async function downloadCSVFromBubble() {
     // Use a Set to track seen GTINs
     const seenGTINs = new Set();
 
-    // Filter: must have non-empty, non-zero GTIN, not duplicated, and not published
+    // Filter: must have non-empty, non-zero GTIN and not duplicated (keep all rows, including published)
     const filtered = data.filter((row) => {
       const gtin = row.gtin?.trim();
       const isValidGtin = gtin && gtin !== "0" && !seenGTINs.has(gtin);
-      // exclude published entries (common field names/status values)
-      const pubVal = row.published?.toString?.().toLowerCase();
-      const statusVal = row.status?.toString?.().toLowerCase();
-      const isPublished =
-        pubVal === "true" ||
-        pubVal === "yes" ||
-        statusVal === "published";
-      const isValid = isValidGtin && !isPublished;
       if (isValidGtin) seenGTINs.add(gtin);
-      return isValid;
+      return isValidGtin;
     });
 
-    // Extract headers as the union of keys across all filtered rows
+    // Remove published property from rows so it doesn’t appear in CSV
+    const sanitized = filtered.map((row) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { published, ...rest } = row;
+      return rest;
+    });
+
+    // Extract headers as the union of keys across all sanitized rows
     const headersSet = new Set();
-    filtered.forEach((row) => {
+    sanitized.forEach((row) => {
       Object.keys(row || {}).forEach((k) => headersSet.add(k));
     });
 
@@ -48,7 +47,7 @@ async function downloadCSVFromBubble() {
     // Convert to CSV
     const csv = [
       headers.join(","), // header row
-      ...filtered.map((row) =>
+      ...sanitized.map((row) =>
         headers
           .map((h) => `"${(row[h] ?? "").toString().replace(/"/g, '""')}"`)
           .join(",")
