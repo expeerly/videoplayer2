@@ -24,18 +24,8 @@ async function downloadCSVFromBubble() {
       return isValid;
     });
 
-    // Extract headers as the union of keys across all filtered rows
-    const headersSet = new Set();
-    filtered.forEach((row) => {
-      Object.keys(row || {}).forEach((k) => headersSet.add(k));
-    });
-
-    // Prefer a sensible order for common columns
-    const priority = ["id", "published", "gtin", "upc", "gtinVariants", "upcVariants"];
-    const headers = [
-      ...priority.filter((h) => headersSet.has(h)),
-      ...[...headersSet].filter((h) => !priority.includes(h)),
-    ];
+    // Extract headers from the first valid row
+    const headers = Object.keys(filtered[0] || {});
 
     // Convert to CSV
     const csv = [
