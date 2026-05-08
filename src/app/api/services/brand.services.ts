@@ -177,13 +177,13 @@ export async function handleGetBrandsWithVideos(
               SELECT COUNT(*)
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
-              WHERE ${product.brandId} = ${brand.id}
+              WHERE ${product.brandId} = ${brand.id} AND ${video.published} = true
             )`,
             rating: sql<number>`(
               SELECT ROUND(COALESCE(AVG(${video.starRating}), 0)::numeric, 2)
               FROM ${video}
               JOIN ${product} ON ${video.productId} = ${product.id}
-              WHERE ${product.brandId} = ${brand.id}
+              WHERE ${product.brandId} = ${brand.id} AND ${video.published} = true
             )`,
           },
           videos: sql<string>`(
@@ -258,7 +258,7 @@ export async function getBrandInfoWithSlug(brandSlug: string, lang: SupportedLan
           FROM ${video}
           LEFT JOIN ${product} ON ${video.productId} = ${product.id}
           LEFT JOIN ${brand} ON ${brand.id} = ${product.brandId}
-          WHERE ${brand.slug} = ${brandSlug}
+          WHERE ${brand.slug} = ${brandSlug} AND ${video.published} = true
         )`,
         reviewsCount: sql<number>`(
               SELECT COUNT(*)
@@ -295,12 +295,7 @@ export async function getBrandProductsWithVideos(
         })
         .from(product)
         .innerJoin(video, eq(video.productId, product.id))
-        .where(
-          and(
-            eq(product.brandId, brandId),
-            sql`EXISTS (SELECT 1 FROM ${video} WHERE ${video.productId} = ${product.id})`
-          )
-        )
+        .where(and(eq(product.brandId, brandId), eq(video.published, true)))
         .then(result => result[0].count),
       db
         .select({
@@ -313,7 +308,7 @@ export async function getBrandProductsWithVideos(
             rating: sql<number>`(
               SELECT ROUND(COALESCE(AVG(${video.starRating}), 0)::numeric, 2)
               FROM ${video}
-              WHERE ${video.productId} = ${product.id}
+              WHERE ${video.productId} = ${product.id} AND ${video.published} = true
             )`,
           },
           videos: sql<string>`(
@@ -344,12 +339,7 @@ export async function getBrandProductsWithVideos(
         .from(product)
         .innerJoin(video, eq(video.productId, product.id))
         .innerJoin(brand, eq(product.brandId, brand.id))
-        .where(
-          and(
-            eq(product.brandId, brandId),
-            sql`EXISTS (SELECT 1 FROM ${video} WHERE ${video.productId} = ${product.id})`
-          )
-        )
+        .where(and(eq(product.brandId, brandId), eq(video.published, true)))
         .limit(limit)
         .offset((page - 1) * limit)
         .groupBy(product.id, brand.slug),
