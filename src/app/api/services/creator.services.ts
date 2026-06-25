@@ -166,7 +166,7 @@ export async function handleGetCreatorWithVideos(
             bio: creator.bio,
           },
           videos: sql<string>`(
-            SELECT json_agg( video_data)
+            SELECT COALESCE(json_agg(video_data), '[]'::json)
             FROM (
               SELECT json_build_object(
                 'id', ${video.id},
@@ -188,6 +188,7 @@ export async function handleGetCreatorWithVideos(
               JOIN ${category} ON ${product.categoryId} = ${category.id}
               WHERE ${video.creatorId} = ${creator.id} AND ${video.published} = true
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
+              ${categoryFilter ? sql`AND ${categoryFilter}` : sql``}
               GROUP BY ${category.categoryData}, ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
               LIMIT ${videoCount}
             ) subq
