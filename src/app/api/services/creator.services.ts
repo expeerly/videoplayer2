@@ -194,7 +194,7 @@ export async function handleGetCreatorWithVideos(
           )`,
         })
         .from(creator)
-        .leftJoin(video, eq(video.creatorId, creator.id))
+        .innerJoin(video, eq(video.creatorId, creator.id))
         .leftJoin(creatorInterests, eq(creatorInterests.creatorId, creator.id))
         .leftJoin(category, eq(category.id, creatorInterests.categoryId))
         .where(and(...whereConditions))
