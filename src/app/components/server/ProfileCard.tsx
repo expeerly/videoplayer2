@@ -12,6 +12,7 @@ export type ProfileCardProps = {
   variant?: 'primary' | 'secondary';
   profileSlug?: string;
   dataType?: 'brand' | 'brand-feed' | 'category' | 'product-feed' | 'reviewer';
+  isClickable?: boolean;
 
   reviewsCount?: string;
   age?: number;
@@ -37,6 +38,7 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
   country,
   rating,
   isExpanded = false,
+  isClickable = true,
 }) => {
   const { t } = await getDictionary();
 
@@ -55,51 +57,60 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
   };
 
   const url = getProfileUrl(dataType, profileSlug);
+  const wrapperClassName = 'flex items-center gap-4 py-b bg-white w-max';
+  const ariaLabel =
+    dataType === 'category'
+      ? t('dynamic_texts.home_category_icons.aria_label', { brandname: title })
+      : dataType === 'brand'
+        ? t('dynamic_texts.home_brand_icons.aria_label', { brandname: title })
+        : t('dynamic_texts.home_hero_reviewer.aria_label', {
+            firstname: title,
+          });
+
+  const content = (
+    <>
+      <div className="relative">
+        <div className="w-10 h-10 rounded-full overflow-hidden">
+          <Avatar
+            src={imageUrl}
+            alt={title}
+            className={dataType === 'reviewer' ? '[&>img]:object-cover [&>img]:object-top' : ''}
+          />
+        </div>
+      </div>
+      <div className="flex flex-col w-full">
+        <div className="flex items-center gap-2">
+          <h3 className=" font-bold text-grey-700 max-w-60 truncate">{title}</h3>
+          {rating && variant === 'primary' && <StarRating rating={rating} />}
+          {isClickable !== false && <RightChevronIcon className="w-2 h-3" />}
+        </div>
+        <div className="flex gap-2">
+          {rating && variant === 'secondary' && <StarRating rating={rating} />}
+          <p className="text-sm text-grey-500">
+            {dataType === 'category'
+              ? `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`
+              : dataType === 'reviewer'
+                ? `${age}, ${location}, ${country ?? ''}`
+                : dataType === 'brand'
+                  ? `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`
+                  : `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`}
+          </p>
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <>
-      <Link
-        href={url}
-        aria-label={
-          dataType === 'category'
-            ? t('dynamic_texts.home_category_icons.aria_label', { brandname: title })
-            : dataType === 'brand'
-              ? t('dynamic_texts.home_brand_icons.aria_label', { brandname: title })
-              : t('dynamic_texts.home_hero_reviewer.aria_label', {
-                  firstname: title,
-                })
-        }
-        className="flex items-center gap-4 py-b bg-white  w-max"
-      >
-        <div className="relative">
-          <div className="w-10 h-10 rounded-full overflow-hidden">
-            <Avatar
-              src={imageUrl}
-              alt={title}
-              className={dataType === 'reviewer' ? '[&>img]:object-cover [&>img]:object-top' : ''}
-            />
-          </div>
+      {isClickable !== false ? (
+        <Link href={url} aria-label={ariaLabel} className={wrapperClassName}>
+          {content}
+        </Link>
+      ) : (
+        <div className={`${wrapperClassName} cursor-default`} aria-label={ariaLabel}>
+          {content}
         </div>
-        <div className="flex flex-col w-full">
-          <div className="flex items-center gap-2">
-            <h3 className=" font-bold text-grey-700 max-w-60 truncate">{title}</h3>
-            {rating && variant === 'primary' && <StarRating rating={rating} />}
-            <RightChevronIcon className="w-2 h-3" />
-          </div>
-          <div className="flex gap-2">
-            {rating && variant === 'secondary' && <StarRating rating={rating} />}
-            <p className="text-sm text-grey-500">
-              {dataType === 'category'
-                ? `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`
-                : dataType === 'reviewer'
-                  ? `${age}, ${location}, ${country ?? ''}`
-                  : dataType === 'brand'
-                    ? `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`
-                    : `${reviewsCount} ${!!reviewsCount && (Number(reviewsCount) > 1 ? t('reviews') : t('singleReview'))}`}
-            </p>
-          </div>
-        </div>
-      </Link>
+      )}
 
       {!!bio && (
         <div className="flex w-full sm:w-2/3 items-center mt-2">
@@ -110,10 +121,12 @@ export const ProfileCard: FunctionComponent<ProfileCardProps> = async ({
               maxLines={2}
               paragraphClassName="text-grey-700"
             />
-          ) : (
+          ) : isClickable ? (
             <Link href={url} className="text-sm text-grey-700 line-clamp-2">
               {bio}
             </Link>
+          ) : (
+            <p className="text-sm text-grey-700 line-clamp-2">{bio}</p>
           )}
         </div>
       )}

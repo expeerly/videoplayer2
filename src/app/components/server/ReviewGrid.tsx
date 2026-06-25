@@ -36,6 +36,7 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
             imageUrl={data?.logo}
             title={data?.name ?? ''}
             profileSlug={data?.slug}
+            isClickable={Boolean(data?.videos?.length)}
             {...header}
           />
         </div>
