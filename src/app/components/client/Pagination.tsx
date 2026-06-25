@@ -31,38 +31,8 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
   );
 
   const pageNumbers = useMemo(() => {
-    const pages = [];
-    const showEllipsisStart = currentPage > 3;
-    const showEllipsisEnd = currentPage < totalPages - 2;
-
-    // Always show first page
-    pages.push(1);
-
-    if (showEllipsisStart) {
-      pages.push('...');
-    }
-
-    // Calculate center pages
-    const start = Math.max(2, currentPage - 2);
-    const end = Math.min(totalPages - 1, currentPage + 2);
-
-    for (let i = start; i <= end; i++) {
-      if (i > 1 && i < totalPages) {
-        pages.push(i);
-      }
-    }
-
-    if (showEllipsisEnd) {
-      pages.push('...');
-    }
-
-    // Always show last page
-    if (pages[pages.length - 1] !== totalPages) {
-      pages.push(totalPages);
-    }
-
-    return pages;
-  }, [currentPage, totalPages]);
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }, [totalPages]);
 
   const navClassName = useMemo(
     () => clsx('flex items-center justify-center gap-1', className),
@@ -80,16 +50,14 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
   );
 
   const pageButtonClassName = useMemo(
-    () => (page: number | string) =>
+    () => (page: number) =>
       clsx(
         'w-8 h-8 flex items-center justify-center rounded-full transition-colors',
         'text-sm font-medium',
         {
           'bg-pink-500 text-white': currentPage === page,
-          'hover:bg-grey-100': currentPage !== page && page !== '...',
-          'cursor-default': page === '...',
-          'text-grey-700': page !== '...' && currentPage !== page,
-          'text-grey-700 ': page === '...',
+          'hover:bg-grey-100': currentPage !== page,
+          'text-grey-700': currentPage !== page,
         }
       ),
     [currentPage]
@@ -121,7 +89,7 @@ export const Pagination: FunctionComponent<PaginationProps> = ({
         <button
           key={`${page}-${idx}`}
           onClick={() => typeof page === 'number' && handlePageChange(page)}
-          disabled={page === '...'}
+          // disabled={page === '...'}
           className={pageButtonClassName(page)}
           aria-current={currentPage === page ? 'page' : undefined}
           aria-label={t('pagination', { pagenumber: page })}
