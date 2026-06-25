@@ -20,13 +20,19 @@ export const ExploreReviewers: React.FunctionComponent<{ locale: Languages }> = 
     }),
   ]);
 
+  const reviewerRows = data?.rows?.filter(row => row.videos && row.videos.length > 0) ?? [];
+
+  if (reviewerRows.length === 0) {
+    return null;
+  }
+
   return (
     <section className="flex flex-col gap-8 w-full py-12  md:pt-14 md:pb-[70px] md:max-w-[900px]">
       <h2 className="px-5 font-extrabold text-2xl text-center text-grey-700 mid-lg:px-0">
         {t('home_h2')}
       </h2>
 
-      {data?.rows?.map(i => (
+      {reviewerRows.map(i => (
         <ReviewGrid
           key={i.id}
           data={i}

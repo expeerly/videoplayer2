@@ -120,6 +120,7 @@ export async function handleGetCreatorWithVideos(
         })
         .from(creator)
         .innerJoin(video, eq(video.creatorId, creator.id))
+        .where(eq(video.published, true))
         .groupBy(creator.id)
         .having(sql`COUNT(DISTINCT ${video.id}) >= 4`)
         .orderBy(sql`RANDOM()`)
@@ -142,6 +143,7 @@ export async function handleGetCreatorWithVideos(
           .where(
             and(
               eq(video.creatorId, creator.id),
+              eq(video.published, true),
               ...(categoryFilter ? [categoryFilter] : []),
               ...(brandFilter ? [brandFilter] : [])
             )
@@ -164,7 +166,7 @@ export async function handleGetCreatorWithVideos(
             bio: creator.bio,
           },
           videos: sql<string>`(
-            SELECT json_agg( video_data)
+            SELECT COALESCE(json_agg(video_data), '[]'::json)
             FROM (
               SELECT json_build_object(
                 'id', ${video.id},
@@ -186,13 +188,14 @@ export async function handleGetCreatorWithVideos(
               JOIN ${category} ON ${product.categoryId} = ${category.id}
               WHERE ${video.creatorId} = ${creator.id} AND ${video.published} = true
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
+              ${categoryFilter ? sql`AND ${categoryFilter}` : sql``}
               GROUP BY ${category.categoryData}, ${product.productSlug}, ${brand.slug}, ${brand.logo}, ${brand.brandName}, ${product.brandId}, ${product.productName}, ${video.id}
               LIMIT ${videoCount}
             ) subq
           )`,
         })
         .from(creator)
-        .leftJoin(video, eq(video.creatorId, creator.id))
+        .innerJoin(video, eq(video.creatorId, creator.id))
         .leftJoin(creatorInterests, eq(creatorInterests.creatorId, creator.id))
         .leftJoin(category, eq(category.id, creatorInterests.categoryId))
         .where(and(...whereConditions))
@@ -306,6 +309,8 @@ export async function getAllCreators() {
         slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
       })
       .from(creator)
+      .innerJoin(video, eq(video.creatorId, creator.id))
+      .where(eq(video.published, true))
       .groupBy(creator.id)
       .orderBy(creator.firstName);
 

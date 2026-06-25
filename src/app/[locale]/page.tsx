@@ -65,6 +65,7 @@ const HomePage: NextPage<PageProps> = async ({ params }) => {
       </section>
       <section className="flex justify-center max-w-[900px] w-full mx-auto pb-12 mt-5 md:pb-[70px]">
         <ReviewGridSection
+          dataType="category"
           getGridVideos={() =>
             getGridVideos({
               lang: locale,

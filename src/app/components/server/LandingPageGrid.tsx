@@ -39,6 +39,10 @@ export const LandingPageGrid: FunctionComponent<Props> = async ({
     filter: getQueryIds(categoryQuery, brandQuery, allCategories, allBrands),
   });
 
+  if (!gridVideos?.rows?.length) {
+    return null;
+  }
+
   return (
     <Suspense fallback={<ReviewGridSkeleton />}>
       <PaginationContainer

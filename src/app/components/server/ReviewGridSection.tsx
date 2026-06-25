@@ -7,9 +7,13 @@ type Props = {
     data: Grid;
     error?: string;
   }>;
+  dataType?: 'brand' | 'brand-feed' | 'category' | 'product-feed' | 'reviewer';
 };
 
-export const ReviewGridSection: FunctionComponent<Props> = async ({ getGridVideos }) => {
+export const ReviewGridSection: FunctionComponent<Props> = async ({
+  getGridVideos,
+  dataType = 'brand',
+}) => {
   const { data: gridData } = await getGridVideos();
 
   // Check if data exists and has rows with videos
@@ -27,7 +31,7 @@ export const ReviewGridSection: FunctionComponent<Props> = async ({ getGridVideo
   return (
     <ReviewGrid
       header={{
-        dataType: 'brand',
+        dataType,
       }}
       data={validRows[0]}
     />
