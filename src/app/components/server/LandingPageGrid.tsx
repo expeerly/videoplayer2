@@ -39,6 +39,16 @@ export const LandingPageGrid: FunctionComponent<Props> = async ({
     filter: getQueryIds(categoryQuery, brandQuery, allCategories, allBrands),
   });
 
+  const validRows = gridVideos?.rows?.filter(row => row.videos && row.videos.length > 0) ?? [];
+  const filteredGridVideos = {
+    ...gridVideos,
+    rows: validRows,
+  };
+
+  if (validRows.length === 0) {
+    return null;
+  }
+
   return (
     <Suspense fallback={<ReviewGridSkeleton />}>
       <PaginationContainer
@@ -46,7 +56,7 @@ export const LandingPageGrid: FunctionComponent<Props> = async ({
           dataType: type === 'creator' ? 'reviewer' : type,
           variant: headerVariant,
         }}
-        data={gridVideos}
+        data={filteredGridVideos}
         ctaBlock={ctaBlock}
       />
     </Suspense>

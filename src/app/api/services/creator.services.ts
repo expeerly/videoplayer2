@@ -120,6 +120,7 @@ export async function handleGetCreatorWithVideos(
         })
         .from(creator)
         .innerJoin(video, eq(video.creatorId, creator.id))
+        .where(eq(video.published, true))
         .groupBy(creator.id)
         .having(sql`COUNT(DISTINCT ${video.id}) >= 4`)
         .orderBy(sql`RANDOM()`)
@@ -142,6 +143,7 @@ export async function handleGetCreatorWithVideos(
           .where(
             and(
               eq(video.creatorId, creator.id),
+              eq(video.published, true),
               ...(categoryFilter ? [categoryFilter] : []),
               ...(brandFilter ? [brandFilter] : [])
             )
@@ -306,6 +308,8 @@ export async function getAllCreators() {
         slug: sql<string>`LOWER(CONCAT(${creator.firstName}, '-', ${creator.id}))`,
       })
       .from(creator)
+      .innerJoin(video, eq(video.creatorId, creator.id))
+      .where(eq(video.published, true))
       .groupBy(creator.id)
       .orderBy(creator.firstName);
 
