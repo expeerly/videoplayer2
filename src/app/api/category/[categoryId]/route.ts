@@ -14,19 +14,10 @@ export async function GET(
   try {
     const categoryBrands = await getBrandsByCategoryIdWithVideos(categoryId, lang, pagination);
 
-    // Parse videos JSON strings to arrays
-    const processedData = {
-      ...categoryBrands,
-      rows: categoryBrands.rows.map((row: Record<string, unknown>) => ({
-        ...row,
-        videos: row.videos ? JSON.parse(row.videos as string) : [],
-      })),
-    };
-
     return NextResponse.json(
       {
         success: true,
-        data: processedData,
+        data: categoryBrands,
       },
       { status: 200 }
     );

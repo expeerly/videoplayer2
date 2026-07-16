@@ -14,16 +14,10 @@ export async function GET(
   try {
     const creator = await getCreatorByIdWithVideos(creatorId, categories, lang);
 
-    // Parse videos JSON string to array
-    const processedData = {
-      ...creator,
-      videos: creator.videos ? JSON.parse(creator.videos as string) : [],
-    };
-
     return NextResponse.json(
       {
         success: true,
-        data: processedData,
+        data: creator,
       },
       { status: 200 }
     );

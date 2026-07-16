@@ -312,7 +312,7 @@ export async function getBrandProductsWithVideos(
             )`,
           },
           videos: sql<string>`(
-          SELECT json_agg(video_data)
+          SELECT json_agg(video_data ORDER BY video_data->>'id' DESC)
           FROM (
             SELECT json_build_object(
               'id', ${video.id},
@@ -332,7 +332,6 @@ export async function getBrandProductsWithVideos(
             JOIN ${brand} ON ${product.brandId} = ${brand.id}
             LEFT JOIN ${category} ON ${product.categoryId} = ${category.id}
             WHERE ${video.productId} = ${product.id} AND ${video.published} = true AND ${product.brandId} = ${brandId}
-            GROUP BY ${brand.brandName}, ${product.productName}, ${product.productSlug}, ${category.categoryData}, ${product.brandId}, ${brand.logo}, ${brand.slug}, ${video.id}
           ) subq
         )`,
         })
