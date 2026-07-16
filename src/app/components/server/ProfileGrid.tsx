@@ -1,5 +1,6 @@
 import { getProfile } from '@/src/app/actions/actions';
 import { PaginationContainer } from '@/src/app/components/server/PaginationContainer';
+import { BrandVideosLogger } from '@/src/app/components/client/BrandVideosLogger';
 import { LocaleProps } from '@/src/db/types';
 import { FunctionComponent, Suspense } from 'react';
 import { ReviewGridSkeleton } from './ReviewGrid';
@@ -33,14 +34,16 @@ export const ProfileGrid: FunctionComponent<Props> = async ({
 
   return (
     <Suspense fallback={<ReviewGridSkeleton count={9} />}>
-      <PaginationContainer
-        data={data}
-        header={{
-          dataType: header?.type,
-          variant: header?.variant,
-        }}
-        ctaBlock={ctaBlock}
-      />
+      <BrandVideosLogger data={data}>
+        <PaginationContainer
+          data={data}
+          header={{
+            dataType: header?.type,
+            variant: header?.variant,
+          }}
+          ctaBlock={ctaBlock}
+        />
+      </BrandVideosLogger>
     </Suspense>
   );
 };
