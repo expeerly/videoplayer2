@@ -205,7 +205,7 @@ export async function handleGetBrandsWithVideos(
               ) as video_data
               FROM ${video}
               JOIN ${product} ON ${brand.id} = ${product.brandId}
-              JOIN ${category} ON ${product.categoryId} = ${category.id}
+              LEFT JOIN ${category} ON ${product.categoryId} = ${category.id}
               WHERE ${video.productId} = ${product.id} AND ${video.published} = true
               ${brandFilter ? sql`AND ${brandFilter}` : sql``}
               GROUP BY ${category.categoryData}, ${product.productSlug}, ${product.brandId}, ${product.productName}, ${video.id} LIMIT ${videoCount}
@@ -330,7 +330,7 @@ export async function getBrandProductsWithVideos(
             ) as video_data
             FROM ${video}
             JOIN ${brand} ON ${product.brandId} = ${brand.id}
-            JOIN ${category} ON ${product.categoryId} = ${category.id}
+            LEFT JOIN ${category} ON ${product.categoryId} = ${category.id}
             WHERE ${video.productId} = ${product.id} AND ${video.published} = true AND ${product.brandId} = ${brandId}
             GROUP BY ${brand.brandName}, ${product.productName}, ${product.productSlug}, ${category.categoryData}, ${product.brandId}, ${brand.logo}, ${brand.slug}, ${video.id}
           ) subq
