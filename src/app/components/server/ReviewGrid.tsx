@@ -29,7 +29,7 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
 }) => {
   const videos = useMemo(() => {
     const rawVideos = data?.videos;
-
+    console.log('rawVideos:', rawVideos);
     if (Array.isArray(rawVideos)) {
       return rawVideos;
     }
@@ -45,6 +45,7 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
 
     return [];
   }, [data?.videos]);
+  console.log('videos:', videos);
 
   return (
     <div className={clsx('w-full flex flex-col gap-5', classNames?.containerClassName)}>
