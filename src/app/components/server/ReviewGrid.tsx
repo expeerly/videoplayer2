@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import { ReviewCard } from '../server/ReviewCard';
 import { ProfileCard } from './ProfileCard';
 import clsx from 'clsx';
@@ -27,6 +27,25 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
   hasProfileHeader = true,
   data,
 }) => {
+  const videos = useMemo(() => {
+    const rawVideos = data?.videos;
+
+    if (Array.isArray(rawVideos)) {
+      return rawVideos;
+    }
+
+    if (typeof rawVideos === 'string') {
+      try {
+        const parsed = JSON.parse(rawVideos);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    return [];
+  }, [data?.videos]);
+
   return (
     <div className={clsx('w-full flex flex-col gap-5', classNames?.containerClassName)}>
       {hasProfileHeader && (
@@ -36,7 +55,7 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
             imageUrl={data?.logo}
             title={data?.name ?? ''}
             profileSlug={data?.slug}
-            isClickable={Boolean(data?.videos?.length)}
+            isClickable={videos.length > 0}
             {...header}
           />
         </div>
@@ -48,7 +67,7 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
           classNames?.gridClassName
         )}
       >
-        {data?.videos?.map((review, i) => (
+        {videos.map((review, i) => (
           <ReviewCard
             key={`${review.id}-i-${i}`}
             review={review}
