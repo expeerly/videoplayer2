@@ -1,4 +1,6 @@
-import React, { FunctionComponent } from 'react';
+'use client';
+
+import React, { FunctionComponent, useEffect } from 'react';
 import { VideoThumbnail } from './VideoThumbnail';
 import { StarRating } from './StarRating';
 import { Avatar } from '../client/Avatar';
@@ -12,6 +14,16 @@ type Props = {
 };
 
 export const ReviewCard: FunctionComponent<Props> = ({ review, className }) => {
+  useEffect(() => {
+    console.log('ReviewCard video:', {
+      id: review.id,
+      playbackId: review.playbackId,
+      categorySlug: review.categorySlug,
+      brandSlug: review.brandSlug,
+      productSlug: review.productSlug,
+    });
+  }, [review.id, review.playbackId, review.categorySlug, review.brandSlug, review.productSlug]);
+
   return (
     <div
       key={review.id}
