@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useMemo } from 'react';
 import { ReviewCard } from '../server/ReviewCard';
 import { ProfileCard } from './ProfileCard';
+import { ReviewVideosLogger } from '../client/ReviewVideosLogger';
 import clsx from 'clsx';
 import { GridData } from '@/src/db/types';
 import { Skeleton } from '../client/Skeleton';
@@ -60,20 +61,22 @@ export const ReviewGrid: FunctionComponent<ReviewGridProps> = ({
         </div>
       )}
 
-      <div
-        className={clsx(
-          'flex gap-[9px] overflow-x-auto scrollbar-thin scrollbar-none justify-start w-full px-5 mid-lg:px-0 md:gap-4',
-          classNames?.gridClassName
-        )}
-      >
-        {videos.map((review, i) => (
-          <ReviewCard
-            key={`${review.id}-i-${i}`}
-            review={review}
-            className={classNames?.cardClassName}
-          />
-        ))}
-      </div>
+      <ReviewVideosLogger videos={videos}>
+        <div
+          className={clsx(
+            'flex gap-[9px] overflow-x-auto scrollbar-thin scrollbar-none justify-start w-full px-5 mid-lg:px-0 md:gap-4',
+            classNames?.gridClassName
+          )}
+        >
+          {videos.map((review, i) => (
+            <ReviewCard
+              key={`${review.id}-i-${i}`}
+              review={review}
+              className={classNames?.cardClassName}
+            />
+          ))}
+        </div>
+      </ReviewVideosLogger>
     </div>
   );
 };
