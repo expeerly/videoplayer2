@@ -56,9 +56,21 @@ export function createRouteHandler<T>({
 
       const data = await serviceFunction(params);
 
+      // Parse videos JSON strings to arrays for Grid data
+      let processedData = data;
+      if (data && typeof data === 'object' && 'rows' in data && Array.isArray(data.rows)) {
+        processedData = {
+          ...data,
+          rows: data.rows.map((row: Record<string, unknown>) => ({
+            ...row,
+            videos: row.videos ? JSON.parse(row.videos as string) : [],
+          })),
+        };
+      }
+
       return NextResponse.json({
         success: true,
-        data,
+        data: processedData,
       });
     } catch (error) {
       return handleError(error);
