@@ -170,7 +170,7 @@ export async function handleGetBrandsWithVideos(
         .select({
           id: brand.id,
           logo: brand.logo,
-          name: brand.brandName,
+          nameThing2: brand.brandName,
           slug: brand.slug,
           info: {
             reviewsCount: sql<number>`(
