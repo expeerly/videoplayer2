@@ -282,7 +282,7 @@ export async function getProductWithRelatedVideos(videoId: string, lang: Support
       db
         .select({
           id: product.id,
-          name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          nameThing: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
           logo: product.productPicture,
           info: {
             reviewsCount: sql<number>`COUNT(${video.id})`,

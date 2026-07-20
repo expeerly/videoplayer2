@@ -170,7 +170,7 @@ export async function handleGetBrandsWithVideos(
         .select({
           id: brand.id,
           logo: brand.logo,
-          nameThing2: brand.brandName,
+          name: brand.brandName,
           slug: brand.slug,
           info: {
             reviewsCount: sql<number>`(
@@ -300,7 +300,7 @@ export async function getBrandProductsWithVideos(
       db
         .select({
           id: product.id,
-          nameThing: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
           slug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
           logo: product.productPicture,
           info: {
