@@ -300,7 +300,7 @@ export async function getBrandProductsWithVideos(
       db
         .select({
           id: product.id,
-          name: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
+          nameThing: sql<string>`COALESCE(${product.productName}->${lang}->>'title', ${product.productName}->'en'->>'title')`,
           slug: sql<string>`COALESCE(${product.productSlug}->${lang}->>'title', ${product.productSlug}->'en'->>'title')`,
           logo: product.productPicture,
           info: {
